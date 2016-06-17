@@ -160,6 +160,9 @@ $router->group(
 
                 //suppliers
                 $router->resource('supplier', 'Backend\SupplierController');
+
+                //suppliers
+                $router->resource('category', 'Backend\CategoryController');
             }
         );
 

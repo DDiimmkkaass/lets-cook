@@ -81,6 +81,11 @@ return array (
     'supplier.write',
     'supplier.delete',
 
+    'category.create',
+    'category.read',
+    'category.write',
+    'category.delete',
+
 //    'comment.create',
 //    'comment.read',
 //    'comment.write',

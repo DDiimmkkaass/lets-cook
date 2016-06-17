@@ -345,4 +345,10 @@ return array (
   'suppliers_list' => 'Список поставщиков',
   'supplier_create' => 'Создание поставщика',
   'supplier_editing' => 'Редактирование поставщика',
+  'purchase' => 'Закупка',
+  'add_category' => 'Добавить категорию',
+  'categories' => 'Категории ингредиентов',
+  'categories_list' => 'Список категорий',
+  'category_create' => 'Создание категории',
+  'category_editing' => 'Редактирование категории',
 );

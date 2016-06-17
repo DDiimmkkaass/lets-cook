@@ -39,6 +39,7 @@ class DataSeeder extends Seeder
             Model::unguard();
 
             $this->call(_SuppliersSeeder::class);
+            $this->call(_CategoriesSeeder::class);
 
             Model::reguard();
         }

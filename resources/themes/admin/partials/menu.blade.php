@@ -44,6 +44,23 @@
                 </li>
             @endif
 
+            <li class="header">@lang('labels.menu')</li>
+            @if ($user->hasAccess('category.read'))
+                <li class="{!! active_class('admin.category*') !!}">
+                    <a href="{!! route('admin.category.index') !!}">
+                        <i class="fa fa-file-text"></i>
+                        <span>@lang('labels.categories')</span>
+
+                        @if ($user->hasAccess('category.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_category')"
+                                   data-href="{!! route('admin.category.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
             @if ($user->hasAccess('group') || $user->hasAccess('user.read'))
                 <li class="header">@lang('labels.users')</li>
             @endif
