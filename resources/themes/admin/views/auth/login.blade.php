@@ -9,20 +9,20 @@
                    <h3 class="box-title">@lang("labels.login_form_heading")</h3>
                </div>
 
-               {!! Form::open(array("id" => "login_form", "role" => "form", 'class' => 'form-horizontal', "route" => 'admin.login.post')) !!}
+               {!! Form::open(["id" => "login_form", "role" => "form", 'class' => 'form-horizontal', "route" => 'admin.login.post']) !!}
                    <div class="box-body">
                        <div class="form-group">
                            <label for="email" class="col-sm-2 control-label">@lang('labels.email')</label>
 
                            <div class="col-sm-10">
-                               {!! Form::text('email', '', array("placeholder"=> trans('labels.email'), 'class' => 'form-control input-sm', 'type' => "email" )) !!}
+                               {!! Form::text('email', '', ["placeholder"=> trans('labels.email'), 'class' => 'form-control input-sm', 'type' => "email" ]) !!}
                            </div>
                        </div>
                        <div class="form-group">
                            <label for="password" class="col-sm-2 control-label">@lang('labels.password')</label>
 
                            <div class="col-sm-10">
-                               {!! Form::password('password', array("placeholder"=> trans('labels.password'), 'class' => 'form-control input-sm' )) !!}
+                               {!! Form::password('password', ["placeholder"=> trans('labels.password'), 'class' => 'form-control input-sm' ]) !!}
                            </div>
                        </div>
                        <div class="form-group">
@@ -36,7 +36,7 @@
                        </div>
                    </div>
                    <div class="box-footer">
-                       {!! Form::submit(trans('labels.login'), array('class' => 'btn btn-info btn-flat pull-right')) !!}
+                       {!! Form::submit(trans('labels.login'), ['class' => 'btn btn-info btn-flat pull-right']) !!}
                    </div>
                {!! Form::close() !!}
            </div>

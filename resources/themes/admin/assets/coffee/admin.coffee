@@ -19,6 +19,10 @@ window.initToggles = ->
 window.fixCustomInputs = ($area) ->
   initInputMask()
 
+  initColorPickers();
+
+  initCheckboxes()
+
   initDateTimePickers()
 
   $area.find('span.select2').remove()
@@ -49,6 +53,10 @@ $(document).on "click", ".front-home-link", (e) ->
 $(document).ready ->
   initToggles()
 
+  initColorPickers();
+
+  initCheckboxes()
+
   #select
   $('select.select2').each () ->
     $(this).select2(select2Options)
@@ -63,8 +71,6 @@ $(document).ready ->
       input.attr('class', _class)
       input.addClass('inputmask-' + e.params.data.id)
       initInputMask()
-
-  initCheckboxes()
 
   $(document).on "click", ".close-me", ->
     $(this).parent().removeClass('active').fadeOut 100

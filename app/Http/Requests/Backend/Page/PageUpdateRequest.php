@@ -27,13 +27,11 @@ class PageUpdateRequest extends FormRequest
     {
         $id = $this->route()->parameter('page');
 
-        $regex = '/^.*\.('.implode('|', config('image.allowed_image_extension')).')$/';
-
         $rules = [
             'status'   => 'required|boolean',
             'slug'     => 'unique:pages,slug,'.$id.',id',
             'position' => 'required|integer',
-            'image'    => ['regex:'.$regex],
+            'image'    => ['regex:'.$this->image_regex],
         ];
 
         $languageRules = [

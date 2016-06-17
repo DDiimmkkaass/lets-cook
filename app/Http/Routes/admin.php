@@ -63,21 +63,6 @@ $router->group(
                 );
                 $router->resource('news', 'Backend\NewsController');
 
-                // articles
-                $router->post(
-                    'article/{id}/ajax_field',
-                    [
-                        'middleware' => ['ajax'],
-                        'as'         => 'admin.article.ajax_field',
-                        'uses'       => 'Backend\ArticleController@ajaxFieldChange',
-                    ]
-                );
-                $router->resource(
-                    'article',
-                    'Backend\ArticleController',
-                    ['only' => ['index', 'edit', 'update', 'destroy']]
-                );
-
                 // comments
                 $router->post(
                     'comment/{id}/ajax_field',

@@ -12,7 +12,7 @@
         @endif
 
         @if ($user->hasAccess('user.write') || $user->hasAccess('user.create'))
-            {!! Form::submit(trans('labels.save'), array('class' => 'btn btn-success btn-flat')) !!}
+            {!! Form::submit(trans('labels.save'), ['class' => 'btn btn-success btn-flat']) !!}
         @endif
     </div>
 </div>

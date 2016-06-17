@@ -4,7 +4,7 @@
 
     <div class="row">
         <div class="col-xs-12">
-            {!! Form::model($model, array('role' => 'form', 'method' => 'put', 'route' => array('admin.group.update', $model->id))) !!}
+            {!! Form::model($model, ['role' => 'form', 'method' => 'put', 'route' => ['admin.group.update', $model->id]]) !!}
 
                 @include('views.group.partials._form')
 

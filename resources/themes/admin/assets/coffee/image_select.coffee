@@ -43,7 +43,5 @@ $(document).ready () ->
     $image = $($this.data('target-image'))
     $input = $($this.data('target-input'))
 
-    console.log($image)
-    
     $image.attr 'src', $image.data('default')
     $input.val('')

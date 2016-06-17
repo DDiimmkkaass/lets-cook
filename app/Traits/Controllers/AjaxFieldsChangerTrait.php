@@ -8,8 +8,7 @@
 
 namespace App\Traits\Controllers;
 
-use App\Events\Event;
-use Request;
+use Event;
 use Response;
 
 /**
@@ -37,22 +36,25 @@ trait AjaxFieldsChangerTrait
         $model = $model::find($id);
 
         if ($model) {
-            $field = Request::get('field');
-            $value = Request::get('value');
+            $field = request('field', null);
+            $value = request('value', null);
 
-            if (!is_null($value)) {
+            if (!empty($field)) {
                 $model->{$field} = $value;
-            }
 
-            if ($model->save()) {
-                $event = '\App\Events\Backend\\'.$class_name.'Edit';
-                if (class_exists($event)) {
-                    Event::fire(new $event($model));
+                if ($model->save()) {
+                    $event = '\App\Events\Backend\\'.$class_name.'Edit';
+                    if (class_exists($event)) {
+                        Event::fire(new $event($model));
+                    }
+
+                    return Response::json(
+                        ["error"   => 0,
+                         'message' => trans('messages.field_value_successfully_saved'),
+                         'type'    => 'success',
+                        ]
+                    );
                 }
-
-                return Response::json(
-                    ["error" => 0, 'message' => trans('messages.field_value_successfully_saved'), 'type' => 'success']
-                );
             }
         }
 

@@ -59,7 +59,7 @@ class QuestionController extends BackendController
 
         Meta::title(trans('labels.all_questions'));
 
-        $this->breadcrumbs(trans('labels.all_questions'), route('admin.question.index'));
+        $this->breadcrumbs(trans('labels.all_questions'), route('admin.'.$this->module.'.index'));
     }
 
     /**
@@ -134,7 +134,7 @@ class QuestionController extends BackendController
         $this->data('page_title', trans('labels.all_questions'));
         $this->breadcrumbs(trans('labels.questions_list'));
 
-        return $this->render('views.question.index');
+        return $this->render('views.'.$this->module.'.index');
     }
 
     /**
@@ -151,7 +151,7 @@ class QuestionController extends BackendController
 
         $this->breadcrumbs(trans('labels.question_create'));
 
-        return $this->render('views.question.create');
+        return $this->render('views.'.$this->module.'.create');
     }
 
     /**
@@ -164,21 +164,18 @@ class QuestionController extends BackendController
      */
     public function store(QuestionRequest $request)
     {
-        $input = $request->all();
-
         try {
-            $model = new Question();
-            $model->fill($input);
+            $model = new Question($request->all());
 
             $model->save();
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.question.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.save_failed'));
 
-            return Redirect::back()->withInput();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -207,17 +204,17 @@ class QuestionController extends BackendController
     {
         try {
             $model = Question::findOrFail($id);
+
+            $this->data('page_title', trans('labels.question_editing'));
+
+            $this->breadcrumbs(trans('labels.question_editing'));
+
+            return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.question.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
-
-        $this->data('page_title', trans('labels.question_editing'));
-
-        $this->breadcrumbs(trans('labels.question_editing'));
-
-        return $this->render('views.question.edit', compact('model'));
     }
 
     /**
@@ -231,24 +228,24 @@ class QuestionController extends BackendController
      */
     public function update($id, QuestionRequest $request)
     {
-        $input = $request->all();
-
         try {
             $model = Question::findOrFail($id);
 
-            $model->update($input);
+            $model->fill($request->all());
+
+            $model->save();
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.question.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.question.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
-            FlashMessages::add("error", trans('messages.update_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.update_error'));
 
-            return Redirect::back()->withInput($input);
+            return redirect()->back()->withInput();
         }
     }
 
@@ -271,9 +268,9 @@ class QuestionController extends BackendController
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
-            FlashMessages::add("error", trans('messages.delete_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.delete_error'));
         }
 
-        return Redirect::route('admin.question.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 }

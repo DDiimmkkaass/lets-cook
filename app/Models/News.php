@@ -287,8 +287,8 @@ class News extends Eloquent implements FrontLink, SearchableContract, MetaGettab
      */
     public function getMetaImage()
     {
-        return url(
-            empty($this->image) ? config('seo.share.default_image') : $this->image
-        );
+        $img = empty($this->image) ? config('seo.share.default_image') : $this->image;
+
+        return $img ? url($img) : $img;
     }
 }

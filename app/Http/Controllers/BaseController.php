@@ -72,7 +72,6 @@ class BaseController extends IlluminateBaseController
      */
     public function render($view = '', array $data = [])
     {
-
         if (!empty($data)) {
             foreach ($data as $k => $v) {
                 $this->data($k, $v);
@@ -95,9 +94,8 @@ class BaseController extends IlluminateBaseController
      *
      * @return bool
      */
-    public function data( /*array or pair of values*/)
+    public function data(/*array or pair of values*/)
     {
-
         $data = func_get_args();
 
         if (!empty($data)) {
@@ -119,7 +117,6 @@ class BaseController extends IlluminateBaseController
      */
     public function breadcrumbs($name, $url = false)
     {
-
         $this->breadcrumbs[] = ['name' => $name, 'url' => $url];
     }
 
@@ -128,7 +125,6 @@ class BaseController extends IlluminateBaseController
      */
     private function _init()
     {
-
         Theme::init($this->_theme);
     }
 }

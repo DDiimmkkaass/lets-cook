@@ -37,7 +37,7 @@ class Banner extends Model
      */
     public function items()
     {
-        return $this->hasMany(BannerItem::class, 'banner_id')->positionSorted();
+        return $this->hasMany(BannerItem::class, 'banner_id')->with('translations')->positionSorted();
     }
 
     /**

@@ -4,7 +4,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            {!! Form::open(array('enctype'=>'multipart/form-data', 'route' => 'admin.group.store', 'role' => 'form')) !!}
+            {!! Form::open(['route' => 'admin.group.store', 'role' => 'form']) !!}
 
                 @include('views.group.partials._form')
 

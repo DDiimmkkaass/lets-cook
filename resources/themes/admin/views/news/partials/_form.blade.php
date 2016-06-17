@@ -26,7 +26,7 @@
             <div class="tab-content">
                 @foreach (config('app.locales') as $key => $locale)
                     <div class="tab-pane fade in @if ($key == 0) active @endif" id="tab_{!! $locale !!}">
-                        @include('views.news.tabs.locale', array('errors' => $errors, 'model' => $model , 'locale' => $locale))
+                        @include('views.news.tabs.locale', ['errors' => $errors, 'model' => $model , 'locale' => $locale])
                     </div>
                 @endforeach
 
@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="tab-pane" id="tags">
-                    @include('article.tabs.tags')
+                    @include('news.tabs.tags')
                 </div>
             </div>
         </div>

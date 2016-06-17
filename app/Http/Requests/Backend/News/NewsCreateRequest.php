@@ -24,13 +24,11 @@ class NewsCreateRequest extends FormRequest
      */
     public function rules()
     {
-        $regex = '/^.*\.('.implode('|', config('image.allowed_image_extension')).')$/';
-
         $rules = [
             'status'     => 'required|boolean',
             'slug'       => 'unique:pages,slug',
             'position'   => 'required|integer',
-            'image'      => ['regex:'.$regex],
+            'image'      => ['regex:'.$this->image_regex],
             'publish_at' => 'date_format:d-m-Y',
         ];
 

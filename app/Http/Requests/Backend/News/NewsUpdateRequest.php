@@ -26,13 +26,11 @@ class NewsUpdateRequest extends FormRequest
     {
         $id = $this->route()->parameter('news');
 
-        $regex = '/^.*\.('.implode('|', config('image.allowed_image_extension')).')$/';
-
         $rules = [
             'status'     => 'required|boolean',
             'slug'       => 'unique:news,slug,'.$id.',id',
             'position'   => 'required|integer',
-            'image'      => ['regex:'.$regex],
+            'image'      => ['regex:'.$this->image_regex],
             'publish_at' => 'date_format:d-m-Y',
         ];
 

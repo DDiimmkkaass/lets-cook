@@ -8,23 +8,13 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App;
 use App\Http\Controllers\BaseController;
-use App\Models\Participant;
-use App\Models\Training;
-use App\Models\TrainingParticipant;
-use App\Models\User;
-use File;
 use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use JavaScript;
 use Lang;
 use Meta;
-use Redirect;
-use Request;
-use Response;
 use Sentry;
-use View;
 
 /**
  * Class BackendController
@@ -44,11 +34,6 @@ class BackendController extends BaseController
     public $module = "";
 
     /**
-     * @var int
-     */
-    public $paginator_count = 10;
-
-    /**
      * Карта доступа к методам.
      * Пара метод => права доступа
      * Ключ all - права доступа ков сем методам класса
@@ -63,7 +48,7 @@ class BackendController extends BaseController
     {
         parent::__construct();
 
-        App::setLocale('ru');
+        app()->setLocale('ru');
 
         $this->response = $response;
 
@@ -82,7 +67,6 @@ class BackendController extends BaseController
      */
     public function callAction($method, $parameters)
     {
-
         if (!empty($this->user)) {
 
             $permission = array_get($this->accessMap, $method, false);
@@ -106,17 +90,6 @@ class BackendController extends BaseController
     }
 
     /**
-     * @param $permission
-     *
-     * @return bool
-     */
-    public function isActionAllowed($permission)
-    {
-
-        return $this->user->hasAccess($permission);
-    }
-
-    /**
      * @param      $permission
      * @param bool $verbose
      *
@@ -124,17 +97,16 @@ class BackendController extends BaseController
      */
     public function protect($permission, $verbose = true)
     {
-
         if (!$this->isActionAllowed($permission)) {
             $message = trans('messages.access not allowed');
 
-            if (Request::ajax()) {
-                return Response::json(['message' => $message, 'status' => 'warning']);
+            if (request()->ajax()) {
+                return response()->json(['message' => $message, 'status' => 'warning']);
             } else {
                 if ($verbose) {
                     FlashMessages::add('warning', $message);
 
-                    return Redirect::route('admin.home');
+                    return redirect()->route('admin.home');
                 }
 
                 return false;
@@ -142,6 +114,16 @@ class BackendController extends BaseController
         }
 
         return true;
+    }
+
+    /**
+     * @param $permission
+     *
+     * @return bool
+     */
+    public function isActionAllowed($permission)
+    {
+        return $this->user->hasAccess($permission);
     }
 
     /**
@@ -174,20 +156,19 @@ class BackendController extends BaseController
 
         $this->data("module", $this->module);
 
-        View::share("user", $this->user);
-        View::share("user_info", $this->user ? $this->user->info()->first() : null);
+        view()->share("user", $this->user);
 
-        View::share('lang', Lang::getLocale());
+        view()->share('lang', Lang::getLocale());
 
-        View::share('currency', trans('labels.grn'));
+        view()->share('currency', trans('labels.grn'));
 
-        View::share('elfinder_link_name', 'link');
+        view()->share('elfinder_link_name', 'link');
 
         $upload_max_filesize = (int) ini_get("upload_max_filesize") * 1024 * 1024;
-        View::share('upload_max_filesize', $upload_max_filesize);
+        view()->share('upload_max_filesize', $upload_max_filesize);
 
         $no_image = '/assets/themes/admin/img/no_image.png';
-        View::share('no_image', $no_image);
+        view()->share('no_image', $no_image);
 
         JavaScript::put(
             [

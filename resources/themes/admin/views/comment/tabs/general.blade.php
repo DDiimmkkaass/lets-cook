@@ -7,7 +7,7 @@
 </div>
 
 <div class="form-group required @if ($errors->has('status')) has-error @endif">
-    {!! Form::label('status', trans('labels.status'), array('class' => 'control-label col-xs-4 col-sm-3 col-md-2')) !!}
+    {!! Form::label('status', trans('labels.status'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
         {!! Form::select('status', ['1' => trans('labels.status_on'), '0' => trans('labels.status_off')], null, ['class' => 'form-control select2 input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
@@ -17,7 +17,7 @@
 </div>
 
 <div class="form-group required @if ($errors->has('comment')) has-error @endif">
-    {!! Form::label('comment', trans('labels.comment'), array('class' => 'control-label col-xs-4 col-sm-3 col-md-2')) !!}
+    {!! Form::label('comment', trans('labels.comment'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-6 col-md-6">
         {!! Form::textarea('comment', null, ['class' => 'form-control input-sm']) !!}

@@ -63,7 +63,7 @@ class BannerController extends BackendController
     {
         parent::__construct($response);
 
-        $this->breadcrumbs(trans('labels.banners'), route('admin.banner.index'));
+        $this->breadcrumbs(trans('labels.banners'), route('admin.'.$this->module.'.index'));
 
         Meta::title(trans('labels.banners'));
     }
@@ -125,7 +125,7 @@ class BannerController extends BackendController
         $this->data('page_title', trans('labels.banners'));
         $this->breadcrumbs(trans('labels.banners_list'));
 
-        return $this->render('views.banner.index');
+        return $this->render('views.'.$this->module.'.index');
     }
 
     /**
@@ -151,7 +151,7 @@ class BannerController extends BackendController
 
         $this->_fillAdditionalTemplateData();
 
-        return $this->render('banner.create');
+        return $this->render('views.'.$this->module.'.create');
     }
 
     /**
@@ -167,9 +167,7 @@ class BannerController extends BackendController
         DB::beginTransaction();
 
         try {
-            $input = $request->all();
-
-            $model = new Banner($input);
+            $model = new Banner($request->all());
             $model->save();
 
             $this->_processItems($model);
@@ -178,13 +176,13 @@ class BannerController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.banner.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
 
             FlashMessages::add('error', trans('messages.save_failed'));
 
-            return Redirect::back()->withInput();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -206,11 +204,11 @@ class BannerController extends BackendController
 
             $this->breadcrumbs(trans('labels.banner_editing'));
 
-            return $this->render('views.banner.edit', compact('model'));
+            return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.banner.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
     }
 
@@ -238,17 +236,17 @@ class BannerController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.banner.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.banner.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
 
-            FlashMessages::add("error", trans('messages.update_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.update_error'));
 
-            return Redirect::back()->withInput();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -270,10 +268,10 @@ class BannerController extends BackendController
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
-            FlashMessages::add("error", trans('messages.delete_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.delete_error'));
         }
 
-        return Redirect::route('admin.banner.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 
     /**

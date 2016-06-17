@@ -19,7 +19,6 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Meta;
-use Redirect;
 use Response;
 
 /**
@@ -62,7 +61,7 @@ class CommentController extends BackendController
 
         Meta::title(trans('labels.comments'));
 
-        $this->breadcrumbs(trans('labels.comments'), route('admin.comment.index'));
+        $this->breadcrumbs(trans('labels.comments'), route('admin.'.$this->module.'.index'));
     }
 
     /**
@@ -163,7 +162,7 @@ class CommentController extends BackendController
         $this->data('page_title', trans('labels.comments'));
         $this->breadcrumbs(trans('labels.comments_list'));
 
-        return $this->render('views.comment.index');
+        return $this->render('views.'.$this->module.'.index');
     }
 
     /**
@@ -196,11 +195,11 @@ class CommentController extends BackendController
 
             $this->breadcrumbs(trans('labels.comment_editing'));
 
-            return $this->render('views.comment.edit', compact('model'));
+            return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.comment.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
     }
 
@@ -227,17 +226,17 @@ class CommentController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.comment.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.comment.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
 
-            FlashMessages::add("error", trans('messages.update_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.update_error'));
 
-            return Redirect::back()->withInput($input);
+            return redirect()->back()->withInput();
         }
     }
 
@@ -262,9 +261,9 @@ class CommentController extends BackendController
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
-            FlashMessages::add("error", trans('messages.delete_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.delete_error'));
         }
 
-        return Redirect::route('admin.comment.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 }

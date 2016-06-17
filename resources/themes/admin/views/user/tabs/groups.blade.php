@@ -5,7 +5,7 @@
                 {!! Form::checkbox('groups['.$key.']', $key,
                 !empty($user_groups) ? in_array($key, $user_groups) :
                     Request::old('groups['.$key.']') ?: false,
-                array('class' => 'square')) !!}
+                ['class' => 'square']) !!}
 
                 <span class="title">{!! $group_name !!}</span>
             </label>

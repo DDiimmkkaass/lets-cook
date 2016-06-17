@@ -1,9 +1,9 @@
 @extends('layouts.master')
 
 @section('main')
-    @include('partials.navigation', array( 'user' => $user ))
+    @include('partials.navigation')
 
-    @include('partials.sidebar', array( 'user' => $user ))
+    @include('partials.sidebar')
 
     <div class="content-wrapper">
         @include('partials.content_header')

@@ -19,11 +19,6 @@ class UserInfoRequest extends FormRequest
 {
 
     /**
-     * @var array
-     */
-    protected $dontFlash = ['imageUpload'];
-
-    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -31,10 +26,10 @@ class UserInfoRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'     => 'required',
-            'birthday' => 'date_format:d-m-Y',
-            'phone'    => 'string|regex:/^\+[0-9]+$/|max:17|min:' . config('user.min_phone_length'),
-            'gender'   => 'in:' . implode(',', UserInfo::$genders)
+            'full_name' => 'required',
+            'birthday'  => 'date_format:d-m-Y',
+            'phone'     => 'string|regex:/^\+[0-9]+$/|max:17|min:'.config('user.min_phone_length'),
+            'gender'    => 'in:'.implode(',', UserInfo::$genders),
         ];
     }
 }

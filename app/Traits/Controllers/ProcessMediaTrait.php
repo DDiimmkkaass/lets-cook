@@ -42,9 +42,9 @@ trait ProcessMediaTrait
     private function _removeExists($type)
     {
 
-        $array = 'remove'.str_plural(mb_convert_case($type, MB_CASE_TITLE, "UTF-8"));
+        $array = str_plural($type).'.remove';
 
-        $list = Input::get($array, []);
+        $list = request($array, []);
 
         if (sizeof($list)) {
             foreach ($list as $id) {
@@ -67,7 +67,7 @@ trait ProcessMediaTrait
     {
         $array = str_plural($type).'.old';
 
-        $data = Input::get($array, []);
+        $data = request($array, []);
 
         if (sizeof($data)) {
             foreach ($data as $key => $val) {
@@ -93,7 +93,7 @@ trait ProcessMediaTrait
     {
         $array = str_plural($type).'.new';
 
-        $data = Input::get($array, []);
+        $data = request($array, []);
 
         if (sizeof($data)) {
             foreach ($data as $val) {

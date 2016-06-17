@@ -13,8 +13,10 @@ Collective\Html\FormBuilder::macro(
         if (isset($params['data-target-input'])) {
             $target_input = $params['data-target-input'];
             unset($params['data-target-input']);
-        } else {
+        } elseif (!empty($name)) {
             $target_input = '[name=\''.$name.'\']';
+        } else {
+            $target_input = '[name=\''.$params['data-name'].'\']';
         }
 
         if (isset($params['elfinder-link-name'])) {

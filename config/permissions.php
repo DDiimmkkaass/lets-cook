@@ -75,7 +75,12 @@ return array (
     'variable.read',
     'variable.write',
     'variable.delete',
-    
+
+    'comment.create',
+    'comment.read',
+    'comment.write',
+    'comment.delete',
+
     'translation.read',
     'translation.write',
 

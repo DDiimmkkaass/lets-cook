@@ -64,7 +64,7 @@ class TextWidgetController extends BackendController
 
         Meta::title(trans('labels.text_widgets'));
 
-        $this->breadcrumbs(trans('labels.text_widgets'), route('admin.text_widget.index'));
+        $this->breadcrumbs(trans('labels.text_widgets'), route('admin.'.$this->module.'.index'));
     }
 
     /**
@@ -126,7 +126,7 @@ class TextWidgetController extends BackendController
         $this->data('page_title', trans('labels.text_widgets'));
         $this->breadcrumbs(trans('labels.text_widgets_list'));
 
-        return $this->render('views.text_widget.index');
+        return $this->render('views.'.$this->module.'.index');
     }
 
     /**
@@ -143,7 +143,7 @@ class TextWidgetController extends BackendController
 
         $this->breadcrumbs(trans('labels.text_widget_creating'));
 
-        return $this->render('views.text_widget.create');
+        return $this->render('views.'.$this->module.'.create');
     }
 
     /**
@@ -156,21 +156,18 @@ class TextWidgetController extends BackendController
      */
     public function store(TextWidgetRequest $request)
     {
-        $input = $request->all();
-
         try {
-            $model = new TextWidget();
-            $model->fill($input);
+            $model = new TextWidget($request->all());
 
             $model->save();
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.text_widget.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.save_failed'));
 
-            return Redirect::back()->withInput();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -199,17 +196,17 @@ class TextWidgetController extends BackendController
     {
         try {
             $model = TextWidget::findOrFail($id);
+
+            $this->data('page_title', '"'.$model->title.'"');
+
+            $this->breadcrumbs(trans('labels.text_widget_editing'));
+
+            return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.text_widget.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
-
-        $this->data('page_title', '"'.$model->title.'"');
-
-        $this->breadcrumbs(trans('labels.text_widget_editing'));
-
-        return $this->render('views.text_widget.edit', compact('model'));
     }
 
     /**
@@ -225,24 +222,20 @@ class TextWidgetController extends BackendController
     {
         try {
             $model = TextWidget::findOrFail($id);
-        } catch (ModelNotFoundException $e) {
-            FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.text_widget.index');
-        }
-
-        $input = $request->all();
-
-        try {
-            $model->update($input);
+            $model->update($request->all());
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.text_widget.index');
-        } catch (Exception $e) {
-            FlashMessages::add("error", trans('messages.update_error').': '.$e->getMessage());
+            return redirect()->route('admin.'.$this->module.'.index');
+        } catch (ModelNotFoundException $e) {
+            FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::back()->withInput($input);
+            return redirect()->route('admin.'.$this->module.'.index');
+        } catch (Exception $e) {
+            FlashMessages::add("error", trans('messages.update_error'));
+
+            return redirect()->back()->withInput();
         }
     }
 
@@ -265,9 +258,9 @@ class TextWidgetController extends BackendController
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
-            FlashMessages::add("error", trans('messages.delete_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.delete_error'));
         }
 
-        return Redirect::route('admin.text_widget.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 }

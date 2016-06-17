@@ -1,7 +1,7 @@
-{!! Form::open(array("route" => array("admin." . $type . ".destroy", $model->id), "method" => "delete", 'class' => 'pull-left')) !!}
+{!! Form::open(["route" => ["admin." . $type . ".destroy", $model->id], "method" => "delete", 'class' => 'pull-left']) !!}
 
     @if ($user->hasAccess((isset($access) ? $access : $type).'.read'))
-        <a class="btn btn-info btn-sm btn-flat" href="{!! route('admin.' . $type . '.edit', array($model->id)) !!}"
+        <a class="btn btn-info btn-sm btn-flat" href="{!! route('admin.' . $type . '.edit', [$model->id]) !!}"
            title="{!! trans('labels.edit') !!}">
             <i class="fa fa-pencil"></i>
         </a>&nbsp;

@@ -4,7 +4,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            {!! Form::open(array('route' => ['admin.user.new_password.post', $model->id], 'class' => 'form-horizontal', 'method'=>'post')) !!}
+            {!! Form::open(['route' => ['admin.user.new_password.post', $model->id], 'class' => 'form-horizontal', 'method'=>'post']) !!}
 
                 @include('user.partials._buttons', ['without_password_change' => true, 'class' => 'buttons-top', 'back_url' => route('admin.user.edit', $model->id)])
 

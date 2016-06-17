@@ -37,7 +37,7 @@ class Menu extends Model
      */
     public function items()
     {
-        return $this->hasMany(MenuItem::class, 'menu_id')->positionSorted();
+        return $this->hasMany(MenuItem::class, 'menu_id')->with('translations')->positionSorted();
     }
 
     /**

@@ -32,7 +32,7 @@ class UserInfo extends Eloquent
      */
     protected $fillable = [
         'user_id',
-        'name',
+        'full_name',
         'phone',
         'gender',
         'birthday',

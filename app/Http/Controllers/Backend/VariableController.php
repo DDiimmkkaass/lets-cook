@@ -108,7 +108,7 @@ class VariableController extends BackendController
         $this->data('page_title', trans('labels.variables'));
         $this->breadcrumbs(trans('labels.variables_list'));
 
-        return $this->render('views.variable.index');
+        return $this->render('views.'.$this->module.'.index');
     }
 
     public function indexValues()
@@ -120,7 +120,7 @@ class VariableController extends BackendController
 
         $this->data('list', $list);
 
-        return $this->render('views.variable.index_values');
+        return $this->render('views.'.$this->module.'.index_values');
     }
 
     /**
@@ -139,7 +139,7 @@ class VariableController extends BackendController
 
         $this->_fillAdditionTemplateData();
 
-        return $this->render('views.variable.create');
+        return $this->render('views.'.$this->module.'.create');
     }
 
     /**
@@ -159,11 +159,11 @@ class VariableController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.variable.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.save_failed'));
 
-            return Redirect::back()->withInput();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -196,11 +196,11 @@ class VariableController extends BackendController
 
             $this->_fillAdditionTemplateData();
 
-            return $this->render('views.variable.edit', compact('model'));
+            return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.variable.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
     }
 
@@ -224,14 +224,14 @@ class VariableController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.variable.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
-            FlashMessages::add("error", trans('messages.update_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.update_error'));
         }
 
-        return Redirect::back();
+        return redirect()->back();
     }
 
     /**
@@ -256,7 +256,7 @@ class VariableController extends BackendController
         } catch (ModelNotFoundException $e) {
             $message = trans('messages.record_not_found');
         } catch (Exception $e) {
-            $message = trans('messages.update_error').': '.$e->getMessage();
+            $message = trans('messages.update_error');
         }
 
         return [
@@ -286,10 +286,10 @@ class VariableController extends BackendController
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
-            FlashMessages::add("error", trans('messages.delete_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.delete_error'));
         }
 
-        return Redirect::route('admin.variable.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 
     /**

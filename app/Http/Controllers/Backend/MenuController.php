@@ -58,7 +58,7 @@ class MenuController extends BackendController
     {
         parent::__construct($response);
 
-        $this->breadcrumbs(trans('labels.menus'), route('admin.menu.index'));
+        $this->breadcrumbs(trans('labels.menus'), route('admin.'.$this->module.'.index'));
 
         Meta::title(trans('labels.menu'));
     }
@@ -121,7 +121,7 @@ class MenuController extends BackendController
         $this->data('page_title', trans('labels.menus'));
         $this->breadcrumbs(trans('labels.menus_list'));
 
-        return $this->render('views.menu.index');
+        return $this->render('views.'.$this->module.'.index');
     }
 
     /**
@@ -163,9 +163,7 @@ class MenuController extends BackendController
         DB::beginTransaction();
 
         try {
-            $input = $request->all();
-
-            $model = new Menu($input);
+            $model = new Menu($request->all());
             $model->save();
 
             $this->_processItems($model);
@@ -174,13 +172,13 @@ class MenuController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.menu.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
 
             FlashMessages::add('error', trans('messages.save_failed'));
 
-            return Redirect::back()->withInput();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -202,11 +200,11 @@ class MenuController extends BackendController
 
             $this->breadcrumbs(trans('labels.menu_editing'));
 
-            return $this->render('views.menu.edit', compact('model'));
+            return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.menu.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
     }
 
@@ -234,17 +232,17 @@ class MenuController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.menu.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.menu.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
 
-            FlashMessages::add("error", trans('messages.update_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.update_error'));
 
-            return Redirect::back()->withInput();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -266,10 +264,10 @@ class MenuController extends BackendController
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
-            FlashMessages::add("error", trans('messages.delete_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.delete_error'));
         }
 
-        return Redirect::route('admin.menu.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 
     /**

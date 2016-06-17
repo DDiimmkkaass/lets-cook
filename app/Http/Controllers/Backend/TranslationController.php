@@ -84,7 +84,7 @@ class TranslationController extends BackendController
                 config('translation.per_page'),
                 $page,
                 [
-                    'path'  => route('admin.translation.index', $group),
+                    'path'  => route('admin.'.$this->module.'.index', $group),
                     'query' => [],
                 ]
             );
@@ -99,7 +99,7 @@ class TranslationController extends BackendController
 
             request()->flush();
 
-            return $this->render('views.translation.index');
+            return $this->render('views.'.$this->module.'.index');
         } catch (TranslationOfGroupNotAllowed $e) {
             FlashMessages::add('error', trans('messages.you can\\\'t edit this translations group'));
         } catch (Exception $e) {
@@ -138,7 +138,7 @@ class TranslationController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return redirect(route('admin.translation.index', $group, ['page' => request('page', 1)]));
+            return redirect(route('admin.'.$this->module.'.index', $group, ['page' => request('page', 1)]));
         } catch (TranslationOfGroupNotAllowed $e) {
             FlashMessages::add('error', trans('messages.you can\'t edit this translations group'));
         } catch (Exception $e) {
@@ -153,13 +153,7 @@ class TranslationController extends BackendController
      */
     public function getExistsLocales()
     {
-        $locales = File::directories(app()->langPath());
-
-        foreach ($locales as $key => $locale) {
-            $locale = explode('/', $locale);
-
-            $this->locales[$key] = array_pop($locale);
-        }
+        $this->locales = config('app.locales');
     }
 
     /**

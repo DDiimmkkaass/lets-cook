@@ -59,7 +59,7 @@ class GroupController extends BackendController
 
         Meta::title(trans('labels.groups'));
 
-        $this->breadcrumbs(trans('labels.groups'), route('admin.group.index'));
+        $this->breadcrumbs(trans('labels.groups'), route('admin.'.$this->module.'.index'));
     }
 
     /**
@@ -93,7 +93,7 @@ class GroupController extends BackendController
 
         $this->data('page_title', trans('labels.groups_list'));
 
-        return $this->render('views.group.index');
+        return $this->render('views.'.$this->module.'.index');
     }
 
     /**
@@ -113,7 +113,7 @@ class GroupController extends BackendController
 
         $this->_fillAdditionTemplateData();
 
-        return $this->render('views.group.create');
+        return $this->render('views.'.$this->module.'.create');
     }
 
     /**
@@ -133,7 +133,7 @@ class GroupController extends BackendController
 
         FlashMessages::add('success', trans('messages.save_ok'));
 
-        return Redirect::route('admin.group.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 
     /**
@@ -158,26 +158,25 @@ class GroupController extends BackendController
     public function edit($id)
     {
         try {
-            // Find the group using the group id
             $group = Sentry::findGroupById($id);
-            // Get the group permissions
+
             $groupPermissions = $group->getPermissions();
+
+            $this->data('model', $group);
+
+            $permissions = $this->permissions->loadAndCombine($groupPermissions);
+            $this->data('permissions', $permissions);
+
+            $this->_fillAdditionTemplateData();
+
+            $this->data('page_title', trans('labels.group_edit').' "'.$group->name.'"');
+
+            return $this->render('views.'.$this->module.'.edit');
         } catch (GroupNotFoundException $e) {
             FlashMessages::add("error", trans('messages.record_not_found'));
 
-            return Redirect::route('admin.group.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
-
-        $this->data('model', $group);
-
-        $permissions = $this->permissions->loadAndCombine($groupPermissions);
-        $this->data('permissions', $permissions);
-
-        $this->_fillAdditionTemplateData();
-
-        $this->data('page_title', trans('labels.group_edit').' "'.$group->name.'"');
-
-        return $this->render('views.group.edit');
     }
 
     /**
@@ -201,15 +200,15 @@ class GroupController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.group.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (ModelNotFoundException $e) {
             FlashMessages::add("error", trans('messages.record_not_found'));
 
-            return Redirect::route('admin.group.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             FlashMessages::add("error", trans('messages.save_failed').' '.$e->getMessage());
 
-            return Redirect::back()->withInput();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -223,10 +222,8 @@ class GroupController extends BackendController
     public function destroy($id)
     {
         try {
-            // Find the group using the group id
             $group = Sentry::findGroupById($id);
 
-            // Delete the group
             $group->delete();
         } catch (GroupNotFoundException $e) {
             FlashMessages::add("error", trans('messages.record_not_found'));
@@ -234,7 +231,7 @@ class GroupController extends BackendController
 
         FlashMessages::add('success', trans('messages.delete_success'));
 
-        return Redirect::route('admin.group.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 
     /**

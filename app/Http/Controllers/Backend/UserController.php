@@ -76,13 +76,15 @@ class UserController extends BackendController
 
         Meta::title(trans('labels.users'));
 
-        $this->breadcrumbs(trans('labels.users'), route('admin.user.index'));
+        $this->breadcrumbs(trans('labels.users'), route('admin.'.$this->module.'.index'));
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Response
      */
     public function index(Request $request)
     {
@@ -90,7 +92,7 @@ class UserController extends BackendController
             $list = User::with('info')->joinInfo()->select(
                 [
                     'users.id',
-                    'user_info.name',
+                    'user_info.full_name',
                     'email',
                     'user_info.phone',
                     'activated',
@@ -99,9 +101,9 @@ class UserController extends BackendController
 
             return $dataTables = Datatables::of($list)
                 ->filterColumn('users.id', 'where', 'users.id', 'LIKE', '$1')
-                ->filterColumn('user_info.name', 'where', 'user_info.name', 'LIKE', '%$1%')
+                ->filterColumn('full_name', 'where', 'user_info.full_name', 'LIKE', '%$1%')
                 ->filterColumn('email', 'where', 'email', 'LIKE', '%$1%')
-                ->filterColumn('user_info.phone', 'where', 'user_info.phone', 'LIKE', '%$1%')
+                ->filterColumn('phone', 'where', 'user_info.phone', 'LIKE', '%$1%')
                 ->editColumn(
                     'activated',
                     function ($model) {
@@ -130,7 +132,7 @@ class UserController extends BackendController
         $this->data('page_title', trans('labels.users'));
         $this->breadcrumbs(trans('labels.users_list'));
 
-        return $this->render('views.user.index');
+        return $this->render('views.'.$this->module.'.index');
     }
 
     /**
@@ -149,7 +151,7 @@ class UserController extends BackendController
 
         $this->breadcrumbs(trans('labels.user_create'));
 
-        return $this->render('views.user.create');
+        return $this->render('views.'.$this->module.'.create');
     }
 
     /**
@@ -167,7 +169,7 @@ class UserController extends BackendController
         if (!$this->validateImage('avatar')) {
             FlashMessages::add('warning', trans('messages.bad image'));
 
-            return Redirect::back()->withInput($input);
+            return redirect()->back()->withInput($input);
         }
 
         DB::beginTransaction();
@@ -187,13 +189,13 @@ class UserController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.user.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
 
-            FlashMessages::add("error", trans('messages.update_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.update_error'));
 
-            return Redirect::back()->withInput(array_merge($input, $user_info));
+            return redirect()->back()->withInput();
         }
     }
 
@@ -221,21 +223,21 @@ class UserController extends BackendController
     {
         try {
             $model = User::with(['info', 'fields'])->whereId($id)->firstOrFail();
+
+            $this->data('page_title', '"'.$model->getFullName().'"');
+
+            $this->breadcrumbs(trans('labels.user_edit'));
+
+            $this->fillAdditionalTemplateData(__FUNCTION__, $model);
+
+            $this->data('model', $model);
+
+            return $this->render('views.'.$this->module.'.edit');
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.user.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
-
-        $this->data('page_title', '"'.$model->getFullName().'"');
-
-        $this->breadcrumbs(trans('labels.user_edit'));
-
-        $this->fillAdditionalTemplateData(__FUNCTION__, $model);
-
-        $this->data('model', $model);
-
-        return $this->render('views.user.edit');
     }
 
     /**
@@ -251,7 +253,7 @@ class UserController extends BackendController
         if (!$this->user->hasAccess('superuser') && (!$this->user->hasAccess('user.write') || $this->user->id != $id)) {
             FlashMessages::add('warning', trans('messages.you can not update others users'));
 
-            return Redirect::route('admin.user.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
 
         try {
@@ -259,7 +261,7 @@ class UserController extends BackendController
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.user.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
 
         $input = $request->only('email', 'activated');
@@ -268,7 +270,7 @@ class UserController extends BackendController
         if (!$this->validateImage('avatar')) {
             FlashMessages::add('warning', trans('messages.bad image'));
 
-            return Redirect::back()->withInput($input);
+            return redirect()->back()->withInput($input);
         }
 
         DB::beginTransaction();
@@ -287,13 +289,13 @@ class UserController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.user.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
 
-            FlashMessages::add("error", trans('messages.update_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.update_error'));
 
-            return Redirect::back()->withInput(array_merge($input, $user_info));
+            return redirect()->back()->withInput();
         }
     }
 
@@ -314,7 +316,7 @@ class UserController extends BackendController
             FlashMessages::add('error', trans("User was not found."));
         }
 
-        return Redirect::route('admin.user.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 
     /**
@@ -329,14 +331,14 @@ class UserController extends BackendController
         if (!$model) {
             FlashMessages::add('error', trans("messages.record_not_found"));
 
-            return Redirect::route('admin.user.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
 
         $this->data('model', $model);
 
         $this->data('page_title', trans('labels.password_edit'));
 
-        return $this->render('views.user.new_password');
+        return $this->render('views.'.$this->module.'.new_password');
     }
 
     /**
@@ -359,7 +361,7 @@ class UserController extends BackendController
             if ($user->save()) {
                 FlashMessages::add("success", trans("messages.save_ok"));
 
-                return Redirect::route('admin.user.edit', $id);
+                return redirect()->route('admin.'.$this->module.'.edit', $id);
             } else {
                 // User information was not updated
                 FlashMessages::add('error', trans("messages.save_failed"));
@@ -370,7 +372,7 @@ class UserController extends BackendController
             FlashMessages::add('error', trans("messages.record_not_found"));
         }
 
-        return Redirect::back()->withInput();
+        return redirect()->back()->withInput();
     }
 
     /**

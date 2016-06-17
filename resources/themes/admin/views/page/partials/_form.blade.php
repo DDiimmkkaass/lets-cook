@@ -22,7 +22,7 @@
             <div class="tab-content">
                 @foreach (config('app.locales') as $key => $locale)
                     <div class="tab-pane fade in @if ($key == 0) active @endif" id="tab_{!! $locale !!}">
-                        @include('views.page.tabs.locale', array('errors' => $errors, 'model' => $model , 'locale' => $locale))
+                        @include('views.page.tabs.locale')
                     </div>
                 @endforeach
 

@@ -12,7 +12,6 @@ use App\Events\Backend\PageDelete;
 use App\Http\Requests\Backend\Page\PageCreateRequest;
 use App\Http\Requests\Backend\Page\PageUpdateRequest;
 use App\Models\Page;
-use App\Models\User;
 use App\Services\PageService;
 use App\Traits\Controllers\AjaxFieldsChangerTrait;
 use Datatables;
@@ -72,7 +71,7 @@ class PageController extends BackendController
 
         Meta::title(trans('labels.pages'));
 
-        $this->breadcrumbs(trans('labels.pages'), route('admin.page.index'));
+        $this->breadcrumbs(trans('labels.pages'), route('admin.'.$this->module.'.index'));
 
         $this->middleware('slug.set', ['only' => ['store', 'update']]);
     }
@@ -140,12 +139,10 @@ class PageController extends BackendController
                 ->make();
         }
 
-        $this->_fillAdditionTemplateData();
-
         $this->data('page_title', trans('labels.pages'));
         $this->breadcrumbs(trans('labels.pages_list'));
 
-        return $this->render('views.page.index');
+        return $this->render('views.'.$this->module.'.index');
     }
 
     /**
@@ -160,11 +157,11 @@ class PageController extends BackendController
 
         $this->data('model', new Page);
 
-        $this->data('page_title', trans('labels.page_create'));
+        $this->data('page_title', trans('labels.page_creating'));
 
-        $this->breadcrumbs(trans('labels.page_create'));
+        $this->breadcrumbs(trans('labels.page_creating'));
 
-        return $this->render('views.page.create');
+        return $this->render('views.'.$this->module.'.create');
     }
 
     /**
@@ -193,13 +190,13 @@ class PageController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.page.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
 
             FlashMessages::add('error', trans('messages.save_failed'));
 
-            return Redirect::back()->withInput();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -228,19 +225,19 @@ class PageController extends BackendController
     {
         try {
             $model = Page::findOrFail($id);
+
+            $this->data('page_title', '"'.$model->name.'"');
+
+            $this->breadcrumbs(trans('labels.page_editing'));
+
+            $this->_fillAdditionTemplateData($model);
+
+            return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.page.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
-
-        $this->data('page_title', '"'.$model->name.'"');
-
-        $this->breadcrumbs(trans('labels.page_editing'));
-
-        $this->_fillAdditionTemplateData($model);
-
-        return $this->render('views.page.edit', compact('model'));
     }
 
     /**
@@ -259,7 +256,7 @@ class PageController extends BackendController
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.page.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
 
         $input = $request->all();
@@ -270,19 +267,19 @@ class PageController extends BackendController
         try {
             $model->fill($input);
 
-            $model->update();
+            $model->save();
 
             DB::commit();
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.page.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
 
-            FlashMessages::add("error", trans('messages.update_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.update_error'));
 
-            return Redirect::back()->withInput($input);
+            return redirect()->back()->withInput();
         }
     }
 
@@ -310,7 +307,7 @@ class PageController extends BackendController
             FlashMessages::add('error', trans('messages.record_not_found'));
         }
 
-        return Redirect::route('admin.page.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 
     /**

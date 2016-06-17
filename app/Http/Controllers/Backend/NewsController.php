@@ -74,7 +74,7 @@ class NewsController extends BackendController
 
         Meta::title(trans('labels.news'));
 
-        $this->breadcrumbs(trans('labels.news'), route('admin.news.index'));
+        $this->breadcrumbs(trans('labels.news'), route('admin.'.$this->module.'.index'));
 
         $this->middleware('slug.set', ['only' => ['store', 'update']]);
     }
@@ -145,7 +145,7 @@ class NewsController extends BackendController
         $this->data('page_title', trans('labels.news'));
         $this->breadcrumbs(trans('labels.news_list'));
 
-        return $this->render('views.news.index');
+        return $this->render('views.'.$this->module.'.index');
     }
 
     /**
@@ -164,7 +164,7 @@ class NewsController extends BackendController
 
         $this->_fillAdditionTemplateData();
 
-        return $this->render('views.news.create');
+        return $this->render('views.'.$this->module.'.create');
     }
 
     /**
@@ -177,12 +177,10 @@ class NewsController extends BackendController
      */
     public function store(NewsCreateRequest $request)
     {
-        $input = $request->all();
-
         DB::beginTransaction();
 
         try {
-            $model = new News($input);
+            $model = new News($request->all());
             $model->save();
 
             $this->newsService->setExternalUrl($model);
@@ -193,13 +191,13 @@ class NewsController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.news.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
 
             FlashMessages::add('error', trans('messages.save_failed'));
 
-            return Redirect::back()->withInput();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -235,11 +233,11 @@ class NewsController extends BackendController
 
             $this->_fillAdditionTemplateData($model);
 
-            return $this->render('views.news.edit', compact('model'));
+            return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.news.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
     }
 
@@ -257,11 +255,9 @@ class NewsController extends BackendController
         try {
             $model = News::findOrFail($id);
 
-            $input = $request->all();
-
             DB::beginTransaction();
 
-            $model->fill($input);
+            $model->fill($request->all());
             $model->update();
 
             $this->processTags($model);
@@ -270,16 +266,16 @@ class NewsController extends BackendController
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.news.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
             DB::rollBack();
 
-            FlashMessages::add("error", trans('messages.update_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.update_error'));
         }
 
-        return Redirect::back()->withInput($input);
+        return redirect()->back()->withInput();
     }
 
     /**
@@ -305,10 +301,10 @@ class NewsController extends BackendController
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
-            FlashMessages::add("error", trans('messages.delete_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.delete_error'));
         }
 
-        return Redirect::route('admin.news.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 
     /**

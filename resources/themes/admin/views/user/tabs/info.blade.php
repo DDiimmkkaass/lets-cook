@@ -1,11 +1,11 @@
 <div class="tab-pane active" id="settings">
-    <div class="form-group required @if ($errors->has('name')) has-error @endif">
-        {!! Form::label('name', trans('labels.fio'), ['class' => 'col-md-3 control-label']) !!}
+    <div class="form-group required @if ($errors->has('full_name')) has-error @endif">
+        {!! Form::label('full_name', trans('labels.full_name'), ['class' => 'col-md-3 control-label']) !!}
 
         <div class="col-md-5">
-            {!! Form::text('name', null, ['placeholder' => trans('labels.fio'), 'required' => true, 'class' => 'form-control input-sm']) !!}
+            {!! Form::text('full_name', null, ['placeholder' => trans('labels.full_name'), 'required' => true, 'class' => 'form-control input-sm']) !!}
 
-            {!! $errors->first('name', '<p class="help-block error">:message</p>') !!}
+            {!! $errors->first('full_name', '<p class="help-block error">:message</p>') !!}
         </div>
     </div>
 

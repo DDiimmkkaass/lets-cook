@@ -66,7 +66,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
      */
     public function parent()
     {
-        return $this->belongsTo(Page::class, 'parent_id')->with('parent');
+        return $this->belongsTo(Page::class, 'parent_id')->with('translations')->with('parent');
     }
 
     /**
@@ -74,7 +74,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
      */
     public function childs()
     {
-        return $this->hasMany(Page::class, 'parent_id');
+        return $this->hasMany(Page::class, 'parent_id')->with('translations');
     }
 
     /**
@@ -291,11 +291,10 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     public function getMetaImage()
     {
         $img = config('seo.share.'.$this->slug.'.image');
+        $img = empty($img) ?
+            (empty($this->image) ? config('seo.share.default_image') : $this->image) :
+            $img;
 
-        return url(
-            empty($img) ?
-                (empty($this->image) ? config('seo.share.default_image') : $this->image)
-                : $img
-        );
+        return $img ? url($img) : $img;
     }
 }

@@ -5,7 +5,7 @@
 
     @if ($user->hasAccess('comment.write') || $user->hasAccess('comment.create'))
         <div class="col-md-4 pull-right ta-right">
-            {!! Form::submit(trans('labels.save'), array('class' => 'btn btn-success btn-flat')) !!}
+            {!! Form::submit(trans('labels.save'), ['class' => 'btn btn-success btn-flat']) !!}
         </div>
     @endif
 </div>

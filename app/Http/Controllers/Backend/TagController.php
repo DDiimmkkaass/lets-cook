@@ -65,7 +65,7 @@ class TagController extends BackendController
 
         Meta::title(trans('labels.tags'));
 
-        $this->breadcrumbs(trans('labels.tags'), route('admin.tag.index'));
+        $this->breadcrumbs(trans('labels.tags'), route('admin.'.$this->module.'.index'));
 
         $this->middleware('slug.set', ['only' => ['store', 'update']]);
     }
@@ -131,7 +131,7 @@ class TagController extends BackendController
         $this->data('page_title', trans('labels.tags'));
         $this->breadcrumbs(trans('labels.tags_list'));
 
-        return $this->render('views.tag.index');
+        return $this->render('views.'.$this->module.'.index');
     }
 
     /**
@@ -148,7 +148,7 @@ class TagController extends BackendController
 
         $this->breadcrumbs(trans('labels.tag_create'));
 
-        return $this->render('views.tag.create');
+        return $this->render('views.'.$this->module.'.create');
     }
 
     /**
@@ -161,21 +161,18 @@ class TagController extends BackendController
      */
     public function store(TagCreateRequest $request)
     {
-        $input = $request->all();
-
         try {
-            $model = new Tag();
-            $model->fill($input);
+            $model = new Tag($request->all());
 
             $model->save();
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.tag.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.save_failed'));
 
-            return Redirect::back()->withInput();
+            return redirect()->back()->withInput();
         }
     }
 
@@ -204,17 +201,17 @@ class TagController extends BackendController
     {
         try {
             $model = Tag::findOrFail($id);
+
+            $this->data('page_title', '"'.$model->name.'"');
+
+            $this->breadcrumbs(trans('labels.tag_editing'));
+
+            return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.tag.index');
+            return redirect()->route('admin.'.$this->module.'.index');
         }
-
-        $this->data('page_title', '"'.$model->name.'"');
-
-        $this->breadcrumbs(trans('labels.tag_editing'));
-
-        return $this->render('views.tag.edit', compact('model'));
     }
 
     /**
@@ -230,30 +227,20 @@ class TagController extends BackendController
     {
         try {
             $model = Tag::findOrFail($id);
-        } catch (ModelNotFoundException $e) {
-            FlashMessages::add('error', trans('messages.record_not_found'));
 
-            return Redirect::route('admin.tag.index');
-        }
-
-        $input = $request->all();
-
-        DB::beginTransaction();
-
-        try {
-            $model->update($input);
-
-            DB::commit();
+            $model->update($request->all());
 
             FlashMessages::add('success', trans('messages.save_ok'));
 
-            return Redirect::route('admin.tag.index');
+            return redirect()->route('admin.'.$this->module.'.index');
+        } catch (ModelNotFoundException $e) {
+            FlashMessages::add('error', trans('messages.record_not_found'));
+
+            return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
-            DB::rollBack();
+            FlashMessages::add("error", trans('messages.update_error'));
 
-            FlashMessages::add("error", trans('messages.update_error').': '.$e->getMessage());
-
-            return Redirect::back()->withInput($input);
+            return redirect()->back()->withInput();
         }
     }
 
@@ -276,9 +263,9 @@ class TagController extends BackendController
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
-            FlashMessages::add("error", trans('messages.delete_error').': '.$e->getMessage());
+            FlashMessages::add("error", trans('messages.delete_error'));
         }
 
-        return Redirect::route('admin.tag.index');
+        return redirect()->route('admin.'.$this->module.'.index');
     }
 }

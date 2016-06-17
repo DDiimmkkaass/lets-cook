@@ -4,7 +4,7 @@
 
     <div class="row">
         <div class="col-lg-12">
-            {!! Form::model($model, array('enctype'=>'multipart/form-data', 'role' => 'form', 'method' => 'put', 'class' => 'form-horizontal', 'route' => array('admin.page.update', $model->id))) !!}
+            {!! Form::model($model, ['role' => 'form', 'method' => 'put', 'class' => 'form-horizontal', 'route' => ['admin.page.update', $model->id]]) !!}
 
             @include('page.partials._form')
 

@@ -6,7 +6,6 @@ use App\Contracts\FrontLink;
 use App\Traits\Models\FieldableTrait;
 use Carbon;
 use Cartalyst\Sentry\Users\Eloquent\User as SentryUser;
-use Request;
 
 /**
  * Class User
@@ -16,6 +15,11 @@ class User extends SentryUser implements FrontLink
 {
 
     use FieldableTrait;
+
+    /**
+     * @var array
+     */
+    protected $with = ['info'];
 
     /**
      * @var string
@@ -59,14 +63,6 @@ class User extends SentryUser implements FrontLink
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\hasMany
-     */
-    public function articles()
-    {
-        return $this->hasMany(Article::class, 'user_id');
-    }
-
-    /**
      * @param      $q
      */
     public function scopeJoinInfo($q)
@@ -97,13 +93,13 @@ class User extends SentryUser implements FrontLink
     /**
      * @return string
      */
-    public function getNameAttribute()
+    public function getFullNameAttribute()
     {
-        if (empty($this->info->name)) {
+        if (empty($this->info->full_name)) {
             return '';
         }
 
-        return $this->info->name;
+        return $this->info->full_name;
     }
 
     /**
@@ -159,7 +155,7 @@ class User extends SentryUser implements FrontLink
      */
     public function getFullName()
     {
-        return $this->name;
+        return $this->full_name;
     }
 
     /**
@@ -175,7 +171,7 @@ class User extends SentryUser implements FrontLink
      */
     public function updateActivity()
     {
-        $this->ip_address = Request::getClientIp();
+        $this->ip_address = request()->getClientIp();
         $this->last_activity = Carbon::now()->toDateTimeString();
 
         $this->save();
