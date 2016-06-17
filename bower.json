@@ -1,0 +1,31 @@
+{
+  "name": "default",
+  "version": "0.0.1",
+  "authors": [
+    "DDiimmkkaass"
+  ],
+  "license": "GPL",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.1.1",
+    "jquery-ui": "~1.11.4",
+    "bootstrap": "~3.3.2",
+    "bootbox": "~4.2.0",
+    "font-awesome": "*",
+    "ionicons": "*",
+    "bootstrap-switch": "~3.0.0",
+    "datatables": "~1",
+    "sysTranslit": "https://synctranslit.googlecode.com/files/synctranslit_0.0.7.zip",
+    "sly": "https://github.com/darsain/sly/archive/master.zip",
+    "bootstrap-validator": "~0.9",
+    "jquery.inputmask": "3.2.5",
+    "components-font-awesome": "~4.5.0"
+  }
+}

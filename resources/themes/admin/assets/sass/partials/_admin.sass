@@ -1,0 +1,299 @@
+body
+  font-size: 12px
+  padding-bottom: 0!important
+
+.login-block
+  padding-top: 200px
+
+/*flash messages*/
+.message-container
+  position: fixed
+  bottom: 0
+  right: 20px
+  max-width: 400px
+  z-index: 99999
+
+/*grid*/
+.buttons-top
+  margin-bottom: 20px
+
+/*forms*/
+.no-list-styles
+  list-style-type: none!important
+
+.checkbox-label
+  .title
+    margin-left: 5px
+    position: relative
+    top: 2px
+
+.form-group.required
+  label
+    &::after
+      content: ''
+
+span.required
+  color: red
+  position: relative
+  left: 5px
+
+.form-group
+  &.has-error
+    margin-bottom: 30px
+    .select2-selection--single
+      border-color: $red
+    .help-block.error
+      position: absolute
+      white-space: nowrap
+
+textarea,
+textarea.input-sm
+  height: 50px
+
+.help-block.error
+  margin-bottom: 0
+
+/*helpers*/
+.display-block
+  display: block
+
+.position-relative
+  position: relative
+
+.red
+  color: $red
+  &:hover
+    color: $red
+
+.green
+  color: $green
+  &:hover
+    color: $red
+
+.lover-case
+  text-transform: lowercase
+
+.upper-case
+  text-transform: uppercase
+
+.ta-right
+  text-align: right
+
+.text-bold
+  font-weight: bold
+
+.no-margin
+  margin: 0
+
+.margin-top-4
+  margin-top: 4px
+
+.margin-top-5
+  margin-top: 5px
+
+.margin-top-10
+  margin-top: 10px
+
+.margin-right
+  margin-right: 10px
+
+.margin-right-5
+  margin-right: 5px
+
+.margin-right-20
+  margin-right: 20px
+
+.margin-bottom-5
+  margin-bottom: 5px
+
+.margin-bottom-10
+  margin-bottom: 10px
+
+.padding-right-10
+  padding-right: 10px
+
+.text-indent-10
+  text-indent: 10px
+
+.auto-height
+  height: auto!important
+  white-space: normal!important
+
+.nowrap,
+.date-line
+  white-space: nowrap
+
+.pointer
+  cursor: pointer
+
+.form-group.required
+  label
+    position: relative
+    &:after
+      position: absolute
+      right: 5px
+      top: 36%
+      content: "*"
+      width: 5px
+      height: 5px
+      font-size: 8px
+      color: red
+
+#modal
+  .form-group.required
+    label
+      position: relative
+      &:after
+        right: -10px
+        top: 20%
+
+.duplicate
+  display: none
+
+table.duplication
+  .form-group
+    margin-left: 0
+    margin-right: 0
+  .nav-tabs-custom
+    background: transparent
+    box-shadow: none
+
+.coll-actions
+  .action
+    cursor: pointer
+
+/*select 2*/
+.select2-hidden-accessible
+  display: none
+  visibility: hidden
+
+.select2-container--default
+  width: 100%!important
+  max-width: 100%
+  .select2-selection--single
+    height: 30px
+    .select2-selection__rendered
+      line-height: 23px
+      font-size: 12px
+    .select2-selection__arrow
+      height: 24px
+.text-red
+  .select2-selection__rendered
+    color: red!important
+.text-green
+  .select2-selection__rendered
+    color: green!important
+
+
+/*datatable*/
+table.dataTable
+  width: 100%!important
+  tr
+    &.new
+      background: #fff047
+    th:first-child,
+    td:first-child
+      width: 10px !important
+    //th:last-child,
+    //td:last-child
+    //  width: 130px !important
+    th.width-50,
+    td.width-50
+      width: 50px !important
+  .btn
+    margin-bottom: 5px
+  .status-button
+    text-align: center
+
+
+.dataTables_paginate
+  float: right
+
+/*tabs*/
+.nav-tabs-custom > .nav-tabs > li.tab-with-errors
+  border-top-color: $red
+
+/*user fields*/
+.add-field-button-block
+  text-align: center
+
+/*user image*/
+.image-block
+  position: relative
+  text-align: center
+  .preview-image
+    position: relative
+    width: 128px
+    height: 128px
+    img
+      height: 100%
+    input[type='file']
+      position: absolute
+      left: 0
+      top: 0
+      width: 100%
+      height: 100%
+      opacity: 0
+  .image-top-helper
+    font-size: 10px
+    margin-bottom: 10px
+  .remove-image
+    display: inline-block
+    cursor: pointer
+    &:hover
+      text-decoration: dashed
+
+/*menu*/
+.create-label
+  position: relative
+  z-index: 1
+  line-height: 12px
+  padding-top: 3px
+
+.sidebar-menu .treeview-menu > li > a
+  font-size: 12px
+
+/*datapicker*/
+.datepicker.datepicker-dropdown
+  z-index: 9999!important
+
+/*elfinder*/
+.show-elfinder-button
+  cursor: pointer
+
+.ui-widget-content
+  *
+    box-sizing: inherit
+
+/*variables*/
+.variables-table
+  .variable-value-label
+    display: flex
+    align-self: center
+
+  .cke_contents
+    height: 150px!important
+
+/*switcher*/
+.bootstrap-switch
+  border-radius: 0 !important
+  .bootstrap-switch-primary
+    border-radius: 0 !important
+
+/*logo*/
+.logo
+  .logo-link
+    color: #fff
+
+/*front home link*/
+.front-home-link
+  position: absolute
+  top: 0
+  right: 20px
+  cursor: pointer
+
+.sidebar-collapse
+  .front-home-link,
+  .logo-lg,
+  .logo-mini
+    display: none!important

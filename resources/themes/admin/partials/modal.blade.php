@@ -1,0 +1,1 @@
+<div id="modal" class="modal" tabindex="-1" role="dialog"></div>
