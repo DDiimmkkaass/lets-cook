@@ -5,6 +5,7 @@ $router->group(
         $router->group(
             ['middleware' => 'admin.auth'],
             function ($router) {
+                //--standard routes
                 $router->any('/', ['as' => 'admin.home', 'uses' => 'Backend\BackendController@getIndex']);
                 $router->any('/home', 'Backend\BackendController@getIndex');
 
@@ -154,6 +155,11 @@ $router->group(
                     'translation/{group}',
                     ['as' => 'admin.translation.update', 'uses' => 'Backend\TranslationController@update']
                 );
+
+                //--lets cook routes
+
+                //suppliers
+                $router->resource('supplier', 'Backend\SupplierController');
             }
         );
 
