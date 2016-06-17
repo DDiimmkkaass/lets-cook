@@ -94,10 +94,6 @@ class SupplierController extends BackendController
                     }
                 )
                 ->setIndexColumn('id')
-                ->removeColumn('meta_keywords')
-                ->removeColumn('meta_title')
-                ->removeColumn('meta_description')
-                ->removeColumn('translations')
                 ->make();
         }
 
