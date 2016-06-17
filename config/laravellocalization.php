@@ -6,9 +6,7 @@ return [
     // These are sorted by the native name, which is the order you might show them in a language selector.
     // Regional languages are sorted by their base language, so "British English" sorts as "English, British"
     'supportedLocales'        => [
-        'en' => ['name' => 'English', 'script' => 'Latn', 'native' => 'English', 'regional' => 'en_GB'],
         'ru' => ['name' => 'Russian', 'script' => 'Cyrl', 'native' => 'русский', 'regional' => 'ru_RU'],
-        'uk' => ['name' => 'Ukrainian', 'script' => 'Cyrl', 'native' => 'українська', 'regional' => 'uk_UA'],
     ],
 
     // Negotiate for the user locale using the Accept-Language header if it's not defined in the URL?
@@ -21,6 +19,6 @@ return [
     // IMPORTANT - When hideDefaultLocaleInURL is set to true, the unlocalized root is treated as the applications default locale "app.locale".
     // Because of this language negotiation using the Accept-Language header will NEVER occur when hideDefaultLocaleInURL is true.
     //
-    'hideDefaultLocaleInURL'  => false,
+    'hideDefaultLocaleInURL'  => true,
 
 ];

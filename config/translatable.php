@@ -12,8 +12,6 @@ return [
     */
     'locales' => [
         'ru',
-        'uk',
-        'en',
     ],
 
     /*
@@ -63,7 +61,7 @@ return [
     | set it to false.
     |
     */
-    'fallback_locale' => 'en',
+    'fallback_locale' => 'ru',
 
     /*
     |--------------------------------------------------------------------------
