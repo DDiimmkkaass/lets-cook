@@ -8,10 +8,9 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Requests\Backend\Tag\TagCreateRequest;
-use App\Http\Requests\Backend\Tag\TagUpdateRequest;
-use App\Models\Tag;
-use App\Traits\Controllers\AjaxFieldsChangerTrait;
+use App\Http\Requests\Backend\Supplier\SupplierCreateRequest;
+use App\Http\Requests\Backend\Supplier\SupplierUpdateRequest;
+use App\Models\Supplier;
 use Datatables;
 use Exception;
 use FlashMessages;
@@ -22,35 +21,32 @@ use Meta;
 use Response;
 
 /**
- * Class TagController
+ * Class SupplierController
  * @package App\Http\Controllers\Backend
  */
-class TagController extends BackendController
+class SupplierController extends BackendController
 {
-
-    use AjaxFieldsChangerTrait;
 
     /**
      * @var string
      */
-    public $module = "tag";
+    public $module = "supplier";
 
     /**
      * @var array
      */
     public $accessMap = [
-        'index'           => 'tag.read',
-        'create'          => 'tag.create',
-        'store'           => 'tag.create',
-        'show'            => 'tag.read',
-        'edit'            => 'tag.read',
-        'update'          => 'tag.write',
-        'destroy'         => 'tag.delete',
-        'ajaxFieldChange' => 'tag.write',
+        'index'   => 'supplier.read',
+        'create'  => 'supplier.create',
+        'store'   => 'supplier.create',
+        'show'    => 'supplier.read',
+        'edit'    => 'supplier.read',
+        'update'  => 'supplier.write',
+        'destroy' => 'supplier.delete',
     ];
 
     /**
-     * @var Tag
+     * @var Supplier
      */
     public $model;
 
@@ -61,16 +57,14 @@ class TagController extends BackendController
     {
         parent::__construct($response);
 
-        Meta::title(trans('labels.tags'));
+        Meta::title(trans('labels.suppliers'));
 
-        $this->breadcrumbs(trans('labels.tags'), route('admin.'.$this->module.'.index'));
-
-        $this->middleware('slug.set', ['only' => ['store', 'update']]);
+        $this->breadcrumbs(trans('labels.suppliers'), route('admin.'.$this->module.'.index'));
     }
 
     /**
      * Display a listing of the resource.
-     * GET /tag
+     * GET /supplier
      *
      * @param \Illuminate\Http\Request $request
      *
@@ -79,34 +73,15 @@ class TagController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = Tag::withTranslations()
-                ->joinTranslations('tags', 'tag_translations', 'id', 'tag_id')
-                ->select(
-                    'tags.id',
-                    'tag_translations.name',
-                    'status',
-                    'position'
-                );
+            $list = Supplier::select('id', 'name', 'comments', 'priority');
 
             return $dataTables = Datatables::of($list)
-                ->filterColumn('id', 'where', 'tags.id', '=', '$1')
-                ->filterColumn('tag_translations.name', 'where', 'tag_translations.name', 'LIKE', '%$1%')
+                ->filterColumn('id', 'where', 'suppliers.id', '=', '$1')
+                ->filterColumn('name', 'where', 'suppliers.name', 'LIKE', '%$1%')
                 ->editColumn(
-                    'status',
+                    'comments',
                     function ($model) {
-                        return view(
-                            'partials.datatables.toggler',
-                            ['model' => $model, 'type' => $this->module, 'field' => 'status']
-                        )->render();
-                    }
-                )
-                ->editColumn(
-                    'position',
-                    function ($model) {
-                        return view(
-                            'partials.datatables.text_input',
-                            ['model' => $model, 'type' => $this->module, 'field' => 'position']
-                        )->render();
+                        return str_limit($model->comments, 150);
                     }
                 )
                 ->editColumn(
@@ -126,41 +101,41 @@ class TagController extends BackendController
                 ->make();
         }
 
-        $this->data('page_title', trans('labels.tags'));
-        $this->breadcrumbs(trans('labels.tags_list'));
+        $this->data('page_title', trans('labels.suppliers'));
+        $this->breadcrumbs(trans('labels.suppliers_list'));
 
         return $this->render('views.'.$this->module.'.index');
     }
 
     /**
      * Show the form for creating a new resource.
-     * GET /tag/create
+     * GET /supplier/create
      *
      * @return Response
      */
     public function create()
     {
-        $this->data('model', new Tag);
+        $this->data('model', new Supplier);
 
-        $this->data('page_title', trans('labels.tag_create'));
+        $this->data('page_title', trans('labels.supplier_create'));
 
-        $this->breadcrumbs(trans('labels.tag_create'));
+        $this->breadcrumbs(trans('labels.supplier_create'));
 
         return $this->render('views.'.$this->module.'.create');
     }
 
     /**
      * Store a newly created resource in storage.
-     * POST /tag
+     * POST /supplier
      *
-     * @param TagCreateRequest $request
+     * @param SupplierCreateRequest $request
      *
      * @return \Response
      */
-    public function store(TagCreateRequest $request)
+    public function store(SupplierCreateRequest $request)
     {
         try {
-            $model = new Tag($request->all());
+            $model = new Supplier($request->all());
 
             $model->save();
 
@@ -176,7 +151,7 @@ class TagController extends BackendController
 
     /**
      * Display the specified resource.
-     * GET /tag/{id}
+     * GET /supplier/{id}
      *
      * @param  int $id
      *
@@ -189,7 +164,7 @@ class TagController extends BackendController
 
     /**
      * Show the form for editing the specified resource.
-     * GET /tag/{id}/edit
+     * GET /supplier/{id}/edit
      *
      * @param  int $id
      *
@@ -198,11 +173,11 @@ class TagController extends BackendController
     public function edit($id)
     {
         try {
-            $model = Tag::findOrFail($id);
+            $model = Supplier::findOrFail($id);
 
             $this->data('page_title', '"'.$model->name.'"');
 
-            $this->breadcrumbs(trans('labels.tag_editing'));
+            $this->breadcrumbs(trans('labels.supplier_editing'));
 
             return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
@@ -214,17 +189,17 @@ class TagController extends BackendController
 
     /**
      * Update the specified resource in storage.
-     * PUT /tag/{id}
+     * PUT /supplier/{id}
      *
-     * @param  int             $id
-     * @param TagUpdateRequest $request
+     * @param  int                  $id
+     * @param SupplierUpdateRequest $request
      *
      * @return \Response
      */
-    public function update($id, TagUpdateRequest $request)
+    public function update($id, SupplierUpdateRequest $request)
     {
         try {
-            $model = Tag::findOrFail($id);
+            $model = Supplier::findOrFail($id);
 
             $model->update($request->all());
 
@@ -244,7 +219,7 @@ class TagController extends BackendController
 
     /**
      * Remove the specified resource from storage.
-     * DELETE /tag/{id}
+     * DELETE /supplier/{id}
      *
      * @param  int $id
      *
@@ -253,7 +228,7 @@ class TagController extends BackendController
     public function destroy($id)
     {
         try {
-            $model = Tag::findOrFail($id);
+            $model = Supplier::findOrFail($id);
 
             $model->delete();
 

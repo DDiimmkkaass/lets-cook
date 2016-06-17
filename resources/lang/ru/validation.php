@@ -134,5 +134,7 @@ return array (
     'variable_id' => 'переменная',
     'value' => 'значение',
     'multilingual' => 'многоязычность',
+    'priority' => 'приоритет',
+    'comments' => 'комментарии',
   ),
 );

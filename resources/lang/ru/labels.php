@@ -338,4 +338,11 @@ return array (
   'translation_group_front_texts' => 'Тексты',
   'translation_group_front_labels' => 'Тайтлы & лейблы',
   'translation_group_front_messages' => 'Сообщения',
+  'priority' => 'Приоритет',
+  'add_supplier' => 'Добавить поставщика',
+  'page_creating' => 'Создание старницы',
+  'suppliers' => 'Поставщики',
+  'suppliers_list' => 'Список поставщиков',
+  'supplier_create' => 'Создание поставщика',
+  'supplier_editing' => 'Редактирование поставщика',
 );
