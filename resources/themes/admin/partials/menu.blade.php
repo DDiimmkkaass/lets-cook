@@ -31,7 +31,7 @@
             @if ($user->hasAccess('supplier.read'))
                 <li class="{!! active_class('admin.supplier*') !!}">
                     <a href="{!! route('admin.supplier.index') !!}">
-                        <i class="fa fa-file-text"></i>
+                        <i class="fa fa-truck"></i>
                         <span>@lang('labels.suppliers')</span>
 
                         @if ($user->hasAccess('supplier.create'))
@@ -48,12 +48,27 @@
             @if ($user->hasAccess('category.read'))
                 <li class="{!! active_class('admin.category*') !!}">
                     <a href="{!! route('admin.category.index') !!}">
-                        <i class="fa fa-file-text"></i>
+                        <i class="fa fa-sitemap"></i>
                         <span>@lang('labels.categories')</span>
 
                         @if ($user->hasAccess('category.create'))
                             <small class="label create-label pull-right bg-green" title="@lang('labels.add_category')"
                                    data-href="{!! route('admin.category.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+            @if ($user->hasAccess('unit.read'))
+                <li class="{!! active_class('admin.unit*') !!}">
+                    <a href="{!! route('admin.unit.index') !!}">
+                        <i class="fa fa-balance-scale"></i>
+                        <span>@lang('labels.units')</span>
+
+                        @if ($user->hasAccess('unit.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_unit')"
+                                   data-href="{!! route('admin.unit.create') !!}">
                                 <i class="fa fa-plus"></i>
                             </small>
                         @endif

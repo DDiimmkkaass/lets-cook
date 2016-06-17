@@ -86,6 +86,11 @@ return array (
     'category.write',
     'category.delete',
 
+    'unit.create',
+    'unit.read',
+    'unit.write',
+    'unit.delete',
+
 //    'comment.create',
 //    'comment.read',
 //    'comment.write',

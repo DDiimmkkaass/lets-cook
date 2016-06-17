@@ -40,6 +40,7 @@ class DataSeeder extends Seeder
 
             $this->call(_SuppliersSeeder::class);
             $this->call(_CategoriesSeeder::class);
+            $this->call(_UnitsSeeder::class);
 
             Model::reguard();
         }
