@@ -8,13 +8,13 @@
 
 namespace App\Http\Controllers;
 
-use View;
-use Theme;
 use FlashMessages;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as IlluminateBaseController;
+use Theme;
+use View;
 
 /**
  * Class BaseController
@@ -51,6 +51,11 @@ class BaseController extends IlluminateBaseController
      * @var null
      */
     public $messageBag = null;
+
+    /**
+     * @var string
+     */
+    public $currency;
 
     /**
      * Constructor
@@ -126,5 +131,7 @@ class BaseController extends IlluminateBaseController
     private function _init()
     {
         Theme::init($this->_theme);
+
+        $this->currency = trans('labels.rub');
     }
 }

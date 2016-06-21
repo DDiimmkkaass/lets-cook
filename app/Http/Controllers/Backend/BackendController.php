@@ -160,7 +160,7 @@ class BackendController extends BaseController
 
         view()->share('lang', Lang::getLocale());
 
-        view()->share('currency', trans('labels.grn'));
+        view()->share('currency', $this->currency);
 
         view()->share('elfinder_link_name', 'link');
 
@@ -186,6 +186,7 @@ class BackendController extends BaseController
                 'lang_errorEmptyNameField'         => trans('messages.name field not set'),
                 'upload_max_filesize'              => $upload_max_filesize,
                 'elfinderConnectorUrl'             => route('admin.elfinder.connector'),
+                'currency'                         => $this->currency,
             ]
         );
 

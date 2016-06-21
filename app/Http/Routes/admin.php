@@ -172,6 +172,9 @@ $router->group(
 
                 //nutritional_values
                 $router->resource('nutritional_value', 'Backend\NutritionalValueController');
+
+                //ingredients
+                $router->resource('ingredient', 'Backend\IngredientController');
             }
         );
 

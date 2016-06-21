@@ -363,12 +363,27 @@ if (!function_exists('thumb')) {
      */
     function thumb($path = '', $width, $height = null)
     {
+        $thumb = null;
+
+        if (URL::isValidUrl($path)) {
+            return $path;
+        }
+
         $height = $height ? : $width;
         $path = File::exists(public_path($path)) ? $path : false;
 
-        return $path ?
-            url(Thumb::thumb($path, $width, $height)->link()) :
-            'http://www.placehold.it/'.$width.'x'.$height.'/EFEFEF/AAAAAA&text=no+image';
+        if ($path) {
+            $img_info = getimagesize(public_path($path));
+
+            if (!empty($img_info)) {
+                $width = $width <= $img_info[0] ? $width : $img_info[0];
+                $height = $height <= $img_info[1] ? $height : $img_info[1];
+            }
+
+            $thumb = url(Thumb::thumb($path, $width, $height)->link());
+        }
+
+        return $thumb ? : 'http://www.placehold.it/'.$width.'x'.$height.'/EFEFEF/AAAAAA&text=no+image';
     }
 }
 
@@ -611,19 +626,20 @@ if (!function_exists('localize_route')) {
     {
         $locale = $locale ? : app()->getLocale();
         $url = route($name, $parameters, $absolute, $route);
-        
+
         return LaravelLocalization::getLocalizedURL($locale, $url);
     }
 }
 
-if (! function_exists('variable')) {
+if (!function_exists('variable')) {
     /**
      * Get / set the specified variable value.
      *
      * If an array is passed as the key, we will assume you want to set an array of values.
      *
-     * @param  array|string  $key
-     * @param  mixed  $default
+     * @param  array|string $key
+     * @param  mixed        $default
+     *
      * @return mixed
      */
     function variable($key = null, $default = null)
@@ -633,5 +649,19 @@ if (! function_exists('variable')) {
         }
 
         return app('variable')->get($key, $default);
+    }
+}
+
+if (!function_exists('is_front')) {
+    /**
+     * @return bool
+     */
+    function is_front()
+    {
+        if (php_sapi_name() == 'cli') {
+            return false;
+        }
+
+        return request()->segment(1) !== 'admin';
     }
 }

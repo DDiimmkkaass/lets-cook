@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\PositionSortedTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -16,6 +17,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class NutritionalValue extends Model
 {
+
+    use PositionSortedTrait;
 
     /**
      * @var array

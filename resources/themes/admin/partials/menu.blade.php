@@ -105,6 +105,21 @@
                     </a>
                 </li>
             @endif
+            @if ($user->hasAccess('ingredient.read'))
+                <li class="{!! active_class('admin.ingredient*') !!}">
+                    <a href="{!! route('admin.ingredient.index') !!}">
+                        <i class="fa fa-hashtag"></i>
+                        <span>@lang('labels.ingredients')</span>
+
+                        @if ($user->hasAccess('ingredient.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_ingredient')"
+                                   data-href="{!! route('admin.ingredient.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
 
             @if ($user->hasAccess('group') || $user->hasAccess('user.read'))
                 <li class="header">@lang('labels.users')</li>

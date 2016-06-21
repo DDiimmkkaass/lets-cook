@@ -101,6 +101,11 @@ return array (
     'nutritionalvalue.write',
     'nutritionalvalue.delete',
 
+    'ingredient.create',
+    'ingredient.read',
+    'ingredient.write',
+    'ingredient.delete',
+
 //    'comment.create',
 //    'comment.read',
 //    'comment.write',

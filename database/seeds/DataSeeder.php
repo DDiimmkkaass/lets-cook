@@ -43,6 +43,7 @@ class DataSeeder extends Seeder
             $this->call(_UnitsSeeder::class);
             $this->call(_ParametersSeeder::class);
             $this->call(_NutritionalValuesSeeder::class);
+            $this->call(_IngredientsSeeder::class);
             
             Model::reguard();
         }
