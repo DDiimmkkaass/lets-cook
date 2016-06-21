@@ -91,6 +91,11 @@ return array (
     'unit.write',
     'unit.delete',
 
+    'parameter.create',
+    'parameter.read',
+    'parameter.write',
+    'parameter.delete',
+
 //    'comment.create',
 //    'comment.read',
 //    'comment.write',

@@ -75,6 +75,21 @@
                     </a>
                 </li>
             @endif
+            @if ($user->hasAccess('parameter.read'))
+                <li class="{!! active_class('admin.parameter*') !!}">
+                    <a href="{!! route('admin.parameter.index') !!}">
+                        <i class="fa fa-check-square-o"></i>
+                        <span>@lang('labels.parameters')</span>
+
+                        @if ($user->hasAccess('parameter.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_parameter')"
+                                   data-href="{!! route('admin.parameter.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
 
             @if ($user->hasAccess('group') || $user->hasAccess('user.read'))
                 <li class="header">@lang('labels.users')</li>

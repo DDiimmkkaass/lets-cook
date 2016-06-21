@@ -140,8 +140,8 @@ $router->group(
                     'variable/value/update',
                     [
                         'middleware' => ['ajax'],
-                        'as' => 'admin.variable.value.update',
-                        'uses' => 'Backend\VariableController@updateValue'
+                        'as'         => 'admin.variable.value.update',
+                        'uses'       => 'Backend\VariableController@updateValue',
                     ]
                 );
                 $router->resource('variable', 'Backend\VariableController');
@@ -166,6 +166,9 @@ $router->group(
 
                 //units
                 $router->resource('unit', 'Backend\UnitController');
+
+                //parameters
+                $router->resource('parameter', 'Backend\ParameterController');
             }
         );
 
