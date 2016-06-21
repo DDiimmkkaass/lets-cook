@@ -187,7 +187,6 @@ return [
          * Custom Providers
          */
         Collective\Html\HtmlServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Jenssegers\Agent\AgentServiceProvider::class,
         Bllim\Datatables\DatatablesServiceProvider::class,
@@ -203,9 +202,6 @@ return [
         Barryvdh\Elfinder\ElfinderServiceProvider::class,
         Laravelrus\LocalizedCarbon\LocalizedCarbonServiceProvider::class,
         Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider::class,
-
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-        Barryvdh\TranslationManager\ManagerServiceProvider::class,
 
         App\Providers\SearchServiceProvider::class,
         App\Providers\VariableServiceProvider::class,
