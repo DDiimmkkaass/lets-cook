@@ -96,6 +96,11 @@ return array (
     'parameter.write',
     'parameter.delete',
 
+    'nutritionalvalue.create',
+    'nutritionalvalue.read',
+    'nutritionalvalue.write',
+    'nutritionalvalue.delete',
+
 //    'comment.create',
 //    'comment.read',
 //    'comment.write',

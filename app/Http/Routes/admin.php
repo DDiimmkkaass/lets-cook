@@ -169,6 +169,9 @@ $router->group(
 
                 //parameters
                 $router->resource('parameter', 'Backend\ParameterController');
+
+                //nutritional_values
+                $router->resource('nutritional_value', 'Backend\NutritionalValueController');
             }
         );
 

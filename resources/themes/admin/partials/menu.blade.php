@@ -90,6 +90,21 @@
                     </a>
                 </li>
             @endif
+            @if ($user->hasAccess('nutritional_value.read'))
+                <li class="{!! active_class('admin.nutritional_value*') !!}">
+                    <a href="{!! route('admin.nutritional_value.index') !!}">
+                        <i class="fa fa-tachometer"></i>
+                        <span>@lang('labels.nutritional_values')</span>
+
+                        @if ($user->hasAccess('nutritional_value.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_nutritional_value')"
+                                   data-href="{!! route('admin.nutritional_value.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
 
             @if ($user->hasAccess('group') || $user->hasAccess('user.read'))
                 <li class="header">@lang('labels.users')</li>

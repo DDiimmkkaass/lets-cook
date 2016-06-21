@@ -361,4 +361,9 @@ return array (
   'parameters_list' => 'Список доп. параметров',
   'parameter_create' => 'Создание параметра',
   'parameter_editing' => 'Редактирование параметра',
+  'add_nutritional_value' => 'Добавить ед. пищевой ценности',
+  'nutritional_values' => 'Ед. пищевой ценности',
+  'nutritional_values_list' => 'Список ед. пищевой ценности',
+  'nutritional_value_create' => 'Создание ед. пищевой ценности',
+  'nutritional_value_editing' => 'Редактирование ед. пищевой ценности',
 );
