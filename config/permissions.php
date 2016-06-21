@@ -111,8 +111,8 @@ return array (
 //    'comment.write',
 //    'comment.delete',
 
-    'translation.read',
-    'translation.write',
+//    'translation.read',
+//    'translation.write',
 
     'user.create',
     'user.read',
