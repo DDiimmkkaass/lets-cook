@@ -3,8 +3,7 @@ Base imports and vars
 ###
 path = require 'path'
 gulp = require 'gulp'
-sass = require 'gulp-ruby-sass'
-compass = require 'gulp-compass'
+sass = require 'gulp-sass'
 prefix = require 'gulp-autoprefixer'
 util = require 'gulp-util'
 concat = require 'gulp-concat'

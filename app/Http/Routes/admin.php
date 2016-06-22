@@ -140,8 +140,8 @@ $router->group(
                     'variable/value/update',
                     [
                         'middleware' => ['ajax'],
-                        'as' => 'admin.variable.value.update',
-                        'uses' => 'Backend\VariableController@updateValue'
+                        'as'         => 'admin.variable.value.update',
+                        'uses'       => 'Backend\VariableController@updateValue',
                     ]
                 );
                 $router->resource('variable', 'Backend\VariableController');
@@ -163,6 +163,18 @@ $router->group(
 
                 //suppliers
                 $router->resource('category', 'Backend\CategoryController');
+
+                //units
+                $router->resource('unit', 'Backend\UnitController');
+
+                //parameters
+                $router->resource('parameter', 'Backend\ParameterController');
+
+                //nutritional_values
+                $router->resource('nutritional_value', 'Backend\NutritionalValueController');
+
+                //ingredients
+                $router->resource('ingredient', 'Backend\IngredientController');
             }
         );
 

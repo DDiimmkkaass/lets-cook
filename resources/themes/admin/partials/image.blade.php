@@ -7,7 +7,7 @@
 @endif
 
 @if (empty($attributes['height']))
-    <?php $attributes['height'] = 100; ?>
+    <?php $attributes['height'] = $attributes['width']; ?>
 @endif
 
 <img src="{!! thumb($src, $attributes['width'], $attributes['height']) !!}"

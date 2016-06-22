@@ -9,7 +9,7 @@ Collective\Html\FormBuilder::macro(
         } else {
             $image_class = str_replace(['[', ']', '.'], '', $name);
         }
-
+        
         if (isset($params['data-target-input'])) {
             $target_input = $params['data-target-input'];
             unset($params['data-target-input']);
@@ -18,14 +18,14 @@ Collective\Html\FormBuilder::macro(
         } else {
             $target_input = '[name=\''.$params['data-name'].'\']';
         }
-
+        
         if (isset($params['elfinder-link-name'])) {
             $elfinder_link_name = $params['elfinder-link-name'];
             unset($params['elfinder-link-name']);
         } else {
             $elfinder_link_name = "{$name}_replaseme";
         }
-
+        
         $params = array_merge(
             array (
                 'data-related-image' => ".$image_class",
@@ -35,8 +35,8 @@ Collective\Html\FormBuilder::macro(
             ),
             $params
         );
-        $image = Request::old($name) ? Request::old($name) : $image;
-
+        $image = old($name) ? old($name) : $image;
+        
         return view(
             'partials.macroses.image',
             [
@@ -65,7 +65,7 @@ Collective\Html\FormBuilder::macro(
             ),
             $params
         );
-
+        
         return view(
             'partials.macroses.elfinder',
             [

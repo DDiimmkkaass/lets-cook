@@ -31,7 +31,7 @@
             @if ($user->hasAccess('supplier.read'))
                 <li class="{!! active_class('admin.supplier*') !!}">
                     <a href="{!! route('admin.supplier.index') !!}">
-                        <i class="fa fa-file-text"></i>
+                        <i class="fa fa-truck"></i>
                         <span>@lang('labels.suppliers')</span>
 
                         @if ($user->hasAccess('supplier.create'))
@@ -48,12 +48,72 @@
             @if ($user->hasAccess('category.read'))
                 <li class="{!! active_class('admin.category*') !!}">
                     <a href="{!! route('admin.category.index') !!}">
-                        <i class="fa fa-file-text"></i>
+                        <i class="fa fa-sitemap"></i>
                         <span>@lang('labels.categories')</span>
 
                         @if ($user->hasAccess('category.create'))
                             <small class="label create-label pull-right bg-green" title="@lang('labels.add_category')"
                                    data-href="{!! route('admin.category.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+            @if ($user->hasAccess('unit.read'))
+                <li class="{!! active_class('admin.unit*') !!}">
+                    <a href="{!! route('admin.unit.index') !!}">
+                        <i class="fa fa-balance-scale"></i>
+                        <span>@lang('labels.units')</span>
+
+                        @if ($user->hasAccess('unit.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_unit')"
+                                   data-href="{!! route('admin.unit.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+            @if ($user->hasAccess('parameter.read'))
+                <li class="{!! active_class('admin.parameter*') !!}">
+                    <a href="{!! route('admin.parameter.index') !!}">
+                        <i class="fa fa-check-square-o"></i>
+                        <span>@lang('labels.parameters')</span>
+
+                        @if ($user->hasAccess('parameter.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_parameter')"
+                                   data-href="{!! route('admin.parameter.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+            @if ($user->hasAccess('nutritional_value.read'))
+                <li class="{!! active_class('admin.nutritional_value*') !!}">
+                    <a href="{!! route('admin.nutritional_value.index') !!}">
+                        <i class="fa fa-tachometer"></i>
+                        <span>@lang('labels.nutritional_values')</span>
+
+                        @if ($user->hasAccess('nutritional_value.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_nutritional_value')"
+                                   data-href="{!! route('admin.nutritional_value.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+            @if ($user->hasAccess('ingredient.read'))
+                <li class="{!! active_class('admin.ingredient*') !!}">
+                    <a href="{!! route('admin.ingredient.index') !!}">
+                        <i class="fa fa-hashtag"></i>
+                        <span>@lang('labels.ingredients')</span>
+
+                        @if ($user->hasAccess('ingredient.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_ingredient')"
+                                   data-href="{!! route('admin.ingredient.create') !!}">
                                 <i class="fa fa-plus"></i>
                             </small>
                         @endif
@@ -92,26 +152,6 @@
                             </small>
                         @endif
                     </a>
-                </li>
-            @endif
-
-            <li class="header">@lang('labels.settings')</li>
-            @if ($user->hasAccess('settings.translations'))
-                <li class="treeview {!! active_class('admin.translation.index*') !!}">
-                    <a href="#">
-                        <i class="fa fa-language"></i>
-                        <span>@lang('labels.translations')</span>
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </a>
-                    <ul class="treeview-menu">
-                        @foreach($translation_groups as $group)
-                            <li class="{!! front_active_class(route('admin.translation.index', $group)) !!}">
-                                <a href="{!! route('admin.translation.index', $group) !!}">
-                                    <span>@lang('labels.translation_group_' . $group)</span>
-                                </a>
-                            </li>
-                        @endforeach
-                    </ul>
                 </li>
             @endif
         </ul>

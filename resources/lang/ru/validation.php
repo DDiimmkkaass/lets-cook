@@ -136,5 +136,8 @@ return array (
     'multilingual' => 'многоязычность',
     'priority' => 'приоритет',
     'comments' => 'комментарии',
+    'unit_id' => 'единицы измерения',
+    'supplier_id' => 'поставщик',
+    'price' => 'цена',
   ),
 );

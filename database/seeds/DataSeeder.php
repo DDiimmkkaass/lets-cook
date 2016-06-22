@@ -12,22 +12,22 @@ class DataSeeder extends Seeder
      * @var \Faker\Generator
      */
     public $faker;
-
+    
     /**
      * @var array of \Faker\Generator
      */
     public $_fakers;
-
+    
     /**
      * DataSeeder constructor.
      */
     public function __construct()
     {
         $this->faker = Faker\Factory::create();
-
+        
         $this->_fakers = make_locales_fakers();
     }
-
+    
     /**
      * Run the database seeds.
      *
@@ -37,14 +37,18 @@ class DataSeeder extends Seeder
     {
         if (env('APP_ENV') !== 'production') {
             Model::unguard();
-
+            
             $this->call(_SuppliersSeeder::class);
             $this->call(_CategoriesSeeder::class);
-
+            $this->call(_UnitsSeeder::class);
+            $this->call(_ParametersSeeder::class);
+            $this->call(_NutritionalValuesSeeder::class);
+            $this->call(_IngredientsSeeder::class);
+            
             Model::reguard();
         }
     }
-
+    
     /**
      * @return \Faker\Generator
      */

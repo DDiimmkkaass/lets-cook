@@ -86,13 +86,33 @@ return array (
     'category.write',
     'category.delete',
 
+    'unit.create',
+    'unit.read',
+    'unit.write',
+    'unit.delete',
+
+    'parameter.create',
+    'parameter.read',
+    'parameter.write',
+    'parameter.delete',
+
+    'nutritionalvalue.create',
+    'nutritionalvalue.read',
+    'nutritionalvalue.write',
+    'nutritionalvalue.delete',
+
+    'ingredient.create',
+    'ingredient.read',
+    'ingredient.write',
+    'ingredient.delete',
+
 //    'comment.create',
 //    'comment.read',
 //    'comment.write',
 //    'comment.delete',
 
-    'translation.read',
-    'translation.write',
+//    'translation.read',
+//    'translation.write',
 
     'user.create',
     'user.read',
