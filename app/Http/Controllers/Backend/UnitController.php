@@ -73,7 +73,7 @@ class UnitController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = Unit::select('id', 'name', 'position');
+            $list = Unit::with('ingredients')->select('id', 'name', 'position');
 
             return $dataTables = Datatables::of($list)
                 ->filterColumn('id', 'where', 'units.id', '=', '$1')
@@ -83,11 +83,18 @@ class UnitController extends BackendController
                     function ($model) {
                         return view(
                             'partials.datatables.control_buttons',
-                            ['model' => $model, 'type' => $this->module]
+                            [
+                                'model'           => $model,
+                                'type'            => $this->module,
+                                'delete_function' => $model->ingredients->count() ?
+                                    'delete_unit('.$model->id.')' :
+                                    false,
+                            ]
                         )->render();
                     }
                 )
                 ->setIndexColumn('id')
+                ->removeColumn('ingredients')
                 ->make();
         }
 
@@ -181,7 +188,7 @@ class UnitController extends BackendController
      * Update the specified resource in storage.
      * PUT /unit/{id}
      *
-     * @param  int                  $id
+     * @param  int              $id
      * @param UnitUpdateRequest $request
      *
      * @return \Response
@@ -205,6 +212,22 @@ class UnitController extends BackendController
 
             return redirect()->back()->withInput();
         }
+    }
+
+    /**
+     * @param int $unit_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDeleteForm($unit_id)
+    {
+        return response()->json(
+            [
+                'title'   => trans('labels.deleting_record'),
+                'message' => view('views.'.$this->module.'.partials.delete_message', ['unit_id' => $unit_id])
+                    ->render(),
+            ]
+        );
     }
 
     /**

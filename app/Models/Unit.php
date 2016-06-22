@@ -24,4 +24,12 @@ class Unit extends Model
         'name',
         'position',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ingredients()
+    {
+        return $this->hasMany(Ingredient::class);
+    }
 }

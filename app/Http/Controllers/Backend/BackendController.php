@@ -22,41 +22,41 @@ use Sentry;
  */
 class BackendController extends BaseController
 {
-
+    
     /**
      * @var string
      */
     public $_theme = "admin";
-
+    
     /**
      * @var string
      */
     public $module = "";
-
+    
     /**
      * Карта доступа к методам.
      * Пара метод => права доступа
      * Ключ all - права доступа ков сем методам класса
      */
-
+    
     public $accessMap = [];
-
+    
     /**
      * @param \Illuminate\Contracts\Routing\ResponseFactory $response
      */
     function __construct(ResponseFactory $response)
     {
         parent::__construct();
-
+        
         app()->setLocale('ru');
-
+        
         $this->response = $response;
-
+        
         $this->user = Sentry::getUser();
-
+        
         $this->fillThemeData();
     }
-
+    
     /**
      * Call controller with the specified parameters.
      *
@@ -68,27 +68,27 @@ class BackendController extends BaseController
     public function callAction($method, $parameters)
     {
         if (!empty($this->user)) {
-
+            
             $permission = array_get($this->accessMap, $method, false);
-
+            
             // если нет соотв. прав - проверим, может заданы права к абсолютно всем методам
             if (!$permission) {
                 $permission = array_get($this->accessMap, 'all', false);
             }
-
+            
             if ($permission) {
-
+                
                 $protect = $this->protect($permission);
-
+                
                 if ($protect !== true) {
                     return $protect;
                 }
             }
         }
-
+        
         return parent::callAction($method, $parameters);
     }
-
+    
     /**
      * @param      $permission
      * @param bool $verbose
@@ -99,23 +99,23 @@ class BackendController extends BaseController
     {
         if (!$this->isActionAllowed($permission)) {
             $message = trans('messages.access not allowed');
-
+            
             if (request()->ajax()) {
                 return response()->json(['message' => $message, 'status' => 'warning']);
             } else {
                 if ($verbose) {
                     FlashMessages::add('warning', $message);
-
+                    
                     return redirect()->route('admin.home');
                 }
-
+                
                 return false;
             }
         }
-
+        
         return true;
     }
-
+    
     /**
      * @param $permission
      *
@@ -125,7 +125,7 @@ class BackendController extends BaseController
     {
         return $this->user->hasAccess($permission);
     }
-
+    
     /**
      * @return $this
      */
@@ -133,7 +133,7 @@ class BackendController extends BaseController
     {
         return $this->render();
     }
-
+    
     /**
      * @param string $view
      * @param array  $data
@@ -143,33 +143,33 @@ class BackendController extends BaseController
     public function render($view = '', array $data = [])
     {
         $this->data('breadcrumbs', $this->breadcrumbs);
-
+        
         return parent::render($view, $data);
     }
-
+    
     /**
      * fill theme data
      */
     private function fillThemeData()
     {
         Meta::title(config('app.name'));
-
+        
         $this->data("module", $this->module);
-
+        
         view()->share("user", $this->user);
-
+        
         view()->share('lang', Lang::getLocale());
-
+        
         view()->share('currency', $this->currency);
-
+        
         view()->share('elfinder_link_name', 'link');
-
+        
         $upload_max_filesize = (int) ini_get("upload_max_filesize") * 1024 * 1024;
         view()->share('upload_max_filesize', $upload_max_filesize);
-
+        
         $no_image = '/assets/themes/admin/img/no_image.png';
         view()->share('no_image', $no_image);
-
+        
         JavaScript::put(
             [
                 'no_image'                         => $no_image,
@@ -177,6 +177,7 @@ class BackendController extends BaseController
                 'lang_yes'                         => trans('labels.yes'),
                 'lang_save'                        => trans('labels.save'),
                 'lang_cancel'                      => trans('labels.cancel'),
+                'lang_DeletingRecordTitle'         => trans('labels.deleting_record'),
                 'birthday_format'                  => 'dd-mm-yyyy',
                 'lang_errorSelectedFileIsTooLarge' => trans('messages.trying to load is too large file'),
                 'lang_errorIncorrectFileType'      => trans('messages.trying to load unsupported file type'),
@@ -189,7 +190,7 @@ class BackendController extends BaseController
                 'currency'                         => $this->currency,
             ]
         );
-
+        
         view()->share('translation_groups', config('translation.visible_groups'));
     }
 }

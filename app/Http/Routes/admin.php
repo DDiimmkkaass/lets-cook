@@ -159,12 +159,36 @@ $router->group(
                 //--lets cook routes
 
                 //suppliers
+                $router->get(
+                    'supplier/{id}/get-delete-form',
+                    [
+                        'as'         => 'supplier.get_delete_form',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Backend\SupplierController@getDeleteForm',
+                    ]
+                );
                 $router->resource('supplier', 'Backend\SupplierController');
 
-                //suppliers
+                //category
+                $router->get(
+                    'category/{id}/get-delete-form',
+                    [
+                        'as'         => 'category.get_delete_form',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Backend\CategoryController@getDeleteForm',
+                    ]
+                );
                 $router->resource('category', 'Backend\CategoryController');
 
                 //units
+                $router->get(
+                    'unit/{id}/get-delete-form',
+                    [
+                        'as'         => 'unit.get_delete_form',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Backend\UnitController@getDeleteForm',
+                    ]
+                );
                 $router->resource('unit', 'Backend\UnitController');
 
                 //parameters
@@ -174,6 +198,21 @@ $router->group(
                 $router->resource('nutritional_value', 'Backend\NutritionalValueController');
 
                 //ingredients
+                $router->post(
+                    'ingredient/{id}/ajax_field',
+                    array (
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.ingredient.ajax_field',
+                        'uses'       => 'Backend\IngredientController@ajaxFieldChange',
+                    )
+                );
+                $router->get(
+                    'ingredient/incomplete',
+                    [
+                        'as'   => 'admin.ingredient.incomplete',
+                        'uses' => 'Backend\IngredientController@indexIncomplete',
+                    ]
+                );
                 $router->resource('ingredient', 'Backend\IngredientController');
             }
         );

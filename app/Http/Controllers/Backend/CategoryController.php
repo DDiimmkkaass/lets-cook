@@ -49,7 +49,7 @@ class CategoryController extends BackendController
      * @var Category
      */
     public $model;
-
+    
     /**
      * @param \Illuminate\Contracts\Routing\ResponseFactory $response
      */
@@ -73,7 +73,7 @@ class CategoryController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = Category::select('id', 'name', 'position');
+            $list = Category::with('ingredients')->select('id', 'name', 'position');
 
             return $dataTables = Datatables::of($list)
                 ->filterColumn('id', 'where', 'categories.id', '=', '$1')
@@ -83,11 +83,18 @@ class CategoryController extends BackendController
                     function ($model) {
                         return view(
                             'partials.datatables.control_buttons',
-                            ['model' => $model, 'type' => $this->module]
+                            [
+                                'model'           => $model,
+                                'type'            => $this->module,
+                                'delete_function' => $model->ingredients->count() ?
+                                    'delete_category('.$model->id.')' :
+                                    false,
+                            ]
                         )->render();
                     }
                 )
                 ->setIndexColumn('id')
+                ->removeColumn('ingredients')
                 ->make();
         }
 
@@ -107,9 +114,9 @@ class CategoryController extends BackendController
     {
         $this->data('model', new Category);
 
-        $this->data('page_title', trans('labels.category_create'));
+        $this->data('page_title', trans('labels.category_creating'));
 
-        $this->breadcrumbs(trans('labels.category_create'));
+        $this->breadcrumbs(trans('labels.category_creating'));
 
         return $this->render('views.'.$this->module.'.create');
     }
@@ -205,6 +212,22 @@ class CategoryController extends BackendController
 
             return redirect()->back()->withInput();
         }
+    }
+
+    /**
+     * @param int $category_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDeleteForm($category_id)
+    {
+        return response()->json(
+            [
+                'title'   => trans('labels.deleting_record'),
+                'message' => view('views.'.$this->module.'.partials.delete_message', ['category_id' => $category_id])
+                    ->render(),
+            ]
+        );
     }
 
     /**

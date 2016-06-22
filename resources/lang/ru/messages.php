@@ -109,4 +109,8 @@ return array (
   'you can\\\\\\\'t edit this translations group' => 'Вы не можете редактировать эту группу переводов',
   'you can\\\'t edit this translations group' => 'Вы не можете редактировать эту группу переводов',
   'to' => 'до',
+  'after removing some ingredients remain without unit' => 'После удаления некоторые ингредиенты остануться без единиц измерения',
+  'after removing some ingredients remain without supplier' => 'После удаления некоторые ингредиенты остануться без поставщика',
+  'after removing some ingredients remain without category' => 'После удаления некоторые ингредиенты остануться без категории',
+  'your really want to delete this record' => 'Вы действительно хотите удалить ету запись?',
 );

@@ -106,7 +106,7 @@
                 </li>
             @endif
             @if ($user->hasAccess('ingredient.read'))
-                <li class="{!! active_class('admin.ingredient*') !!}">
+                <li class="{!! active_class('admin.ingredient*', 'active', 'admin.ingredient.incomplete*') !!}">
                     <a href="{!! route('admin.ingredient.index') !!}">
                         <i class="fa fa-hashtag"></i>
                         <span>@lang('labels.ingredients')</span>
@@ -117,6 +117,12 @@
                                 <i class="fa fa-plus"></i>
                             </small>
                         @endif
+                    </a>
+                </li>
+                <li class="{!! active_class('admin.ingredient.incomplete*') !!}">
+                    <a href="{!! route('admin.ingredient.incomplete') !!}">
+                        <i class="fa fa-frown-o"></i>
+                        <span>@lang('labels.incomplete_ingredients')</span>
                     </a>
                 </li>
             @endif

@@ -25,4 +25,12 @@ class Supplier extends Model
         'comments',
         'priority',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function ingredients()
+    {
+        return $this->hasMany(Ingredient::class);
+    }
 }

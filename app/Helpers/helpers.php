@@ -86,21 +86,43 @@ if (!function_exists('get_last_query')) {
 
 if (!function_exists('active_class')) {
     /**
-     * @param        $pattern
-     * @param string $class
+     * @param              $pattern
+     * @param string       $class
+     * @param string|array $exclude
      *
      * @return string
      */
-    function active_class($pattern, $class = 'active')
+    function active_class($pattern, $class = 'active', $exclude = '')
     {
         $pattern = str_replace('.', '\.', $pattern);
         if (strpos($pattern, '*')) {
             $pattern = str_replace('*', '', $pattern);
 
-            return route_is("^$pattern") ? $class : '';
+            $result = route_is("^$pattern") ? true : false;
         } else {
-            return route_is("^$pattern$") ? $class : '';
+            $result =route_is("^$pattern$") ? true : false;
         }
+
+        $_result = false;
+
+        if ($exclude) {
+            foreach ((array) $exclude as $_pattern) {
+                $_pattern = str_replace('.', '\.', $_pattern);
+                if (strpos($_pattern, '*')) {
+                    $_pattern = str_replace('*', '', $_pattern);
+
+                    $_result = route_is("^$_pattern") ? true : false;
+                } else {
+                    $_result =route_is("^$_pattern$") ? true : false;
+                }
+
+                if ($_result) {
+                    break;
+                }
+            }
+        }
+
+        return $result && !$_result ? $class : '';
     }
 }
 

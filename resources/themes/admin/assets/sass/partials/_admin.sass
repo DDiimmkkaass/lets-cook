@@ -82,6 +82,12 @@ textarea.input-sm
 .text-bold
   font-weight: bold
 
+.pwidth-50
+  width: 50%!important
+
+.pwidth-70
+  width: 70%!important
+
 .no-margin
   margin: 0
 
@@ -118,6 +124,10 @@ textarea.input-sm
 .text-indent-10
   text-indent: 10px
 
+.full-width-select
+  select
+    width: 100%
+
 .auto-height
   height: auto!important
   white-space: normal!important
@@ -125,6 +135,9 @@ textarea.input-sm
 .nowrap,
 .date-line
   white-space: nowrap
+
+.line-height-28
+  line-height: 28px
 
 .pointer
   cursor: pointer
@@ -192,14 +205,13 @@ table.duplication
 table.dataTable
   width: 100%!important
   tr
+    td
+      vertical-align: middle
     &.new
       background: #fff047
     th:first-child,
     td:first-child
       width: 10px !important
-    //th:last-child,
-    //td:last-child
-    //  width: 130px !important
     th.width-50,
     td.width-50
       width: 50px !important
@@ -207,7 +219,6 @@ table.dataTable
     margin-bottom: 5px
   .status-button
     text-align: center
-
 
 .dataTables_paginate
   float: right

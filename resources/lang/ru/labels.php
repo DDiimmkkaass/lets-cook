@@ -380,4 +380,9 @@ return array (
   'ingredient_creating' => 'Создание ингредиента',
   'tab_additional' => 'Дополнительно',
   'tab_parameters' => 'Параметры',
+  'go_to_ingredients_list' => 'Перейти к списку ингредиентов которые затронет удаление',
+  'view_ingredients_list' => 'Посмотреть список ингредиентов',
+  'category_creating' => 'Создание категрии',
+  'incomplete_ingredients' => 'Ингредиенты с неп. данными',
+  'incomplete_ingredients_list' => 'Список ингредиентов с неполными данными',
 );

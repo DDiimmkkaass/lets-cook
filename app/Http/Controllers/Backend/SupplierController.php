@@ -26,12 +26,12 @@ use Response;
  */
 class SupplierController extends BackendController
 {
-
+    
     /**
      * @var string
      */
     public $module = "supplier";
-
+    
     /**
      * @var array
      */
@@ -44,24 +44,24 @@ class SupplierController extends BackendController
         'update'  => 'supplier.write',
         'destroy' => 'supplier.delete',
     ];
-
+    
     /**
      * @var Supplier
      */
     public $model;
-
+    
     /**
      * @param \Illuminate\Contracts\Routing\ResponseFactory $response
      */
     public function __construct(ResponseFactory $response)
     {
         parent::__construct($response);
-
+        
         Meta::title(trans('labels.suppliers'));
-
+        
         $this->breadcrumbs(trans('labels.suppliers'), route('admin.'.$this->module.'.index'));
     }
-
+    
     /**
      * Display a listing of the resource.
      * GET /supplier
@@ -73,8 +73,8 @@ class SupplierController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = Supplier::select('id', 'name', 'comments', 'priority');
-
+            $list = Supplier::with('ingredients')->select('id', 'name', 'comments', 'priority');
+            
             return $dataTables = Datatables::of($list)
                 ->filterColumn('id', 'where', 'suppliers.id', '=', '$1')
                 ->filterColumn('name', 'where', 'suppliers.name', 'LIKE', '%$1%')
@@ -89,20 +89,27 @@ class SupplierController extends BackendController
                     function ($model) {
                         return view(
                             'partials.datatables.control_buttons',
-                            ['model' => $model, 'type' => $this->module]
+                            [
+                                'model'           => $model,
+                                'type'            => $this->module,
+                                'delete_function' => $model->ingredients->count() ?
+                                    'delete_supplier('.$model->id.')' :
+                                    false,
+                            ]
                         )->render();
                     }
                 )
                 ->setIndexColumn('id')
+                ->removeColumn('ingredients')
                 ->make();
         }
-
+        
         $this->data('page_title', trans('labels.suppliers'));
         $this->breadcrumbs(trans('labels.suppliers_list'));
-
+        
         return $this->render('views.'.$this->module.'.index');
     }
-
+    
     /**
      * Show the form for creating a new resource.
      * GET /supplier/create
@@ -112,14 +119,14 @@ class SupplierController extends BackendController
     public function create()
     {
         $this->data('model', new Supplier);
-
+        
         $this->data('page_title', trans('labels.supplier_create'));
-
+        
         $this->breadcrumbs(trans('labels.supplier_create'));
-
+        
         return $this->render('views.'.$this->module.'.create');
     }
-
+    
     /**
      * Store a newly created resource in storage.
      * POST /supplier
@@ -132,19 +139,19 @@ class SupplierController extends BackendController
     {
         try {
             $model = new Supplier($request->all());
-
+            
             $model->save();
-
+            
             FlashMessages::add('success', trans('messages.save_ok'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.save_failed'));
-
+            
             return redirect()->back()->withInput();
         }
     }
-
+    
     /**
      * Display the specified resource.
      * GET /supplier/{id}
@@ -157,7 +164,7 @@ class SupplierController extends BackendController
     {
         return $this->edit($id);
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      * GET /supplier/{id}/edit
@@ -170,19 +177,19 @@ class SupplierController extends BackendController
     {
         try {
             $model = Supplier::findOrFail($id);
-
+            
             $this->data('page_title', '"'.$model->name.'"');
-
+            
             $this->breadcrumbs(trans('labels.supplier_editing'));
-
+            
             return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         }
     }
-
+    
     /**
      * Update the specified resource in storage.
      * PUT /supplier/{id}
@@ -196,23 +203,39 @@ class SupplierController extends BackendController
     {
         try {
             $model = Supplier::findOrFail($id);
-
+            
             $model->update($request->all());
-
+            
             FlashMessages::add('success', trans('messages.save_ok'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             FlashMessages::add("error", trans('messages.update_error'));
-
+            
             return redirect()->back()->withInput();
         }
     }
-
+    
+    /**
+     * @param int $supplier_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDeleteForm($supplier_id)
+    {
+        return response()->json(
+            [
+                'title'   => trans('labels.deleting_record'),
+                'message' => view('views.'.$this->module.'.partials.delete_message', ['supplier_id' => $supplier_id])
+                    ->render(),
+            ]
+        );
+    }
+    
     /**
      * Remove the specified resource from storage.
      * DELETE /supplier/{id}
@@ -225,16 +248,16 @@ class SupplierController extends BackendController
     {
         try {
             $model = Supplier::findOrFail($id);
-
+            
             $model->delete();
-
+            
             FlashMessages::add('success', trans("messages.destroy_ok"));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
             FlashMessages::add("error", trans('messages.delete_error'));
         }
-
+        
         return redirect()->route('admin.'.$this->module.'.index');
     }
 }

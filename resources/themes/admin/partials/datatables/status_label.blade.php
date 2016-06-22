@@ -1,0 +1,1 @@
+<span class="label lover-case label-{!! $status !!}">{!! $label !!}</span>
