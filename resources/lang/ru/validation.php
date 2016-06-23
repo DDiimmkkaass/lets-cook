@@ -139,5 +139,6 @@ return array (
     'unit_id' => 'единицы измерения',
     'supplier_id' => 'поставщик',
     'price' => 'цена',
+    'basket_id' => 'корзина',
   ),
 );

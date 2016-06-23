@@ -386,4 +386,9 @@ return array (
   'incomplete_ingredients' => 'Ингредиенты с неп. данными',
   'incomplete_ingredients_list' => 'Список ингредиентов с неполными данными',
   'filter_as_action' => 'Фильтровать',
+  'add_basket' => 'Добавить корзину',
+  'baskets' => 'Корзины',
+  'baskets_list' => 'Список коризин',
+  'basket_creating' => 'Создание корзины',
+  'basket_editing' => 'Редактирование корзины',
 );

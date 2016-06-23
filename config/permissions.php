@@ -31,6 +31,41 @@ return array (
     |------------------------------------------------------------------------
     */
 
+    'category.create',
+    'category.read',
+    'category.write',
+    'category.delete',
+
+    'unit.create',
+    'unit.read',
+    'unit.write',
+    'unit.delete',
+
+    'parameter.create',
+    'parameter.read',
+    'parameter.write',
+    'parameter.delete',
+
+    'nutritionalvalue.create',
+    'nutritionalvalue.read',
+    'nutritionalvalue.write',
+    'nutritionalvalue.delete',
+
+    'ingredient.create',
+    'ingredient.read',
+    'ingredient.write',
+    'ingredient.delete',
+
+    'basket.create',
+    'basket.read',
+    'basket.write',
+    'basket.delete',
+
+    'supplier.create',
+    'supplier.read',
+    'supplier.write',
+    'supplier.delete',
+
     'page.create',
     'page.read',
     'page.write',
@@ -75,36 +110,6 @@ return array (
     'variable.read',
     'variable.write',
     'variable.delete',
-
-    'supplier.create',
-    'supplier.read',
-    'supplier.write',
-    'supplier.delete',
-
-    'category.create',
-    'category.read',
-    'category.write',
-    'category.delete',
-
-    'unit.create',
-    'unit.read',
-    'unit.write',
-    'unit.delete',
-
-    'parameter.create',
-    'parameter.read',
-    'parameter.write',
-    'parameter.delete',
-
-    'nutritionalvalue.create',
-    'nutritionalvalue.read',
-    'nutritionalvalue.write',
-    'nutritionalvalue.delete',
-
-    'ingredient.create',
-    'ingredient.read',
-    'ingredient.write',
-    'ingredient.delete',
 
 //    'comment.create',
 //    'comment.read',

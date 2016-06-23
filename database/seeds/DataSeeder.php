@@ -44,7 +44,8 @@ class DataSeeder extends Seeder
             $this->call(_ParametersSeeder::class);
             $this->call(_NutritionalValuesSeeder::class);
             $this->call(_IngredientsSeeder::class);
-            
+            $this->call(_BasketsSeeder::class);
+
             Model::reguard();
         }
     }

@@ -1,49 +1,6 @@
 <aside class="main-sidebar">
     <section class="sidebar">
         <ul class="sidebar-menu">
-            <li class="header">@lang('labels.content')</li>
-            @if ($user->hasAccess('page.read'))
-                <li class="{!! active_class('admin.page*') !!}">
-                    <a href="{!! route('admin.page.index') !!}">
-                        <i class="fa fa-file-text"></i>
-                        <span>@lang('labels.pages')</span>
-
-                        @if ($user->hasAccess('page.create'))
-                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_page')"
-                                   data-href="{!! route('admin.page.create') !!}">
-                                <i class="fa fa-plus"></i>
-                            </small>
-                        @endif
-                    </a>
-                </li>
-            @endif
-
-            @if ($user->hasAccess('variablevalue.read'))
-                <li class="{!! active_class('admin.variable*') !!}">
-                    <a href="{!! route('admin.variable.value.index') !!}">
-                        <i class="fa fa-cog"></i>
-                        <span>@lang('labels.variables')</span>
-                    </a>
-                </li>
-            @endif
-
-            <li class="header">@lang('labels.purchase')</li>
-            @if ($user->hasAccess('supplier.read'))
-                <li class="{!! active_class('admin.supplier*') !!}">
-                    <a href="{!! route('admin.supplier.index') !!}">
-                        <i class="fa fa-truck"></i>
-                        <span>@lang('labels.suppliers')</span>
-
-                        @if ($user->hasAccess('supplier.create'))
-                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_supplier')"
-                                   data-href="{!! route('admin.supplier.create') !!}">
-                                <i class="fa fa-plus"></i>
-                            </small>
-                        @endif
-                    </a>
-                </li>
-            @endif
-
             <li class="header">@lang('labels.menu')</li>
             @if ($user->hasAccess('category.read'))
                 <li class="{!! active_class('admin.category*') !!}">
@@ -123,6 +80,64 @@
                     <a href="{!! route('admin.ingredient.incomplete') !!}">
                         <i class="fa fa-frown-o"></i>
                         <span>@lang('labels.incomplete_ingredients')</span>
+                    </a>
+                </li>
+            @endif
+            @if ($user->hasAccess('basket.read'))
+                <li class="{!! active_class('admin.basket*') !!}">
+                    <a href="{!! route('admin.basket.index') !!}">
+                        <i class="fa fa-shopping-basket"></i>
+                        <span>@lang('labels.baskets')</span>
+
+                        @if ($user->hasAccess('basket.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_basket')"
+                                   data-href="{!! route('admin.basket.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
+            <li class="header">@lang('labels.purchase')</li>
+            @if ($user->hasAccess('supplier.read'))
+                <li class="{!! active_class('admin.supplier*') !!}">
+                    <a href="{!! route('admin.supplier.index') !!}">
+                        <i class="fa fa-truck"></i>
+                        <span>@lang('labels.suppliers')</span>
+
+                        @if ($user->hasAccess('supplier.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_supplier')"
+                                   data-href="{!! route('admin.supplier.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
+            <li class="header">@lang('labels.content')</li>
+            @if ($user->hasAccess('page.read'))
+                <li class="{!! active_class('admin.page*') !!}">
+                    <a href="{!! route('admin.page.index') !!}">
+                        <i class="fa fa-file-text"></i>
+                        <span>@lang('labels.pages')</span>
+
+                        @if ($user->hasAccess('page.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_page')"
+                                   data-href="{!! route('admin.page.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
+            @if ($user->hasAccess('variablevalue.read'))
+                <li class="{!! active_class('admin.variable*') !!}">
+                    <a href="{!! route('admin.variable.value.index') !!}">
+                        <i class="fa fa-cog"></i>
+                        <span>@lang('labels.variables')</span>
                     </a>
                 </li>
             @endif

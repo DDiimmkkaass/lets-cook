@@ -158,17 +158,6 @@ $router->group(
 
                 //--lets cook routes
 
-                //suppliers
-                $router->get(
-                    'supplier/{id}/get-delete-form',
-                    [
-                        'as'         => 'supplier.get_delete_form',
-                        'middleware' => 'ajax',
-                        'uses'       => 'Backend\SupplierController@getDeleteForm',
-                    ]
-                );
-                $router->resource('supplier', 'Backend\SupplierController');
-
                 //category
                 $router->get(
                     'category/{id}/get-delete-form',
@@ -214,6 +203,20 @@ $router->group(
                     ]
                 );
                 $router->resource('ingredient', 'Backend\IngredientController');
+
+                //suppliers
+                $router->get(
+                    'supplier/{id}/get-delete-form',
+                    [
+                        'as'         => 'supplier.get_delete_form',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Backend\SupplierController@getDeleteForm',
+                    ]
+                );
+                $router->resource('supplier', 'Backend\SupplierController');
+
+                //baskets
+                $router->resource('basket', 'Backend\BasketController');
             }
         );
 
