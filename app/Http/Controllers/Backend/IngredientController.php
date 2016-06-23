@@ -203,7 +203,7 @@ class IngredientController extends BackendController
                             $model->name,
                             ['ingredient' => $model->id],
                             ['target' => '_blank']
-                        );
+                        )->toHtml();
                         
                         if ($model->image) {
                             $html = view(
