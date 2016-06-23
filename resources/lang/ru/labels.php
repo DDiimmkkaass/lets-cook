@@ -385,4 +385,5 @@ return array (
   'category_creating' => 'Создание категрии',
   'incomplete_ingredients' => 'Ингредиенты с неп. данными',
   'incomplete_ingredients_list' => 'Список ингредиентов с неполными данными',
+  'filter_as_action' => 'Фильтровать',
 );
