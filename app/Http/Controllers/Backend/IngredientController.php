@@ -428,8 +428,6 @@ class IngredientController extends BackendController
         } catch (Exception $e) {
             DB::rollBack();
             
-            dd('message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile());
-            
             FlashMessages::add("error", trans('messages.update_error'));
             
             return redirect()->back()->withInput();
