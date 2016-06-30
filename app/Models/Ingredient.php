@@ -32,7 +32,7 @@ class Ingredient extends Model
         'category_id',
         'unit_id',
     ];
-
+    
     /**
      * @var array
      */
@@ -61,7 +61,7 @@ class Ingredient extends Model
     {
         return $this->belongsTo(Unit::class, 'unit_id');
     }
-
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -69,7 +69,7 @@ class Ingredient extends Model
     {
         return $this->belongsToMany(Parameter::class);
     }
-
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -77,7 +77,15 @@ class Ingredient extends Model
     {
         return $this->hasMany(IngredientNutritionalValue::class);
     }
-
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function recipe()
+    {
+        return $this->belongsToMany(RecipeIngredient::class);
+    }
+    
     /**
      * @param $value
      */
@@ -156,5 +164,15 @@ class Ingredient extends Model
     public function scopeJoinUnit($query)
     {
         return $query->leftJoin('units', 'units.id', '=', 'ingredients.unit_id');
+    }
+
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeCompleted($query)
+    {
+        return $query->whereNotNull('category_id')->whereNotNull('supplier_id')->whereNotNull('unit_id');
     }
 }

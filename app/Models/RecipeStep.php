@@ -2,8 +2,8 @@
 /**
  * Created by Newway, info@newway.com.ua
  * User: ddiimmkkaass, ddiimmkkaass@gmail.com
- * Date: 23.06.16
- * Time: 14:43
+ * Date: 30.06.16
+ * Time: 13:54
  */
 
 namespace App\Models;
@@ -12,10 +12,10 @@ use App\Traits\Models\PositionSortedTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Basket
+ * Class RecipeStep
  * @package App\Models
  */
-class Basket extends Model
+class RecipeStep extends Model
 {
 
     use PositionSortedTrait;
@@ -24,15 +24,18 @@ class Basket extends Model
      * @var array
      */
     protected $fillable = [
+        'recipe_id',
         'name',
+        'description',
+        'image',
         'position',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function recipes()
+    public function recipe()
     {
-        return $this->belongsToMany(Recipe::class);
+        return $this->belongsTo(Recipe::class);
     }
 }

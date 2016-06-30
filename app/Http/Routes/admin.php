@@ -167,6 +167,14 @@ $router->group(
                         'uses'       => 'Backend\CategoryController@getDeleteForm',
                     ]
                 );
+                $router->get(
+                    'category/{id}/completed-ingredients',
+                    [
+                        'as'         => 'category.completed_ingredients',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Backend\CategoryController@completedIngredients',
+                    ]
+                );
                 $router->resource('category', 'Backend\CategoryController');
 
                 //units
@@ -203,6 +211,25 @@ $router->group(
                     ]
                 );
                 $router->resource('ingredient', 'Backend\IngredientController');
+
+                //recipe
+                $router->post(
+                    'recipe/{id}/ajax_field',
+                    array (
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.recipe.ajax_field',
+                        'uses'       => 'Backend\RecipeController@ajaxFieldChange',
+                    )
+                );
+                $router->get(
+                    'recipe/get-ingredient-row/{ingredient_id}',
+                    array (
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.recipe.get_ingredient_row',
+                        'uses'       => 'Backend\RecipeController@getIngredientRow',
+                    )
+                );
+                $router->resource('recipe', 'Backend\RecipeController');
 
                 //suppliers
                 $router->get(

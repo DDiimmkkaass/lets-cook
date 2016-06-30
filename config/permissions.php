@@ -61,6 +61,11 @@ return array (
     'basket.write',
     'basket.delete',
 
+    'recipe.create',
+    'recipe.read',
+    'recipe.write',
+    'recipe.delete',
+
     'supplier.create',
     'supplier.read',
     'supplier.write',

@@ -1,0 +1,141 @@
+<div class="box-body table-responsive no-padding recipe-steps-table">
+    <table class="table table-hover table-bordered duplication">
+        <tbody>
+        <tr>
+            <th class="col-md-3">{!! trans('labels.image') !!}</th>
+            <th>{!! trans('labels.name') !!}</th>
+            <th class="col-sm-1 text-center">{!! trans('labels.position') !!}<span class="required">*</span></th>
+            <th class="col-sm-1 text-center">{!! trans('labels.delete') !!}</th>
+        </tr>
+
+        @if (count($model->steps))
+            @foreach($model->steps as $step)
+                <tr class="duplication-row">
+                    <td>
+                        <div class="form-group required @if ($errors->has('steps.old.' .$step->id. '.image')) has-error @endif">
+                            {!! Form::imageInput('steps[old][' .$step->id. '][image]', $step->image, ['width' => 100, 'height' => 100, 'required' => true]) !!}
+
+                            {!! $errors->first('steps.old.' .$step->id. '.image', '<p class="help-block error">:message</p>') !!}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="form-group required @if ($errors->has('steps.old.' .$step->id. '.name')) has-error @endif">
+                                {!! Form::text('steps[old][' . $step->id . '][name]', $step->name, ['id' => 'steps.old.' . $step->id . '.name', 'placeholder' => trans('labels.name'), 'class' => 'form-control input-sm', 'required' => true]) !!}
+
+                                {!! $errors->first('steps.old.' .$step->id. '.name', '<p class="help-block error">:message</p>') !!}
+                            </div>
+
+                            <div class="form-group required @if ($errors->has('steps.old.' .$step->id. '.description')) has-error @endif">
+                                {!! Form::textarea('steps[old][' . $step->id . '][description]', $step->description, ['id' => 'steps.old.' . $step->id . '.description', 'placeholder' => trans('labels.description'), 'rows' => 5, 'class' => 'form-control input-sm', 'required' => true]) !!}
+
+                                {!! $errors->first('steps.old.' .$step->id. '.description', '<p class="help-block error">:message</p>') !!}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group required @if ($errors->has('steps.old.' .$step->id. '.position')) has-error @endif">
+                            {!! Form::text('steps[old][' .$step->id. '][position]', $step->position, ['id' => 'steps.old.' .$step->id. '.position', 'class' => 'form-control input-sm', 'required' => true]) !!}
+
+                            {!! $errors->first('steps.old.' .$step->id. '.position', '<p class="help-block error">:message</p>') !!}
+                        </div>
+                    </td>
+                    <td class="coll-actions text-center">
+                        <a class="btn btn-flat btn-danger btn-xs action exist destroy" data-id="{!! $step->id !!}"
+                           data-name="steps[remove][]"><i class="fa fa-remove"></i></a>
+                    </td>
+                </tr>
+            @endforeach
+        @endif
+
+        @if (count(old('steps.new')))
+            @foreach(old('steps.new') as $step_key => $step)
+                @if ($step_key !== 'replaseme')
+                    <tr class="duplication-row">
+                        <td>
+                            <div class="form-group required @if ($errors->has('steps.new.' .$step_key. '.image')) has-error @endif">
+                                {!! Form::imageInput('steps[new][' .$step_key. '][image]', $step['image'], ['width' => 100, 'height' => 100, 'required' => true]) !!}
+
+                                {!! $errors->first('steps.new.' .$step_key. '.image', '<p class="help-block error">:message</p>') !!}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <div class="form-group required @if ($errors->has('steps.new.' .$step_key. '.name')) has-error @endif">
+                                    {!! Form::text('steps[new][' . $step_key . '][name]', $step['name'], ['id' => 'steps.new.' . $step_key . '.name', 'placeholder' => trans('labels.name'), 'class' => 'form-control input-sm', 'required' => true]) !!}
+
+                                    {!! $errors->first('steps.new.' .$step_key. '.name', '<p class="help-block error">:message</p>') !!}
+                                </div>
+
+                                <div class="form-group required @if ($errors->has('steps.new.' .$step_key. '.description')) has-error @endif">
+                                    {!! Form::textarea('steps[new][' . $step_key . '][description]', $step['text'], ['id' => 'steps.new.' . $step_key . '.description', 'placeholder' => trans('labels.description'), 'rows' => 5, 'class' => 'form-control input-sm', 'required' => true]) !!}
+
+                                    {!! $errors->first('steps.new.' .$step_key. '.description', '<p class="help-block error">:message</p>') !!}
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group required @if ($errors->has('steps.new.' .$step_key. '.position')) has-error @endif">
+                                {!! Form::text('steps[new][' .$step_key. '][position]', $step['position'], ['id' => 'steps.new.' .$step_key. '.position', 'class' => 'form-control input-sm', 'required' => true]) !!}
+
+                                {!! $errors->first('steps.new.' .$step_key. '.position', '<p class="help-block error">:message</p>') !!}
+                            </div>
+                        </td>
+                        <td class="coll-actions text-center">
+                            <a class="btn btn-flat btn-danger btn-xs action destroy"><i class="fa fa-remove"></i></a>
+                        </td>
+                    </tr>
+                @endif
+            @endforeach
+        @endif
+
+        <tr class="duplication-button">
+            <td colspan="4" class="text-center">
+                <div class="form-group @if ($errors->has('steps')) has-error @endif">
+                    {!! $errors->first('steps', '<div class="margin-bottom-25 text-center position-relative error-block"><p class="help-block error">:message</p></div>') !!}
+
+                    <a name="@lang('labels.add_one_more')" class="btn btn-flat btn-primary btn-sm action create">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </a>
+                </div>
+            </td>
+        </tr>
+
+        <tr class="duplication-row duplicate">
+            <td>
+                <div class="form-group required">
+                    {!! Form::imageInput('', '', ['width' => 100, 'height' => 100, 'data-related-image' => 'stepsnewreplasemeimage', 'data-name' => 'steps[new][replaseme][image]', 'data-required' => 'required']) !!}
+                </div>
+            </td>
+            <td>
+                <div class="form-group">
+                    <div class="form-group required">
+                        <input data-name="steps[new][replaseme][name]"
+                               placeholder="@lang('labels.name')"
+                               class="form-control input-sm"
+                               data-required="required">
+                    </div>
+
+                    <div class="form-group required">
+                        <textarea data-name="steps[new][replaseme][description]"
+                                  placeholder="@lang('labels.description')"
+                                  rows="5"
+                                  class="form-control input-sm"
+                                  data-required="required"></textarea>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="form-group required">
+                    <input data-name="steps[new][replaseme][position]" value="0" data-required="required"
+                           class="form-control input-sm">
+                </div>
+            </td>
+            <td class="coll-actions text-center">
+                <a class="btn btn-flat btn-danger btn-xs action destroy"><i class="fa fa-remove"></i></a>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</div>

@@ -52,3 +52,6 @@ $(document).ready () ->
     $parent = $(this).closest '.tab-pane'
 
     $('a[href=\'#' + $parent.attr('id') + '\']').closest('li').removeClass 'tab-with-errors'
+
+  $(document).on 'click', '.help-block.error', () ->
+    $(this).remove()

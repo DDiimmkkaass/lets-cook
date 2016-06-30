@@ -65,7 +65,7 @@
             @if ($user->hasAccess('ingredient.read'))
                 <li class="{!! active_class('admin.ingredient*', 'active', 'admin.ingredient.incomplete*') !!}">
                     <a href="{!! route('admin.ingredient.index') !!}">
-                        <i class="fa fa-hashtag"></i>
+                        <i class="icon-carrot"></i>
                         <span>@lang('labels.ingredients')</span>
 
                         @if ($user->hasAccess('ingredient.create'))
@@ -92,6 +92,21 @@
                         @if ($user->hasAccess('basket.create'))
                             <small class="label create-label pull-right bg-green" title="@lang('labels.add_basket')"
                                    data-href="{!! route('admin.basket.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+            @if ($user->hasAccess('recipe.read'))
+                <li class="{!! active_class('admin.recipe*') !!}">
+                    <a href="{!! route('admin.recipe.index') !!}">
+                        <i class="icon-chef"></i>
+                        <span>@lang('labels.recipes')</span>
+
+                        @if ($user->hasAccess('recipe.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_recipe')"
+                                   data-href="{!! route('admin.recipe.create') !!}">
                                 <i class="fa fa-plus"></i>
                             </small>
                         @endif

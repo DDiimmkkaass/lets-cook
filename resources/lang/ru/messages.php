@@ -113,4 +113,5 @@ return array (
   'after removing some ingredients remain without supplier' => 'После удаления некоторые ингредиенты остануться без поставщика',
   'after removing some ingredients remain without category' => 'После удаления некоторые ингредиенты остануться без категории',
   'your really want to delete this record' => 'Вы действительно хотите удалить ету запись?',
+  'ingredient already added to list' => 'Ингредиент уже додан к списку',
 );

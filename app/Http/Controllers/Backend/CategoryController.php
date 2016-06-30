@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Requests\Backend\Category\CategoryCreateRequest;
 use App\Http\Requests\Backend\Category\CategoryUpdateRequest;
 use App\Models\Category;
+use App\Models\Ingredient;
 use Datatables;
 use Exception;
 use FlashMessages;
@@ -253,5 +254,27 @@ class CategoryController extends BackendController
         }
 
         return redirect()->route('admin.'.$this->module.'.index');
+    }
+
+    /**
+     * @param int $category_id
+     *
+     * @return array
+     */
+    public function completedIngredients($category_id)
+    {
+        try {
+            $ingredients = Ingredient::completed()->whereCategoryId($category_id)->get()->toArray();
+
+            return [
+                'status'      => 'success',
+                'ingredients' => $ingredients,
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
     }
 }

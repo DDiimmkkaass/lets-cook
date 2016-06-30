@@ -1,6 +1,6 @@
 body
   font-size: 12px
-  padding-bottom: 0!important
+  padding-bottom: 0 !important
 
 .login-block
   padding-top: 200px
@@ -19,7 +19,7 @@ body
 
 /*forms*/
 .no-list-styles
-  list-style-type: none!important
+  list-style-type: none !important
 
 .checkbox-label
   .title
@@ -45,6 +45,9 @@ span.required
     .help-block.error
       position: absolute
       white-space: nowrap
+    .error-block
+      .help-block.error
+        position: relative
 
 textarea,
 textarea.input-sm
@@ -76,6 +79,9 @@ textarea.input-sm
 .upper-case
   text-transform: uppercase
 
+.font-size-16
+  font-size: 16px
+
 .ta-right
   text-align: right
 
@@ -83,10 +89,10 @@ textarea.input-sm
   font-weight: bold
 
 .pwidth-50
-  width: 50%!important
+  width: 50% !important
 
 .pwidth-70
-  width: 70%!important
+  width: 70% !important
 
 .no-margin
   margin: 0
@@ -94,32 +100,15 @@ textarea.input-sm
 .margin-top-4
   margin-top: 4px
 
-.margin-top-5
-  margin-top: 5px
-
-.margin-top-10
-  margin-top: 10px
-
-.margin-right
-  margin-right: 10px
-
-.margin-right-5
-  margin-right: 5px
-
-.margin-right-10
-  margin-right: 10px
-
-.margin-right-20
-  margin-right: 20px
-
-.margin-bottom-5
-  margin-bottom: 5px
-
-.margin-bottom-10
-  margin-bottom: 10px
-
-.padding-right-10
-  padding-right: 10px
+$properties: margin padding
+$directions: top right bottom left
+@each $property in $properties
+  @each $direction in $directions
+    $i: 5
+    @while $i <= 25
+      .#{$property}-#{$direction}-#{$i}
+        #{$property}-#{$direction}: #{$i}px
+      $i: $i + 5
 
 .text-indent-10
   text-indent: 10px
@@ -129,8 +118,8 @@ textarea.input-sm
     width: 100%
 
 .auto-height
-  height: auto!important
-  white-space: normal!important
+  height: auto !important
+  white-space: normal !important
 
 .nowrap,
 .date-line
@@ -184,7 +173,7 @@ table.duplication
   visibility: hidden
 
 .select2-container--default
-  width: 100%!important
+  width: 100% !important
   max-width: 100%
   .select2-selection--single
     height: 30px
@@ -193,17 +182,18 @@ table.duplication
       font-size: 12px
     .select2-selection__arrow
       height: 24px
+
 .text-red
   .select2-selection__rendered
-    color: red!important
+    color: red !important
+
 .text-green
   .select2-selection__rendered
-    color: green!important
-
+    color: green !important
 
 /*datatable*/
 table.dataTable
-  width: 100%!important
+  width: 100% !important
   tr
     td
       vertical-align: middle
@@ -258,6 +248,14 @@ table.dataTable
       text-decoration: dashed
 
 /*menu*/
+[class^="icon-"]
+  width: 20px
+  display: inline-block
+  font: normal normal normal 14px/1 WebHostingHub-Glyphs
+  font-size: inherit
+  text-rendering: auto
+  -webkit-font-smoothing: antialiased
+
 .create-label
   position: relative
   z-index: 1
@@ -269,7 +267,7 @@ table.dataTable
 
 /*datapicker*/
 .datepicker.datepicker-dropdown
-  z-index: 9999!important
+  z-index: 9999 !important
 
 /*elfinder*/
 .show-elfinder-button
@@ -286,7 +284,7 @@ table.dataTable
     align-self: center
 
   .cke_contents
-    height: 150px!important
+    height: 150px !important
 
 /*switcher*/
 .bootstrap-switch
@@ -310,4 +308,20 @@ table.dataTable
   .front-home-link,
   .logo-lg,
   .logo-mini
-    display: none!important
+    display: none !important
+
+/*recipe*/
+.recipe-ingredients-table
+  tbody
+    tr
+      td
+        vertical-align: middle
+  .form-group
+    margin-left: 0
+    margin-right: 0
+  .has-error
+    margin-bottom: 15px
+
+.recipe-steps-table
+ textarea.input-sm
+   height: auto
