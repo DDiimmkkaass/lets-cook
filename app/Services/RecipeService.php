@@ -11,8 +11,12 @@ namespace App\Services;
 use App\Models\Recipe;
 use App\Models\RecipeIngredient;
 use App\Models\RecipeStep;
+use Datatables;
+use DB;
 use Exception;
 use FlashMessages;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Http\Request;
 
 /**
  * Class RecipeService
@@ -20,6 +24,88 @@ use FlashMessages;
  */
 class RecipeService
 {
+    
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|\Bllim\Datatables\json
+     */
+    public function table(Request $request)
+    {
+        $list = Recipe::with('baskets', 'ingredients')
+            ->joinBaskets()
+            ->joinMainIngredient()
+            ->select(
+                'recipes.id',
+                'recipes.name',
+                'recipes.image',
+                DB::raw('1 as baskets_list'),
+                'recipes.portions',
+                DB::raw('ingredients.name as main_ingredient'),
+                'recipes.price',
+                'recipes.status'
+            )
+            ->groupBy('recipes.id');
+
+        $this->_implodeFilters($list, $request);
+
+        return $dataTables = Datatables::of($list)
+            ->filterColumn('id', 'where', 'recipes.id', '=', '$1')
+            ->filterColumn('name', 'where', 'recipes.name', 'LIKE', '%$1%')
+            ->editColumn(
+                'name',
+                function ($model) {
+                    $html = $model->name;
+
+                    if ($model->image) {
+                        $html = view(
+                                'partials.image',
+                                [
+                                    'src'        => $model->image,
+                                    'attributes' => ['width' => 50, 'class' => 'margin-right-10'],
+                                ]
+                            )->render().$html;
+                    }
+
+                    return $html;
+                }
+            )
+            ->editColumn(
+                'baskets_list',
+                function ($model) {
+                    return $model->baskets->implode('name', '<br>');
+                }
+            )
+            ->editColumn(
+                'price',
+                function ($model) {
+                    return $model->price.' '.currency();
+                }
+            )
+            ->editColumn(
+                'status',
+                function ($model) {
+                    return view(
+                        'partials.datatables.toggler',
+                        ['model' => $model, 'type' => 'recipe', 'field' => 'status']
+                    )->render();
+                }
+            )
+            ->editColumn(
+                'actions',
+                function ($model) {
+                    return view(
+                        'partials.datatables.control_buttons',
+                        ['model' => $model, 'type' => 'recipe']
+                    )->render();
+                }
+            )
+            ->setIndexColumn('id')
+            ->removeColumn('ingredients')
+            ->removeColumn('baskets')
+            ->removeColumn('image')
+            ->make();
+    }
 
     /**
      * @param \App\Models\Recipe $model
@@ -110,6 +196,42 @@ class RecipeService
                     "error",
                     trans("messages.step save failure"." ".$step['name'])
                 );
+            }
+        }
+    }
+
+    /**
+     * @param Builder $list
+     * @param Request $request
+     */
+    private function _implodeFilters(&$list, $request)
+    {
+        $filters = $request->get('recipe_filters');
+
+        if (count($filters)) {
+            foreach ($filters as $filter => $value) {
+                if ($value !== '') {
+                    switch ($filter) {
+                        case 'name':
+                            $list->where('recipes.name', 'LIKE', '%'.$value.'%');
+                            break;
+                        case 'basket':
+                            $list->where('basket_recipe.basket_id', $value);
+                            break;
+                        case 'portions':
+                            $list->where('recipes.portions', $value);
+                            break;
+                        case 'main_ingredient':
+                            $list->where('ingredients.name', 'LIKE', '%'.$value.'%');
+                            break;
+                        case 'price':
+                            $list->where('recipes.price', $value * 100);
+                            break;
+                        case 'status':
+                            $list->where('recipes.status', $value);
+                            break;
+                    }
+                }
             }
         }
     }

@@ -100,7 +100,7 @@ if (!function_exists('active_class')) {
 
             $result = route_is("^$pattern") ? true : false;
         } else {
-            $result =route_is("^$pattern$") ? true : false;
+            $result = route_is("^$pattern$") ? true : false;
         }
 
         $_result = false;
@@ -113,7 +113,7 @@ if (!function_exists('active_class')) {
 
                     $_result = route_is("^$_pattern") ? true : false;
                 } else {
-                    $_result =route_is("^$_pattern$") ? true : false;
+                    $_result = route_is("^$_pattern$") ? true : false;
                 }
 
                 if ($_result) {
@@ -685,5 +685,24 @@ if (!function_exists('is_front')) {
         }
 
         return request()->segment(1) !== 'admin';
+    }
+}
+
+if (!function_exists('currency')) {
+    /**
+     * Get / set the currency value.
+     *
+     * @param string|null $value
+     * @param string|null $default
+     *
+     * @return string
+     */
+    function currency($value = null, $default = null)
+    {
+        if (is_null($value)) {
+            return session('currency');
+        }
+
+        return session('currency', $default);
     }
 }

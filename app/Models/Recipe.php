@@ -90,6 +90,17 @@ class Recipe extends Model
      *
      * @return mixed
      */
+    public function scopeJoinBaskets($query)
+    {
+        return $query->leftJoin('basket_recipe', 'basket_recipe.recipe_id', '=', 'recipes.id')
+            ->leftJoin('baskets', 'baskets.id', '=', 'basket_recipe.basket_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
     public function scopeJoinIngredients($query)
     {
         return $query->leftJoin('recipe_ingredients', 'recipe_ingredients.recipe_id', '=', 'recipes.id');
@@ -103,6 +114,18 @@ class Recipe extends Model
     public function scopeJoinIngredientIngredient($query)
     {
         return $query->leftJoin('ingredients', 'ingredients.id', '=', 'recipe_ingredients.ingredient_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinMainIngredient($query)
+    {
+        return $query->joinIngredients()
+            ->joinIngredientIngredient()
+            ->where('recipe_ingredients.main', true);
     }
     
     /**

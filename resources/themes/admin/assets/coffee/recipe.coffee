@@ -1,4 +1,21 @@
+window.filterRecipesTable = () ->
+  $table = $('#recipes_datable')
+  params = [];
+
+  $('.recipe-filter').each () ->
+    params.push($(this).attr('name') + '=' + $(this).val())
+
+  url = '/admin/recipe?' + params.join('&');
+
+  $table.DataTable().ajax.url(url).load();
+
 $(document).on 'ready', ->
+  $('input[type=\'text\'].recipe-filter').on "keyup", ->
+    filterRecipesTable()
+
+  $('select.recipe-filter').on "change", ->
+    filterRecipesTable()
+
   $('.ingredient-category-select').on "change", ->
     category = $(this).val()
 

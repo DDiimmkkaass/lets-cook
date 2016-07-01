@@ -15,7 +15,6 @@ use App\Models\Ingredient;
 use App\Models\Recipe;
 use App\Services\RecipeService;
 use App\Traits\Controllers\AjaxFieldsChangerTrait;
-use Datatables;
 use DB;
 use Exception;
 use FlashMessages;
@@ -83,84 +82,13 @@ class RecipeController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = Recipe::with('baskets', 'ingredients')->
-            select(
-                'recipes.id',
-                'recipes.name',
-                'recipes.image',
-                DB::raw('1 as baskets_list'),
-                'recipes.portions',
-                DB::raw('2 as base_ingredient'),
-                'recipes.price',
-                'recipes.status'
-            );
-            
-            return $dataTables = Datatables::of($list)
-                ->filterColumn('id', 'where', 'recipes.id', '=', '$1')
-                ->filterColumn('name', 'where', 'recipes.name', 'LIKE', '%$1%')
-                ->editColumn(
-                    'name',
-                    function ($model) {
-                        $html = $model->name;
-                        
-                        if ($model->image) {
-                            $html = view(
-                                    'partials.image',
-                                    [
-                                        'src'        => $model->image,
-                                        'attributes' => ['width' => 50, 'class' => 'margin-right-10'],
-                                    ]
-                                )->render().$html;
-                        }
-                        
-                        return $html;
-                    }
-                )
-                ->editColumn(
-                    'baskets_list',
-                    function ($model) {
-                        return $model->baskets->implode('name', '<br>');
-                    }
-                )
-                ->editColumn(
-                    'base_ingredient',
-                    function ($model) {
-                        return $model->mainIngredient() != null ? $model->mainIngredient()->name : '';
-                    }
-                )
-                ->editColumn(
-                    'price',
-                    function ($model) {
-                        return $model->price.' '.$this->currency;
-                    }
-                )
-                ->editColumn(
-                    'status',
-                    function ($model) {
-                        return view(
-                            'partials.datatables.toggler',
-                            ['model' => $model, 'type' => $this->module, 'field' => 'status']
-                        )->render();
-                    }
-                )
-                ->editColumn(
-                    'actions',
-                    function ($model) {
-                        return view(
-                            'partials.datatables.control_buttons',
-                            ['model' => $model, 'type' => $this->module]
-                        )->render();
-                    }
-                )
-                ->setIndexColumn('id')
-                ->removeColumn('ingredients')
-                ->removeColumn('baskets')
-                ->removeColumn('image')
-                ->make();
+            return $this->recipeService->table($request);
         }
         
         $this->data('page_title', trans('labels.recipes'));
         $this->breadcrumbs(trans('labels.recipes_list'));
+
+        $this->_fillIndexAdditionalTemplateData();
         
         return $this->render('views.'.$this->module.'.index');
     }
@@ -346,6 +274,23 @@ class RecipeController extends BackendController
     }
     
     /**
+     *  fill additional template data for index route
+     */
+    private function _fillIndexAdditionalTemplateData()
+    {
+        $baskets = ['' => trans('labels.please_select')];
+        foreach (Basket::positionSorted()->get(['id', 'name']) as $item) {
+            $baskets[$item->id] = $item->name;
+        }
+        $this->data('baskets', $baskets);
+
+        $this->data(
+            'statuses',
+            ['' => trans('labels.please_select'), '1' => trans('labels.status_on'), '0' => trans('labels.status_off')]
+        );
+    }
+
+    /**
      *  fill additional template data
      *
      * @param \App\Models\Recipe|null $model
@@ -357,7 +302,7 @@ class RecipeController extends BackendController
             $ingredient_categories[$item->id] = $item->name;
         }
         $this->data('ingredient_categories', $ingredient_categories);
-        
+
         $ingredients = ['' => trans('labels.please_select_ingredient')];
         foreach (Ingredient::completed()->get(['id', 'name']) as $item) {
             $ingredients[$item->id] = $item->name;
@@ -381,7 +326,7 @@ class RecipeController extends BackendController
 
         $this->data('selected_baskets', $selected_baskets);
     }
-    
+
     /**
      * @param \App\Models\Recipe       $model
      * @param \Illuminate\Http\Request $request

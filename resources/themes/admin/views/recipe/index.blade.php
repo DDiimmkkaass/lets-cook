@@ -8,7 +8,7 @@
                 <div class="box-body">
                     <div class="recipes-table">
                         {!!
-                            TablesBuilder::create(['id' => "datatable1", 'class' => "table table-bordered table-striped table-hover"], ['bStateSave' => true])
+                            TablesBuilder::create(['id' => "recipes_datable", 'class' => "table table-bordered table-striped table-hover"], ['bStateSave' => true])
                             ->addHead([
                                 ['text' => trans('labels.id')],
                                 ['text' => trans('labels.name')],
@@ -20,7 +20,14 @@
                                 ['text' => trans('labels.actions')]
                             ])
                             ->addFoot([
-                                ['attr' => ['colspan' => 8]]
+                                ['attr' => ['colspan' => 1]],
+                                ['text' => Form::text('recipe_filters[name]', '', ['class' => 'form-control input-sm recipe-filter'])],
+                                ['text' => Form::select('recipe_filters[basket]', $baskets, null, ['class' => 'form-control select2 input-sm recipe-filter'])],
+                                ['text' => Form::text('recipe_filters[portions]', '', ['class' => 'form-control input-sm recipe-filter'])],
+                                ['text' => Form::text('recipe_filters[main_ingredient]', '', ['class' => 'form-control input-sm recipe-filter'])],
+                                ['text' => Form::text('recipe_filters[price]', '', ['class' => 'form-control input-sm recipe-filter'])],
+                                ['text' => Form::select('recipe_filters[status]', $statuses, null, ['class' => 'form-control select2 input-sm recipe-filter'])],
+                                ['attr' => ['colspan' => 1]],
                             ])
                              ->make()
                         !!}

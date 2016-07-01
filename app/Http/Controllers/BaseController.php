@@ -133,5 +133,7 @@ class BaseController extends IlluminateBaseController
         Theme::init($this->_theme);
 
         $this->currency = trans('labels.rub');
+
+        currency($this->currency);
     }
 }
