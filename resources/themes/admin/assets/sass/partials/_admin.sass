@@ -131,6 +131,17 @@ $directions: top right bottom left
 .pointer
   cursor: pointer
 
+.with-after-helper
+  position: relative
+  &:after
+    position: absolute
+    content: ''
+    right: -20px
+    top: 25%
+  &.units-minutes
+    &:after
+      content: 'мин.'
+
 .form-group.required
   label
     position: relative
@@ -323,5 +334,5 @@ table.dataTable
     margin-bottom: 15px
 
 .recipe-steps-table
- textarea.input-sm
-   height: auto
+  textarea.input-sm
+    height: auto

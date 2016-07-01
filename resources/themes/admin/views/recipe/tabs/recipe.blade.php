@@ -1,8 +1,8 @@
 <div class="form-group required @if ($errors->has('cooking_time')) has-error @endif">
     {!! Form::label('cooking_time', trans('labels.cooking_time'), ['class' => 'control-label col-xs-12 col-sm-3 col-md-2']) !!}
 
-    <div class="col-xs-12 col-sm-2 col-md-1">
-        {!! Form::text('cooking_time', $model->cooking_time ?: 0, ['class' => 'form-control input-sm with-after-helper units-minutes', 'aria-hidden' => 'true', 'required' => true]) !!}
+    <div class="col-xs-12 col-sm-2 col-md-1 with-after-helper units-minutes">
+        {!! Form::text('cooking_time', $model->cooking_time ?: 0, ['class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
 
         {!! $errors->first('cooking_time', '<p class="help-block error">:message</p>') !!}
     </div>
