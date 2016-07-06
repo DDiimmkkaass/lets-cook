@@ -45,13 +45,14 @@ class IngredientController extends BackendController
      * @var array
      */
     public $accessMap = [
-        'index'   => 'ingredient.read',
-        'create'  => 'ingredient.create',
-        'store'   => 'ingredient.create',
-        'show'    => 'ingredient.read',
-        'edit'    => 'ingredient.read',
-        'update'  => 'ingredient.write',
-        'destroy' => 'ingredient.delete',
+        'index'           => 'ingredient.read',
+        'indexIncomplete' => 'ingredient.read',
+        'create'          => 'ingredient.create',
+        'store'           => 'ingredient.create',
+        'show'            => 'ingredient.read',
+        'edit'            => 'ingredient.read',
+        'update'          => 'ingredient.write',
+        'destroy'         => 'ingredient.delete',
     ];
     
     /**
