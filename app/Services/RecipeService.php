@@ -34,14 +34,13 @@ class RecipeService
     {
         $list = Recipe::with('baskets', 'ingredients')
             ->joinBaskets()
-            ->joinMainIngredient()
             ->select(
                 'recipes.id',
                 'recipes.name',
                 'recipes.image',
                 DB::raw('1 as baskets_list'),
                 'recipes.portions',
-                DB::raw('ingredients.name as main_ingredient'),
+                DB::raw('2 as base_ingredient'),
                 'recipes.price',
                 'recipes.status'
             )
@@ -74,6 +73,14 @@ class RecipeService
                 'baskets_list',
                 function ($model) {
                     return $model->baskets->implode('name', '<br>');
+                }
+            )
+            ->editColumn(
+                'base_ingredient',
+                function ($model) {
+                    $main_ingredient = $model->mainIngredient();
+
+                    return $main_ingredient ? $main_ingredient->name : '';
                 }
             )
             ->editColumn(
@@ -222,7 +229,8 @@ class RecipeService
                             $list->where('recipes.portions', $value);
                             break;
                         case 'main_ingredient':
-                            $list->where('ingredients.name', 'LIKE', '%'.$value.'%');
+                            $list->joinMainIngredient()
+                                ->where('ingredients.name', 'LIKE', '%'.$value.'%');
                             break;
                         case 'price':
                             $list->where('recipes.price', $value * 100);
