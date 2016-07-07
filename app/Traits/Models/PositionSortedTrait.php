@@ -23,6 +23,6 @@ trait PositionSortedTrait
      */
     public function scopePositionSorted($query, $order = 'ASC')
     {
-        return $query->orderBy('position', $order);
+        return $query->orderBy($this->getTable().'.position', $order);
     }
 }

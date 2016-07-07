@@ -180,6 +180,7 @@ class BackendController extends BaseController
                 'lang_DeletingRecordTitle'            => trans('labels.deleting_record'),
                 'lang_pleaseSelectIngredient'         => trans('labels.please_select_ingredient'),
                 'lang_ingredientAlreadyInAddedToList' => trans('messages.ingredient already added to list'),
+                'lang_recipeAlreadyAddedToList'       => trans('messages.recipe already added to list'),
                 'birthday_format'                     => 'dd-mm-yyyy',
                 'lang_errorSelectedFileIsTooLarge'    => trans('messages.trying to load is too large file'),
                 'lang_errorIncorrectFileType'         => trans('messages.trying to load unsupported file type'),

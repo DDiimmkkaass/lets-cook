@@ -17,3 +17,14 @@
         {!! $errors->first('position', '<p class="help-block error">:message</p>') !!}
     </div>
 </div>
+
+<div class="form-group required @if ($errors->has('description')) has-error @endif">
+    {!! Form::label('description', trans('labels.description'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
+
+    <div class="col-xs-8 col-sm-7 col-md-10">
+        {!! Form::textarea('description', null, ['id' => 'description', 'rows' => '3', 'class' => 'form-control input-sm', 'required' => true]) !!}
+
+        {!! $errors->first('description', '<p class="help-block error">:message</p>') !!}
+    </div>
+</div>
+@include('partials.tabs.ckeditor', ['id' => 'description'])

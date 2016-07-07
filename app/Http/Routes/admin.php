@@ -243,6 +243,14 @@ $router->group(
                 $router->resource('supplier', 'Backend\SupplierController');
 
                 //baskets
+                $router->get(
+                    'basket/get-recipe-row/{recipe_id}',
+                    array (
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.basket.get_recipe_row',
+                        'uses'       => 'Backend\BasketController@getRecipeRow',
+                    )
+                );
                 $router->resource('basket', 'Backend\BasketController');
             }
         );

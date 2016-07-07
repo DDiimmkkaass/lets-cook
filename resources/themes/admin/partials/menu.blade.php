@@ -84,14 +84,27 @@
                 </li>
             @endif
             @if ($user->hasAccess('basket.read'))
-                <li class="{!! active_class('admin.basket*') !!}">
-                    <a href="{!! route('admin.basket.index') !!}">
+                <li class="{!! in_get('type', 'basic') ? 'active' : '' !!}">
+                    <a href="{!! route('admin.basket.index', ['type' => 'basic']) !!}">
                         <i class="fa fa-shopping-basket"></i>
                         <span>@lang('labels.baskets')</span>
 
                         @if ($user->hasAccess('basket.create'))
                             <small class="label create-label pull-right bg-green" title="@lang('labels.add_basket')"
-                                   data-href="{!! route('admin.basket.create') !!}">
+                                   data-href="{!! route('admin.basket.create', ['type' => 'basic']) !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+                <li class="{!! in_get('type', 'additional') ? 'active' : '' !!}">
+                    <a href="{!! route('admin.basket.index', ['type' => 'additional']) !!}">
+                        <span class="icon-shoppingbag"></span>
+                        <span>@lang('labels.additional_baskets')</span>
+
+                        @if ($user->hasAccess('basket.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_additional_baskets')"
+                                   data-href="{!! route('admin.basket.create', ['type' => 'additional']) !!}">
                                 <i class="fa fa-plus"></i>
                             </small>
                         @endif

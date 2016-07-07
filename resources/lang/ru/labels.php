@@ -277,6 +277,7 @@ return array (
   'tab_medias' => 'Медиа',
   'tab_name' => 'Название',
   'tab_permissions' => 'Разрешения',
+  'tab_recipes' => 'Рецепты',
   'tab_ru' => 'Русский',
   'tab_spendings' => 'Отчет',
   'tab_tags' => 'Теги',
@@ -411,4 +412,8 @@ return array (
   'tab_ingredients' => 'Ингредиенты',
   'tab_recipe' => 'Рецепт',
   'tab_cooking_steps' => 'Шаги приготовления',
+  'add_additional_baskets' => 'Добавить дополнительную корзину',
+  'additional_baskets' => 'Дополнительные корзины',
+  'basic_baskets' => 'Основные корзины',
+  'please_select_recipe' => 'Пожалуйста, выберите рецепт',
 );

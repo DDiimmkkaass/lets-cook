@@ -22,6 +22,6 @@ trait VisibleTrait
      */
     public function scopeVisible($query)
     {
-        return $query->whereStatus('true');
+        return $query->where($this->getTable().'.status', true);
     }
 }

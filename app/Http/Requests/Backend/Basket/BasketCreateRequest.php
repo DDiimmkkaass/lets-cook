@@ -9,6 +9,7 @@
 namespace App\Http\Requests\Backend\Basket;
 
 use App\Http\Requests\FormRequest;
+use App\Models\Basket;
 
 /**
  * Class BasketCreateRequest
@@ -27,6 +28,12 @@ class BasketCreateRequest extends FormRequest
         return [
             'name'     => 'required|unique:baskets,name',
             'position' => 'integer',
+            'type'     => 'required|in:'.implode(',', Basket::$types),
+
+            'recipes.new.*.recipe_id' => 'required_with:recipes.new|exists:recipes,id',
+            'recipes.new.*.main'      => 'boolean',
+            'recipes.new.*.portions'  => 'required_with:recipes.new|numeric|min:1',
+            'recipes.new.*.position'  => 'required_with:recipes.new|numeric|min:0',
         ];
     }
 }

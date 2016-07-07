@@ -139,6 +139,8 @@ if (!function_exists('front_active_class')) {
 
         $pattern = str_replace(['/', '.'], ['\/', '\.'], $pattern);
 
+        dd($pattern, $current);
+
         return preg_match("/$pattern/", $current) ? $class : '';
     }
 }
