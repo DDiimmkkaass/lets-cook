@@ -26,7 +26,7 @@ class RecipeRequest extends FormRequest
     {
         return [
             'name'         => 'required',
-            'image'        => ['required', 'regex:'.$this->image_regex],
+            'image'        => ['regex:'.$this->image_regex],
             'recipe'       => 'required',
             'portions'     => 'required|numeric|min:0',
             'cooking_time' => 'required|numeric|min:0',
