@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Validators\DiffInDaysValidator;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Barryvdh\TranslationManager\ManagerServiceProvider;
 use Illuminate\Support\ServiceProvider;
+use Validator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -16,7 +18,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Validator::resolver(function($translator, $data, $rules, $messages)
+        {
+            return new DiffInDaysValidator($translator, $data, $rules, $messages);
+        });
     }
 
     /**

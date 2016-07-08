@@ -9,6 +9,7 @@ return array (
   'alpha_num' => 'Поле :attribute может содержать только буквы и цифры.',
   'array' => 'Поле :attribute должно быть массивом.',
   'before' => 'В поле :attribute должна быть дата до :date.',
+  'diff_in_days' => 'Промежуток между днями :attribute и :param должен быть равен :diff.',
   'between' => 
   array (
     'numeric' => 'Поле :attribute должно быть между :min и :max.',
