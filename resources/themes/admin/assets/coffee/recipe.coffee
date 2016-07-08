@@ -1,3 +1,9 @@
+window.delete_recipe = (recipe_id) ->
+  $form = $('#admin_recipe_destroy_form_' + recipe_id)
+  url = '/admin/recipe/' + recipe_id + '/get-delete-form'
+
+  ajax_dialog(url, $form)
+
 window.filterRecipesTable = () ->
   $table = $('#recipes_datable')
   params = [];

@@ -229,6 +229,14 @@ $router->group(
                         'uses'       => 'Backend\RecipeController@getIngredientRow',
                     ]
                 );
+                $router->get(
+                    'recipe/{id}/get-delete-form',
+                    [
+                        'as'         => 'recipe.get_delete_form',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Backend\RecipeController@getDeleteForm',
+                    ]
+                );
                 $router->resource('recipe', 'Backend\RecipeController');
 
                 //suppliers

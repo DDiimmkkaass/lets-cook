@@ -117,4 +117,6 @@ return array (
   'recipe already added to list' => 'Рецепт уже додан к списку',
   'click on recipe for make him main' => 'Кликните на рецепт, чтобы сделать его основным',
   'current week menu is not created yet' => 'Меню на поточную неделю еще не создано',
+  'you can not delete this recipe as it is used in the following menu' => 'Вы не можете удалить этот рецепт, так как он используется в следующих меню',
+  'you can not delete this recipe because it is still used menu' => 'Вы не можете удалить этот рецепт, так как он до сих пор используется меню',
 );

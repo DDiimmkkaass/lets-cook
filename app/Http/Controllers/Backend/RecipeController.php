@@ -13,8 +13,10 @@ use App\Models\Basket;
 use App\Models\Category;
 use App\Models\Ingredient;
 use App\Models\Recipe;
+use App\Models\WeeklyMenu;
 use App\Services\RecipeService;
 use App\Traits\Controllers\AjaxFieldsChangerTrait;
+use Carbon;
 use DB;
 use Exception;
 use FlashMessages;
@@ -225,6 +227,24 @@ class RecipeController extends BackendController
             return redirect()->back()->withInput();
         }
     }
+
+    /**
+     * @param int $recipe_id
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getDeleteForm($recipe_id)
+    {
+        $menus = $this->recipeService->getWeeklyMenusWhereUsedRecipe($recipe_id);
+
+        return response()->json(
+            [
+                'title'   => trans('labels.deleting_record'),
+                'message' => view('views.'.$this->module.'.partials.delete_message', ['menus' => $menus])
+                    ->render(),
+            ]
+        );
+    }
     
     /**
      * Remove the specified resource from storage.
@@ -237,6 +257,14 @@ class RecipeController extends BackendController
     public function destroy($id)
     {
         try {
+            $menus = $this->recipeService->getWeeklyMenusWhereUsedRecipe($id);
+            
+            if (count($menus)) {
+                FlashMessages::add('error', trans('messages.you can not delete this recipe because it is still used menu'));
+
+                return redirect()->route('admin.'.$this->module.'.index');
+            }
+
             $model = Recipe::findOrFail($id);
             
             $model->delete();

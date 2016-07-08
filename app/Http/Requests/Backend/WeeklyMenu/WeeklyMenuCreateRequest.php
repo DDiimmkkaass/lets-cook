@@ -28,7 +28,7 @@ class WeeklyMenuCreateRequest extends FormRequest
             'week' => 'required|regex:/^[0-9]{2}\.[0-9]{2}\.[0-9]{4}\s\-\s[0-9]{2}\.[0-9]{2}\.[0-9]{4}$/',
 
             'started_at' => 'required|unique:weekly_menus,started_at|before:ended_at',
-            'ended_at'   => 'required|unique:weekly_menus,ended_at|after:started_at|diff_in_days:started_at,7',
+            'ended_at'   => 'required|unique:weekly_menus,ended_at|after:started_at|diff_in_days:started_at,6',
 
             'baskets.*.new.*' => 'array',
 

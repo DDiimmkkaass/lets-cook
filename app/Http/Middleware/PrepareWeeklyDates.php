@@ -51,7 +51,7 @@ class PrepareWeeklyDates
 
             $_dates = [
                 'started_at' => Carbon::createFromFormat('d.m.Y', $dates[0])->startOfDay()->format('Y-m-d H:i:s'),
-                'ended_at'   => Carbon::createFromFormat('d.m.Y', $dates[1])->startOfDay()->format('Y-m-d H:i:s'),
+                'ended_at'   => Carbon::createFromFormat('d.m.Y', $dates[1])->endOfDay()->format('Y-m-d H:i:s'),
             ];
         }
 

@@ -425,4 +425,6 @@ return array (
   'weekly_menus' => 'Меню на неделю',
   'weekly_menu_creating' => 'Создание меню на неделю',
   'weekly_menu_editing' => 'Редактирование меню на неделю',
+  'go_to_menu' => 'Перейти к меню',
+  'menu_of' => 'Меню за'
 );

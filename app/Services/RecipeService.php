@@ -11,6 +11,8 @@ namespace App\Services;
 use App\Models\Recipe;
 use App\Models\RecipeIngredient;
 use App\Models\RecipeStep;
+use App\Models\WeeklyMenu;
+use Carbon;
 use Datatables;
 use DB;
 use Exception;
@@ -45,9 +47,9 @@ class RecipeService
                 'recipes.status'
             )
             ->groupBy('recipes.id');
-
+        
         $this->_implodeFilters($list, $request);
-
+        
         return $dataTables = Datatables::of($list)
             ->filterColumn('id', 'where', 'recipes.id', '=', '$1')
             ->filterColumn('name', 'where', 'recipes.name', 'LIKE', '%$1%')
@@ -55,7 +57,7 @@ class RecipeService
                 'name',
                 function ($model) {
                     $html = $model->name;
-
+                    
                     if ($model->image) {
                         $html = view(
                                 'partials.image',
@@ -65,7 +67,7 @@ class RecipeService
                                 ]
                             )->render().$html;
                     }
-
+                    
                     return $html;
                 }
             )
@@ -79,7 +81,7 @@ class RecipeService
                 'base_ingredient',
                 function ($model) {
                     $main_ingredient = $model->mainIngredient();
-
+                    
                     return $main_ingredient ? $main_ingredient->name : '';
                 }
             )
@@ -103,7 +105,11 @@ class RecipeService
                 function ($model) {
                     return view(
                         'partials.datatables.control_buttons',
-                        ['model' => $model, 'type' => 'recipe']
+                        [
+                            'model'           => $model,
+                            'type'            => 'recipe',
+                            'delete_function' => 'delete_recipe('.$model->id.')',
+                        ]
                     )->render();
                 }
             )
@@ -113,7 +119,7 @@ class RecipeService
             ->removeColumn('image')
             ->make();
     }
-
+    
     /**
      * @param \App\Models\Recipe $model
      * @param array              $ingredients
@@ -130,15 +136,15 @@ class RecipeService
                 FlashMessages::add("error", trans("messages.ingredient destroy failure"." ".$id));
             }
         }
-
+        
         $data = isset($ingredients['old']) ? $ingredients['old'] : [];
         foreach ($data as $id => $ingredient) {
             try {
                 $_ingredient = RecipeIngredient::findOrFail($id);
-
+                
                 $_ingredient['main'] = $main_ingredient == $_ingredient->ingredient_id ? true : false;
                 $_ingredient->fill($ingredient);
-
+                
                 $_ingredient->save();
             } catch (Exception $e) {
                 FlashMessages::add(
@@ -147,13 +153,13 @@ class RecipeService
                 );
             }
         }
-
+        
         $data = isset($ingredients['new']) ? $ingredients['new'] : [];
         foreach ($data as $id => $ingredient) {
             try {
                 $ingredient['main'] = $main_ingredient == $id ? true : false;
                 $ingredient = new RecipeIngredient($ingredient);
-
+                
                 $model->ingredients()->save($ingredient);
             } catch (Exception $e) {
                 FlashMessages::add(
@@ -179,7 +185,7 @@ class RecipeService
                 FlashMessages::add("error", trans("messages.step destroy failure"." ".$id));
             }
         }
-
+        
         $data = isset($steps['old']) ? $steps['old'] : [];
         foreach ($data as $key => $step) {
             try {
@@ -192,7 +198,7 @@ class RecipeService
                 );
             }
         }
-
+        
         $data = isset($steps['new']) ? $steps['new'] : [];
         foreach ($data as $step) {
             try {
@@ -206,7 +212,7 @@ class RecipeService
             }
         }
     }
-
+    
     /**
      * @param Builder $list
      * @param Request $request
@@ -214,7 +220,7 @@ class RecipeService
     private function _implodeFilters(&$list, $request)
     {
         $filters = $request->get('recipe_filters');
-
+        
         if (count($filters)) {
             foreach ($filters as $filter => $value) {
                 if ($value !== '') {
@@ -242,5 +248,21 @@ class RecipeService
                 }
             }
         }
+    }
+    
+    /**
+     * @param int   $recipe_id
+     * @param array $select
+     *
+     * @return mixed
+     */
+    public function getWeeklyMenusWhereUsedRecipe($recipe_id, $select = [])
+    {
+        return WeeklyMenu::joinBasketRecipes()
+            ->whereNotNull('basket_recipes.weekly_menu_id')
+            ->where('ended_at', '>=', Carbon::now())
+            ->where('basket_recipes.recipe_id', $recipe_id)
+            ->groupBy('weekly_menus.id')
+            ->get(empty($select) ? ['weekly_menus.*'] : $select);
     }
 }
