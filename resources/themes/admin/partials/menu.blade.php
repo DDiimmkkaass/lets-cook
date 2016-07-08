@@ -126,6 +126,28 @@
                     </a>
                 </li>
             @endif
+            @if ($user->hasAccess('weeklymenu.read'))
+                <li class="{!! active_class('admin.weekly_menu.current*') !!}">
+                    <a href="{!! route('admin.weekly_menu.current') !!}">
+                        <i class="fa fa-bars"></i>
+                        <span>@lang('labels.current_week_menu')</span>
+                    </a>
+                </li>
+
+                <li class="{!! active_class('admin.weekly_menu*', 'active', 'admin.weekly_menu.current*') !!}">
+                    <a href="{!! route('admin.weekly_menu.index') !!}">
+                        <i class="fa fa-list"></i>
+                        <span>@lang('labels.weekly_menus')</span>
+
+                        @if ($user->hasAccess('weeklymenu.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.weekly_menu')"
+                                   data-href="{!! route('admin.weekly_menu.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
 
             <li class="header">@lang('labels.purchase')</li>
             @if ($user->hasAccess('supplier.read'))

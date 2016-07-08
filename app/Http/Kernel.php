@@ -44,15 +44,16 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth'                    => \App\Http\Middleware\Authenticate::class,
-        'admin.auth'              => \App\Http\Middleware\AdminAuthenticate::class,
-        'auth.basic'              => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest'                   => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle'                => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'ajax'                    => \App\Http\Middleware\AjaxMiddleware::class,
-        'prepare.phone'           => \App\Http\Middleware\PreparePhone::class,
-        'slug.set'                => \App\Http\Middleware\SetSlug::class,
-        'localizationRedirect'    => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
-        'localeSessionRedirect'   => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
+        'auth'                  => \App\Http\Middleware\Authenticate::class,
+        'admin.auth'            => \App\Http\Middleware\AdminAuthenticate::class,
+        'auth.basic'            => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'guest'                 => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'throttle'              => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'ajax'                  => \App\Http\Middleware\AjaxMiddleware::class,
+        'prepare.phone'         => \App\Http\Middleware\PreparePhone::class,
+        'prepare.weekly_dates'  => \App\Http\Middleware\PrepareWeeklyDates::class,
+        'slug.set'              => \App\Http\Middleware\SetSlug::class,
+        'localizationRedirect'  => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
+        'localeSessionRedirect' => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
     ];
 }

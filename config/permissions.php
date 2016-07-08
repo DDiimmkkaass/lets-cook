@@ -66,6 +66,11 @@ return array (
     'recipe.write',
     'recipe.delete',
 
+    'weeklymenu.create',
+    'weeklymenu.read',
+    'weeklymenu.write',
+    'weeklymenu.delete',
+
     'supplier.create',
     'supplier.read',
     'supplier.write',

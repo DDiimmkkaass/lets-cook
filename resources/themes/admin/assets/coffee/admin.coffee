@@ -51,6 +51,8 @@ $(document).on "click", ".front-home-link", (e) ->
   window.open($(this).data('href'),'_blank');
 
 $(document).ready ->
+  moment.locale(lang);
+
   initToggles()
 
   initColorPickers();

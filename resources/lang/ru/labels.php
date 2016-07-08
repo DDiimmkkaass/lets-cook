@@ -416,4 +416,13 @@ return array (
   'additional_baskets' => 'Дополнительные корзины',
   'basic_baskets' => 'Основные корзины',
   'please_select_recipe' => 'Пожалуйста, выберите рецепт',
+  'select' => 'Выбрать',
+  'week_label_short' => 'н.',  
+  'from' => 'от',  
+  'to' => 'до',
+  'week' => 'Неделя',
+  'current_week_menu' => 'Меню на поточную неделю',
+  'weekly_menus' => 'Меню на неделю',
+  'weekly_menu_creating' => 'Создание меню на неделю',
+  'weekly_menu_editing' => 'Редактирование меню на неделю',
 );

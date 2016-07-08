@@ -1,4 +1,6 @@
-{!! Form::open(["route" => ["admin." . $type . ".destroy", $model->id], "id" => "admin_" . $type . "_destroy_form_".$model->id, "method" => "delete", 'class' => 'pull-left']) !!}
+@if (empty($without_delete))
+    {!! Form::open(["route" => ["admin." . $type . ".destroy", $model->id], "id" => "admin_" . $type . "_destroy_form_".$model->id, "method" => "delete", 'class' => 'pull-left']) !!}
+@endif
 
     @if ($user->hasAccess((isset($access) ? $access : $type).'.read'))
         <a class="btn btn-info btn-sm btn-flat" href="{!! route('admin.' . $type . '.edit', [$model->id]) !!}"
@@ -7,7 +9,7 @@
         </a>&nbsp;
     @endif
 
-    @if ($user->hasAccess((isset($access) ? $access : $type).'.delete'))
+    @if ($user->hasAccess((isset($access) ? $access : $type).'.delete') && empty($without_delete))
         <a class="btn btn-danger btn-sm btn-flat"
            href="javascript:void(0);"
            title="{!! trans('labels.delete') !!}"
@@ -23,4 +25,6 @@
         </a>
     @endif
 
-{!! Form::close() !!}
+@if (empty($without_delete))
+    {!! Form::close() !!}
+@endif

@@ -115,4 +115,6 @@ return array (
   'your really want to delete this record' => 'Вы действительно хотите удалить ету запись?',
   'ingredient already added to list' => 'Ингредиент уже додан к списку',
   'recipe already added to list' => 'Рецепт уже додан к списку',
+  'click on recipe for make him main' => 'Кликните на рецепт, чтобы сделать его основным',
+  'current week menu is not created yet' => 'Меню на поточную неделю еще не создано',
 );

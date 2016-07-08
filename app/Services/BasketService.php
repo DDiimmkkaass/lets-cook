@@ -23,8 +23,9 @@ class BasketService
     /**
      * @param \App\Models\Basket $model
      * @param array              $recipes
+     * @param null|int           $weekly_menu_id
      */
-    public function processRecipes(Basket $model, $recipes = [])
+    public function processRecipes(Basket $model, $recipes = [], $weekly_menu_id = null)
     {
         $data = isset($recipes['remove']) ? $recipes['remove'] : [];
         foreach ($data as $id) {
@@ -52,7 +53,7 @@ class BasketService
         $data = isset($recipes['new']) ? $recipes['new'] : [];
         foreach ($data as $recipe) {
             try {
-                $recipe = new BasketRecipe($recipe);
+                $recipe = new BasketRecipe(array_merge($recipe, ['weekly_menu_id' => $weekly_menu_id]));
                 $model->recipes()->save($recipe);
             } catch (Exception $e) {
                 FlashMessages::add(

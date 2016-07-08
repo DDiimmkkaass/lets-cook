@@ -12,11 +12,11 @@ $router->group(
                 // users
                 $router->post(
                     'user/{id}/ajax_field',
-                    array (
+                    [
                         'middleware' => ['ajax'],
                         'as'         => 'admin.user.ajax_field',
                         'uses'       => 'Backend\UserController@ajaxFieldChange',
-                    )
+                    ]
                 );
                 $router->get(
                     'user/new_password/{id}',
@@ -67,11 +67,11 @@ $router->group(
                 // comments
                 $router->post(
                     'comment/{id}/ajax_field',
-                    array (
+                    [
                         'middleware' => ['ajax'],
                         'as'         => 'admin.comment.ajax_field',
                         'uses'       => 'Backend\CommentController@ajaxFieldChange',
-                    )
+                    ]
                 );
                 $router->resource(
                     'comment',
@@ -126,11 +126,11 @@ $router->group(
                 // variables
                 $router->post(
                     'variable/{id}/ajax_field',
-                    array (
+                    [
                         'middleware' => ['ajax'],
                         'as'         => 'admin.variable.ajax_field',
                         'uses'       => 'Backend\VariableController@ajaxFieldChange',
-                    )
+                    ]
                 );
                 $router->get(
                     'variable/value/index',
@@ -197,11 +197,11 @@ $router->group(
                 //ingredients
                 $router->post(
                     'ingredient/{id}/ajax_field',
-                    array (
+                    [
                         'middleware' => 'ajax',
                         'as'         => 'admin.ingredient.ajax_field',
                         'uses'       => 'Backend\IngredientController@ajaxFieldChange',
-                    )
+                    ]
                 );
                 $router->get(
                     'ingredient/incomplete',
@@ -215,19 +215,19 @@ $router->group(
                 //recipe
                 $router->post(
                     'recipe/{id}/ajax_field',
-                    array (
+                    [
                         'middleware' => 'ajax',
                         'as'         => 'admin.recipe.ajax_field',
                         'uses'       => 'Backend\RecipeController@ajaxFieldChange',
-                    )
+                    ]
                 );
                 $router->get(
                     'recipe/get-ingredient-row/{ingredient_id}',
-                    array (
+                    [
                         'middleware' => 'ajax',
                         'as'         => 'admin.recipe.get_ingredient_row',
                         'uses'       => 'Backend\RecipeController@getIngredientRow',
-                    )
+                    ]
                 );
                 $router->resource('recipe', 'Backend\RecipeController');
 
@@ -245,13 +245,28 @@ $router->group(
                 //baskets
                 $router->get(
                     'basket/get-recipe-row/{recipe_id}',
-                    array (
+                    [
                         'middleware' => 'ajax',
                         'as'         => 'admin.basket.get_recipe_row',
                         'uses'       => 'Backend\BasketController@getRecipeRow',
-                    )
+                    ]
                 );
                 $router->resource('basket', 'Backend\BasketController');
+
+                //weekly menu
+                $router->get(
+                    'weekly_menu/current',
+                    ['as' => 'admin.weekly_menu.current', 'uses' => 'Backend\WeeklyMenuController@current']
+                );
+                $router->get(
+                    'weekly_menu/{basket_id}/get-recipe-item/{recipe_id}',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.weekly_menu.get_recipe_item',
+                        'uses'       => 'Backend\WeeklyMenuController@getRecipeItem',
+                    ]
+                )->where('basket_id', '[0-9]+');
+                $router->resource('weekly_menu', 'Backend\WeeklyMenuController', ['except' => ['destroy']]);
             }
         );
 

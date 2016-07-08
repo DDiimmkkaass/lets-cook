@@ -45,9 +45,13 @@ span.required
     .help-block.error
       position: absolute
       white-space: nowrap
+      &.position-relative
+        position: relative
     .error-block
       .help-block.error
         position: relative
+        &.position-relative
+          position: relative
 
 textarea,
 textarea.input-sm
@@ -59,6 +63,9 @@ textarea.input-sm
 /*helpers*/
 .display-block
   display: block
+
+.display-inline-block
+  display: inline-block
 
 .position-relative
   position: relative
@@ -79,8 +86,9 @@ textarea.input-sm
 .upper-case
   text-transform: uppercase
 
-.font-size-16
-  font-size: 16px
+@for $i from 1 through 25
+  .font-size-#{$i}
+    font-size: #{$i}px
 
 .ta-right
   text-align: right
@@ -100,14 +108,25 @@ textarea.input-sm
 .margin-top-4
   margin-top: 4px
 
+.margin-bottom-2
+  margin-bottom: 2px
+
 $properties: margin padding
 $directions: top right bottom left
 @each $property in $properties
   @each $direction in $directions
-    $i: 5
+    $i: 0
     @while $i <= 25
       .#{$property}-#{$direction}-#{$i}
         #{$property}-#{$direction}: #{$i}px
+      $i: $i + 5
+
+$properties: margin padding
+@each $property in $properties
+  $i: 0
+  @while $i <= 25
+    .#{$property}-#{$i}
+      #{$property}: #{$i}px
       $i: $i + 5
 
 .text-indent-10
@@ -348,3 +367,39 @@ table.dataTable
     margin-right: 0
   .has-error
     margin-bottom: 15px
+
+/*weekly menu basket recipes table*/
+.menu-recipes-table
+  .recipe-block
+    display: inline-block
+    vertical-align: top
+    .inner
+      cursor: pointer
+      position: relative
+      padding: 10px 10px 5px
+      .inner-block
+        display: inline-block
+      img
+        max-width: 100%
+        height: auto
+      p
+        font-size: 12px
+    .action
+      &.destroy
+        position: absolute
+        top: -9px
+        right: -9px
+        border-radius: 50%
+    &.main
+      .inner
+        &:after
+          font: normal normal normal 14px/1 FontAwesome
+          text-rendering: auto
+          -webkit-font-smoothing: antialiased
+          content: "\f058"
+          color: green
+          position: absolute
+          top: 50%
+          left: 45%
+          font-size: 55px
+          cursor: pointer
