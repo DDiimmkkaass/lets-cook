@@ -43,7 +43,6 @@ class RecipeService
                 DB::raw('1 as baskets_list'),
                 'recipes.portions',
                 DB::raw('2 as base_ingredient'),
-                'recipes.price',
                 'recipes.status'
             )
             ->groupBy('recipes.id');
@@ -83,12 +82,6 @@ class RecipeService
                     $main_ingredient = $model->mainIngredient();
                     
                     return $main_ingredient ? $main_ingredient->name : '';
-                }
-            )
-            ->editColumn(
-                'price',
-                function ($model) {
-                    return $model->price.' '.currency();
                 }
             )
             ->editColumn(
@@ -237,9 +230,6 @@ class RecipeService
                         case 'main_ingredient':
                             $list->joinMainIngredient()
                                 ->where('ingredients.name', 'LIKE', '%'.$value.'%');
-                            break;
-                        case 'price':
-                            $list->where('recipes.price', $value * 100);
                             break;
                         case 'status':
                             $list->where('recipes.status', $value);

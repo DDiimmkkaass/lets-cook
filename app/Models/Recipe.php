@@ -35,7 +35,6 @@ class Recipe extends Model
         'home_equipment',
         'home_ingredients',
         'status',
-        'price',
     ];
     
     /**
@@ -65,24 +64,6 @@ class Recipe extends Model
     public function steps()
     {
         return $this->hasMany(RecipeStep::class)->positionSorted();
-    }
-    
-    /**
-     * @param float|int $value
-     */
-    public function setPriceAttribute($value)
-    {
-        $this->attributes['price'] = (int) ($value * 100);
-    }
-    
-    /**
-     * @param int $value
-     *
-     * @return float
-     */
-    public function getPriceAttribute($value)
-    {
-        return $value / 100;
     }
     
     /**

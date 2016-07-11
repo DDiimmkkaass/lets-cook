@@ -5,8 +5,6 @@
                 <h4>{!! $model->name !!}</h4>
 
                 <p class="font-size-12">
-                    @lang('labels.price'): {!! $model->price !!} {!! $currency !!}
-                    <br>
                     @lang('labels.portions'): {!! $model->portions !!}
                 </p>
 
@@ -14,7 +12,6 @@
                 <input type="hidden" name="baskets[{!! $basket_id !!}][new][{!! $model->id !!}][name]" value="{!! $model->name !!}">
                 <input type="hidden" name="baskets[{!! $basket_id !!}][new][{!! $model->id !!}][image]" value="{!! $model->image !!}">
                 <input type="hidden" name="baskets[{!! $basket_id !!}][new][{!! $model->id !!}][recipe_portions]" value="{!! $model->portions !!}">
-                <input type="hidden" name="baskets[{!! $basket_id !!}][new][{!! $model->id !!}][price]" value="{!! $model->price !!}">
             </div>
 
             <div class="image col-sm-4 no-padding text-center">

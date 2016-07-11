@@ -15,7 +15,6 @@
                                 ['text' => trans('labels.basket')],
                                 ['text' => trans('labels.portions')],
                                 ['text' => trans('labels.main_ingredient')],
-                                ['text' => trans('labels.price')],
                                 ['text' => trans('labels.status')],
                                 ['text' => trans('labels.actions')]
                             ])
@@ -25,7 +24,6 @@
                                 ['text' => Form::select('recipe_filters[basket]', $baskets, null, ['class' => 'form-control select2 input-sm recipe-filter'])],
                                 ['text' => Form::text('recipe_filters[portions]', '', ['class' => 'form-control input-sm recipe-filter'])],
                                 ['text' => Form::text('recipe_filters[main_ingredient]', '', ['class' => 'form-control input-sm recipe-filter'])],
-                                ['text' => Form::text('recipe_filters[price]', '', ['class' => 'form-control input-sm recipe-filter'])],
                                 ['text' => Form::select('recipe_filters[status]', $statuses, null, ['class' => 'form-control select2 input-sm recipe-filter'])],
                                 ['attr' => ['colspan' => 1]],
                             ])

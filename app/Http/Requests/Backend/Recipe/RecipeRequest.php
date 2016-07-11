@@ -31,7 +31,6 @@ class RecipeRequest extends FormRequest
             'portions'     => 'required|numeric|min:0',
             'cooking_time' => 'required|numeric|min:0',
             'status'       => 'required|boolean',
-            'price'        => 'required|numeric|min:0',
 
             'baskets' => 'required|array',
 

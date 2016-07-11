@@ -31,8 +31,6 @@
                                 <h5>{!! $recipe->recipe->name !!}</h5>
 
                                 <p>
-                                    @lang('labels.price'): {!! $recipe->recipe->price !!} {!! $currency !!}
-                                    <br>
                                     @lang('labels.portions'): {!! $recipe->recipe->portions !!}
                                 </p>
                             </div>
@@ -82,8 +80,6 @@
                                     <h5>{!! $recipe['name'] !!}</h5>
 
                                     <p>
-                                        @lang('labels.price'): {!! $recipe['price'] !!} {!! $currency !!}
-                                        <br>
                                         @lang('labels.portions'): {!! $recipe['recipe_portions'] !!}
                                     </p>
                                 </div>
@@ -96,7 +92,6 @@
                                 <input type="hidden" name="baskets[{!! $basket->id !!}][new][{!! $recipe_key !!}][name]" value="{!! $recipe['name'] !!}">
                                 <input type="hidden" name="baskets[{!! $basket->id !!}][new][{!! $recipe_key !!}][image]" value="{!! $recipe['image'] !!}">
                                 <input type="hidden" name="baskets[{!! $basket->id !!}][new][{!! $recipe_key !!}][recipe_portions]" value="{!! $recipe['recipe_portions'] !!}">
-                                <input type="hidden" name="baskets[{!! $basket->id !!}][new][{!! $recipe_key !!}][price]" value="{!! $recipe['price'] !!}">
 
                                 <input type="hidden" class="main-checkbox" name="baskets[{!! $basket->id !!}][new][{!! $recipe_key !!}][main]" value="{!! $recipe['main'] ? 1 : 0 !!}">
 
