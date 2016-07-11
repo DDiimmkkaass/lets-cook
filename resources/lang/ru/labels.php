@@ -421,7 +421,7 @@ return array (
   'from' => 'от',  
   'to' => 'до',
   'week' => 'Неделя',
-  'current_week_menu' => 'Меню на поточную неделю',
+  'current_week_menu' => 'Меню на текущую неделю',
   'weekly_menus' => 'Меню на неделю',
   'weekly_menu_creating' => 'Создание меню на неделю',
   'weekly_menu_editing' => 'Редактирование меню на неделю',
