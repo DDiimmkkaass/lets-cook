@@ -31,7 +31,6 @@ class _RecipesSeeder extends DataSeeder
                 'cooking_time'     => rand(5, 300),
                 'home_equipment'   => implode('<br>', $this->getLocalizedFaker()->sentences(rand(5, 10))),
                 'home_ingredients' => implode('<br>', $this->getLocalizedFaker()->sentences(rand(5, 10))),
-                'price'            => rand(100, 100000),
             ];
 
             $recipe = new Recipe($input);

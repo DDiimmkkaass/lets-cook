@@ -15,6 +15,7 @@
                                 ['text' => trans('labels.basket')],
                                 ['text' => trans('labels.portions')],
                                 ['text' => trans('labels.main_ingredient')],
+                                ['text' => trans('labels.price')],
                                 ['text' => trans('labels.status')],
                                 ['text' => trans('labels.actions')]
                             ])

@@ -695,16 +695,15 @@ if (!function_exists('currency')) {
      * Get / set the currency value.
      *
      * @param string|null $value
-     * @param string|null $default
      *
      * @return string
      */
-    function currency($value = null, $default = null)
+    function currency($value = null)
     {
         if (is_null($value)) {
             return session('currency');
         }
 
-        return session('currency', $default);
+        return session()->set('currency', $value);
     }
 }

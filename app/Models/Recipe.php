@@ -130,4 +130,22 @@ class Recipe extends Model
         
         return $this->main_ingredient;
     }
+    
+    /**
+     * set and return price of recipe
+     *
+     * @return int|mixed
+     */
+    public function getPrice()
+    {
+        if (empty($this->price)) {
+            $this->price = 0;
+
+            foreach ($this->ingredients as $ingredient) {
+                $this->attributes['price'] += $ingredient->ingredient->price * $ingredient->count;
+            }
+        }
+
+        return $this->price;
+    }
 }

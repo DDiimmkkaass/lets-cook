@@ -43,6 +43,7 @@ class RecipeService
                 DB::raw('1 as baskets_list'),
                 'recipes.portions',
                 DB::raw('2 as base_ingredient'),
+                DB::raw('3 as recipe_price'),
                 'recipes.status'
             )
             ->groupBy('recipes.id');
@@ -82,6 +83,12 @@ class RecipeService
                     $main_ingredient = $model->mainIngredient();
                     
                     return $main_ingredient ? $main_ingredient->name : '';
+                }
+            )
+            ->editColumn(
+                'recipe_price',
+                function ($model) {
+                    return $model->getPrice().' '.currency();
                 }
             )
             ->editColumn(
