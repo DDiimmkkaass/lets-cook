@@ -28,6 +28,7 @@ class BasketUpdateRequest extends FormRequest
 
         return [
             'name'     => 'required|unique:baskets,name,'.$id.',id',
+            'price'    => 'required|numeric|min:0',
             'position' => 'integer',
 
             'recipes.new' => 'array',

@@ -26,6 +26,7 @@ class Basket extends Model
     protected $fillable = [
         'name',
         'description',
+        'price',
         'position',
     ];
     
@@ -51,6 +52,24 @@ class Basket extends Model
     public function recipes()
     {
         return $this->hasMany(BasketRecipe::class)->positionSorted()->with('recipe');
+    }
+    
+    /**
+     * @param float|int $value
+     */
+    public function setPriceAttribute($value)
+    {
+        $this->attributes['price'] = (int) ($value * 100);
+    }
+    
+    /**
+     * @param int $value
+     *
+     * @return float
+     */
+    public function getPriceAttribute($value)
+    {
+        return $value / 100;
     }
     
     /**

@@ -99,11 +99,17 @@ class BasketController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = Basket::ofType($this->type)->select('id', 'name', 'position', 'type');
+            $list = Basket::ofType($this->type)->select('id', 'name', 'position', 'price', 'type');
             
             return $dataTables = Datatables::of($list)
                 ->filterColumn('id', 'where', 'baskets.id', '=', '$1')
                 ->filterColumn('name', 'where', 'baskets.name', 'LIKE', '%$1%')
+                ->editColumn(
+                    'price',
+                    function ($model) {
+                        return $model->price.' '.currency();
+                    }
+                )
                 ->editColumn(
                     'actions',
                     function ($model) {

@@ -13,6 +13,7 @@
                                 ['text' => trans('labels.id')],
                                 ['text' => trans('labels.name')],
                                 ['text' => trans('labels.position')],
+                                ['text' => trans('labels.price')],
                                 ['text' => trans('labels.actions')]
                             ])
                             ->addFoot([

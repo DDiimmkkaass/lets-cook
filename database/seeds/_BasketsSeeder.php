@@ -21,9 +21,11 @@ class _BasketsSeeder extends DataSeeder
                 'name'     => $this->getLocalizedFaker()->word,
                 'type'     => Basket::getTypeIdByName('basic'),
                 'position' => $i,
+                'price'    => rand(3000, 10000),
             ];
 
-            Basket::create($input);
+            $model = new Basket($input);
+            $model->save();
         }
 
         foreach (range(1, 10) as $index) {
@@ -31,9 +33,11 @@ class _BasketsSeeder extends DataSeeder
                 'name'     => $this->getLocalizedFaker()->word,
                 'type'     => Basket::getTypeIdByName('additional'),
                 'position' => $index,
+                'price'    => rand(3000, 10000),
             ];
 
-            Basket::create($input);
+            $model = new Basket($input);
+            $model->save();
         }
     }
 }

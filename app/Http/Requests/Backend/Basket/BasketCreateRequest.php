@@ -27,6 +27,7 @@ class BasketCreateRequest extends FormRequest
     {
         return [
             'name'     => 'required|unique:baskets,name',
+            'price'    => 'required|numeric|min:0',
             'position' => 'integer',
             'type'     => 'required|in:'.implode(',', Basket::$types),
 
