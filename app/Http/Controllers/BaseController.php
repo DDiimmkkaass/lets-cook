@@ -66,14 +66,14 @@ class BaseController extends IlluminateBaseController
 
         $this->_init();
     }
-
+    
     /**
      * Render views
      *
      * @param string $view
      * @param array  $data
      *
-     * @return $this
+     * @return \Illuminate\Contracts\View\View
      */
     public function render($view = '', array $data = [])
     {

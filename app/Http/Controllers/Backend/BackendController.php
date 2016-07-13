@@ -127,7 +127,7 @@ class BackendController extends BaseController
     }
     
     /**
-     * @return $this
+     * @return \Illuminate\Contracts\View\View
      */
     public function getIndex()
     {
@@ -138,7 +138,7 @@ class BackendController extends BaseController
      * @param string $view
      * @param array  $data
      *
-     * @return $this
+     * @return \Illuminate\Contracts\View\View
      */
     public function render($view = '', array $data = [])
     {
@@ -185,6 +185,7 @@ class BackendController extends BaseController
                 'lang_pleaseSelectIngredient'         => trans('labels.please_select_ingredient'),
                 'lang_ingredientAlreadyInAddedToList' => trans('messages.ingredient already added to list'),
                 'lang_recipeAlreadyAddedToList'       => trans('messages.recipe already added to list'),
+                'lang_basketAlreadyAddedToList'       => trans('messages.this basket already added to list'),
                 'birthday_format'                     => 'dd-mm-yyyy',
                 'lang_errorSelectedFileIsTooLarge'    => trans('messages.trying to load is too large file'),
                 'lang_errorIncorrectFileType'         => trans('messages.trying to load unsupported file type'),

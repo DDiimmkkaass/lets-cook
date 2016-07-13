@@ -32,6 +32,14 @@ class WeeklyMenu extends Model
     protected $dates = ['started_at', 'ended_at'];
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function baskets()
+    {
+        return $this->hasMany(WeeklyMenuBasket::class)->with('basket');
+    }
+    
+    /**
      * @return string
      */
     public function getStartedAt()
@@ -100,8 +108,18 @@ class WeeklyMenu extends Model
      *
      * @return mixed
      */
+    public function scopeJoinWeeklyMenuBaskets($query)
+    {
+        return $query->leftJoin('weekly_menu_baskets', 'weekly_menu_baskets.weekly_menu_id', '=', 'weekly_menus.id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
     public function scopeJoinBasketRecipes($query)
     {
-        return $query->leftJoin('basket_recipes', 'basket_recipes.weekly_menu_id', '=', 'weekly_menus.id');
+        return $query->leftJoin('basket_recipes', 'basket_recipes.weekly_menu_basket_id', '=', 'weekly_menu_baskets.basket_id');
     }
 }

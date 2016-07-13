@@ -16,7 +16,6 @@ use App\Models\WeeklyMenu;
 use App\Services\BasketService;
 use App\Services\WeeklyMenuService;
 use Carbon;
-use Datatables;
 use DB;
 use Exception;
 use FlashMessages;
@@ -55,12 +54,12 @@ class WeeklyMenuController extends BackendController
      * @var WeeklyMenu
      */
     public $model;
-
+    
     /**
      * @var \App\Services\WeeklyMenuService
      */
     private $weeklyMenuService;
-
+    
     /**
      * @var \App\Services\BasketService
      */
@@ -77,68 +76,37 @@ class WeeklyMenuController extends BackendController
         BasketService $basketService
     ) {
         parent::__construct($response);
-
+        
         $this->weeklyMenuService = $weeklyMenuService;
         $this->basketService = $basketService;
-
+        
         $this->middleware('prepare.weekly_dates', ['only' => ['store', 'update']]);
-
+        
         Meta::title(trans('labels.weekly_menus'));
         
         $this->breadcrumbs(trans('labels.weekly_menus'), route('admin.'.$this->module.'.index'));
     }
-
+    
     /**
      * Display a listing of the resource.
      * GET /weekly_menu
+     *
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Response
      */
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = WeeklyMenu::select(
-                'id',
-                'started_at',
-                'ended_at'
-            );
-
-            return $dataTables = Datatables::of($list)
-                ->filterColumn('id', 'where', 'weekly_menu.id', '=', '$1')
-                ->filterColumn('started_at', 'where', 'weekly_menu.started_at', 'LIKE', '%$1%')
-                ->filterColumn('ended_at', 'where', 'weekly_menu.ended_at', 'LIKE', '%$1%')
-                ->editColumn(
-                    'started_at',
-                    function ($model) {
-                        return $model->getStartedAt() .
-                        ($model->isCurrentWeekMenu() ? view('views.weekly_menu.partials.current_week_menu_label')->render() : '');
-                    }
-                )
-                ->editColumn(
-                    'ended_at',
-                    function ($model) {
-                        return $model->getEndedAt();
-                    }
-                )
-                ->editColumn(
-                    'actions',
-                    function ($model) {
-                        return view(
-                            'partials.datatables.control_buttons',
-                            ['model' => $model, 'type' => $this->module, 'without_delete' => true]
-                        )->render();
-                    }
-                )
-                ->setIndexColumn('id')
-                ->make();
+            return $this->weeklyMenuService->table();
         }
-
+        
         $this->data('page_title', trans('labels.weekly_menus'));
         $this->breadcrumbs(trans('labels.weekly_menus_list'));
-
+        
         return $this->render('views.'.$this->module.'.index');
     }
-
+    
     /**
      * Display menu of current week.
      *
@@ -146,24 +114,24 @@ class WeeklyMenuController extends BackendController
      */
     public function current()
     {
-        $model = WeeklyMenu::current()->first();
-
+        $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.basket.allowed_recipes')->current()->first();
+        
         if (!$model) {
             session()->put('current_week_menu', true);
-
+            
             FlashMessages::add('error', trans('messages.current week menu is not created yet'));
-
+            
             return redirect()->route('admin.'.$this->module.'.create');
         }
-
+        
         $this->data('model', $model);
-
+        
         $this->data('page_title', trans('labels.current_week_menu'));
-
+        
         $this->breadcrumbs(trans('labels.current_week_menu'));
-
-        $this->_fillAdditionalTemplateData();
-
+        
+        $this->_fillAdditionalTemplateData($model);
+        
         return $this->render('views.'.$this->module.'.edit');
     }
     
@@ -176,22 +144,22 @@ class WeeklyMenuController extends BackendController
     public function create()
     {
         $model = new WeeklyMenu();
-
+        
         if (session('current_week_menu', false)) {
             $model->started_at = Carbon::now()->startOfWeek();
             $model->ended_at = Carbon::now()->endOfWeek();
-
+            
             session()->forget('current_week_menu');
         }
-
+        
         $this->data('model', $model);
         
         $this->data('page_title', trans('labels.weekly_menu_creating'));
         
         $this->breadcrumbs(trans('labels.weekly_menu_creating'));
-
-        $this->_fillAdditionalTemplateData();
-
+        
+        $this->_fillAdditionalTemplateData($model);
+        
         return $this->render('views.'.$this->module.'.create');
     }
     
@@ -206,22 +174,22 @@ class WeeklyMenuController extends BackendController
     public function store(WeeklyMenuCreateRequest $request)
     {
         DB::beginTransaction();
-
+        
         try {
             $model = new WeeklyMenu($request->all());
-
+            
             $model->save();
-
+            
             $this->_saveRelationships($model, $request);
-
+            
             DB::commit();
-
+            
             FlashMessages::add('success', trans('messages.save_ok'));
-
+            
             return redirect()->route('admin.'.$this->module.'.edit', $model->id);
         } catch (Exception $e) {
             DB::rollBack();
-
+            
             FlashMessages::add('error', trans('messages.save_failed'));
             
             return redirect()->back()->withInput();
@@ -252,17 +220,17 @@ class WeeklyMenuController extends BackendController
     public function edit($id)
     {
         try {
-            $model = WeeklyMenu::whereId($id)->firstOrFail();
-
+            $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.basket.allowed_recipes')->whereId($id)->firstOrFail();
+            
             if ($model->isCurrentWeekMenu()) {
                 return redirect()->route('admin.'.$this->module.'.current');
             }
-
+            
             $this->data('page_title', '"'.$model->getWeekDates().'"');
             
             $this->breadcrumbs(trans('labels.weekly_menu_editing'));
-
-            $this->_fillAdditionalTemplateData();
+            
+            $this->_fillAdditionalTemplateData($model);
             
             return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
@@ -284,49 +252,50 @@ class WeeklyMenuController extends BackendController
     public function update($id, WeeklyMenuUpdateRequest $request)
     {
         DB::beginTransaction();
-
+        
         try {
             $model = WeeklyMenu::findOrFail($id);
             
             $model->update($request->all());
-
+            
             $this->_saveRelationships($model, $request);
-
+            
             DB::commit();
             
             FlashMessages::add('success', trans('messages.save_ok'));
             
+            if ($model->isCurrentWeekMenu()) {
+                return redirect()->route('admin.'.$this->module.'.current');
+            }
+    
             return redirect()->route('admin.'.$this->module.'.edit', $model->id);
         } catch (ModelNotFoundException $e) {
             DB::rollBack();
-
+            
             FlashMessages::add('error', trans('messages.record_not_found'));
             
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
-
+            
             FlashMessages::add("error", trans('messages.update_error'));
             
             return redirect()->back()->withInput();
         }
     }
-
+    
     /**
-     * @param int $basket_id
-     * @param int $recipe_id
-     *
      * @return array
      */
-    public function getRecipeItem($basket_id, $recipe_id)
+    public function getBasketSelectPopup()
     {
         try {
-            $model = Recipe::visible()->findOrFail($recipe_id);
-
+            $baskets = Basket::basic()->get();
+            
             return [
                 'status' => 'success',
-                'html'   => view('views.'.$this->module.'.partials.recipe_item')
-                    ->with(['basket_id' => $basket_id, 'model' => $model])
+                'html'   => view('views.'.$this->module.'.popups.basket_select')
+                    ->with('baskets', $baskets)
                     ->render(),
             ];
         } catch (Exception $e) {
@@ -336,13 +305,85 @@ class WeeklyMenuController extends BackendController
             ];
         }
     }
-
+    
     /**
-     * fill additional template data
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
      */
-    private function _fillAdditionalTemplateData()
+    public function addBasket(Request $request)
     {
-        $this->data('baskets', Basket::with('recipes', 'allowed_recipes')->basic()->get());
+        try {
+            $basket = Basket::with('allowed_recipes')->whereId($request->get('basket_id'))->firstOrFail();
+            
+            return [
+                'status'       => 'success',
+                'tab_html'     => view('views.'.$this->module.'.partials.basket_add_tab')
+                    ->with(
+                        [
+                            'basket'   => $basket,
+                            'portions' => $request->get('portions', config('weekly_menu.default_portions_count')),
+                        ]
+                    )
+                    ->render(),
+                'content_html' => view('views.'.$this->module.'.partials.basket_add_content')
+                    ->with(
+                        [
+                            'basket'   => $basket,
+                            'portions' => $request->get('portions', config('weekly_menu.default_portions_count')),
+                        ]
+                    )
+                    ->render(),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
+     * @param int $basket_id
+     * @param int $portions
+     * @param int $recipe_id
+     *
+     * @return array
+     */
+    public function getRecipeItem($basket_id, $portions, $recipe_id)
+    {
+        try {
+            $model = Recipe::visible()->findOrFail($recipe_id);
+            
+            return [
+                'status' => 'success',
+                'html'   => view('views.'.$this->module.'.partials.recipe_item')
+                    ->with(
+                        [
+                            'basket_id' => $basket_id,
+                            'portions'  => $portions,
+                            'model'     => $model,
+                        ]
+                    )
+                    ->render(),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
+     *
+     * fill additional template data
+     *
+     * @param WeeklyMenu|null $model
+     */
+    private function _fillAdditionalTemplateData($model)
+    {
+        $this->data('baskets', $model->baskets);
     }
     
     /**
@@ -351,10 +392,17 @@ class WeeklyMenuController extends BackendController
      */
     private function _saveRelationships(WeeklyMenu $model, Request $request)
     {
-        foreach ($request->get('baskets', []) as $basket_id => $recipes) {
-            $basket = Basket::whereId($basket_id)->first();
-
-            $this->basketService->processRecipes($basket, (array) $recipes, $model->id);
+        $exists_baskets = [];
+        
+        foreach ($request->get('baskets', []) as $key => $recipes) {
+            list($basket_id, $portions) = explode('_', $key);
+    
+            $basket = $this->weeklyMenuService->saveBasket($model, ['basket_id' => $basket_id, 'portions' => $portions]);
+            $this->weeklyMenuService->processRecipes($basket, $recipes);
+    
+            $exists_baskets[] = $basket->id;
         }
+        
+        $this->weeklyMenuService->removeDeletedBaskets($model, $exists_baskets);
     }
 }

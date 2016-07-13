@@ -267,7 +267,23 @@ $router->group(
                     ['as' => 'admin.weekly_menu.current', 'uses' => 'Backend\WeeklyMenuController@current']
                 );
                 $router->get(
-                    'weekly_menu/{basket_id}/get-recipe-item/{recipe_id}',
+                    'weekly_menu/get-basket-select-popup',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.weekly_menu.get_basket_select_popup',
+                        'uses'       => 'Backend\WeeklyMenuController@getBasketSelectPopup',
+                    ]
+                );
+                $router->get(
+                    'weekly_menu/add-basket',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.weekly_menu.add_basket',
+                        'uses'       => 'Backend\WeeklyMenuController@addBasket',
+                    ]
+                );
+                $router->get(
+                    'weekly_menu/{basket_id}/{portions}/get-recipe-item/{recipe_id}',
                     [
                         'middleware' => 'ajax',
                         'as'         => 'admin.weekly_menu.get_recipe_item',

@@ -5,36 +5,29 @@
                 <h4>{!! $model->name !!}</h4>
 
                 <p class="font-size-12">
-                    @lang('labels.portions'): {!! $model->portions !!}
+                    @lang('labels.portions_lowercase'): {!! $model->portions !!}
                 </p>
 
-                <input type="hidden" name="baskets[{!! $basket_id !!}][new][{!! $model->id !!}][recipe_id]" value="{!! $model->id !!}">
-                <input type="hidden" name="baskets[{!! $basket_id !!}][new][{!! $model->id !!}][name]" value="{!! $model->name !!}">
-                <input type="hidden" name="baskets[{!! $basket_id !!}][new][{!! $model->id !!}][image]" value="{!! $model->image !!}">
-                <input type="hidden" name="baskets[{!! $basket_id !!}][new][{!! $model->id !!}][recipe_portions]" value="{!! $model->portions !!}">
+                <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][recipe_id]" value="{!! $model->id !!}">
+                <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][name]" value="{!! $model->name !!}">
+                <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][image]" value="{!! $model->image !!}">
+                <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][recipe_portions]" value="{!! $model->portions !!}">
             </div>
 
             <div class="image col-sm-4 no-padding text-center">
                 @include('partials.image', ['src' => $model->image, 'attributes' => ['width' => 100, 'class' => 'img-circle']])
             </div>
 
-            {!! Form::hidden('baskets['.$basket_id.'][new]['.$model->id.'][main]', 0, ['id' => 'baskets_'.$basket_id.'_old_'.$model->id.'_main', 'class' => 'main-checkbox']) !!}
+            {!! Form::hidden('baskets['.$basket_id.'_'.$portions.'][new]['.$model->id.'][main]', 0, ['id' => 'baskets_'.$basket_id.'_'.$portions.'_new_'.$model->id.'_main', 'class' => 'main-checkbox']) !!}
 
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>
         <div class="col-sm-12 padding-10">
-            <div class="form-group required">
-                {!! Form::label('portions', trans('labels.portions'), ['class' => 'control-label col-sm-3']) !!}
-                <div class="col-sm-9">
-                    {!! Form::text('baskets['.$basket_id.'][new]['.$model->id.'][portions]', $model->portions, ['id' => 'baskets_'.$basket_id.'_new_'.$model->id.'_portions', 'class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
-                </div>
-            </div>
-
             <div class="form-group margin-bottom-0 required">
-                {!! Form::label('position', trans('labels.position'), ['class' => 'control-label col-sm-3']) !!}
+                {!! Form::label('baskets['.$basket_id.'_'.$portions.'][new]['.$model->id.'][position]', trans('labels.position'), ['class' => 'control-label col-sm-3']) !!}
                 <div class="col-sm-9">
-                    {!! Form::text('baskets['.$basket_id.'][new]['.$model->id.'][position]', 0, ['id' => 'baskets_'.$basket_id.'_new_'.$model->id.'_portions', 'class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+                    {!! Form::text('baskets['.$basket_id.'_'.$portions.'][new]['.$model->id.'][position]', 0, ['id' => 'baskets_'.$portions.'_'.$basket_id.'_new_'.$model->id.'_portions', 'class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
                 </div>
             </div>
         </div>

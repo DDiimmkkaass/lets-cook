@@ -15,7 +15,6 @@
         <tr>
             <th class="col-sm-1 text-center">{!! trans('labels.id') !!}</th>
             <th>{!! trans('labels.name') !!}</th>
-            <th class="col-sm-1 text-center">{!! trans('labels.portions') !!} <span class="required">*</span></th>
             <th class="col-sm-1 text-center">{!! trans('labels.position') !!} <span class="required">*</span></th>
             <th class="col-sm-1 text-center">{!! trans('labels.delete') !!}</th>
         </tr>
@@ -34,11 +33,6 @@
                                 @include('partials.image', ['src' => $recipe->recipe->image, 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
                             @endif
                             {!! $recipe->recipe->name !!} <span class="lover-case">(@lang('labels.portions'): {!! $recipe->recipe->portions !!})</span>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group required @if ($errors->has('recipes.old.' .$recipe->id. '.portions')) has-error @endif">
-                            {!! Form::text('recipes[old][' .$recipe->id. '][portions]', $recipe->portions ?: 2, ['id' => 'recipes.old.' .$recipe->id. '.portions', 'class' => 'form-control input-sm', 'required' => true]) !!}
                         </div>
                     </td>
                     <td>
@@ -75,11 +69,6 @@
                                 {!! Form::hidden('recipes[new][' .$recipe_key. '][image]', $recipe['image']) !!}
                                 {!! Form::hidden('recipes[new][' .$recipe_key. '][name]', $recipe['name']) !!}
                                 {!! Form::hidden('recipes[new][' .$recipe_key. '][recipe_portions]', $recipe['recipe_portions']) !!}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-group required @if ($errors->has('recipes.new.' .$recipe_key. '.portions')) has-error @endif">
-                                {!! Form::text('recipes[new][' .$recipe_key. '][portions]', $recipe['portions'], ['id' => 'recipes.new.' .$recipe_key. '.portions', 'class' => 'form-control input-sm', 'required' => true]) !!}
                             </div>
                         </td>
                         <td>

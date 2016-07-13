@@ -25,7 +25,7 @@ class WeeklyMenuUpdateRequest extends FormRequest
     public function rules()
     {
         $id = $this->route('weekly_menu');
-
+        
         return [
             'week' => 'required|regex:/^[0-9]{2}\.[0-9]{2}\.[0-9]{4}\s\-\s[0-9]{2}\.[0-9]{2}\.[0-9]{4}$/',
 
@@ -34,13 +34,12 @@ class WeeklyMenuUpdateRequest extends FormRequest
 
             'baskets.*.new.*' => 'array',
             'baskets.*.old.*' => 'array',
-            'baskets.remove' => 'array',
+            'baskets.*.remove' => 'array',
 
             'baskets.*.new.*.recipe_id' => 'required_with:baskets.*.new|exists:recipes,id',
-            'baskets.*.new.*.portions'  => 'required_with:baskets.*.new|numeric|min:0',
             'baskets.*.new.*.position'  => 'required_with:baskets.*.new|numeric|min:0',
 
-            'baskets.*.old.*.portions'  => 'required_with:baskets.*.old|numeric|min:0',
+            'baskets.*.old.*.recipe_id' => 'exists:recipes,id',
             'baskets.*.old.*.position'  => 'required_with:baskets.*.old|numeric|min:0',
         ];
     }

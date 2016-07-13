@@ -24,21 +24,12 @@ class BasketRecipe extends Model
      * @var array
      */
     protected $fillable = [
-        'weekly_menu_id',
         'basket_id',
+        'weekly_menu_basket_id',
         'recipe_id',
         'main',
-        'portions',
         'position',
     ];
-    
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function basket()
-    {
-        return $this->belongsTo(Basket::class);
-    }
     
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -51,8 +42,16 @@ class BasketRecipe extends Model
     /**
      * @param int $value
      */
-    public function setWeeklyMenuIdAttribute($value)
+    public function setBasketIdAttribute($value)
     {
-        $this->attributes['weekly_menu_id'] = empty($value) ? null : (int) $value;
+        $this->attributes['basket_id'] = empty($value) ? null : (int) $value;
+    }
+    
+    /**
+     * @param int $value
+     */
+    public function setWeeklyMenuBasketIdAttribute($value)
+    {
+        $this->attributes['weekly_menu_basket_id'] = empty($value) ? null : (int) $value;
     }
 }

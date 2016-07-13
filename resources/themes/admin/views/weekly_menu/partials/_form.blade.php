@@ -3,40 +3,19 @@
 <div class="row">
     <div class="col-md-12">
 
-        <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-                @foreach($baskets as $key => $basket)
-                    <li @if ($key == 0) class="active" @endif>
-                        <a aria-expanded="false" href="#basket_{!! $basket->id !!}" data-toggle="tab">{!! $basket->name !!}</a>
-                    </li>
-                @endforeach
-            </ul>
+        <div class="box box-primary">
+            <div class="box-body">
 
-            <div class="tab-content">
+                @include('weekly_menu.tabs.menu_options')
 
-                <div class="recipes-add-control margin-bottom-25">
-                    <div class="form-group no-margin @if ($errors->first('week') || $errors->first('started_at') || $errors->first('ended_at')) has-error @endif">
-                        <div class="col-xs-12 margin-bottom-5 font-size-16 text-left no-padding">
-                            @lang('labels.week')
-                        </div>
-                        <div class="input-group">
-                            <div class="input-group-addon">
-                                <i class="fa fa-calendar"></i>
-                            </div>
-                            {!! Form::text('week', old('week') ?: $model->getWeekDates(), ['id' => 'week_menu_date', 'class' => 'form-control pull-left', 'required' => true]) !!}
-                        </div>
-
-                        {!! $errors->first('week', '<p class="help-block error position-relative">:message</p>') !!}
-                        {!! $errors->first('started_at', '<p class="help-block error position-relative">:message</p>') !!}
-                        {!! $errors->first('ended_at', '<p class="help-block error position-relative">:message</p>') !!}
-                    </div>
+                <div class="get-basket-select-popup pull-right margin-bottom-15 btn btn-primary btn-flat btn-sm">
+                    @lang('labels.add_basket')
                 </div>
 
-                @foreach($baskets as $key => $basket)
-                    <div class="tab-pane @if ($key == 0) active @endif" id="basket_{!! $basket->id !!}">
-                        @include('weekly_menu.tabs.basket')
-                    </div>
-                @endforeach
+                <div class="clearfix"></div>
+
+                @include('weekly_menu.partials.tabs')
+
             </div>
         </div>
 

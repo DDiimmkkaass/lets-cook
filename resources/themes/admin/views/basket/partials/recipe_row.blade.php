@@ -21,13 +21,6 @@
     </td>
     <td>
         <div class="form-group">
-            <input type="text" class="form-control input-sm" name="recipes[new][{!! $model->id !!}][portions]"
-                   required="required"
-                   value="2">
-        </div>
-    </td>
-    <td>
-        <div class="form-group">
             <input type="text" class="form-control input-sm" name="recipes[new][{!! $model->id !!}][position]"
                    required="required"
                    value="0">

@@ -23,11 +23,25 @@ class BasketService
     /**
      * @param \App\Models\Basket $model
      * @param array              $recipes
-     * @param null|int           $weekly_menu_id
      */
-    public function processRecipes(Basket $model, $recipes = [], $weekly_menu_id = null)
+    public function processRecipes(Basket $model, $recipes = [])
     {
         $data = isset($recipes['remove']) ? $recipes['remove'] : [];
+        $this->_removeRecipes($model, $data);
+        
+        $data = isset($recipes['old']) ? $recipes['old'] : [];
+        $this->_updateOld($data);
+        
+        $data = isset($recipes['new']) ? $recipes['new'] : [];
+        $this->_saveNew($model, $data);
+    }
+    
+    /**
+     * @param \App\Models\Basket $model
+     * @param array              $data
+     */
+    private function _removeRecipes(Basket $model, $data = [])
+    {
         foreach ($data as $id) {
             try {
                 $recipe = $model->recipes()->findOrFail($id);
@@ -36,8 +50,13 @@ class BasketService
                 FlashMessages::add("error", trans("messages.recipe delete failure"." ".$id));
             }
         }
-
-        $data = isset($recipes['old']) ? $recipes['old'] : [];
+    }
+    
+    /**
+     * @param array $data
+     */
+    private function _updateOld($data = [])
+    {
         foreach ($data as $key => $recipe) {
             try {
                 $_recipe = BasketRecipe::findOrFail($key);
@@ -49,11 +68,17 @@ class BasketService
                 );
             }
         }
-
-        $data = isset($recipes['new']) ? $recipes['new'] : [];
+    }
+    
+    /**
+     * @param \App\Models\Basket $model
+     * @param array              $data
+     */
+    private function _saveNew(Basket $model, $data = [])
+    {
         foreach ($data as $recipe) {
             try {
-                $recipe = new BasketRecipe(array_merge($recipe, ['weekly_menu_id' => $weekly_menu_id]));
+                $recipe = new BasketRecipe(array_merge($recipe));
                 $model->recipes()->save($recipe);
             } catch (Exception $e) {
                 FlashMessages::add(

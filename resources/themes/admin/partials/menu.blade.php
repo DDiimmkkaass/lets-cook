@@ -140,7 +140,7 @@
                         <span>@lang('labels.weekly_menus')</span>
 
                         @if ($user->hasAccess('weeklymenu.create'))
-                            <small class="label create-label pull-right bg-green" title="@lang('labels.weekly_menu')"
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.weekly_menus')"
                                    data-href="{!! route('admin.weekly_menu.create') !!}">
                                 <i class="fa fa-plus"></i>
                             </small>

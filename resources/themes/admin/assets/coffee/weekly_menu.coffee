@@ -1,3 +1,19 @@
+window.checkLastBasketTabInList = () ->
+  setTimeout () ->
+      $tabs = $('.weekly-menu-form .nav-tabs li:last')
+      $tab = $($tabs[$tabs.length - 1])
+
+      content_id = $tab.find('a:first').attr('href')
+      $content = $('' + content_id)
+
+      $('.weekly-menu-form .nav-tabs li.active').removeClass 'active'
+      $('.weekly-menu-form .tab-pane.active').removeClass 'active'
+
+      $tab.addClass 'active'
+      $content.addClass 'active'
+
+    , 300
+
 $(document).on 'ready', ->
   $('.menu-recipes-table').each () ->
     unless $(this).find('.recipe-block').length
@@ -21,14 +37,76 @@ $(document).on 'ready', ->
       monthNames: moment.monthsShort()
       firstDay: moment.localeData()._week.dow
 
-  $('.menu-recipe-select').on "change", ->
+  $('.weekly-menu-form .get-basket-select-popup').on "click", (e) ->
+    e.preventDefault()
+
+    $.ajax
+      url: '/admin/weekly_menu/get-basket-select-popup'
+      type: 'GET'
+      dataType: 'json'
+      error: (response) =>
+        message.show response.responseText, 'error'
+      success: (response) =>
+        if response.status == 'success'
+          dModal response.html
+        else
+          message.show response.message, response.status
+
+    return false
+
+  $(document).on "click", ".weekly-menu-add-basket", (e) ->
+    e.preventDefault()
+
+    data = getFormData $(this).closest('.basket-select-form')
+
+    unless $('#basket_' + data.basket_id + '_' + data.portions).length
+      $.ajax
+        url: '/admin/weekly_menu/add-basket'
+        type: 'GET'
+        dataType: 'json'
+        data: data
+        error: (response) =>
+          processError response, null
+        success: (response) =>
+          if response.status == 'success'
+            dModalHide()
+
+            $('.weekly-menu-form .nav-tabs').append(response.tab_html)
+            $('.weekly-menu-form .tab-content').append(response.content_html)
+
+            fixCustomInputs($('.weekly-menu-form'))
+
+            checkLastBasketTabInList()
+          else
+            message.show response.message, response.status
+    else
+      message.show lang_basketAlreadyAddedToList, 'warning'
+
+    return false
+
+  $(document).on "click", ".weekly-menu-basket-remove", (e) ->
+    e.preventDefault()
+
+    $content_block = $(this).closest('.tab-pane')
+    $tab = $('[href="#' + $content_block.attr('id') + '"]').closest('li')
+
+    $tab.remove()
+    $content_block.remove()
+
+    checkLastBasketTabInList()
+
+    return false
+
+  $(document).on "change", '.menu-recipe-select', ->
     recipe = $(this).val()
     basket_id = $(this).data('basket')
-    $basket = $('#basket_recipes_' + basket_id)
+    portions = $(this).data('portions')
+
+    $basket = $('#basket_recipes_' + basket_id + '_' + portions)
 
     if recipe
       $.ajax
-        url: '/admin/weekly_menu/' + basket_id + '/get-recipe-item/' + recipe
+        url: '/admin/weekly_menu/' + basket_id + '/'  + portions + '/get-recipe-item/' + recipe
         type: 'GET'
         dataType: 'json'
         error: (response) =>
@@ -43,7 +121,7 @@ $(document).on 'ready', ->
               message.show lang_recipeAlreadyAddedToList, 'warning'
 
             if $basket.find('.recipe-block').length
-              $basket.closest('.box-body').find('.main-recipe-helper-message').fadeIn()
+              $basket.closest('.tab-pane').find('.main-recipe-helper-message').fadeIn()
           else
             message.show response.message, response.status
 

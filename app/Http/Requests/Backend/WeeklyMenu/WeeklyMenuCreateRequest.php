@@ -33,7 +33,6 @@ class WeeklyMenuCreateRequest extends FormRequest
             'baskets.*.new.*' => 'array',
 
             'baskets.*.new.*.recipe_id' => 'required_with:baskets.*.new|exists:recipes,id',
-            'baskets.*.new.*.portions'  => 'required_with:baskets.*.new|numeric|min:0',
             'baskets.*.new.*.position'  => 'required_with:baskets.*.new|numeric|min:0',
         ];
 

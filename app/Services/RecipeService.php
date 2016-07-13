@@ -255,8 +255,9 @@ class RecipeService
      */
     public function getWeeklyMenusWhereUsedRecipe($recipe_id, $select = [])
     {
-        return WeeklyMenu::joinBasketRecipes()
-            ->whereNotNull('basket_recipes.weekly_menu_id')
+        return WeeklyMenu::joinWeeklyMenuBaskets()
+            ->joinBasketRecipes()
+            ->whereNotNull('basket_recipes.weekly_menu_basket_id')
             ->where('ended_at', '>=', Carbon::now())
             ->where('basket_recipes.recipe_id', $recipe_id)
             ->groupBy('weekly_menus.id')
