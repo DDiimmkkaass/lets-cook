@@ -110,6 +110,11 @@ return array (
 //    'textwidget.read',
 //    'textwidget.write',
 //    'textwidget.delete',
+    
+    'city.create',
+    'city.read',
+    'city.write',
+    'city.delete',
 
     'variable.value.read',
     'variable.value.write',
@@ -120,7 +125,7 @@ return array (
     'variable.read',
     'variable.write',
     'variable.delete',
-
+    
 //    'comment.create',
 //    'comment.read',
 //    'comment.write',

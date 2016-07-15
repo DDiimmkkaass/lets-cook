@@ -291,6 +291,9 @@ $router->group(
                     ]
                 )->where('basket_id', '[0-9]+');
                 $router->resource('weekly_menu', 'Backend\WeeklyMenuController', ['except' => ['destroy']]);
+
+                //cities
+                $router->resource('city', 'Backend\CityController');
             }
         );
 

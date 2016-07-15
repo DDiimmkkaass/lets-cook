@@ -183,6 +183,22 @@
                 </li>
             @endif
 
+            @if ($user->hasAccess('city.read'))
+                <li class="{!! active_class('admin.city*') !!}">
+                    <a href="{!! route('admin.city.index') !!}">
+                        <i class="fa fa-map-marker"></i>
+                        <span>@lang('labels.cities')</span>
+
+                        @if ($user->hasAccess('city.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_city')"
+                                   data-href="{!! route('admin.city.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
             @if ($user->hasAccess('variablevalue.read'))
                 <li class="{!! active_class('admin.variable*') !!}">
                     <a href="{!! route('admin.variable.value.index') !!}">
