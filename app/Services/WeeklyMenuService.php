@@ -50,7 +50,7 @@ class WeeklyMenuService
                 function ($model) {
                     return view(
                         'partials.datatables.control_buttons',
-                        ['model' => $model, 'type' => $this->module, 'without_delete' => true]
+                        ['model' => $model, 'type' => 'weekly_menu', 'without_delete' => true]
                     )->render();
                 }
             )
