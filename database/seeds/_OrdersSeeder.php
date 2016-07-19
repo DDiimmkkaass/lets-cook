@@ -53,33 +53,41 @@ class _OrdersSeeder extends DataSeeder
             $order->save();
             
             $basket = WeeklyMenuBasket::with('recipes')->get()->random(1);
-            
-            foreach ($basket->recipes as $recipe) {
-                OrderRecipe::create(
-                    [
-                        'order_id'         => $order->id,
-                        'basket_recipe_id' => $recipe->id,
-                        'name'             => $recipe->recipe->name,
-                    ]
-                );
+            if (count($basket)) {
+                foreach ($basket->recipes as $recipe) {
+                    OrderRecipe::create(
+                        [
+                            'order_id'         => $order->id,
+                            'basket_recipe_id' => $recipe->id,
+                            'name'             => $recipe->recipe->name,
+                        ]
+                    );
+                }
             }
             
-            $ingredients = Ingredient::get()->random(rand(2, 5));
-            
-            foreach ($ingredients as $ingredient) {
-                OrderIngredient::create(
-                    [
-                        'order_id'      => $order->id,
-                        'ingredient_id' => $ingredient->id,
-                        'name'          => $ingredient->name,
-                        'count'         => rand(1, 10),
-                    ]
-                );
+            $ingredients_count = Ingredient::get()->count();
+            $ingredients = Ingredient::get()->random(
+                rand($ingredients_count > 2 ? 2 : $ingredients_count, $ingredients_count)
+            );
+            if ($ingredients_count) {
+                foreach ($ingredients as $ingredient) {
+                    OrderIngredient::create(
+                        [
+                            'order_id'      => $order->id,
+                            'ingredient_id' => $ingredient->id,
+                            'name'          => $ingredient->name,
+                            'count'         => rand(1, 10),
+                        ]
+                    );
+                }
             }
-            
-            $baskets = Basket::additional()->get()->random(rand(1, 5))->pluck('id')->toArray();
-            if (count($baskets)) {
-                $order->baskets()->sync($baskets);
+
+            $baskets_count = Basket::additional()->count();
+            if ($baskets_count) {
+                $baskets = Basket::additional()->get()->random(rand(1, $baskets_count))->pluck('id')->toArray();
+                if (count($baskets)) {
+                    $order->baskets()->sync($baskets);
+                }
             }
         }
     }
