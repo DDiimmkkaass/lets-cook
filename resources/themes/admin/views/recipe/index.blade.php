@@ -25,6 +25,7 @@
                                 ['text' => Form::select('recipe_filters[basket]', $baskets, null, ['class' => 'form-control select2 input-sm recipe-filter'])],
                                 ['text' => Form::text('recipe_filters[portions]', '', ['class' => 'form-control input-sm recipe-filter'])],
                                 ['text' => Form::text('recipe_filters[main_ingredient]', '', ['class' => 'form-control input-sm recipe-filter'])],
+                                ['attr' => ['colspan' => 1]],
                                 ['text' => Form::select('recipe_filters[status]', $statuses, null, ['class' => 'form-control select2 input-sm recipe-filter'])],
                                 ['attr' => ['colspan' => 1]],
                             ])
