@@ -9,7 +9,6 @@ return array (
   'alpha_num' => 'Поле :attribute может содержать только буквы и цифры.',
   'array' => 'Поле :attribute должно быть массивом.',
   'before' => 'В поле :attribute должна быть дата до :date.',
-  'diff_in_days' => 'Промежуток между днями :attribute и :param должен быть равен :diff.',
   'between' => 
   array (
     'numeric' => 'Поле :attribute должно быть между :min и :max.',
@@ -145,9 +144,18 @@ return array (
     'week' => 'неделя',
     'started_at' => 'начало недели',
     'ended_at' => 'окончание недели',
+    'city_id' => 'город',
+    'delivery_date' => 'дата доставки',
+    'delivery_time' => 'время доставки',
+    'city' => 'город',
+    'address' => 'адрес',
+    'additional_phone' => 'дополнительный телефон',
+    'subscribe_period' => 'период доставки',
+    'verify_call' => 'позвоните мне',
   ),
   'recipe steps' => 'Вы должны добавить хотя бы один шаг',
   'recipe ingredients' => 'Вы должны выбрать хотя бы один ингредиент',
   'recipe main ingredient' => 'Вы должны выбрать основной ингредиент',
   'recipe baskets' => 'Вы должны выбрать хотя бы одину корзину для рецепта',
+  'diff_in_days' => 'Промежуток между днями :attribute и :param должен быть равен :diff.',
 );

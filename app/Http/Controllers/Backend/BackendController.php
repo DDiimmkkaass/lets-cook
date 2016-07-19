@@ -183,7 +183,7 @@ class BackendController extends BaseController
                 'lang_to'                             => trans('labels.to'),
                 'lang_DeletingRecordTitle'            => trans('labels.deleting_record'),
                 'lang_pleaseSelectIngredient'         => trans('labels.please_select_ingredient'),
-                'lang_ingredientAlreadyInAddedToList' => trans('messages.ingredient already added to list'),
+                'lang_ingredientAlreadyAddedToList' => trans('messages.ingredient already added to list'),
                 'lang_recipeAlreadyAddedToList'       => trans('messages.recipe already added to list'),
                 'lang_basketAlreadyAddedToList'       => trans('messages.this basket already added to list'),
                 'birthday_format'                     => 'dd-mm-yyyy',

@@ -61,7 +61,7 @@ $(document).on 'ready', ->
 
               fixCustomInputs($('.recipe-ingredients-table tr:last-child'))
             else
-              message.show lang_ingredientAlreadyInAddedToList, 'warning'
+              message.show lang_ingredientAlreadyAddedToList, 'warning'
           else
             message.show response.message, response.status
 

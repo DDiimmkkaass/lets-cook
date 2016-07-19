@@ -16,23 +16,32 @@ use Cartalyst\Sentry\Groups\Eloquent\Group as SentryGroup;
  */
 class Group extends SentryGroup
 {
-
+    
     /**
      * @var string
      */
     protected $table = 'groups';
-
+    
     /**
      * @var array
      */
     protected $fillable = ['name', 'permissions'];
-
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function users()
     {
-
-        return $this->belongsToMany(User::class, 'users_groups', 'user_id');
+        return $this->belongsToMany(User::class, 'users_groups');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeClients($query)
+    {
+        return $query->whereName('Clients');
     }
 }

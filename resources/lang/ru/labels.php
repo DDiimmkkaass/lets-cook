@@ -463,4 +463,9 @@ return array (
   'cities_list' => 'Список городов',
   'city_create' => 'Создание города',
   'city_editing' => 'Редактирование города',
+  'add_ingredients' => 'Добавить ингредиенты',
+  'main_basket' => 'Основная корзина',
+  'add_recipes' => 'Добавить рецепты',
+  'tab_baskets' => 'Корзины',
+  'tab_additional_baskets' => 'Дополнительные корзины',
 );

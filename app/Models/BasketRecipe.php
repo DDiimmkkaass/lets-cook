@@ -36,7 +36,7 @@ class BasketRecipe extends Model
      */
     public function recipe()
     {
-        return $this->belongsTo(Recipe::class);
+        return $this->belongsTo(Recipe::class)->withTrashed();
     }
     
     /**
@@ -53,5 +53,15 @@ class BasketRecipe extends Model
     public function setWeeklyMenuBasketIdAttribute($value)
     {
         $this->attributes['weekly_menu_basket_id'] = empty($value) ? null : (int) $value;
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinRecipe($query)
+    {
+        return $query->leftJoin('recipes', 'recipes.id', '=', 'basket_recipes.recipe_id');
     }
 }

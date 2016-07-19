@@ -76,6 +76,7 @@
             <script src="{!! asset('assets/themes/admin/vendor/adminlte/plugins/pace/pace.min.js') !!}"></script>
 
             <script src="{!! asset('assets/themes/admin/vendor/adminlte/plugins/select2/select2.full.min.js') !!}"></script>
+            <script src="{!! asset('assets/themes/admin/vendor/adminlte/plugins/select2/i18n/ru.js') !!}"></script>
 
             <script src="{!! asset('assets/themes/admin/vendor/adminlte/plugins/iCheck/icheck.min.js') !!}"></script>
 

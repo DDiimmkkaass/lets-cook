@@ -46,7 +46,10 @@ class DataSeeder extends Seeder
             $this->call(_IngredientsSeeder::class);
             $this->call(_BasketsSeeder::class);
             $this->call(_RecipesSeeder::class);
+            $this->call(_WeeklyMenusSeeder::class);
             $this->call(_CitiesSeeder::class);
+            $this->call(_UsersSeeder::class);
+            $this->call(_OrdersSeeder::class);
 
             Model::reguard();
         }

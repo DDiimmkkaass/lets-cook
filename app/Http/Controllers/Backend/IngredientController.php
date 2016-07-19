@@ -461,6 +461,25 @@ class IngredientController extends BackendController
     }
     
     /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|\Illuminate\Http\JsonResponse
+     */
+    public function find(Request $request)
+    {
+        try {
+            $ingredients = Ingredient::where('name', 'like', '%'.$request->get('text', '').'%')->get();
+            
+            return response()->json($ingredients);
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
      *  fill additional template data
      *
      * @param \App\Models\Ingredient|null $model

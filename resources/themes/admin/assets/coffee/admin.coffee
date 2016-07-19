@@ -1,4 +1,5 @@
 window.select2Options =
+  language: lang
   minimumResultsForSearch: 10
 
 window.initToggles = ->

@@ -120,6 +120,6 @@ class WeeklyMenu extends Model
      */
     public function scopeJoinBasketRecipes($query)
     {
-        return $query->leftJoin('basket_recipes', 'basket_recipes.weekly_menu_basket_id', '=', 'weekly_menu_baskets.basket_id');
+        return $query->leftJoin('basket_recipes', 'basket_recipes.weekly_menu_basket_id', '=', 'weekly_menu_baskets.id');
     }
 }

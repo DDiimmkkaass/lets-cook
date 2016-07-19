@@ -70,7 +70,11 @@ return array (
     'weeklymenu.read',
     'weeklymenu.write',
     'weeklymenu.delete',
-
+    
+    'order.read',
+    'order.write',
+    'order.delete',
+    
     'supplier.create',
     'supplier.read',
     'supplier.write',

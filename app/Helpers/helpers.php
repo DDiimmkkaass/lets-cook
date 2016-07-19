@@ -139,8 +139,6 @@ if (!function_exists('front_active_class')) {
 
         $pattern = str_replace(['/', '.'], ['\/', '\.'], $pattern);
 
-        dd($pattern, $current);
-
         return preg_match("/$pattern/", $current) ? $class : '';
     }
 }
@@ -277,15 +275,15 @@ if (!function_exists('get_url_host')) {
 if (!function_exists('get_localized_date')) {
     /**
      * @param string $date
-     * @param string $format
+     * @param string $in_format
      * @param bool   $time_format
      * @param string $time_position
      *
      * @return string
      */
-    function get_localized_date($date, $format = 'Y-m-d H:i:s', $time_format = false, $time_position = 'after')
+    function get_localized_date($date, $in_format = 'Y-m-d H:i:s', $time_format = false, $time_position = 'after')
     {
-        $date = LocalizedCarbon::createFromFormat($format, $date);
+        $date = LocalizedCarbon::createFromFormat($in_format, $date);
 
         return
             trim(

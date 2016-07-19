@@ -1,8 +1,4 @@
 window.dialog = (title, message, $form, closure) ->
-  
-  console.log($form)
-  console.log(closure)
-  
   bootbox.dialog
     title: title
     message: message

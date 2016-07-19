@@ -210,6 +210,14 @@ $router->group(
                         'uses' => 'Backend\IngredientController@indexIncomplete',
                     ]
                 );
+                $router->get(
+                    'ingredient/find',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.ingredient.find',
+                        'uses'       => 'Backend\IngredientController@find',
+                    ]
+                );
                 $router->resource('ingredient', 'Backend\IngredientController');
 
                 //recipe
@@ -291,9 +299,28 @@ $router->group(
                     ]
                 )->where('basket_id', '[0-9]+');
                 $router->resource('weekly_menu', 'Backend\WeeklyMenuController', ['except' => ['destroy']]);
-
+    
                 //cities
                 $router->resource('city', 'Backend\CityController');
+                
+                //orders
+                $router->get(
+                    'order/get-recipe-row/{recipe_id}',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.order.get_recipe_row',
+                        'uses'       => 'Backend\OrderController@getRecipeRow',
+                    ]
+                );
+                $router->get(
+                    'order/get-ingredient-row/{ingredient_id}',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.order.get_ingredient_row',
+                        'uses'       => 'Backend\OrderController@getIngredientRow',
+                    ]
+                );
+                $router->resource('order', 'Backend\OrderController', ['only' => ['index', 'show', 'edit', 'update']]);
             }
         );
 

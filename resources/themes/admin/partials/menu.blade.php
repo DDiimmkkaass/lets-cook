@@ -149,6 +149,16 @@
                 </li>
             @endif
 
+            <li class="header">@lang('labels.orders')</li>
+            @if ($user->hasAccess('order.read'))
+                <li class="{!! active_class('admin.order*') !!}">
+                    <a href="{!! route('admin.order.index') !!}">
+                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                        <span>@lang('labels.orders')</span>
+                    </a>
+                </li>
+            @endif
+
             <li class="header">@lang('labels.purchase')</li>
             @if ($user->hasAccess('supplier.read'))
                 <li class="{!! active_class('admin.supplier*') !!}">

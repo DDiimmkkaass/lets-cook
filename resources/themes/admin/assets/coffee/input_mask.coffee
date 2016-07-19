@@ -2,6 +2,9 @@ window.initInputMask = () ->
   $(".inputmask-birthday").each () ->
     $(this).inputmask(birthday_format, {'placeholder': birthday_format})
 
+  $(".inputmask-delivery_date").each () ->
+    $(this).inputmask(birthday_format, {'placeholder': birthday_format})
+
   #mobile phone
   $(".inputmask-2").each () ->
     $(this).inputmask
