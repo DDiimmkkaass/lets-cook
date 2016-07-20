@@ -111,7 +111,8 @@ class IngredientController extends BackendController
                     DB::raw('categories.name as category'),
                     DB::raw('units.name as unit'),
                     DB::raw('suppliers.name as supplier'),
-                    'price'
+                    'price',
+                    'sale_price'
                 );
             
             return $dataTables = Datatables::of($list)
@@ -142,6 +143,12 @@ class IngredientController extends BackendController
                     'price',
                     function ($model) {
                         return $model->price.' '.$this->currency;
+                    }
+                )
+                ->editColumn(
+                    'sale_price',
+                    function ($model) {
+                        return $model->isSold() ? $model->sale_price.' '.$this->currency : trans('labels.not_sold');
                     }
                 )
                 ->editColumn(

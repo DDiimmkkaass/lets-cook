@@ -28,6 +28,7 @@ class Ingredient extends Model
         'title',
         'image',
         'price',
+        'sale_price',
         'supplier_id',
         'category_id',
         'unit_id',
@@ -119,6 +120,14 @@ class Ingredient extends Model
     }
     
     /**
+     * @param int|float $value
+     */
+    public function setSalePriceAttribute($value)
+    {
+        $this->attributes['sale_price'] = (int) ($value * 100);
+    }
+    
+    /**
      * @param int $value
      *
      * @return float
@@ -129,11 +138,29 @@ class Ingredient extends Model
     }
     
     /**
+     * @param int $value
+     *
+     * @return float
+     */
+    public function getSalePriceAttribute($value)
+    {
+        return $value / 100;
+    }
+    
+    /**
      * @return string
      */
     public function getTitle()
     {
         return empty($this->title) ? $this->name : $this->title;
+    }
+    
+    /**
+     * @return bool
+     */
+    public function isSold()
+    {
+        return $this->sale_price > 0;
     }
     
     /**
@@ -165,7 +192,7 @@ class Ingredient extends Model
     {
         return $query->leftJoin('units', 'units.id', '=', 'ingredients.unit_id');
     }
-
+    
     /**
      * @param $query
      *

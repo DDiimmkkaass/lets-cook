@@ -16,7 +16,7 @@ use App\Http\Requests\FormRequest;
  */
 class IngredientRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,14 +26,15 @@ class IngredientRequest extends FormRequest
     {
         return [
             'name'        => 'required',
-            'price'       => 'required|numeric',
+            'price'       => 'required|numeric|min:0',
+            'sale_price'  => 'numeric|min:0',
             'image'       => ['regex:'.$this->image_regex],
             'category_id' => 'required|exists:categories,id',
             'supplier_id' => 'required|exists:suppliers,id',
             'unit_id'     => 'required|exists:units,id',
-
+            
             'parameters.*' => 'exists:parameters,id',
-
+            
             'nutritional_values.*.id'    => 'exists:nutritional_values,id',
             'nutritional_values.*.value' => 'numeric',
         ];

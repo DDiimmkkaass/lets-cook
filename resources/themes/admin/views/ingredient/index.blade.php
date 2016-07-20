@@ -16,6 +16,7 @@
                                 ['text' => trans('labels.unit')],
                                 ['text' => trans('labels.supplier')],
                                 ['text' => trans('labels.price')],
+                                ['text' => trans('labels.sale_price')],
                                 ['text' => trans('labels.actions')]
                             ])
                             ->addFoot([

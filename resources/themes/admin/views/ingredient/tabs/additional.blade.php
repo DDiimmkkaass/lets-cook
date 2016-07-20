@@ -28,6 +28,20 @@
     </div>
 </div>
 
+<div class="form-group @if ($errors->has('sale_price')) has-error @endif">
+    {!! Form::label('sale_price', trans('labels.sale_price'), ['class' => 'control-label col-xs-12 col-sm-3 col-md-2']) !!}
+
+    <div class="col-xs-12 col-sm-2 col-md-1 with-after-helper currency-rub">
+        {!! Form::text('sale_price', $model->sale_price ?: 0, ['class' => 'form-control input-sm', 'aria-hidden' => 'true']) !!}
+
+        {!! $errors->first('sale_price', '<p class="help-block error">:message</p>') !!}
+    </div>
+
+    <div class="col-xs-12 col-sm-6 col-md-6 margin-left-10 margin-top-4">
+        <p class="help-block">(@lang('messages.sale price helper message'))</p>
+    </div>
+</div>
+
 <div class="form-group @if ($errors->has('image')) has-error @endif">
     {!! Form::label('image', trans('labels.image'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 

@@ -139,6 +139,7 @@ return array (
     'unit_id' => 'единицы измерения',
     'supplier_id' => 'поставщик',
     'price' => 'цена',
+    'sale_price' => 'цена на продажу',
     'basket_id' => 'корзина',
     'recipe' => 'рецепт',
     'week' => 'неделя',
