@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\SoftDeletesTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -19,6 +20,7 @@ class Ingredient extends Model
 {
     
     use SoftDeletes;
+    use SoftDeletesTrait;
     
     /**
      * @var array
@@ -211,5 +213,15 @@ class Ingredient extends Model
     public function scopeInSales($query)
     {
         return $query->where('sale_price', '>', 0);
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeNotSales($query)
+    {
+        return $query->where('sale_price', '=', 0);
     }
 }

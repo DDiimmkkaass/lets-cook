@@ -219,7 +219,7 @@ class RecipeService
      */
     private function _implodeFilters(&$list, $request)
     {
-        $filters = $request->get('recipe_filters');
+        $filters = $request->get('datatable_filters');
         
         if (count($filters)) {
             foreach ($filters as $filter => $value) {

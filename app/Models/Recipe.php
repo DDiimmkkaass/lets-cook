@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\SoftDeletesTrait;
 use App\Traits\Models\VisibleTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,6 +22,7 @@ class Recipe extends Model
     
     use SoftDeletes;
     use VisibleTrait;
+    use SoftDeletesTrait;
     
     /**
      * @var array

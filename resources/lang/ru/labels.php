@@ -469,5 +469,6 @@ return array (
   'add_recipes' => 'Добавить рецепты',
   'tab_baskets' => 'Корзины',
   'tab_additional_baskets' => 'Дополнительные корзины',
-  'not_sold' => 'Не продается',
+  'not_sales' => 'Не продается',
+  'in_sales' => 'Продается',
 );

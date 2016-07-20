@@ -8,7 +8,7 @@
                 <div class="box-body">
                     <div class="ingredients-table">
                         {!!
-                            TablesBuilder::create(['id' => "datatable1", 'class' => "table table-bordered table-striped table-hover"], ['bStateSave' => true])
+                            TablesBuilder::create(['id' => "datatable1", 'class' => "filtered-datatable table table-bordered table-striped table-hover"], ['bStateSave' => true])
                             ->addHead([
                                 ['text' => trans('labels.id')],
                                 ['text' => trans('labels.name')],
@@ -20,7 +20,9 @@
                                 ['text' => trans('labels.actions')]
                             ])
                             ->addFoot([
-                                ['attr' => ['colspan' => 7]]
+                                ['attr' => ['colspan' => 6]],
+                                ['text' => Form::select('datatable_filters[sale_price]', ['0' => trans('labels.all'), '-1' => trans('labels.not_sales'), '1' => trans('labels.in_sales')], null, ['class' => 'form-control select2 input-sm datatable-filter'])],
+                                ['attr' => ['colspan' => 1]],
                             ])
                              ->make()
                         !!}
