@@ -210,7 +210,7 @@ class OrderController extends BackendController
     public function getIngredientRow($ingredient_id)
     {
         try {
-            $model = Ingredient::findOrFail($ingredient_id);
+            $model = Ingredient::inSales()->whereId($ingredient_id)->firstOrFail();
             
             return [
                 'status' => 'success',

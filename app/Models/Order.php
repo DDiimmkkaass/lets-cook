@@ -206,7 +206,7 @@ class Order extends Model
         $total += $this->baskets()->sum('price') / 100;
     
         $total += $this->ingredients()->get()->reduce(function ($_total, $item) {
-            return $_total + ($item->ingredient->price * $item->count);
+            return $_total + ($item->ingredient->sale_price * $item->count);
         });
         
         return $total;

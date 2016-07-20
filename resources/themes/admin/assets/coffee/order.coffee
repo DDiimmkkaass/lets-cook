@@ -69,6 +69,7 @@ $(document).on "ready", () ->
       data: (params) ->
         return {
           text: params.term
+          in_sales: true
         }
       processResults: (data, params) ->
         return {

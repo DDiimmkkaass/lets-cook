@@ -475,9 +475,13 @@ class IngredientController extends BackendController
     public function find(Request $request)
     {
         try {
-            $ingredients = Ingredient::where('name', 'like', '%'.$request->get('text', '').'%')->get();
+            $ingredients = Ingredient::where('name', 'like', '%'.$request->get('text', '').'%');
             
-            return response()->json($ingredients);
+            if ($request->get('in_sales', false)) {
+                $ingredients->inSales();
+            }
+            
+            return response()->json($ingredients->get());
         } catch (Exception $e) {
             return [
                 'status'  => 'error',

@@ -202,4 +202,14 @@ class Ingredient extends Model
     {
         return $query->whereNotNull('category_id')->whereNotNull('supplier_id')->whereNotNull('unit_id');
     }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeInSales($query)
+    {
+        return $query->where('sale_price', '>', 0);
+    }
 }
