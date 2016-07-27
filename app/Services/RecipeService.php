@@ -130,7 +130,7 @@ class RecipeService
         $data = isset($ingredients['remove']) ? $ingredients['remove'] : [];
         foreach ($data as $id) {
             try {
-                $ingredient = $model->ingredients()->findOrFail($id);
+                $ingredient = RecipeIngredient::findOrFail($id);
                 $ingredient->delete();
             } catch (Exception $e) {
                 FlashMessages::add("error", trans("messages.ingredient destroy failure"." ".$id));
@@ -149,7 +149,7 @@ class RecipeService
             } catch (Exception $e) {
                 FlashMessages::add(
                     "error",
-                    trans("messages.ingredient update failure"." ".$_ingredient->ingredient_id)
+                    trans("messages.ingredient update failure"." ".$id)
                 );
             }
         }
@@ -158,6 +158,7 @@ class RecipeService
         foreach ($data as $id => $ingredient) {
             try {
                 $ingredient['main'] = $main_ingredient == $id ? true : false;
+                $ingredient['type'] = isset($ingredient['type']) ? $ingredient['type'] : 0;
                 $ingredient = new RecipeIngredient($ingredient);
                 
                 $model->ingredients()->save($ingredient);

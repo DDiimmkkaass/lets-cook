@@ -56,23 +56,23 @@ class FormRequest extends IlluminateRequest
         }
         
         foreach ($errors as $key => $error) {
-            preg_match_all('/.*\s([a-zA-z0-9\.*]+)\s.*/iUs', $errors[$key][0], $matches);
-            
-            if (isset($matches[1]) && !empty($matches[1])) {
-                foreach ($matches[1] as $match) {
-                    $title = explode('.', $match);
-                    $title = trans('validation.attributes.'.array_pop($title));
-                    
-                    $error = str_replace($match, $title, $error);
+            foreach ($error as $_key => $e) {
+                preg_match_all('/.*\s([a-zA-z0-9\.*]+)\s.*/iUs', $e, $matches);
+                
+                if (!empty($matches[1])) {
+                    foreach ($matches[1] as $match) {
+                        $title = explode('.', $match);
+                        $title = trans('validation.attributes.'.array_pop($title));
+    
+                        $errors[$key][$_key] = str_replace($match, $title, $e);
+                    }
                 }
             }
-            
-            $errors[$key] = $error;
         }
         
         return parent::response($errors);
     }
-
+    
     /**
      * set image regexp based on current env
      */

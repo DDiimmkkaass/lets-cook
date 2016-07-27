@@ -16,7 +16,7 @@ use App\Http\Requests\FormRequest;
  */
 class RecipeRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -31,26 +31,51 @@ class RecipeRequest extends FormRequest
             'portions'     => 'required|numeric|min:0',
             'cooking_time' => 'required|numeric|min:0',
             'status'       => 'required|boolean',
-
+            
             'baskets' => 'required|array',
-
+            
             'main_ingredient' => 'required',
-
-            'steps'       => 'required|array',
-            'ingredients' => 'required|array',
-
-            'steps.*.*.name'        => 'required',
-            'steps.*.*.description' => 'required',
-            'steps.*.*.image'       => ['required', 'regex:'.$this->image_regex],
-            'steps.*.*.position'    => 'required|numeric|min:0',
-
-            'ingredients.*.*.ingredient_id' => 'required|exists:ingredients,id',
-            'ingredients.*.*.count'         => 'required|numeric|min:0',
-            'ingredients.*.*.position'      => 'required|numeric|min:0',
-            'ingredients.*.*.main'          => 'boolean',
+            
+            'steps'            => 'required|array',
+            'ingredients'      => 'required|array',
+            'ingredients_home' => 'array',
+            
+            'steps.old.*.name'        => 'required',
+            'steps.old.*.description' => 'required',
+            'steps.old.*.image'       => ['required', 'regex:'.$this->image_regex],
+            'steps.old.*.position'    => 'required|numeric|min:0',
+            
+            'steps.new.*.name'        => 'required',
+            'steps.new.*.description' => 'required',
+            'steps.new.*.image'       => ['required', 'regex:'.$this->image_regex],
+            'steps.new.*.position'    => 'required|numeric|min:0',
+            
+            'steps.remove' => 'array',
+            
+            'ingredients.old.*.ingredient_id' => 'required|exists:ingredients,id',
+            'ingredients.old.*.count'         => 'required|numeric|min:0',
+            'ingredients.old.*.position'      => 'required|numeric|min:0',
+            'ingredients.old.*.main'          => 'boolean',
+            
+            'ingredients.new.*.ingredient_id' => 'required|exists:ingredients,id',
+            'ingredients.new.*.count'         => 'required|numeric|min:0',
+            'ingredients.new.*.position'      => 'required|numeric|min:0',
+            'ingredients.new.*.main'          => 'boolean',
+            
+            'ingredients.remove' => 'array',
+            
+            'ingredients_home.old.*.ingredient_id' => 'required|exists:ingredients,id',
+            'ingredients_home.old.*.count'         => 'required|numeric|min:0',
+            'ingredients_home.old.*.position'      => 'required|numeric|min:0',
+            
+            'ingredients_home.new.*.ingredient_id' => 'required|exists:ingredients,id',
+            'ingredients_home.new.*.count'         => 'required|numeric|min:0',
+            'ingredients_home.new.*.position'      => 'required|numeric|min:0',
+            
+            'ingredients_home.remove' => 'array',
         ];
     }
-
+    
     /**
      * Get custom messages for validator errors.
      *

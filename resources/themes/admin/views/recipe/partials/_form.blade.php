@@ -14,6 +14,10 @@
                 </li>
 
                 <li>
+                    <a aria-expanded="false" href="#ingredients_home" data-toggle="tab">@lang('labels.tab_ingredients_home')</a>
+                </li>
+
+                <li>
                     <a aria-expanded="false" href="#tab_recipe" data-toggle="tab">@lang('labels.tab_recipe')</a>
                 </li>
 
@@ -29,6 +33,10 @@
 
                 <div class="tab-pane" id="ingredients">
                     @include('recipe.tabs.ingredients')
+                </div>
+
+                <div class="tab-pane" id="ingredients_home">
+                    @include('recipe.tabs.ingredients_home')
                 </div>
 
                 <div class="tab-pane" id="tab_recipe">

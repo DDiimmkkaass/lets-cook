@@ -8,6 +8,8 @@ $(document).on 'ready', ->
   $('.ingredient-category-select').on "change", ->
     category = $(this).val()
 
+    $tab = $(this.closest('.tab-pane'))
+
     if category
       $.ajax
         url: '/admin/category/' + category + '/completed-ingredients'
@@ -17,32 +19,35 @@ $(document).on 'ready', ->
           processError response, null
         success: (response) =>
           if response.status is 'success'
-            $select = $('.ingredient-select')
+            $select = $tab.find('.ingredient-select')
 
             $select.html '<option>' + lang_pleaseSelectIngredient + '</option>';
             for ingredient in response.ingredients
               $select.append('<option value="' + ingredient.id + '">' + ingredient.name + '</option>');
 
-            fixCustomInputs($('.ingredients-add-control'))
+            fixCustomInputs($tab.find('.ingredients-add-control'))
           else
             message.show response.message, response.status
 
   $('.ingredient-select').on "change", ->
     ingredient = $(this).val()
+    type = $(this).data('type')
+
+    $tab = $(this.closest('.tab-pane'))
 
     if ingredient
       $.ajax
-        url: '/admin/recipe/get-ingredient-row/' + ingredient
+        url: '/admin/recipe/get-ingredient-row/' + ingredient + '/' + type
         type: 'GET'
         dataType: 'json'
         error: (response) =>
           processError response, null
         success: (response) =>
           if response.status is 'success'
-            unless $('.recipe-ingredients-table #ingredient_' + ingredient).length
-              $('.recipe-ingredients-table').append response.html
+            unless $tab.find('.recipe-ingredients-table #ingredient_' + ingredient).length
+              $tab.find('.recipe-ingredients-table').append response.html
 
-              fixCustomInputs($('.recipe-ingredients-table tr:last-child'))
+              fixCustomInputs($tab.find('.recipe-ingredients-table tr:last-child'))
             else
               message.show lang_ingredientAlreadyAddedToList, 'warning'
           else

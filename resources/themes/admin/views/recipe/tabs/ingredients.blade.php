@@ -13,7 +13,7 @@
             @lang('labels.ingredients')
         </div>
         <div class="col-sm-12 full-width-select">
-            {!! Form::select('add_ingredients', $ingredients, null, ['id' => 'ingredient_select', 'class' => 'form-control select2 ingredient-select input-sm', 'aria-hidden' => 'true']) !!}
+            {!! Form::select('add_ingredients', $ingredients, null, ['id' => 'ingredient_select', 'class' => 'form-control select2 ingredient-select input-sm', 'aria-hidden' => 'true', 'data-type' => 'normal']) !!}
 
             <div class="position-relative error-block">
                 {!! $errors->first('ingredients', '<p class="help-block error">:message</p>') !!}
@@ -48,7 +48,7 @@
                             @if ($ingredient->ingredient->image)
                                 @include('partials.image', ['src' => $ingredient->ingredient->image, 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
                             @endif
-                            {!! $ingredient->ingredient->name !!} ({!! $ingredient->ingredient->unit->name !!})
+                            {!! link_to_route('admin.ingredient.show', $ingredient->ingredient->name, [$model->id], ['target' => '_blank']) !!} ({!! $ingredient->ingredient->unit->name !!})
                         </div>
                     </td>
                     <td>
@@ -92,7 +92,7 @@
                                 @if ($ingredient['image'])
                                     @include('partials.image', ['src' => $ingredient['image'], 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
                                 @endif
-                                {!! $ingredient['name'] !!} ({!! $ingredient['unit'] !!})
+                                {!! link_to_route('admin.ingredient.show', $ingredient['name'], [$model->id], ['target' => '_blank']) !!} ({!! $ingredient['unit'] !!})
 
                                 {!! Form::hidden('ingredients[new][' .$ingredient_key. '][image]', $ingredient['image']) !!}
                                 {!! Form::hidden('ingredients[new][' .$ingredient_key. '][name]', $ingredient['name']) !!}

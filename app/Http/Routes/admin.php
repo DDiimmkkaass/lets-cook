@@ -230,7 +230,7 @@ $router->group(
                     ]
                 );
                 $router->get(
-                    'recipe/get-ingredient-row/{ingredient_id}',
+                    'recipe/get-ingredient-row/{ingredient_id}/{type}',
                     [
                         'middleware' => 'ajax',
                         'as'         => 'admin.recipe.get_ingredient_row',

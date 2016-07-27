@@ -33,7 +33,6 @@ class Recipe extends Model
         'portions',
         'cooking_time',
         'home_equipment',
-        'home_ingredients',
         'status',
     ];
     
@@ -55,7 +54,15 @@ class Recipe extends Model
      */
     public function ingredients()
     {
-        return $this->hasMany(RecipeIngredient::class)->with('ingredient')->positionSorted();
+        return $this->hasMany(RecipeIngredient::class)->with('ingredient')->normal()->positionSorted();
+    }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function home_ingredients()
+    {
+        return $this->hasMany(RecipeIngredient::class)->with('ingredient')->home()->positionSorted();
     }
     
     /**

@@ -368,7 +368,6 @@ return array (
   'nutritional_value_editing' => 'Редактирование ед. пищевой ценности',
   'unit' => 'Единицы измерения',
   'price' => 'Цена',
-  'sale_price' => 'Цена на продажу',
   'supplier' => 'Поставщик',
   'name_for_users' => 'Название для пользователей',
   'tab_nutritional_values' => 'Пищевая ценность на 100 гр',
@@ -468,7 +467,9 @@ return array (
   'main_basket' => 'Основная корзина',
   'add_recipes' => 'Добавить рецепты',
   'tab_baskets' => 'Корзины',
+  'sale_price' => 'Цена на продажу',
   'tab_additional_baskets' => 'Дополнительные корзины',
   'not_sales' => 'Не продается',
   'in_sales' => 'Продается',
+  'tab_ingredients_home' => 'Ингредиенты дома',
 );

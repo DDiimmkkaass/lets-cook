@@ -172,7 +172,7 @@ class RecipeController extends BackendController
     public function edit($id)
     {
         try {
-            $model = Recipe::with('ingredients', 'baskets', 'steps')->whereId($id)->firstOrFail();
+            $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps')->whereId($id)->firstOrFail();
 
             $this->data('page_title', '"'.$model->name.'"');
             
@@ -280,18 +280,22 @@ class RecipeController extends BackendController
     }
     
     /**
-     * @param int $ingredient_id
+     * @param int    $ingredient_id
+     * @param string $type
      *
      * @return array
      */
-    public function getIngredientRow($ingredient_id)
+    public function getIngredientRow($ingredient_id, $type = 'normal')
     {
         try {
             $model = Ingredient::with('unit')->findOrFail($ingredient_id);
+    
+            $key = $type != 'normal' ? 'ingredients_'.$type : 'ingredients';
             
             return [
                 'status' => 'success',
-                'html'   => view('views.'.$this->module.'.partials.ingredient_row', compact('model'))->render(),
+                'html'   => view('views.'.$this->module.'.partials.ingredient_row', compact('model', 'type', 'key'))
+                    ->render(),
             ];
         } catch (Exception $e) {
             return [
@@ -330,12 +334,8 @@ class RecipeController extends BackendController
             $ingredient_categories[$item->id] = $item->name;
         }
         $this->data('ingredient_categories', $ingredient_categories);
-
-        $ingredients = ['' => trans('labels.please_select_ingredient')];
-        foreach (Ingredient::completed()->get(['id', 'name']) as $item) {
-            $ingredients[$item->id] = $item->name;
-        }
-        $this->data('ingredients', $ingredients);
+        
+        $this->data('ingredients', ['' => trans('labels.please_select_ingredient_category')]);
 
         $baskets = [];
         foreach (Basket::positionSorted()->get(['id', 'name']) as $item) {
@@ -367,6 +367,12 @@ class RecipeController extends BackendController
             $model,
             $request->get('ingredients', []),
             $request->get('main_ingredient', 0)
+        );
+    
+        $this->recipeService->processIngredients(
+            $model,
+            $request->get('ingredients_home', []),
+            0
         );
 
         $this->recipeService->processSteps(

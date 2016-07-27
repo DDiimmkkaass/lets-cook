@@ -50,14 +50,3 @@
     </div>
 </div>
 @include('partials.tabs.ckeditor', ['id' => 'home_equipment'])
-
-<div class="form-group @if ($errors->has('home_ingredients')) has-error @endif">
-    {!! Form::label('home_ingredients', trans('labels.home_ingredients'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
-
-    <div class="col-xs-8 col-sm-7 col-md-10">
-        {!! Form::textarea('home_ingredients', null, ['id' => 'home_ingredients', 'rows' => '3', 'class' => 'form-control input-sm']) !!}
-
-        {!! $errors->first('home_ingredients', '<p class="help-block error">:message</p>') !!}
-    </div>
-</div>
-@include('partials.tabs.ckeditor', ['id' => 'home_ingredients'])
