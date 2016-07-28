@@ -27,7 +27,16 @@
                 <div class="form-group required">
                     <label for="portions" class="control-label">@lang('labels.portions')</label>
 
-                    <input class="form-control input-sm" type="text" name="portions" id="portions" required="required" value="{!! config('weekly_menu.default_portions_count') !!}">
+                    <select class="form-control select2 basket-select" name="portions" id="portions" required="required">
+                        @foreach(config('recipe.available_portions') as $portion)
+                            <option value="{!! $portion !!}"
+                                @if (config('weekly_menu.default_portions_count') == $portion) selected="selected" @endif
+                            >
+                                {!! $portion !!} @choice('labels.count_of_portions', $portion)
+                            </option>
+                        @endforeach
+                    </select>
+
                 </div>
             </div>
             <div class="modal-footer">

@@ -220,7 +220,9 @@ class WeeklyMenuController extends BackendController
     public function edit($id)
     {
         try {
-            $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.basket.allowed_recipes')->whereId($id)->firstOrFail();
+            $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.basket.allowed_recipes')->whereId(
+                $id
+            )->firstOrFail();
             
             if ($model->isCurrentWeekMenu()) {
                 return redirect()->route('admin.'.$this->module.'.current');
@@ -267,7 +269,7 @@ class WeeklyMenuController extends BackendController
             if ($model->isCurrentWeekMenu()) {
                 return redirect()->route('admin.'.$this->module.'.current');
             }
-    
+            
             return redirect()->route('admin.'.$this->module.'.edit', $model->id);
         } catch (ModelNotFoundException $e) {
             DB::rollBack();
@@ -314,7 +316,10 @@ class WeeklyMenuController extends BackendController
     public function addBasket(Request $request)
     {
         try {
-            $basket = Basket::with('allowed_recipes')->whereId($request->get('basket_id'))->firstOrFail();
+            $portions = $request->get('portions', config('weekly_menu.default_portions_count'));
+            
+            $basket = Basket::whereId($request->get('basket_id'))->firstOrFail();
+            $recipes = $basket->allowed_recipes()->where('portions', $portions)->get();
             
             return [
                 'status'       => 'success',
@@ -322,7 +327,7 @@ class WeeklyMenuController extends BackendController
                     ->with(
                         [
                             'basket'   => $basket,
-                            'portions' => $request->get('portions', config('weekly_menu.default_portions_count')),
+                            'portions' => $portions,
                         ]
                     )
                     ->render(),
@@ -330,7 +335,8 @@ class WeeklyMenuController extends BackendController
                     ->with(
                         [
                             'basket'   => $basket,
-                            'portions' => $request->get('portions', config('weekly_menu.default_portions_count')),
+                            'portions' => $portions,
+                            'recipes'  => $recipes,
                         ]
                     )
                     ->render(),
@@ -396,10 +402,13 @@ class WeeklyMenuController extends BackendController
         
         foreach ($request->get('baskets', []) as $key => $recipes) {
             list($basket_id, $portions) = explode('_', $key);
-    
-            $basket = $this->weeklyMenuService->saveBasket($model, ['basket_id' => $basket_id, 'portions' => $portions]);
+            
+            $basket = $this->weeklyMenuService->saveBasket(
+                $model,
+                ['basket_id' => $basket_id, 'portions' => $portions]
+            );
             $this->weeklyMenuService->processRecipes($basket, $recipes);
-    
+            
             $exists_baskets[] = $basket->id;
         }
         

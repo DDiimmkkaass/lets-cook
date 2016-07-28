@@ -6,7 +6,7 @@
         <div class="col-sm-12 full-width-select">
             <select class="form-control select2 menu-recipe-select input-sm add-recipe" aria-hidden="true" data-portions="{!! $basket->portions !!}" data-basket="{!! $basket->basket_id !!}">
                 <option value="">@lang('labels.please_select_recipe')</option>
-                @foreach($basket->basket->allowed_recipes as $recipe)
+                @foreach($basket->basket->allowed_recipes()->where('portions', $basket->portions)->get() as $recipe)
                     <option value="{!! $recipe->id !!}">{!! $recipe->name !!} (@lang('labels.portions_lowercase'): {!! $recipe->portions !!})</option>
                 @endforeach
             </select>
