@@ -35,92 +35,27 @@
             <th class="col-sm-1 text-center">{!! trans('labels.delete') !!}</th>
         </tr>
 
-        @if (count($model->ingredients))
+        @if (count($model->ingredients) && !isset($copy))
             @foreach($model->ingredients as $ingredient)
-                <tr id="ingredient_{!! $ingredient->ingredient_id !!}">
-                    <td>
-                        <div class="form-group @if ($errors->has('ingredients.old.' .$ingredient->id. '.ingredient_id')) has-error @endif">
-                            {!! Form::text('ingredients[old][' .$ingredient->id. '][ingredient_id]', $ingredient->ingredient_id, ['id' => 'ingredients.old.' .$ingredient->id. '.ingredient_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group">
-                            @if ($ingredient->ingredient->image)
-                                @include('partials.image', ['src' => $ingredient->ingredient->image, 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
-                            @endif
-                            {!! link_to_route('admin.ingredient.show', $ingredient->ingredient->name, [$model->id], ['target' => '_blank']) !!} ({!! $ingredient->ingredient->unit->name !!})
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group required @if ($errors->has('ingredients.old.' .$ingredient->id. '.count')) has-error @endif">
-                            {!! Form::text('ingredients[old][' .$ingredient->id. '][count]', $ingredient->count ?: 1, ['id' => 'ingredients.old.' .$ingredient->id. '.count', 'class' => 'form-control input-sm', 'required' => true]) !!}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-group required @if ($errors->has('ingredients.old.' .$ingredient->id. '.position')) has-error @endif">
-                            {!! Form::text('ingredients[old][' .$ingredient->id. '][position]', $ingredient->position ?: 0, ['id' => 'ingredients.old.' .$ingredient->id. '.position', 'class' => 'form-control input-sm', 'required' => true]) !!}
-                        </div>
-                    </td>
-                    <td class="text-center">
-                        <div class="form-group @if ($errors->has('ingredients.old.' .$ingredient->id. '.main')) has-error @endif">
-                            <label for="ingredients.old.{!! $ingredient->id !!}.main" class="checkbox-label">
-                                {!! Form::radio('main_ingredient', $ingredient->ingredient_id, $ingredient->main, ['id' => 'ingredients.old.' .$ingredient->id. '.main', 'class' => 'square main-ingredient']) !!}
-                            </label>
-                        </div>
-                    </td>
-                    <td class="text-center coll-actions">
-                        <a class="btn btn-flat btn-danger btn-xs action exist destroy" data-id="{!! $ingredient->id !!}"
-                           data-name="ingredients[remove][]"><i class="fa fa-remove"></i></a>
-                    </td>
-                </tr>
+
+                @include('recipe.partials.ingredient_old_row', ['key' => 'ingredients'])
+
             @endforeach
         @endif
 
         @if (count(old('ingredients.new')))
             @foreach(old('ingredients.new') as $ingredient_key => $ingredient)
-                @if ($ingredient_key !== 'replaseme')
-                    <tr id="ingredient_{!! $ingredient_key !!}">
-                        <td>
-                            <div class="form-group">
-                                <div class="form-group @if ($errors->has('ingredients.new.' .$ingredient_key. '.ingredient_id')) has-error @endif">
-                                    {!! Form::text('ingredients[new][' .$ingredient_key. '][ingredient_id]', $ingredient['ingredient_id'], ['id' => 'ingredients.new.' .$ingredient_key. '.ingredient_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-group">
-                                @if ($ingredient['image'])
-                                    @include('partials.image', ['src' => $ingredient['image'], 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
-                                @endif
-                                {!! link_to_route('admin.ingredient.show', $ingredient['name'], [$model->id], ['target' => '_blank']) !!} ({!! $ingredient['unit'] !!})
 
-                                {!! Form::hidden('ingredients[new][' .$ingredient_key. '][image]', $ingredient['image']) !!}
-                                {!! Form::hidden('ingredients[new][' .$ingredient_key. '][name]', $ingredient['name']) !!}
-                                {!! Form::hidden('ingredients[new][' .$ingredient_key. '][unit]', $ingredient['unit']) !!}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-group required @if ($errors->has('ingredients.new.' .$ingredient_key. '.count')) has-error @endif">
-                                {!! Form::text('ingredients[new][' .$ingredient_key. '][count]', $ingredient['count'], ['id' => 'ingredients.new.' .$ingredient_key. '.count', 'class' => 'form-control input-sm', 'required' => true]) !!}
-                            </div>
-                        </td>
-                        <td>
-                            <div class="form-group required @if ($errors->has('ingredients.new.' .$ingredient_key. '.position')) has-error @endif">
-                                {!! Form::text('ingredients[new][' .$ingredient_key. '][position]', $ingredient['position'], ['id' => 'ingredients.new.' .$ingredient_key. '.position', 'class' => 'form-control input-sm', 'required' => true]) !!}
-                            </div>
-                        </td>
-                        <td class="text-center">
-                            <div class="form-group @if ($errors->has('ingredients.new.' .$ingredient_key. '.main')) has-error @endif">
-                                <label for="ingredients.new.{!! $ingredient_key !!}.main" class="checkbox-label">
-                                    {!! Form::radio('main_ingredient', $ingredient_key, old('main_ingredient') == $ingredient_key, ['id' => 'ingredients.new.' .$ingredient_key. '.main', 'class' => 'square main-ingredient']) !!}
-                                </label>
-                            </div>
-                        </td>
-                        <td class="text-center coll-actions">
-                            <a class="btn btn-flat btn-danger btn-xs action destroy"><i class="fa fa-remove"></i></a>
-                        </td>
-                    </tr>
-                @endif
+                @include('recipe.partials.ingredient_new_row', ['type' => 'normal', 'key' => 'ingredients', 'id' => $ingredient_key])
+
+            @endforeach
+        @endif
+
+        @if (isset($copy) && !count(old('ingredients.new')))
+            @foreach($model->ingredients as $ingredient)
+
+                @include('recipe.partials.copy_ingredient_new_row', ['type' => 'normal', 'key' => 'ingredients', 'id' => $ingredient->ingredient_id])
+
             @endforeach
         @endif
 

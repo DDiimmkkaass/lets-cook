@@ -145,6 +145,7 @@ return array (
     'started_at' => 'начало недели',
     'ended_at' => 'окончание недели',
     'city_id' => 'город',
+    'cooking_time' => 'время приготовления',
     'delivery_date' => 'дата доставки',
     'delivery_time' => 'время доставки',
     'city' => 'город',

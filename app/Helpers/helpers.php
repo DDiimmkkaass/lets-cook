@@ -705,3 +705,15 @@ if (!function_exists('currency')) {
         return session()->set('currency', $value);
     }
 }
+
+if (!function_exists('get_recipe_ingredient_type_id')) {
+    /**
+     * @param string $type
+     *
+     * @return string
+     */
+    function get_recipe_ingredient_type_id($type)
+    {
+        return \App\Models\RecipeIngredient::getTypeIdByName($type);
+    }
+}

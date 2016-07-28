@@ -99,7 +99,7 @@ class RecipeController extends BackendController
      * Show the form for creating a new resource.
      * GET /recipe/create
      *
-     * @return Response
+     * @return \Response
      */
     public function create()
     {
@@ -225,6 +225,32 @@ class RecipeController extends BackendController
             FlashMessages::add("error", trans('messages.update_error'));
             
             return redirect()->back()->withInput();
+        }
+    }
+    
+    /**
+     * @param int $id
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Response
+     */
+    public function copy($id)
+    {
+        try {
+            $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps')->whereId($id)->firstOrFail();
+    
+            $this->data('model', $model);
+            
+            $this->data('page_title', trans('labels.copy_recipe') . ' "'.$model->name.'"');
+            
+            $this->breadcrumbs(trans('labels.copy_recipe'));
+            
+            $this->_fillAdditionalTemplateData($model);
+    
+            return $this->render('views.'.$this->module.'.copy');
+        } catch (ModelNotFoundException $e) {
+            FlashMessages::add('error', trans('messages.copy error, parent recipe not found'));
+        
+            return redirect()->route('admin.'.$this->module.'.index');
         }
     }
 

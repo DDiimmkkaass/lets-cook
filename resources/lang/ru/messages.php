@@ -121,4 +121,5 @@ return array (
   'you can not delete this recipe as it is used in the following menu' => 'Вы не можете удалить этот рецепт, так как он используется в следующих меню',
   'you can not delete this recipe because it is still used menu' => 'Вы не можете удалить этот рецепт, так как он до сих пор используется в меню',
   'sale price helper message' => '0 - ингредиент не продается',
+  'copy error, parent recipe not found' => 'Ошибка копирования, исходный рецепт не найден',
 );

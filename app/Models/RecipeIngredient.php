@@ -17,9 +17,9 @@ use Illuminate\Database\Eloquent\Model;
  */
 class RecipeIngredient extends Model
 {
-
+    
     use PositionSortedTrait;
-
+    
     /**
      * @var array
      */
@@ -37,9 +37,9 @@ class RecipeIngredient extends Model
      */
     public static $types = [
         0 => 'normal',
-        1 => 'home'
+        1 => 'home',
     ];
-
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -47,7 +47,7 @@ class RecipeIngredient extends Model
     {
         return $this->belongsTo(Recipe::class);
     }
-
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -87,6 +87,18 @@ class RecipeIngredient extends Model
     public function scopeHome($query)
     {
         return $query->ofType('home');
+    }
+    
+    /**
+     * @return string
+     */
+    public function getStringType()
+    {
+        foreach (self::$types as $id => $type) {
+            if ($id == $this->type) {
+                return $type;
+            }
+        }
     }
     
     /**

@@ -472,4 +472,5 @@ return array (
   'not_sales' => 'Не продается',
   'in_sales' => 'Продается',
   'tab_ingredients_home' => 'Ингредиенты дома',
+  'copy_recipe' => 'Копирование рецепта',
 );

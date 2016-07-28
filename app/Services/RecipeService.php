@@ -110,7 +110,8 @@ class RecipeService
                             'type'            => 'recipe',
                             'delete_function' => 'delete_recipe('.$model->id.')',
                         ]
-                    )->render();
+                    )->render().
+                    view('recipe.datatables.control_buttons', ['model' => $model])->render();
                 }
             )
             ->setIndexColumn('id')

@@ -8,7 +8,7 @@ $router->group(
                 //--standard routes
                 $router->any('/', ['as' => 'admin.home', 'uses' => 'Backend\BackendController@getIndex']);
                 $router->any('/home', 'Backend\BackendController@getIndex');
-
+                
                 // users
                 $router->post(
                     'user/{id}/ajax_field',
@@ -27,10 +27,10 @@ $router->group(
                     ['as' => 'admin.user.new_password.post', 'uses' => 'Backend\UserController@postNewPassword']
                 );
                 $router->resource('user', 'Backend\UserController');
-
+                
                 // groups
                 $router->resource('group', 'Backend\GroupController');
-
+                
                 // pages
                 $router->post(
                     'page/{id}/ajax_field',
@@ -41,7 +41,7 @@ $router->group(
                     ]
                 );
                 $router->resource('page', 'Backend\PageController');
-
+                
                 // tag
                 $router->post(
                     'tag/{id}/ajax_field',
@@ -52,7 +52,7 @@ $router->group(
                     ]
                 );
                 $router->resource('tag', 'Backend\TagController');
-
+                
                 // news
                 $router->post(
                     'news/{id}/ajax_field',
@@ -63,7 +63,7 @@ $router->group(
                     ]
                 );
                 $router->resource('news', 'Backend\NewsController');
-
+                
                 // comments
                 $router->post(
                     'comment/{id}/ajax_field',
@@ -78,7 +78,7 @@ $router->group(
                     'Backend\CommentController',
                     ['only' => ['index', 'edit', 'update', 'destroy']]
                 );
-
+                
                 // questions
                 $router->post(
                     'question/{id}/ajax_field',
@@ -89,7 +89,7 @@ $router->group(
                     ]
                 );
                 $router->resource('question', 'Backend\QuestionController');
-
+                
                 // menus
                 $router->post(
                     'menu/{id}/ajax_field',
@@ -100,7 +100,7 @@ $router->group(
                     ]
                 );
                 $router->resource('menu', 'Backend\MenuController');
-
+                
                 // banners
                 $router->post(
                     'banner/{id}/ajax_field',
@@ -111,7 +111,7 @@ $router->group(
                     ]
                 );
                 $router->resource('banner', 'Backend\BannerController');
-
+                
                 // text_widgets
                 $router->post(
                     'text_widget/{id}/ajax_field',
@@ -122,7 +122,7 @@ $router->group(
                     ]
                 );
                 $router->resource('text_widget', 'Backend\TextWidgetController');
-
+                
                 // variables
                 $router->post(
                     'variable/{id}/ajax_field',
@@ -145,7 +145,7 @@ $router->group(
                     ]
                 );
                 $router->resource('variable', 'Backend\VariableController');
-
+                
                 // translations
                 $router->get(
                     'translation/{group}',
@@ -155,9 +155,9 @@ $router->group(
                     'translation/{group}',
                     ['as' => 'admin.translation.update', 'uses' => 'Backend\TranslationController@update']
                 );
-
+                
                 //--lets cook routes
-
+                
                 //category
                 $router->get(
                     'category/{id}/get-delete-form',
@@ -176,7 +176,7 @@ $router->group(
                     ]
                 );
                 $router->resource('category', 'Backend\CategoryController');
-
+                
                 //units
                 $router->get(
                     'unit/{id}/get-delete-form',
@@ -187,13 +187,13 @@ $router->group(
                     ]
                 );
                 $router->resource('unit', 'Backend\UnitController');
-
+                
                 //parameters
                 $router->resource('parameter', 'Backend\ParameterController');
-
+                
                 //nutritional_values
                 $router->resource('nutritional_value', 'Backend\NutritionalValueController');
-
+                
                 //ingredients
                 $router->post(
                     'ingredient/{id}/ajax_field',
@@ -219,7 +219,7 @@ $router->group(
                     ]
                 );
                 $router->resource('ingredient', 'Backend\IngredientController');
-
+                
                 //recipe
                 $router->post(
                     'recipe/{id}/ajax_field',
@@ -245,8 +245,12 @@ $router->group(
                         'uses'       => 'Backend\RecipeController@getDeleteForm',
                     ]
                 );
+                $router->get(
+                    'recipe/{id}/copy',
+                    ['as' => 'admin.recipe.copy', 'uses' => 'Backend\RecipeController@copy']
+                );
                 $router->resource('recipe', 'Backend\RecipeController');
-
+                
                 //suppliers
                 $router->get(
                     'supplier/{id}/get-delete-form',
@@ -257,7 +261,7 @@ $router->group(
                     ]
                 );
                 $router->resource('supplier', 'Backend\SupplierController');
-
+                
                 //baskets
                 $router->get(
                     'basket/get-recipe-row/{recipe_id}',
@@ -268,7 +272,7 @@ $router->group(
                     ]
                 );
                 $router->resource('basket', 'Backend\BasketController');
-
+                
                 //weekly menu
                 $router->get(
                     'weekly_menu/current',
@@ -299,7 +303,7 @@ $router->group(
                     ]
                 )->where('basket_id', '[0-9]+');
                 $router->resource('weekly_menu', 'Backend\WeeklyMenuController', ['except' => ['destroy']]);
-    
+                
                 //cities
                 $router->resource('city', 'Backend\CityController');
                 
@@ -323,7 +327,7 @@ $router->group(
                 $router->resource('order', 'Backend\OrderController', ['only' => ['index', 'show', 'edit', 'update']]);
             }
         );
-
+        
         $router->group(
             ['prefix' => 'auth'],
             function ($router) {

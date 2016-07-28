@@ -8,7 +8,7 @@
             <th class="col-sm-1 text-center">{!! trans('labels.delete') !!}</th>
         </tr>
 
-        @if (count($model->steps))
+        @if (count($model->steps) && !isset($copy))
             @foreach($model->steps as $step)
                 <tr class="duplication-row">
                     <td>
@@ -68,7 +68,7 @@
                                 </div>
 
                                 <div class="form-group required @if ($errors->has('steps.new.' .$step_key. '.description')) has-error @endif">
-                                    {!! Form::textarea('steps[new][' . $step_key . '][description]', $step['text'], ['id' => 'steps.new.' . $step_key . '.description', 'placeholder' => trans('labels.description'), 'rows' => 5, 'class' => 'form-control input-sm', 'required' => true]) !!}
+                                    {!! Form::textarea('steps[new][' . $step_key . '][description]', $step['description'], ['id' => 'steps.new.' . $step_key . '.description', 'placeholder' => trans('labels.description'), 'rows' => 5, 'class' => 'form-control input-sm', 'required' => true]) !!}
 
                                     {!! $errors->first('steps.new.' .$step_key. '.description', '<p class="help-block error">:message</p>') !!}
                                 </div>
@@ -86,6 +86,37 @@
                         </td>
                     </tr>
                 @endif
+            @endforeach
+        @endif
+
+        @if (isset($copy) && !count(old('steps.new')))
+            @foreach($model->steps as $step)
+                <tr class="duplication-row">
+                    <td>
+                        <div class="form-group required">
+                            {!! Form::imageInput('steps[new][' .$step->id. '][image]', $step->image, ['width' => 100, 'height' => 100, 'required' => true]) !!}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            <div class="form-group required">
+                                {!! Form::text('steps[new][' . $step->id . '][name]', $step->name, ['id' => 'steps.new.' . $step->id . '.name', 'placeholder' => trans('labels.name'), 'class' => 'form-control input-sm', 'required' => true]) !!}
+                            </div>
+
+                            <div class="form-group required">
+                                {!! Form::textarea('steps[new][' . $step->id . '][description]', $step->description, ['id' => 'steps.new.' . $step->id . '.description', 'placeholder' => trans('labels.description'), 'rows' => 5, 'class' => 'form-control input-sm', 'required' => true]) !!}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group required">
+                            {!! Form::text('steps[new][' .$step->id. '][position]', $step->position, ['id' => 'steps.new.' .$step->id. '.position', 'class' => 'form-control input-sm', 'required' => true]) !!}
+                        </div>
+                    </td>
+                    <td class="coll-actions text-center">
+                        <a class="btn btn-flat btn-danger btn-xs action destroy"><i class="fa fa-remove"></i></a>
+                    </td>
+                </tr>
             @endforeach
         @endif
 

@@ -1,4 +1,4 @@
-<tr id="ingredient_{!! $model->id !!}">
+<tr id="{!! $key !!}_{!! $model->id !!}">
     <td>
         <div class="form-group">
             <input type="text" class="form-control input-sm" name="{!! $key !!}[new][{!! $model->id !!}][ingredient_id]"
