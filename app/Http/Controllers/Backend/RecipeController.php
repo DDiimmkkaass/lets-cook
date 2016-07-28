@@ -13,10 +13,8 @@ use App\Models\Basket;
 use App\Models\Category;
 use App\Models\Ingredient;
 use App\Models\Recipe;
-use App\Models\WeeklyMenu;
 use App\Services\RecipeService;
 use App\Traits\Controllers\AjaxFieldsChangerTrait;
-use Carbon;
 use DB;
 use Exception;
 use FlashMessages;
@@ -89,7 +87,7 @@ class RecipeController extends BackendController
         
         $this->data('page_title', trans('labels.recipes'));
         $this->breadcrumbs(trans('labels.recipes_list'));
-
+        
         $this->_fillIndexAdditionalTemplateData();
         
         return $this->render('views.'.$this->module.'.index');
@@ -173,7 +171,7 @@ class RecipeController extends BackendController
     {
         try {
             $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps')->whereId($id)->firstOrFail();
-
+            
             $this->data('page_title', '"'.$model->name.'"');
             
             $this->breadcrumbs(trans('labels.recipe_editing'));
@@ -237,23 +235,23 @@ class RecipeController extends BackendController
     {
         try {
             $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps')->whereId($id)->firstOrFail();
-    
+            
             $this->data('model', $model);
             
-            $this->data('page_title', trans('labels.copy_recipe') . ' "'.$model->name.'"');
+            $this->data('page_title', trans('labels.copy_recipe').' "'.$model->name.'"');
             
             $this->breadcrumbs(trans('labels.copy_recipe'));
             
             $this->_fillAdditionalTemplateData($model);
-    
+            
             return $this->render('views.'.$this->module.'.copy');
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.copy error, parent recipe not found'));
-        
+            
             return redirect()->route('admin.'.$this->module.'.index');
         }
     }
-
+    
     /**
      * @param int $recipe_id
      *
@@ -262,7 +260,7 @@ class RecipeController extends BackendController
     public function getDeleteForm($recipe_id)
     {
         $menus = $this->recipeService->getWeeklyMenusWhereUsedRecipe($recipe_id);
-
+        
         return response()->json(
             [
                 'title'   => trans('labels.deleting_record'),
@@ -286,11 +284,14 @@ class RecipeController extends BackendController
             $menus = $this->recipeService->getWeeklyMenusWhereUsedRecipe($id);
             
             if (count($menus)) {
-                FlashMessages::add('error', trans('messages.you can not delete this recipe because it is still used menu'));
-
+                FlashMessages::add(
+                    'error',
+                    trans('messages.you can not delete this recipe because it is still used menu')
+                );
+                
                 return redirect()->route('admin.'.$this->module.'.index');
             }
-
+            
             $model = Recipe::findOrFail($id);
             
             $model->delete();
@@ -315,7 +316,7 @@ class RecipeController extends BackendController
     {
         try {
             $model = Ingredient::with('unit')->findOrFail($ingredient_id);
-    
+            
             $key = $type != 'normal' ? 'ingredients_'.$type : 'ingredients';
             
             return [
@@ -341,13 +342,19 @@ class RecipeController extends BackendController
             $baskets[$item->id] = $item->name;
         }
         $this->data('baskets', $baskets);
-
+        
+        $portions = [];
+        foreach (config('recipe.available_portions') as $portion) {
+            $portions[$portion] = $portion.' '.trans_choice('labels.count_of_portions', $portion);
+        }
+        $this->data('portions', $portions);
+        
         $this->data(
             'statuses',
             ['' => trans('labels.please_select'), '1' => trans('labels.status_on'), '0' => trans('labels.status_off')]
         );
     }
-
+    
     /**
      *  fill additional template data
      *
@@ -362,25 +369,31 @@ class RecipeController extends BackendController
         $this->data('ingredient_categories', $ingredient_categories);
         
         $this->data('ingredients', ['' => trans('labels.please_select_ingredient_category')]);
-
+        
+        $portions = [];
+        foreach (config('recipe.available_portions') as $portion) {
+            $portions[$portion] = $portion.' '.trans_choice('labels.count_of_portions', $portion);
+        }
+        $this->data('portions', $portions);
+        
         $baskets = [];
         foreach (Basket::positionSorted()->get(['id', 'name']) as $item) {
             $baskets[$item->id] = $item->name;
         }
         $this->data('baskets', $baskets);
-
+        
         $selected_baskets = [];
-
+        
         if ($model) {
             $selected_baskets = [];
             foreach ($model->baskets as $item) {
                 $selected_baskets[] = $item->id;
             }
         }
-
+        
         $this->data('selected_baskets', $selected_baskets);
     }
-
+    
     /**
      * @param \App\Models\Recipe       $model
      * @param \Illuminate\Http\Request $request
@@ -388,19 +401,19 @@ class RecipeController extends BackendController
     private function _saveRelationships(Recipe $model, Request $request)
     {
         $model->baskets()->sync($request->get('baskets', []));
-
+        
         $this->recipeService->processIngredients(
             $model,
             $request->get('ingredients', []),
             $request->get('main_ingredient', 0)
         );
-    
+        
         $this->recipeService->processIngredients(
             $model,
             $request->get('ingredients_home', []),
             0
         );
-
+        
         $this->recipeService->processSteps(
             $model,
             $request->get('steps', [])

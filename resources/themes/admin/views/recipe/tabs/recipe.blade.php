@@ -12,7 +12,7 @@
     {!! Form::label('portions', trans('labels.portions'), ['class' => 'control-label col-xs-12 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-2 col-md-1">
-        {!! Form::text('portions', $model->portions ?: 2, ['class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+        {!! Form::select('portions', $portions, null, ['class' => 'form-control select2 input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
 
         {!! $errors->first('portions', '<p class="help-block error">:message</p>') !!}
     </div>

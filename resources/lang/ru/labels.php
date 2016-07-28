@@ -473,4 +473,5 @@ return array (
   'in_sales' => 'Продается',
   'tab_ingredients_home' => 'Ингредиенты дома',
   'copy_recipe' => 'Копирование рецепта',
+  'count_of_portions' => '{0} порций|{1} порция|[2,4] порции|[5,inf] порций',
 );
