@@ -12,6 +12,10 @@
                         <option value="{!! $recipe->id !!}">{!! $recipe->name !!} (@lang('labels.portions_lowercase'): {!! $recipe->portions !!})</option>
                     @endforeach
                 </select>
+
+                <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][name]" value="{!! $basket->name !!}">
+                <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][id]" value="{!! $basket->id !!}">
+                <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][portions]" value="{!! $portions !!}">
             </div>
         </div>
     </div>

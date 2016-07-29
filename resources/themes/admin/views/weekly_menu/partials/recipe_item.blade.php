@@ -8,9 +8,9 @@
                     @lang('labels.portions_lowercase'): {!! $model->portions !!}
                 </p>
 
-                <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][recipe_id]" value="{!! $model->id !!}">
-                <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][name]" value="{!! $model->name !!}">
                 <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][image]" value="{!! $model->image !!}">
+                <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][name]" value="{!! $model->name !!}">
+                <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][recipe_id]" value="{!! $model->id !!}">
                 <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][recipe_portions]" value="{!! $model->portions !!}">
             </div>
 

@@ -114,7 +114,9 @@ class WeeklyMenuController extends BackendController
      */
     public function current()
     {
-        $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.basket.allowed_recipes')->current()->first();
+        $model = WeeklyMenu::with('baskets', 'baskets.recipes')
+            ->current()
+            ->first();
         
         if (!$model) {
             session()->put('current_week_menu', true);
@@ -220,9 +222,9 @@ class WeeklyMenuController extends BackendController
     public function edit($id)
     {
         try {
-            $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.basket.allowed_recipes')->whereId(
-                $id
-            )->firstOrFail();
+            $model = WeeklyMenu::with('baskets', 'baskets.recipes')
+                ->whereId($id)
+                ->firstOrFail();
             
             if ($model->isCurrentWeekMenu()) {
                 return redirect()->route('admin.'.$this->module.'.current');
@@ -382,6 +384,30 @@ class WeeklyMenuController extends BackendController
     }
     
     /**
+     * @param int $basket_id
+     * @param int $portions
+     *
+     * @return array
+     */
+    public function getBasketAvailableRecipes($basket_id, $portions)
+    {
+        try {
+            $basket = Basket::findOrFail($basket_id);
+            $recipes = $basket->allowed_recipes()->where('portions', $portions)->get();
+            
+            return [
+                'status'  => 'success',
+                'recipes' => $recipes,
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
      *
      * fill additional template data
      *
@@ -400,14 +426,15 @@ class WeeklyMenuController extends BackendController
     {
         $exists_baskets = [];
         
-        foreach ($request->get('baskets', []) as $key => $recipes) {
-            list($basket_id, $portions) = explode('_', $key);
-            
+        foreach ($request->get('baskets', []) as $_basket) {
             $basket = $this->weeklyMenuService->saveBasket(
                 $model,
-                ['basket_id' => $basket_id, 'portions' => $portions]
+                [
+                    'basket_id' => $_basket['id'],
+                    'portions'  => $_basket['portions'],
+                ]
             );
-            $this->weeklyMenuService->processRecipes($basket, $recipes);
+            $this->weeklyMenuService->processRecipes($basket, $_basket);
             
             $exists_baskets[] = $basket->id;
         }

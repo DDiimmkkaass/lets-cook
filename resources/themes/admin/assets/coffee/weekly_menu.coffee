@@ -146,3 +146,21 @@ $(document).on 'ready', ->
       $(this).closest('.box-body').find('.main-recipe-helper-message').fadeOut()
 
     $(this).closest(".recipe-block").remove()
+
+  $('.menu-recipe-select.load').each () ->
+    $.ajax
+      url: '/admin/weekly_menu/' + $(this).data('basket') + '/'  + $(this).data('portions') + '/get-basket-available-recipes'
+      type: 'GET'
+      dataType: 'json'
+      error: (response) =>
+        processError response, null
+      success: (response) =>
+        if response.status is 'success'
+          options = '';
+
+          $.each response.recipes, (index, item) ->
+            options += '<option value="' + item.id + '">' + item.name + '(' + lang_portionsLowercase + ': ' + item.portions + ')</option>'
+
+          $(this).append(options);
+        else
+          message.show response.message, response.status

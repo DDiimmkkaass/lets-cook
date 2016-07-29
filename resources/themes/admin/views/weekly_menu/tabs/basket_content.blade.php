@@ -10,6 +10,10 @@
                     <option value="{!! $recipe->id !!}">{!! $recipe->name !!} (@lang('labels.portions_lowercase'): {!! $recipe->portions !!})</option>
                 @endforeach
             </select>
+
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][name]" value="{!! $basket->basket->name !!}">
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][id]" value="{!! $basket->basket_id !!}">
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][portions]" value="{!! $basket->portions !!}">
         </div>
     </div>
 </div>
@@ -22,7 +26,6 @@
 
     @if (isset($model) && $model->exists)
         @foreach($basket->recipes as $recipe)
-
             <div id="recipe_{!! $recipe->recipe->id !!}" class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe->main) main @endif">
                 <div class="small-box bg-aqua">
                     <div class="inner">
@@ -39,6 +42,11 @@
                         </div>
 
                         {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][main]', $recipe->main ? 1 : 0, ['id' => 'baskets_'.$basket->basket_id.'_'.$basket->portions.'_old_'.$recipe->id.'_main', 'class' => 'main-checkbox']) !!}
+
+                        {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][image]', $recipe->recipe->image) !!}
+                        {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][name]', $recipe->recipe->name) !!}
+                        {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][recipe_id]', $recipe->recipe->id) !!}
+                        {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][recipe_portions]', $recipe->recipe->portions) !!}
 
                         <div class="clearfix"></div>
                     </div>
@@ -62,52 +70,6 @@
         @endforeach
     @endif
 
-    @if (count(old('baskets.'.$basket->basket_id.'_'.$basket->portions.'.new')))
-        @foreach(old('baskets.'.$basket->basket_id.'_'.$basket->portions.'.new') as $recipe_key => $recipe)
-
-            <div id="recipe_{!! $recipe['recipe_id'] !!}" class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe['main']) main @endif">
-                <div class="small-box bg-aqua">
-                    <div class="inner">
-                        <div class="inner-block col-sm-8 no-padding">
-                            <h5>{!! $recipe['name'] !!}</h5>
-
-                            <p>
-                                @lang('labels.portions'): {!! $recipe['recipe_portions'] !!}
-                            </p>
-                        </div>
-
-                        <div class="image col-sm-4 no-padding text-center">
-                            @include('partials.image', ['src' => $recipe['image'], 'attributes' => ['width' => 100, 'class' => 'img-circle']])
-                        </div>
-
-                        <input type="hidden" name="baskets[{!! $basket->basket_id.'_'.$basket->portions !!}]['new'][{!! $recipe_key !!}][recipe_id]" value="{!! $recipe['recipe_id'] !!}">
-                        <input type="hidden" name="baskets[{!! $basket->basket_id.'_'.$basket->portions !!}]['new'][{!! $recipe_key !!}][name]" value="{!! $recipe['name'] !!}">
-                        <input type="hidden" name="baskets[{!! $basket->basket_id.'_'.$basket->portions !!}]['new'][{!! $recipe_key !!}][image]" value="{!! $recipe['image'] !!}">
-                        <input type="hidden" name="baskets[{!! $basket->basket_id.'_'.$basket->portions !!}]['new'][{!! $recipe_key !!}][recipe_portions]" value="{!! $recipe['recipe_portions'] !!}">
-
-                        <input type="hidden" class="main-checkbox" name="baskets[{!! $basket->basket_id.'_'.$basket->portions !!}][new][{!! $recipe_key !!}][main]" value="{!! $recipe['main'] ? 1 : 0 !!}">
-
-                        <div class="clearfix"></div>
-                    </div>
-                    <div class="clearfix"></div>
-                    <div class="col-sm-12 padding-10">
-                        <div class="form-group margin-bottom-0 required @if ($errors->has('baskets.'.$basket->basket_id.'_'.$basket->portions.'.new.'.$recipe_key.'.position')) has-error @endif">
-                            {!! Form::label('baskets['.$basket->basket_id.'_'.$basket->portions.'][new]['.$recipe_key.'][position]', trans('labels.position'), ['class' => 'control-label col-sm-3']) !!}
-                            <div class="col-sm-9">
-                                {!! Form::text('baskets['.$basket->basket_id.'_'.$basket->portions.'][new]['.$recipe_key.'][position]', $recipe['position'], ['id' => 'baskets_'.$basket->basket_id.'_'.$basket->portions.'_new_'.$recipe_key.'_portions', 'class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                    <a href="{!! route('admin.recipe.show', $recipe['recipe_id']) !!}" target="_blank" class="small-box-footer lover-case">
-                        @lang('labels.detailed') <i class="fa fa-arrow-circle-right"></i>
-                    </a>
-                    <a class="btn btn-flat btn-danger btn-xs action destroy"><i class="fa fa-remove"></i></a>
-                </div>
-            </div>
-
-        @endforeach
-    @endif
 </div>
 
 <div class="clearfix"></div>

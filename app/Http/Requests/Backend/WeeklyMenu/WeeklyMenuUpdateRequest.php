@@ -36,11 +36,16 @@ class WeeklyMenuUpdateRequest extends FormRequest
             'baskets.*.old.*' => 'array',
             'baskets.*.remove' => 'array',
 
+            'baskets.*.id'       => 'required|exists:baskets,id',
+            'baskets.*.portions' => 'required|numeric|in:'.implode(',', config('recipe.available_portions')),
+
+            'baskets.*.old.*.recipe_id' => 'required_with:baskets.*.new|exists:recipes,id',
+            'baskets.*.old.*.position'  => 'required_with:baskets.*.new|numeric|min:0',
+            'baskets.*.old.*.main'      => 'boolean',
+
             'baskets.*.new.*.recipe_id' => 'required_with:baskets.*.new|exists:recipes,id',
             'baskets.*.new.*.position'  => 'required_with:baskets.*.new|numeric|min:0',
-
-            'baskets.*.old.*.recipe_id' => 'exists:recipes,id',
-            'baskets.*.old.*.position'  => 'required_with:baskets.*.old|numeric|min:0',
+            'baskets.*.new.*.main'      => 'boolean',
         ];
     }
 }

@@ -301,7 +301,15 @@ $router->group(
                         'as'         => 'admin.weekly_menu.get_recipe_item',
                         'uses'       => 'Backend\WeeklyMenuController@getRecipeItem',
                     ]
-                )->where('basket_id', '[0-9]+');
+                )->where('basket_id', '[0-9]+')->where('portions', '[0-9]+');
+                $router->get(
+                    'weekly_menu/{basket_id}/{portions}/get-basket-available-recipes',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.weekly_menu.get_basket_available_recipes',
+                        'uses'       => 'Backend\WeeklyMenuController@getBasketAvailableRecipes',
+                    ]
+                )->where('basket_id', '[0-9]+')->where('portions', '[0-9]+');
                 $router->resource('weekly_menu', 'Backend\WeeklyMenuController', ['except' => ['destroy']]);
                 
                 //cities
