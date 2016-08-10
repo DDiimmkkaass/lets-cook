@@ -189,6 +189,15 @@ class Order extends Model
     }
     
     /**
+     * @param $query
+     */
+    public function scopeForNextWeek($query)
+    {
+        return $query->where('delivery_date', '>=', Carbon::now()->addWeek()->startOfWeek())
+            ->where('delivery_date', '<=', Carbon::now()->addWeek()->endOfWeek());
+    }
+    
+    /**
      * @return bool
      */
     public function isSubscribe()
@@ -204,10 +213,12 @@ class Order extends Model
         $total = 0;
         
         $total += $this->baskets()->sum('price') / 100;
-    
-        $total += $this->ingredients()->get()->reduce(function ($_total, $item) {
-            return $_total + ($item->ingredient->sale_price * $item->count);
-        });
+        
+        $total += $this->ingredients()->get()->reduce(
+            function ($_total, $item) {
+                return $_total + ($item->ingredient->sale_price * $item->count);
+            }
+        );
         
         return $total;
     }

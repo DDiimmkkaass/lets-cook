@@ -40,7 +40,37 @@ class OrderIngredient extends Model
      */
     public function ingredient()
     {
-        return $this->belongsTo(Ingredient::class)->withTrashed();
+        return $this->belongsTo(Ingredient::class)->with('unit')->withTrashed();
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinIngredient($query)
+    {
+        return $query->leftJoin('ingredients', 'ingredients.id', '=', 'order_ingredients.ingredient_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinIngredientSupplier($query)
+    {
+        return $query->leftJoin('suppliers', 'suppliers.id', '=', 'ingredients.supplier_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinIngredientCategory($query)
+    {
+        return $query->leftJoin('categories', 'categories.id', '=', 'ingredients.category_id');
     }
     
     /**

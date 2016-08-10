@@ -29,7 +29,9 @@
         "pingpong/widget": "~2.0",
         "dimsav/laravel-translatable": "5.5",
         "mcamara/laravel-localization": "1.1.*",
-        "nicolaslopezj/searchable": "1.*"
+        "nicolaslopezj/searchable": "1.*",
+        "maatwebsite/excel": "~2.1.0",
+        "laravelcollective/bus": "^5.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

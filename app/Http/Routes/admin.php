@@ -333,6 +333,54 @@ $router->group(
                     ]
                 );
                 $router->resource('order', 'Backend\OrderController', ['only' => ['index', 'show', 'edit', 'update']]);
+                
+                //purchase
+                $router->group(
+                    ['prefix' => 'purchase'],
+                    function ($router) {
+                        $router->post(
+                            'purchase/{id}/ajax_field',
+                            [
+                                'middleware' => ['ajax'],
+                                'as'         => 'admin.purchase.ajax_field',
+                                'uses'       => 'Backend\PurchaseController@ajaxFieldChange',
+                            ]
+                        );
+                        $router->post(
+                            'purchase/{id}/set-ingredient-price',
+                            [
+                                'middleware' => ['ajax'],
+                                'as'         => 'admin.purchase.set_ingredient_price',
+                                'uses'       => 'Backend\PurchaseController@setIngredientPrice',
+                            ]
+                        );
+                        
+                        $router->get(
+                            'index',
+                            ['as' => 'admin.purchase.index', 'uses' => 'Backend\PurchaseController@index']
+                        );
+    
+                        $router->get(
+                            'edit',
+                            ['as' => 'admin.purchase.edit', 'uses' => 'Backend\PurchaseController@edit']
+                        );
+    
+                        $router->get(
+                            'show/{year}/{week}',
+                            ['as' => 'admin.purchase.show', 'uses' => 'Backend\PurchaseController@show']
+                        );
+    
+                        $router->get(
+                            'update/{id}',
+                            ['as' => 'admin.purchase.update', 'uses' => 'Backend\PurchaseController@index']
+                        );
+    
+                        $router->get(
+                            '{year}/{week}/download/{supplier_id?}',
+                            ['as' => 'admin.purchase.download', 'uses' => 'Backend\PurchaseController@download']
+                        );
+                    }
+                );
             }
         );
         

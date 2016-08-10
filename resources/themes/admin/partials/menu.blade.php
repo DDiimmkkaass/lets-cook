@@ -175,6 +175,20 @@
                     </a>
                 </li>
             @endif
+            @if ($user->hasAccess('purchase.read'))
+                <li class="{!! active_class('admin.purchase.edit') !!}">
+                    <a href="{!! route('admin.purchase.edit') !!}">
+                        <i class="fa fa-list-ol"></i>
+                        <span>@lang('labels.list_of_purchasing')</span>
+                    </a>
+                </li>
+                <li class="{!! active_class('admin.purchase*', 'active', 'admin.purchase.edit*') !!}">
+                    <a href="{!! route('admin.purchase.index') !!}">
+                        <i class="fa fa-history"></i>
+                        <span>@lang('labels.history_of_purchasing')</span>
+                    </a>
+                </li>
+            @endif
 
             <li class="header">@lang('labels.content')</li>
             @if ($user->hasAccess('page.read'))

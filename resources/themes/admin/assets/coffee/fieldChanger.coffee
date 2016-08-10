@@ -23,12 +23,18 @@
       value = (if $(this).is(":checked") then 1 else value)
 
       unless value == undefined
-        $.post url,
-          value: value
-          field: field
-          _token: token
-        , (response) ->
-          fieldChanger.options.callback response  if typeof fieldChanger.options.callback is "function"
+        $.ajax
+          url: url
+          type: 'POST'
+          dataType: 'json'
+          data:
+            value: value
+            field: field
+            _token: token
+          error: (response) =>
+            processError response, null
+          success: (response) =>
+            fieldChanger.options.callback response if typeof fieldChanger.options.callback is "function"
 
   $.fn.fieldChanger = (params) ->
     $(this).each ->

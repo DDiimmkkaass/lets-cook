@@ -57,6 +57,36 @@ class RecipeIngredient extends Model
     }
     
     /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinIngredient($query)
+    {
+        return $query->leftJoin('ingredients', 'ingredients.id', '=', 'recipe_ingredients.ingredient_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinIngredientSupplier($query)
+    {
+        return $query->leftJoin('suppliers', 'suppliers.id', '=', 'ingredients.supplier_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinIngredientCategory($query)
+    {
+        return $query->leftJoin('categories', 'categories.id', '=', 'ingredients.category_id');
+    }
+    
+    /**
      * @param        $query
      * @param string $type
      *

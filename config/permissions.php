@@ -79,11 +79,14 @@ return array (
     'supplier.read',
     'supplier.write',
     'supplier.delete',
-
+    
     'page.create',
     'page.read',
     'page.write',
     'page.delete',
+    
+    'purchase.read',
+    'purchase.write',
 
 //    'tag.create',
 //    'tag.read',
