@@ -9,7 +9,7 @@
             @if ($model->image)
                 @include('partials.image', ['src' => $model['image'], 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
             @endif
-            {!! $model->name !!}
+            {!! link_to_route('admin.ingredient.show', $model->name, $model->id, ['target' => '_blank']) !!}
 
             {!! Form::hidden('ingredients[new][' .$model->id. '][image]', $model->image) !!}
             {!! Form::hidden('ingredients[new][' .$model->id. '][name]', $model->name) !!}

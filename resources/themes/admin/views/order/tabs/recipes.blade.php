@@ -37,7 +37,8 @@
                             @if ($recipe->image)
                                 @include('partials.image', ['src' => $recipe->image, 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
                             @endif
-                            {!! $recipe->name !!} <span class="lover-case">(@lang('labels.portions'): {!! $recipe->portions !!})</span>
+                            {!! link_to_route('admin.recipe.show', $recipe->name, $recipe->recipe_id, ['target' => '_blank']) !!}
+                            <span class="lover-case">(@lang('labels.portions'): {!! $recipe->portions !!})</span>
                         </div>
                     </td>
                     <td class="text-center coll-actions">
@@ -62,7 +63,8 @@
                                 @if ($recipe['image'])
                                     @include('partials.image', ['src' => $recipe['image'], 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
                                 @endif
-                                {!! $recipe['name'] !!} <span class="lover-case">(@lang('labels.portions'): {!! $recipe['recipe_portions'] !!})</span>
+                                {!! link_to_route('admin.recipe.show', $recipe['name'], $recipe_key, ['target' => '_blank']) !!}
+                                <span class="lover-case">(@lang('labels.portions'): {!! $recipe['recipe_portions'] !!})</span>
 
                                 {!! Form::hidden('recipes[new][' .$recipe_key. '][image]', $recipe['image']) !!}
                                 {!! Form::hidden('recipes[new][' .$recipe_key. '][name]', $recipe['name']) !!}

@@ -34,7 +34,7 @@
                             @if ($ingredient->getImage())
                                 @include('partials.image', ['src' => $ingredient->getImage(), 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
                             @endif
-                            {!! $ingredient->getName() !!}
+                            {!! link_to_route('admin.ingredient.show', $ingredient->getName(), $ingredient->ingredient_id, ['target' => '_blank']) !!}
                         </div>
                     </td>
                     <td>
@@ -64,7 +64,7 @@
                                 @if ($ingredient['image'])
                                     @include('partials.image', ['src' => $ingredient['image'], 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
                                 @endif
-                                {!! $ingredient['name'] !!}
+                                {!! link_to_route('admin.ingredient.show', $ingredient['name'], $ingredient['ingredient_id'], ['target' => '_blank']) !!}
 
                                 {!! Form::hidden('ingredients[new][' .$ingredient_key. '][image]', $ingredient['image']) !!}
                                 {!! Form::hidden('ingredients[new][' .$ingredient_key. '][name]', $ingredient['name']) !!}
