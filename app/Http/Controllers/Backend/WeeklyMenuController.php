@@ -267,8 +267,6 @@ class WeeklyMenuController extends BackendController
             
             FlashMessages::add('success', trans('messages.save_ok'));
             
-            dd($model->isCurrentWeekMenu());
-            
             if ($model->isCurrentWeekMenu()) {
                 return redirect()->route('admin.'.$this->module.'.current');
             }
