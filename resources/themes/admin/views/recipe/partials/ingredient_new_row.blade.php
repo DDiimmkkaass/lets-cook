@@ -13,7 +13,7 @@
             @if ($ingredient['image'])
                 @include('partials.image', ['src' => $ingredient['image'], 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
             @endif
-            {!! link_to_route('admin.ingredient.show', $ingredient['name'], [$model->id], ['target' => '_blank']) !!} ({!! $ingredient['unit'] !!})
+            {!! link_to_route('admin.ingredient.show', $ingredient['name'], $ingredient['ingredient_id'], ['target' => '_blank']) !!} ({!! $ingredient['unit'] !!})
 
             {!! Form::hidden($key.'[new][' .$id. '][image]', $ingredient['image']) !!}
             {!! Form::hidden($key.'[new][' .$id. '][name]', $ingredient['name']) !!}

@@ -10,13 +10,18 @@
             @if ($ingredient->ingredient->image)
                 @include('partials.image', ['src' => $ingredient->ingredient->image, 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
             @endif
-            {!! link_to_route('admin.ingredient.show', $ingredient->ingredient->name, [$model->id], ['target' => '_blank']) !!}
+            {!! link_to_route('admin.ingredient.show', $ingredient->ingredient->name, [$ingredient->ingredient_id], ['target' => '_blank']) !!}
             ({!! $ingredient->ingredient->unit->name !!})
         </div>
     </td>
     <td>
         <div class="form-group required @if ($errors->has($key.'.old.' .$ingredient->id. '.count')) has-error @endif">
             {!! Form::text($key.'[old][' .$ingredient->id. '][count]', $ingredient->count ?: 1, ['id' => $key.'.old.' .$ingredient->id. '.count', 'class' => 'form-control input-sm', 'required' => true]) !!}
+        </div>
+    </td>
+    <td>
+        <div class="form-group required @if ($errors->has($key.'.old.' .$ingredient->id. '.position')) has-error @endif">
+            {!! Form::text($key.'[old][' .$ingredient->id. '][position]', $ingredient->position ?: 0, ['id' => $key.'.old.' .$ingredient->id. '.position', 'class' => 'form-control input-sm', 'required' => true]) !!}
         </div>
     </td>
     @if ($ingredient->getStringType() == 'normal')
@@ -28,12 +33,6 @@
             </div>
         </td>
     @endif
-    <td>
-        <div class="form-group required @if ($errors->has($key.'.old.' .$ingredient->id. '.position')) has-error @endif">
-            {!! Form::text($key.'[old][' .$ingredient->id. '][position]', $ingredient->position ?: 0, ['id' => $key.'.old.' .$ingredient->id. '.position', 'class' => 'form-control input-sm', 'required' => true]) !!}
-        </div>
-    </td>
-
     <td class="text-center coll-actions">
         <a class="btn btn-flat btn-danger btn-xs action exist destroy" data-id="{!! $ingredient->id !!}"
            data-name="{!! $key !!}[remove][]"><i class="fa fa-remove"></i></a>
