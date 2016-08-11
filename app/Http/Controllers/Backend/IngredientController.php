@@ -261,8 +261,6 @@ class IngredientController extends BackendController
             
             DB::commit();
             
-            FlashMessages::add('success', trans('messages.save_ok'));
-            
             return [
                 'status'     => 'success',
                 'ingredient' => $model,

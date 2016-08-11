@@ -125,5 +125,6 @@ return array (
   'recipe save failure' => 'Ошибка сохранения рецепта',
   'sale price helper message' => '0 - ингредиент не продается',
   'copy error, parent recipe not found' => 'Ошибка копирования, исходный рецепт не найден',
-  'this recipe has not ordered any time' => 'Этот рецепт еще не заказали ни разу'
+  'this recipe has not ordered any time' => 'Этот рецепт еще не заказали ни разу',
+  'ingredient successfully added' => 'Ингредиент успешно добавлен',
 );

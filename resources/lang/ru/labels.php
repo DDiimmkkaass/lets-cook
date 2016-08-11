@@ -494,4 +494,5 @@ return array (
   'last_order' => 'Последний заказ',
   'tab_statistic_of_orders' => 'Статистика заказов',
   'count_of_orders' => 'Количество заказов',
+  'quick_ingredient_create_title' => 'Быстрое добавления ингредиента',
 );
