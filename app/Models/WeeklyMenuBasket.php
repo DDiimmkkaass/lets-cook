@@ -49,4 +49,20 @@ class WeeklyMenuBasket extends Model
     {
         return $this->hasMany(BasketRecipe::class)->with('recipe');
     }
+    
+    /**
+     * @return int
+     */
+    public function getPrice()
+    {
+        if (empty($this->price)) {
+            $this->price = 0;
+    
+            foreach ($this->recipes as $recipe) {
+                $this->attributes['price'] += $recipe->recipe->getPrice();
+            }
+        }
+        
+        return $this->price;
+    }
 }

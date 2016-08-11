@@ -14,10 +14,21 @@ window.checkLastBasketTabInList = () ->
 
     , 300
 
+window.updateBasketInternalPrice = ($basket) ->
+  price = 0;
+
+  $basket.find('.recipe-block').each () ->
+    price += parseInt($(this).find('.recipe-price').val())
+
+  $basket.find('.basket-internal-price').val price;
+
 $(document).on 'ready', ->
   $('.menu-recipes-table').each () ->
     unless $(this).find('.recipe-block').length
       $(this).closest('.box-body').find('.main-recipe-helper-message').fadeOut()
+
+  $('.tab-pane').each () ->
+    updateBasketInternalPrice($(this))
 
   $('.weekly-menu-form .get-basket-select-popup').on "click", (e) ->
     e.preventDefault()
@@ -99,6 +110,8 @@ $(document).on 'ready', ->
               $basket.append response.html
 
               fixCustomInputs($basket)
+
+              updateBasketInternalPrice($('#basket_' + basket_id + '_' + portions))
             else
               message.show lang_recipeAlreadyAddedToList, 'warning'
 
@@ -127,7 +140,11 @@ $(document).on 'ready', ->
     unless ($(this).closest('.menu-recipes-table').find('.recipe-block').length - 1)
       $(this).closest('.box-body').find('.main-recipe-helper-message').fadeOut()
 
+    $basket = $(this).closest('.tab-pane')
+
     $(this).closest(".recipe-block").remove()
+
+    updateBasketInternalPrice($basket)
 
   $('.menu-recipe-select.load').each () ->
     $.ajax

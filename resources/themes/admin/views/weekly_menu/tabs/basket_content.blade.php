@@ -1,3 +1,23 @@
+<div class="weekly-menu-prices-box margin-bottom-15 margin-top-10">
+    <div class="form-group">
+        <label class="col-sm-2 control-label">@lang('labels.basket_price'):</label>
+        <div class="col-sm-10">
+            <div class="col-sm-1 with-after-helper currency-rub">
+                <input type="text" readonly="readonly" class="form-control input-sm" value="{!! $basket->basket->price !!}">
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="col-sm-2 control-label">@lang('labels.internal_price'):</label>
+        <div class="col-sm-10">
+            <div class="col-sm-1 with-after-helper currency-rub">
+                <input type="text" readonly="readonly" class="form-control input-sm basket-internal-price" value="{!! $basket->getPrice() !!}">
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="recipes-add-control">
     <div class="form-group margin-bottom-25">
         <div class="col-xs-12 margin-bottom-5 font-size-16 text-left">
@@ -14,6 +34,7 @@
             <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][name]" value="{!! $basket->basket->name !!}">
             <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][id]" value="{!! $basket->basket_id !!}">
             <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][portions]" value="{!! $basket->portions !!}">
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][price]" value="{!! $basket->basket->price !!}">
         </div>
     </div>
 </div>
@@ -35,6 +56,9 @@
                             <p>
                                 @lang('labels.portions'): {!! $recipe->recipe->portions !!}
                             </p>
+                            <p>
+                                @lang('labels.price'): {!! $recipe->recipe->getPrice() !!} {!! $currency !!}
+                            </p>
                         </div>
 
                         <div class="image col-sm-4 no-padding text-center">
@@ -47,6 +71,7 @@
                         {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][name]', $recipe->recipe->name) !!}
                         {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][recipe_id]', $recipe->recipe->id) !!}
                         {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][recipe_portions]', $recipe->recipe->portions) !!}
+                        {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][recipe_price]', $recipe->recipe->getPrice(), ['class' => 'recipe-price']) !!}
 
                         <div class="clearfix"></div>
                     </div>

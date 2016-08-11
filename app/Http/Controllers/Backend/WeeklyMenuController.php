@@ -112,7 +112,9 @@ class WeeklyMenuController extends BackendController
      */
     public function current()
     {
-        $model = WeeklyMenu::with('baskets', 'baskets.recipes')->current()->first();
+        $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.recipes.recipe.ingredients')
+            ->current()
+            ->first();
         
         if (!$model) {
             session()->put('current_week_menu', true);
@@ -218,7 +220,9 @@ class WeeklyMenuController extends BackendController
     public function edit($id)
     {
         try {
-            $model = WeeklyMenu::with('baskets', 'baskets.recipes')->whereId($id)->firstOrFail();
+            $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.recipes.recipe.ingredients')
+                ->whereId($id)
+                ->firstOrFail();
             
             if ($model->isCurrentWeekMenu()) {
                 return redirect()->route('admin.'.$this->module.'.current');

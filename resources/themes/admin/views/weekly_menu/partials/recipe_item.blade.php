@@ -5,13 +5,17 @@
                 <h4>{!! $model->name !!}</h4>
 
                 <p class="font-size-12">
-                    @lang('labels.portions_lowercase'): {!! $model->portions !!}
+                    @lang('labels.portions'): {!! $model->portions !!}
+                </p>
+                <p class="font-size-12">
+                    @lang('labels.price'): {!! $model->getPrice() !!}
                 </p>
 
                 <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][image]" value="{!! $model->image !!}">
                 <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][name]" value="{!! $model->name !!}">
                 <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][recipe_id]" value="{!! $model->id !!}">
                 <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][recipe_portions]" value="{!! $model->portions !!}">
+                <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][recipe_price]" value="{!! $model->getPrice() !!}" class="recipe-price">
             </div>
 
             <div class="image col-sm-4 no-padding text-center">

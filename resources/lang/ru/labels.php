@@ -489,4 +489,6 @@ return array (
   'for_next_week' => 'На следующую неделю',
   'weekly_menu_days_labels' => 'Дни',
   'w_label' => 'w',
+  'basket_price' => 'Цена корзины',
+  'internal_price' => 'Внутренняя цена',
 );
