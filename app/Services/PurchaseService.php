@@ -105,6 +105,15 @@ class PurchaseService
         $file_name = $this->_getDownloadFileName($year, $week, $supplier_id);
         
         $data = $this->_getPurchaseFor($year, $week, $supplier_id);
+    
+        foreach ($data as $key => $item) {
+            $data[$key] = [
+                trans('labels.ingredient') => $item['ingredient'],
+                ' ' => ' ',
+                trans('labels.count') => $item['count'],
+                trans('labels.unit') => $item['unit'],
+            ];
+        }
         
         Excel::create(
             $file_name,
@@ -304,7 +313,7 @@ class PurchaseService
         }
         
         return str_replace(' ', '_', trans('labels.list_of_purchase')).
-        '_'.$week.'_'.$year.($supplier ? '_'.str_replace(' ', '_', $supplier) : '');
+        '_'.trans('labels.w_label').$week.'_'.$year.($supplier ? '_'.str_replace(' ', '_', $supplier) : '');
     }
     
     /**
@@ -316,7 +325,7 @@ class PurchaseService
      */
     private function _getPurchaseFor($year, $week, $supplier_id = false)
     {
-        $list = Purchase::joinIngredient()->where('year', $year)->where('week', $week);
+        $list = Purchase::joinIngredient()->joinIngredientUnit()->where('year', $year)->where('week', $week);
         
         if ($supplier_id > 0) {
             $list = $list->where('purchases.supplier_id', $supplier_id);
@@ -325,7 +334,7 @@ class PurchaseService
         }
         
         $list = $list->where('purchases.buy_count', '>', 0)
-            ->select(DB::raw('ingredients.name as ingredient'), DB::raw('buy_count as count'))
+            ->select(DB::raw('ingredients.name as ingredient'), DB::raw('buy_count as count'), DB::raw('units.name as unit'))
             ->get()
             ->toArray();
         

@@ -88,6 +88,14 @@ class Purchase extends Model
     
     /**
      * @param $query
+     */
+    public function scopeJoinIngredientUnit($query)
+    {
+        $query->leftJoin('units', 'units.id', '=', 'ingredients.unit_id');
+    }
+    
+    /**
+     * @param $query
      *
      * @return mixed
      */
