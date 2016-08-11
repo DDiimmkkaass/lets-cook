@@ -218,6 +218,22 @@ $router->group(
                         'uses'       => 'Backend\IngredientController@find',
                     ]
                 );
+                $router->get(
+                    'ingredient/quick-create',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.ingredient.quick_create',
+                        'uses'       => 'Backend\IngredientController@quickCreate',
+                    ]
+                );
+                $router->post(
+                    'ingredient/quick-store',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.ingredient.quick_store',
+                        'uses'       => 'Backend\IngredientController@quickStore',
+                    ]
+                );
                 $router->resource('ingredient', 'Backend\IngredientController');
                 
                 //recipe

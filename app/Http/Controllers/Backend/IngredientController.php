@@ -81,6 +81,16 @@ class IngredientController extends BackendController
     private $suppliers;
     
     /**
+     * @var array
+     */
+    private $parameters;
+    
+    /**
+     * @var array
+     */
+    private $nutritional_values;
+    
+    /**
      * @var \App\Services\IngredientService
      */
     private $ingredientService;
@@ -92,11 +102,11 @@ class IngredientController extends BackendController
     public function __construct(ResponseFactory $response, IngredientService $ingredientService)
     {
         parent::__construct($response);
-    
+        
         $this->ingredientService = $ingredientService;
         
         Meta::title(trans('labels.ingredients'));
-    
+        
         $this->breadcrumbs(trans('labels.ingredients'), route('admin.'.$this->module.'.index'));
     }
     
@@ -166,6 +176,40 @@ class IngredientController extends BackendController
     }
     
     /**
+     * Show the form for quick creating a new resource.
+     * GET /ingredient/quick-create
+     *
+     * @return array
+     */
+    public function quickCreate()
+    {
+        try {
+            $model = new Ingredient();
+            
+            $this->_fillAdditionalTemplateData($model);
+            
+            return [
+                'status' => 'success',
+                'html'   => view('ingredient.popups.quick_create')->with(
+                    [
+                        'model'              => $model,
+                        'units'              => $this->units,
+                        'categories'         => $this->categories,
+                        'suppliers'          => $this->suppliers,
+                        'parameters'         => $this->parameters,
+                        'nutritional_values' => $this->nutritional_values,
+                    ]
+                )->render(),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
      * Store a newly created resource in storage.
      * POST /ingredient
      *
@@ -194,6 +238,43 @@ class IngredientController extends BackendController
             FlashMessages::add('error', trans('messages.save_failed'));
             
             return redirect()->back()->withInput();
+        }
+    }
+    
+    /**
+     * Store a newly quick created resource in storage.
+     * POST /ingredient
+     *
+     * @param IngredientRequest $request
+     *
+     * @return array
+     */
+    public function quickStore(IngredientRequest $request)
+    {
+        try {
+            DB::beginTransaction();
+            
+            $model = new Ingredient($request->all());
+            $model->save();
+            
+            $this->_saveRelationships($model, $request);
+            
+            DB::commit();
+            
+            FlashMessages::add('success', trans('messages.save_ok'));
+            
+            return [
+                'status'     => 'success',
+                'ingredient' => $model,
+                'message'    => trans('messages.ingredient successfully added'),
+            ];
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
         }
     }
     
@@ -351,10 +432,12 @@ class IngredientController extends BackendController
         $this->data('suppliers', $this->suppliers);
         
         if ($model) {
-            $this->data('parameters', Parameter::positionSorted()->get());
+            $this->parameters = Parameter::positionSorted()->get();
+            $this->data('parameters', $this->parameters);
             $this->data('selected_parameters', $model->parameters->keyBy('id')->toArray());
             
-            $this->data('nutritional_values', NutritionalValue::positionSorted()->get());
+            $this->nutritional_values = NutritionalValue::positionSorted()->get();
+            $this->data('nutritional_values', $this->nutritional_values);
             $this->data(
                 'ingredient_nutritional_values',
                 $model->nutritional_values->keyBy('nutritional_value_id')->toArray()

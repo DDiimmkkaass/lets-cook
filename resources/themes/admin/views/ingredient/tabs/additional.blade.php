@@ -9,7 +9,7 @@
 </div>
 
 <div class="form-group required @if ($errors->has('supplier_id')) has-error @endif">
-    {!! Form::label('supplier_id', trans('labels.suppliers'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
+    {!! Form::label('supplier_id', trans('labels.supplier'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
         {!! Form::select('supplier_id', $suppliers, null, ['class' => 'form-control select2 input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}

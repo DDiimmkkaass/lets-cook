@@ -14,7 +14,7 @@ window.setErrors = (response, $form) ->
 
   $.each response.responseJSON, (i, item) =>
     n++
-    i = i.replace('.', '_')
+    i = i.replace(new RegExp(/\./, 'g'), '_',)
 
     $form.find('#' + i).closest('.form-group').addClass "has-error"
     setTimeout () =>
@@ -37,11 +37,16 @@ window.processError = (response, $form) ->
 
     message.show mess, 'error'
 
-$(document).ready () ->
+  setTabsErrors()
+
+window.setTabsErrors = () ->
   $('.tab-pane .has-error').each () ->
     $parent = $(this).closest '.tab-pane'
 
     $('a[href=\'#' + $parent.attr('id') + '\']').closest('li').addClass 'tab-with-errors'
+
+$(document).ready () ->
+  setTabsErrors()
 
   $(document).on 'click', '.tab-with-errors', () ->
     $(this).removeClass('tab-with-errors')

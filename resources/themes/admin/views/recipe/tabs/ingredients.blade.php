@@ -13,7 +13,15 @@
             @lang('labels.ingredients')
         </div>
         <div class="col-sm-12 full-width-select">
-            {!! Form::select('add_ingredients', $ingredients, null, ['id' => 'ingredient_select', 'class' => 'form-control select2 ingredient-select input-sm', 'aria-hidden' => 'true', 'data-type' => 'normal']) !!}
+            <div class="input-group">
+                {!! Form::select('add_ingredients', $ingredients, null, ['id' => 'ingredient_select', 'class' => 'form-control select2 ingredient-select input-sm', 'aria-hidden' => 'true', 'data-type' => 'normal']) !!}
+
+                @if ($user->hasAccess('ingredient.create'))
+                    <div title="@lang('labels.add_ingredient')" data-href="{!! route('admin.ingredient.quick_create') !!}" class="input-group-addon get-ingredient-quick-create">
+                        <i class="fa fa-plus"></i>
+                    </div>
+                @endif
+            </div>
 
             <div class="position-relative error-block">
                 {!! $errors->first('ingredients', '<p class="help-block error">:message</p>') !!}

@@ -180,13 +180,21 @@ $properties: margin padding
       font-size: 8px
       color: red
 
+.input-group
+  select.select2
+    position: absolute
+
 #modal
-  .form-group.required
-    label
-      position: relative
-      &:after
-        right: -10px
-        top: 20%
+  .form-group
+    position: relative
+    &.required
+      label
+        &:after
+          position: relative
+          right: -10px
+          top: 20%
+    &.has-error
+      margin-bottom: 10px
 
 .duplicate
   display: none
@@ -465,3 +473,7 @@ table.dataTable
 .download-purchase-list
   a
     color: #fff
+
+/*ingredients quick add*/
+.get-ingredient-quick-create
+  cursor: pointer
