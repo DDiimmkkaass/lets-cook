@@ -33,7 +33,10 @@ class WeeklyMenuService
             ->editColumn(
                 'week',
                 function ($model) {
-                    return trans('labels.w_label').$model->week;
+                    return trans('labels.w_label').$model->week.
+                        ($model->isCurrentWeekMenu() ?
+                        view('views.weekly_menu.partials.current_week_menu_label')->render() :
+                        '');
                 }
             )
             ->addColumn(
