@@ -10,8 +10,9 @@
                         {!!
                             TablesBuilder::create(['id' => "datatable1", 'class' => "table table-bordered table-striped table-hover"], ['bStateSave' => true])
                             ->addHead([
-                                ['text' => trans('labels.week'), 'attr' => ['class' => 'col-sm-7']],
-                                ['text' => trans('labels.year'), 'attr' => ['class' => 'col-sm-4']],
+                                ['text' => trans('labels.week'), 'attr' => ['class' => 'col-sm-4']],
+                                ['text' => trans('labels.year'), 'attr' => ['class' => 'col-sm-3']],
+                                ['text' => trans('labels.weekly_menu_days_labels'), 'attr' => ['class' => 'col-sm-4']],
                                 ['text' => trans('labels.actions'), 'attr' => ['class' => 'col-sm-1']],
                             ])
                             ->addFoot([

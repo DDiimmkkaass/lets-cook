@@ -105,4 +105,17 @@ class Purchase extends Model
     {
         return $query->leftJoin('categories', 'categories.id', '=', 'ingredients.category_id');
     }
+    
+    /**
+     * @return string
+     */
+    public function getWeekDates()
+    {
+        $dt = Carbon::create($this->year, 1, 1, 0)->addWeek($this->week);
+        
+        $started_at = $dt->startOfWeek()->format('Y-m-d');
+        $ended_at = $dt->endOfWeek()->format('Y-m-d');
+        
+        return $started_at.' - '.$ended_at;
+    }
 }

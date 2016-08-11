@@ -77,6 +77,12 @@ class PurchaseController extends BackendController
             return $dataTables = Datatables::of($list)
                 ->filterColumn('week', 'where', 'purchase.week', '=', '$1')
                 ->filterColumn('year', 'where', 'purchase.year', '=', '$1')
+                ->editColumn('week', function ($model) {
+                    return trans('labels.w_label').$model->week;
+                })
+                ->addColumn('dates', function ($model) {
+                    return $model->getWeekDates();
+                })
                 ->editColumn(
                     'actions',
                     function ($model) {
@@ -112,9 +118,9 @@ class PurchaseController extends BackendController
         
         $this->data('list', $list);
         
-        $this->data('page_title', trans('labels.list_of_purchase').': '.$week.', '.$year);
+        $this->data('page_title', trans('labels.list_of_purchase').': '.trans('labels.w_label').$week.', '.$year);
         
-        $this->breadcrumbs(trans('labels.list_of_purchase').': '.$week.', '.$year);
+        $this->breadcrumbs(trans('labels.list_of_purchase').': '.trans('labels.w_label').$week.', '.$year);
         
         return $this->render('views.'.$this->module.'.show');
     }
