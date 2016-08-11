@@ -16,6 +16,7 @@
                                 ['text' => trans('labels.portions')],
                                 ['text' => trans('labels.main_ingredient')],
                                 ['text' => trans('labels.price')],
+                                ['text' => trans('labels.last_order')],
                                 ['text' => trans('labels.status')],
                                 ['text' => trans('labels.actions')]
                             ])
@@ -25,6 +26,7 @@
                                 ['text' => Form::select('datatable_filters[basket]', $baskets, null, ['class' => 'form-control select2 input-sm datatable-filter'])],
                                 ['text' => Form::select('datatable_filters[portions]', $portions, null, ['class' => 'form-control select2 input-sm datatable-filter'])],
                                 ['text' => Form::text('datatable_filters[main_ingredient]', '', ['class' => 'form-control input-sm datatable-filter'])],
+                                ['attr' => ['colspan' => 1]],
                                 ['attr' => ['colspan' => 1]],
                                 ['text' => Form::select('datatable_filters[status]', $statuses, null, ['class' => 'form-control select2 input-sm datatable-filter'])],
                                 ['attr' => ['colspan' => 1]],

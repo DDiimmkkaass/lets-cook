@@ -44,6 +44,9 @@ class RecipeService
                 'recipes.portions',
                 DB::raw('2 as base_ingredient'),
                 DB::raw('3 as recipe_price'),
+                DB::raw('(SELECT MAX(_or.created_at) as last_order FROM order_recipes _or
+                        LEFT JOIN basket_recipes _br ON (_or.basket_recipe_id = _br.id)
+                        WHERE _br.recipe_id = recipes.id AND _or.created_at <= NOW()) as last_order'),
                 'recipes.status'
             )
             ->groupBy('recipes.id');
@@ -89,6 +92,18 @@ class RecipeService
                 'recipe_price',
                 function ($model) {
                     return $model->getPrice().' '.currency();
+                }
+            )
+            ->editColumn(
+                'last_order',
+                function ($model) {
+                    if (!empty($model->last_order)) {
+                        $dt = Carbon::createFromFormat('Y-m-d H:i:s', $model->last_order);
+                        
+                        return '<div class="text-center">'.trans('labels.w_label').$dt->weekOfYear.', '.$dt->year.'</div>';
+                    }
+                    
+                    return '';
                 }
             )
             ->editColumn(
@@ -264,5 +279,27 @@ class RecipeService
             ->where('basket_recipes.recipe_id', $recipe_id)
             ->groupBy('weekly_menus.id')
             ->get(empty($select) ? ['weekly_menus.*'] : $select);
+    }
+    
+    /**
+     * @param \App\Models\Recipe $recipe
+     *
+     * @return array
+     */
+    public function getStatisticOfOrder(Recipe $recipe)
+    {
+        $orders = [];
+        
+        foreach ($recipe->orders as $order_item) {
+            $week = trans('labels.w_label').$order_item->created_at->weekOfYear.', '.$order_item->created_at->year;
+            
+            if (!isset($orders[$week])) {
+                $orders[$week] = 0;
+            }
+    
+            $orders[$week] += 1;
+        }
+        
+        return $orders;
     }
 }

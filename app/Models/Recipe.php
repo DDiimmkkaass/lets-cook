@@ -66,6 +66,15 @@ class Recipe extends Model
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function orders()
+    {
+        return $this->hasManyThrough(OrderRecipe::class, BasketRecipe::class, 'recipe_id', 'basket_recipe_id')
+            ->dateSorted();
+    }
+    
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function steps()
@@ -147,12 +156,12 @@ class Recipe extends Model
     {
         if (empty($this->price)) {
             $this->price = 0;
-
+            
             foreach ($this->ingredients as $ingredient) {
                 $this->attributes['price'] += $ingredient->ingredient->price * $ingredient->count;
             }
         }
-
+        
         return $this->price;
     }
 }

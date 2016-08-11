@@ -491,4 +491,7 @@ return array (
   'w_label' => 'w',
   'basket_price' => 'Цена корзины',
   'internal_price' => 'Внутренняя цена',
+  'last_order' => 'Последний заказ',
+  'tab_statistic_of_orders' => 'Статистика заказов',
+  'count_of_orders' => 'Количество заказов',
 );

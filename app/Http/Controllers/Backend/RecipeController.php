@@ -170,7 +170,9 @@ class RecipeController extends BackendController
     public function edit($id)
     {
         try {
-            $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps')->whereId($id)->firstOrFail();
+            $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps', 'orders')
+                ->whereId($id)
+                ->firstOrFail();
             
             $this->data('page_title', '"'.$model->name.'"');
             
@@ -389,6 +391,8 @@ class RecipeController extends BackendController
             foreach ($model->baskets as $item) {
                 $selected_baskets[] = $item->id;
             }
+            
+            $this->data('orders', $this->recipeService->getStatisticOfOrder($model));
         }
         
         $this->data('selected_baskets', $selected_baskets);

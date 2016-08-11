@@ -24,6 +24,14 @@
                 <li>
                     <a aria-expanded="false" href="#steps" data-toggle="tab">@lang('labels.tab_cooking_steps')</a>
                 </li>
+
+                @if ($model->exists && !isset($copy))
+                    <li>
+                        <a aria-expanded="false" href="#statistic_of_orders" data-toggle="tab">
+                            @lang('labels.tab_statistic_of_orders')
+                        </a>
+                    </li>
+                @endif
             </ul>
 
             <div class="tab-content">
@@ -46,6 +54,12 @@
                 <div class="tab-pane" id="steps">
                     @include('recipe.tabs.steps')
                 </div>
+
+                @if ($model->exists && !isset($copy))
+                    <div class="tab-pane" id="statistic_of_orders">
+                        @include('recipe.tabs.statistic_of_orders')
+                    </div>
+                @endif
             </div>
         </div>
 

@@ -61,4 +61,15 @@ class OrderRecipe extends Model
     {
         return $query->leftJoin('recipes', 'recipes.id', '=', 'basket_recipes.recipe_id');
     }
+    
+    /**
+     * @param        $query
+     * @param string $order
+     *
+     * @return mixed
+     */
+    public function scopeDateSorted($query, $order = 'ASC')
+    {
+        return $query->orderBy('created_at', $order);
+    }
 }
