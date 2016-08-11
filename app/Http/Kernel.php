@@ -51,7 +51,6 @@ class Kernel extends HttpKernel
         'throttle'              => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'ajax'                  => \App\Http\Middleware\AjaxMiddleware::class,
         'prepare.phone'         => \App\Http\Middleware\PreparePhone::class,
-        'prepare.weekly_dates'  => \App\Http\Middleware\PrepareWeeklyDates::class,
         'slug.set'              => \App\Http\Middleware\SetSlug::class,
         'localizationRedirect'  => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
         'localeSessionRedirect' => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,

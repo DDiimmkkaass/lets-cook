@@ -24,28 +24,25 @@ class WeeklyMenuService
     
     public function table()
     {
-        $list = WeeklyMenu::select('id', 'started_at', 'ended_at');
+        $list = WeeklyMenu::select('id', 'week', 'year');
         
         return $dataTables = Datatables::of($list)
             ->filterColumn('id', 'where', 'weekly_menu.id', '=', '$1')
-            ->filterColumn('started_at', 'where', 'weekly_menu.started_at', 'LIKE', '%$1%')
-            ->filterColumn('ended_at', 'where', 'weekly_menu.ended_at', 'LIKE', '%$1%')
+            ->filterColumn('week', 'where', 'weekly_menu.week', 'LIKE', '%$1%')
+            ->filterColumn('year', 'where', 'weekly_menu.year', 'LIKE', '%$1%')
             ->editColumn(
-                'started_at',
+                'week',
                 function ($model) {
-                    return $model->getStartedAt().
-                    ($model->isCurrentWeekMenu() ? view(
-                        'views.weekly_menu.partials.current_week_menu_label'
-                    )->render() : '');
+                    return trans('labels.w_label').$model->week;
                 }
             )
-            ->editColumn(
-                'ended_at',
+            ->addColumn(
+                'dates',
                 function ($model) {
-                    return $model->getEndedAt();
+                    return $model->getWeekDates();
                 }
             )
-            ->editColumn(
+            ->addColumn(
                 'actions',
                 function ($model) {
                     return view(
@@ -67,9 +64,9 @@ class WeeklyMenuService
     public function saveBasket(WeeklyMenu $model, $data = [])
     {
         $basket = $model->baskets()->firstOrNew($data);
-    
+        
         $basket->save();
-            
+        
         return $basket;
     }
     

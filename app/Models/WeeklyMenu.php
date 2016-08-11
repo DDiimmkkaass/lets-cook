@@ -22,14 +22,9 @@ class WeeklyMenu extends Model
      * @var array
      */
     protected $fillable = [
-        'started_at',
-        'ended_at',
+        'week',
+        'year',
     ];
-    
-    /**
-     * @var array
-     */
-    protected $dates = ['started_at', 'ended_at'];
     
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -42,36 +37,14 @@ class WeeklyMenu extends Model
     /**
      * @return string
      */
-    public function getStartedAt()
-    {
-        if (empty($this->started_at) || $this->started_at == '0000-00-00 00:00:00') {
-            return null;
-        } else {
-            return Carbon::createFromFormat('Y-m-d H:i:s', $this->started_at)->format('d.m.Y');
-        }
-    }
-    
-    /**
-     * @return string
-     */
-    public function getEndedAt()
-    {
-        if (empty($this->ended_at) || $this->ended_at == '0000-00-00 00:00:00') {
-            return null;
-        } else {
-            return Carbon::createFromFormat('Y-m-d H:i:s', $this->ended_at)->format('d.m.Y');
-        }
-    }
-    
-    /**
-     * @return string
-     */
     public function getWeekDates()
     {
-        $started_at = $this->getStartedAt();
-        $ended_at = $this->getEndedAt();
+        $dt = Carbon::create($this->year, 1, 1, 0)->addWeek($this->week);
         
-        return $started_at && $ended_at ? $started_at.' - '.$ended_at : '';
+        $started_at = $dt->startOfWeek()->format('Y-m-d');
+        $ended_at = $dt->endOfWeek()->format('Y-m-d');
+        
+        return $started_at.' - '.$ended_at;
     }
     
     /**
@@ -79,7 +52,7 @@ class WeeklyMenu extends Model
      */
     public function isCurrentWeekMenu()
     {
-        return $this->started_at <= Carbon::now() && $this->ended_at >= Carbon::now();
+        return $this->year == Carbon::now()->year && $this->week == Carbon::now()->weekOfYear;
     }
     
     /**
@@ -89,18 +62,8 @@ class WeeklyMenu extends Model
      */
     public function scopeCurrent($query)
     {
-        return $query->where('started_at', '<=', Carbon::now())->where('ended_at', '>=', Carbon::now());
-    }
-    
-    /**
-     * @param        $query
-     * @param string $order
-     *
-     * @return mixed
-     */
-    public function scopeStartedAtSorted($query, $order = 'DESC')
-    {
-        return $query->orderBy('started_at', $order);
+        return $query->where('year', '=', Carbon::now()->year)
+            ->where('week', '=', Carbon::now()->weekOfYear);
     }
     
     /**

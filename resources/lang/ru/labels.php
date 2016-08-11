@@ -487,4 +487,6 @@ return array (
   'buy_count' => 'Количество для закупки',
   'purchase_manager' => 'Закупаеться вручную',
   'for_next_week' => 'На следующую неделю',
+  'weekly_menu_days_labels' => 'Дни',
+  'w_label' => 'w',
 );

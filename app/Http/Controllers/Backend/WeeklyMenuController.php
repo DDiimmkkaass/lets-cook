@@ -80,8 +80,6 @@ class WeeklyMenuController extends BackendController
         $this->weeklyMenuService = $weeklyMenuService;
         $this->basketService = $basketService;
         
-        $this->middleware('prepare.weekly_dates', ['only' => ['store', 'update']]);
-        
         Meta::title(trans('labels.weekly_menus'));
         
         $this->breadcrumbs(trans('labels.weekly_menus'), route('admin.'.$this->module.'.index'));
@@ -114,9 +112,7 @@ class WeeklyMenuController extends BackendController
      */
     public function current()
     {
-        $model = WeeklyMenu::with('baskets', 'baskets.recipes')
-            ->current()
-            ->first();
+        $model = WeeklyMenu::with('baskets', 'baskets.recipes')->current()->first();
         
         if (!$model) {
             session()->put('current_week_menu', true);
@@ -148,8 +144,8 @@ class WeeklyMenuController extends BackendController
         $model = new WeeklyMenu();
         
         if (session('current_week_menu', false)) {
-            $model->started_at = Carbon::now()->startOfWeek();
-            $model->ended_at = Carbon::now()->endOfWeek();
+            $model->week = Carbon::now()->weekOfYear;
+            $model->year = Carbon::now()->year;
             
             session()->forget('current_week_menu');
         }
@@ -222,15 +218,18 @@ class WeeklyMenuController extends BackendController
     public function edit($id)
     {
         try {
-            $model = WeeklyMenu::with('baskets', 'baskets.recipes')
-                ->whereId($id)
-                ->firstOrFail();
+            $model = WeeklyMenu::with('baskets', 'baskets.recipes')->whereId($id)->firstOrFail();
             
             if ($model->isCurrentWeekMenu()) {
                 return redirect()->route('admin.'.$this->module.'.current');
             }
             
-            $this->data('page_title', '"'.$model->getWeekDates().'"');
+            $this->data(
+                'page_title',
+                trans('labels.weekly_menu').': '.trans(
+                    'labels.w_label'
+                ).$model->week.', '.$model->year.' ('.$model->getWeekDates().')'
+            );
             
             $this->breadcrumbs(trans('labels.weekly_menu_editing'));
             
@@ -267,6 +266,8 @@ class WeeklyMenuController extends BackendController
             DB::commit();
             
             FlashMessages::add('success', trans('messages.save_ok'));
+            
+            dd($model->isCurrentWeekMenu());
             
             if ($model->isCurrentWeekMenu()) {
                 return redirect()->route('admin.'.$this->module.'.current');

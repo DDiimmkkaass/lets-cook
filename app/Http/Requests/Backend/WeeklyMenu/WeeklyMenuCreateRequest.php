@@ -9,6 +9,7 @@
 namespace App\Http\Requests\Backend\WeeklyMenu;
 
 use App\Http\Requests\FormRequest;
+use Carbon;
 
 /**
  * Class WeeklyMenuCreateRequest
@@ -25,11 +26,9 @@ class WeeklyMenuCreateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'week' => 'required|regex:/^[0-9]{2}\.[0-9]{2}\.[0-9]{4}\s\-\s[0-9]{2}\.[0-9]{2}\.[0-9]{4}$/',
-            
-            'started_at' => 'required|unique:weekly_menus,started_at|before:ended_at',
-            'ended_at'   => 'required|unique:weekly_menus,ended_at|after:started_at|diff_in_days:started_at,6',
-            
+            'week' => 'required|numeric|min:1|max:52|unique:weekly_menus,week,NULL,id,year,' . $this->request->get('year'),
+            'year' => 'required|numeric|min:'.Carbon::now()->year,
+             
             'baskets.*.old.*' => 'array',
             'baskets.*.new.*' => 'array',
             

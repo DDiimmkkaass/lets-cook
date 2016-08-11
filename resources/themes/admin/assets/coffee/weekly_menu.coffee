@@ -19,24 +19,6 @@ $(document).on 'ready', ->
     unless $(this).find('.recipe-block').length
       $(this).closest('.box-body').find('.main-recipe-helper-message').fadeOut()
 
-  $('#week_menu_date').daterangepicker
-    timePicker: false,
-    format: 'DD.MM.YYYY'
-    dateLimit:
-      days: 7
-    showWeekNumbers: true
-    applyClass: 'btn-success btn-flat margin-bottom-5'
-    cancelClass: 'btn-default btn-flat margin-bottom-5'
-    locale:
-      applyLabel: lang_select
-      cancelLabel: lang_cancel
-      fromLabel: lang_from
-      toLabel: lang_to
-      weekLabel: lang_weekLabel
-      daysOfWeek: moment.weekdaysMin()
-      monthNames: moment.monthsShort()
-      firstDay: moment.localeData()._week.dow
-
   $('.weekly-menu-form .get-basket-select-popup').on "click", (e) ->
     e.preventDefault()
 

@@ -11,12 +11,13 @@
                             TablesBuilder::create(['id' => "datatable1", 'class' => "table table-bordered table-striped table-hover"], ['bStateSave' => true])
                             ->addHead([
                                 ['text' => trans('labels.id')],
-                                ['text' => trans('labels.started_at')],
-                                ['text' => trans('labels.ended_at')],
+                                ['text' => trans('labels.week')],
+                                ['text' => trans('labels.year')],
+                                ['text' => trans('labels.weekly_menu_days_labels')],
                                 ['text' => trans('labels.actions')],
                             ])
                             ->addFoot([
-                                ['attr' => ['colspan' => 4]]
+                                ['attr' => ['colspan' => 5]]
                             ])
                              ->make()
                         !!}
