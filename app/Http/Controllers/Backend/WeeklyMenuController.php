@@ -259,7 +259,14 @@ class WeeklyMenuController extends BackendController
         try {
             $model = WeeklyMenu::findOrFail($id);
             
-            $model->update($request->all());
+            $input = $request->all();
+            
+            if ($model->isCurrentWeekMenu()) {
+                unset($input['week']);
+                unset($input['year']);
+            }
+            
+            $model->update($input);
             
             $this->_saveRelationships($model, $request);
             
