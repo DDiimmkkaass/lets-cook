@@ -5,7 +5,7 @@
 
     @if ($user->hasAccess('recipe.write') || $user->hasAccess('recipe.create'))
         <div class="col-md-9 pull-right ta-right">
-            @if ($model->draft || $copy)
+            @if ($model->draft || isset($copy) || !$model->exists)
                 <a id="draft_submit" class="btn btn-primary btn-flat btn-xs margin-right-10" href="#">@lang('labels.save_draft')</a>
             @endif
 
