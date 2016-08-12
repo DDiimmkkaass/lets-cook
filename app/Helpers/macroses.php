@@ -56,7 +56,13 @@ Collective\Html\FormBuilder::macro(
 Collective\Html\FormBuilder::macro(
     'elfinderInput',
     function ($name, $value, $params = []) {
-        $elfinder_link_name = $name;
+        if (isset($params['elfinder-link-name'])) {
+            $elfinder_link_name = $params['elfinder-link-name'];
+            unset($params['elfinder-link-name']);
+        } else {
+            $elfinder_link_name = "{$name}_replaseme";
+        }
+        
         $params = array_merge(
             array (
                 'placeholder'   => trans('labels.link'),

@@ -23,6 +23,11 @@ class FormRequest extends IlluminateRequest
     protected $image_regex;
     
     /**
+     * @var string
+     */
+    protected $file_regex;
+    
+    /**
      * FormRequest constructor.
      */
     public function __construct()
@@ -30,6 +35,8 @@ class FormRequest extends IlluminateRequest
         parent::__construct();
         
         $this->_setImageRegexp();
+        
+        $this->_setFileRegexp();
     }
     
     /**
@@ -81,5 +88,10 @@ class FormRequest extends IlluminateRequest
         $this->image_regex = env('APP_ENV') != 'production' ?
             '/.+/' :
             '/^.*\.('.implode('|', config('image.allowed_image_extension')).')$/';
+    }
+    
+    private function _setFileRegexp()
+    {
+        $this->file_regex = '/^.*\.('.implode('|', config('recipe.allowed_file_extension')).')$/';;
     }
 }

@@ -25,6 +25,10 @@
                     <a aria-expanded="false" href="#steps" data-toggle="tab">@lang('labels.tab_cooking_steps')</a>
                 </li>
 
+                <li>
+                    <a aria-expanded="false" href="#files" data-toggle="tab">@lang('labels.tab_files')</a>
+                </li>
+
                 @if ($model->exists && !isset($copy))
                     <li>
                         <a aria-expanded="false" href="#statistic_of_orders" data-toggle="tab">
@@ -53,6 +57,10 @@
 
                 <div class="tab-pane" id="steps">
                     @include('recipe.tabs.steps')
+                </div>
+
+                <div class="tab-pane" id="files">
+                    @include('recipe.tabs.files')
                 </div>
 
                 @if ($model->exists && !isset($copy))

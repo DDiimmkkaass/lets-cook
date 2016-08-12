@@ -107,6 +107,7 @@ return array (
     'category_id' => 'категория',
     'category_name' => 'категория',
     'slug' => 'чпу',
+    'src' => 'файл',
     'target' => 'цель',
     'user_id' => 'пользователь',
     'comment' => 'комментарий',

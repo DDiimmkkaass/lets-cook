@@ -15,6 +15,7 @@ use App\Models\Ingredient;
 use App\Models\Recipe;
 use App\Services\RecipeService;
 use App\Traits\Controllers\AjaxFieldsChangerTrait;
+use App\Traits\Controllers\ProcessMediaTrait;
 use DB;
 use Exception;
 use FlashMessages;
@@ -32,6 +33,7 @@ class RecipeController extends BackendController
 {
     
     use AjaxFieldsChangerTrait;
+    use ProcessMediaTrait;
     
     /**
      * @var string
@@ -427,5 +429,7 @@ class RecipeController extends BackendController
             $model,
             $request->get('steps', [])
         );
+        
+        $this->processMedia($model, 'files');
     }
 }

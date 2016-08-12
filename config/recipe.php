@@ -8,6 +8,8 @@
 
 return [
     
-    'available_portions' => [2, 4]
+    'available_portions' => [2, 4],
     
+    'allowed_file_extension' => ['pdf', 'xls', 'xlsx'],
+
 ];

@@ -496,5 +496,7 @@ return array (
     'count_of_orders' => 'Количество заказов',
     'quick_ingredient_create_title' => 'Быстрое добавления ингредиента',
     'draft' => 'Черновик',
+    'tab_files' => 'Файлы',
+    'file' => 'Файл',
 );
 

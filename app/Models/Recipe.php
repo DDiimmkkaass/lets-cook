@@ -83,6 +83,23 @@ class Recipe extends Model
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function media()
+    {
+        return $this->morphMany(Media::class, 'mediable')->positionSorted();
+    }
+    
+    /**
+     * @return mixed
+     */
+    public function files()
+    {
+        return $this->media()->of('file');
+    }
+    
+    
+    /**
      * @param $query
      *
      * @return mixed

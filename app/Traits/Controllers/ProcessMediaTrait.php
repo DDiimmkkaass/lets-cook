@@ -52,7 +52,7 @@ trait ProcessMediaTrait
                     $media = Media::findOrFail($id);
                     $media->delete();
                 } catch (Exception $e) {
-                    throw new Exception(trans('messages.failed_media_removing').' ('.$type.'): '.$e->getMessage());
+                    throw new Exception(trans('messages.failed_media_removing').' ('.$type.'): #'.$id);
                 }
             }
         }
@@ -76,7 +76,7 @@ trait ProcessMediaTrait
                         $media = Media::findOrFail($key);
                         $media->update($val);
                     } catch (Exception $e) {
-                        throw new Exception(trans('messages.failed_media_updating').' ('.$type.'): '.$e->getMessage());
+                        throw new Exception(trans('messages.failed_media_updating').' ('.$type.'): '.isset($val['name']) ? $val['src'] : '');
                     }
                 }
             }
@@ -103,7 +103,7 @@ trait ProcessMediaTrait
 
                         $model->media()->save($media);
                     } catch (Exception $e) {
-                        throw new Exception(trans('messages.failed_media_saving').' ('.$type.'): '.$e->getMessage());
+                        throw new Exception(trans('messages.failed_media_saving').' ('.$type.'): '.isset($val['name']) ? $val['src'] : '');
                     }
                 }
             }
