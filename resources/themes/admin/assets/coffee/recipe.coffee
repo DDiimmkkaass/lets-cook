@@ -72,3 +72,12 @@ $(document).on 'ready', ->
   $(document).on "click", ".recipe-ingredients-table .destroy", ->
     confirm_dialog () =>
         Recipe.deleteIngredient($(this))
+
+  $(document).on "click", '#draft_submit', (e) ->
+    e.preventDefault()
+
+    $form = $(this).closest('form')
+
+    $form.validator('destroy').attr('action', $form.attr('action') + '?draft=1').submit()
+
+    return false

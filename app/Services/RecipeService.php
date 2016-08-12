@@ -47,7 +47,8 @@ class RecipeService
                 DB::raw('(SELECT MAX(_or.created_at) as last_order FROM order_recipes _or
                         LEFT JOIN basket_recipes _br ON (_or.basket_recipe_id = _br.id)
                         WHERE _br.recipe_id = recipes.id AND _or.created_at <= NOW()) as last_order'),
-                'recipes.status'
+                'recipes.status',
+                'recipes.draft'
             )
             ->groupBy('recipes.id');
         
@@ -69,6 +70,10 @@ class RecipeService
                                     'attributes' => ['width' => 50, 'class' => 'margin-right-10'],
                                 ]
                             )->render().$html;
+                    }
+    
+                    if ($model->draft) {
+                        $html .= view('recipe.partials.draft_label')->render();
                     }
                     
                     return $html;
@@ -118,21 +123,14 @@ class RecipeService
             ->editColumn(
                 'actions',
                 function ($model) {
-                    return view(
-                        'partials.datatables.control_buttons',
-                        [
-                            'model'           => $model,
-                            'type'            => 'recipe',
-                            'delete_function' => 'delete_recipe('.$model->id.')',
-                        ]
-                    )->render().
-                    view('recipe.datatables.control_buttons', ['model' => $model])->render();
+                    return view('recipe.datatables.control_buttons', ['model' => $model])->render();
                 }
             )
             ->setIndexColumn('id')
             ->removeColumn('ingredients')
             ->removeColumn('baskets')
             ->removeColumn('image')
+            ->removeColumn('draft')
             ->make();
     }
     

@@ -20,7 +20,6 @@ class Recipe extends Model
 {
     
     use SoftDeletes;
-    use VisibleTrait;
     
     /**
      * @var array
@@ -34,6 +33,7 @@ class Recipe extends Model
         'cooking_time',
         'home_equipment',
         'status',
+        'draft',
     ];
     
     /**
@@ -111,6 +111,16 @@ class Recipe extends Model
     public function scopeJoinIngredientIngredient($query)
     {
         return $query->leftJoin('ingredients', 'ingredients.id', '=', 'recipe_ingredients.ingredient_id');
+    }
+    
+    /**
+     * @param        $query
+     *
+     * @return mixed
+     */
+    public function scopeVisible($query)
+    {
+        return $query->where($this->getTable().'.status', true)->where($this->getTable().'.draft', false);
     }
     
     /**

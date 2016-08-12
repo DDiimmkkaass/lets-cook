@@ -1,0 +1,1 @@
+<span class="label label-info margin-left-5">@lang('labels.draft')</span>

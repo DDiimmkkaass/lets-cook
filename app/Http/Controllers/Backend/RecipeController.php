@@ -173,8 +173,10 @@ class RecipeController extends BackendController
             $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps', 'orders')
                 ->whereId($id)
                 ->firstOrFail();
+    
+            $page_title = '"'.$model->name.'" '.($model->draft ? view('recipe.partials.draft_label')->render() : '');
             
-            $this->data('page_title', '"'.$model->name.'"');
+            $this->data('page_title', $page_title);
             
             $this->breadcrumbs(trans('labels.recipe_editing'));
             
@@ -204,7 +206,10 @@ class RecipeController extends BackendController
             
             DB::beginTransaction();
             
-            $model->update($request->all());
+            $model->fill($request->all());
+            $model->draft = $request->get('draft', 0);
+            
+            $model->save();
             
             $this->_saveRelationships($model, $request);
             
