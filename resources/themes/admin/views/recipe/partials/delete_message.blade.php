@@ -7,7 +7,7 @@
                title="@lang('labels.go_to_menu') {!! $menu->getWeekDates() !!}"
                target="_blank"
                href="{!! route('admin.weekly_menu.edit', $menu->id) !!}">
-                @lang('labels.menu_of') {!! $menu->getWeekDates() !!}
+                @lang('labels.menu_of') @lang('labels.w_label'){!! $menu->week !!}, {!! $menu->year !!} ({!! $menu->getWeekDates() !!})
             </a>
         </div>
     @endforeach

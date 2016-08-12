@@ -22,6 +22,33 @@ window.updateBasketInternalPrice = ($basket) ->
 
   $basket.find('.basket-internal-price').val price;
 
+WeeklyMenu = {}
+
+WeeklyMenu.removeBasket = ($button) ->
+  $content_block = $button.closest('.tab-pane')
+  $tab = $('[href="#' + $content_block.attr('id') + '"]').closest('li')
+
+  $tab.remove()
+  $content_block.remove()
+
+  checkLastBasketTabInList()
+
+WeeklyMenu.removeRecipe = ($button) ->
+  if $button.hasClass('exist')
+    id = $button.data("id")
+    if id
+      name = $button.data("name")
+      $button.closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
+
+  unless ($button.closest('.menu-recipes-table').find('.recipe-block').length - 1)
+    $button.closest('.box-body').find('.main-recipe-helper-message').fadeOut()
+
+  $basket = $button.closest('.tab-pane')
+
+  $button.closest(".recipe-block").remove()
+
+  updateBasketInternalPrice($basket)
+
 $(document).on 'ready', ->
   $('.menu-recipes-table').each () ->
     unless $(this).find('.recipe-block').length
@@ -80,13 +107,8 @@ $(document).on 'ready', ->
   $(document).on "click", ".weekly-menu-basket-remove", (e) ->
     e.preventDefault()
 
-    $content_block = $(this).closest('.tab-pane')
-    $tab = $('[href="#' + $content_block.attr('id') + '"]').closest('li')
-
-    $tab.remove()
-    $content_block.remove()
-
-    checkLastBasketTabInList()
+    confirm_dialog () =>
+        WeeklyMenu.removeBasket($(this))
 
     return false
 
@@ -131,20 +153,8 @@ $(document).on 'ready', ->
       $recipe.find('.main-checkbox').val(0)
 
   $(document).on "click", ".menu-recipes-table .destroy", ->
-    if $(this).hasClass('exist')
-      id = $(this).data("id")
-      if id
-        name = $(this).data("name")
-        $(this).closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
-
-    unless ($(this).closest('.menu-recipes-table').find('.recipe-block').length - 1)
-      $(this).closest('.box-body').find('.main-recipe-helper-message').fadeOut()
-
-    $basket = $(this).closest('.tab-pane')
-
-    $(this).closest(".recipe-block").remove()
-
-    updateBasketInternalPrice($basket)
+    confirm_dialog () =>
+        WeeklyMenu.removeRecipe($(this))
 
   $('.menu-recipe-select.load').each () ->
     $.ajax

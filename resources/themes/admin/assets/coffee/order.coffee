@@ -1,6 +1,6 @@
-order = {}
+Order = {}
 
-order.processCity = () ->
+Order.processCity = () ->
   $city_block = $('#order-city-block')
 
   unless parseInt($('.order-city-id-select').val())
@@ -8,7 +8,7 @@ order.processCity = () ->
   else
     $city_block.addClass('hidden').removeClass('required').find('input').removeAttr('required').val('')
 
-order.processSubscribePeriod = () ->
+Order.processSubscribePeriod = () ->
   $subscribe_period_block = $('#subscribe-period-block')
 
   if parseInt($('.order-type-select').val()) == 2
@@ -16,18 +16,36 @@ order.processSubscribePeriod = () ->
   else
     $subscribe_period_block.addClass('hidden').removeClass('required').find('select').removeAttr('required').val('')
 
+Order.deleteRecipe = ($button) ->
+  if $button.hasClass('exist')
+    id = $button.data("id")
+    if id
+      name = $button.data("name")
+      $button.closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
+
+  $button.closest("tr").remove()
+
+Order.deleteIngredient = ($button) ->
+  if $button.hasClass('exist')
+    id = $button.data("id")
+    if id
+      name = $button.data("name")
+      $button.closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
+
+  $button.closest("tr").remove()
+
 $(document).on "ready", () ->
   #subscribe period
-  order.processSubscribePeriod()
+  Order.processSubscribePeriod()
 
   $('.order-type-select').on "change", () ->
-    order.processSubscribePeriod()
+    Order.processSubscribePeriod()
 
   #city
-  order.processCity()
+  Order.processCity()
 
   $('.order-city-id-select').on "change", () ->
-    order.processCity()
+    Order.processCity()
 
   #main basket
   $('.order-recipe-select').on "change", ->
@@ -52,13 +70,8 @@ $(document).on "ready", () ->
             message.show response.message, response.status
 
   $(document).on "click", ".order-recipes-table .destroy", ->
-    if $(this).hasClass('exist')
-      id = $(this).data("id")
-      if id
-        name = $(this).data("name")
-        $(this).closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
-
-    $(this).closest("tr").remove()
+    confirm_dialog () =>
+        Order.deleteRecipe($(this))
 
   #ingredients
   options = $.extend
@@ -109,10 +122,5 @@ $(document).on "ready", () ->
           message.show response.message, response.status
 
   $(document).on "click", ".order-ingredients-table .destroy", ->
-    if $(this).hasClass('exist')
-      id = $(this).data("id")
-      if id
-        name = $(this).data("name")
-        $(this).closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
-
-    $(this).closest("tr").remove()
+    confirm_dialog () =>
+        Order.deleteIngredient(O$(this))

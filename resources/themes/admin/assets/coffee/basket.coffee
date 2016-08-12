@@ -1,3 +1,14 @@
+Basket = {}
+
+Basket.deleteRecipe = ($button) ->
+  if $button.hasClass('exist')
+    id = $button.data("id")
+    if id
+      name = $button.data("name")
+      $button.closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
+
+    $button.closest("tr").remove()
+
 $(document).on 'ready', ->
   $('.recipe-select').on "change", ->
     recipe = $(this).val()
@@ -21,10 +32,5 @@ $(document).on 'ready', ->
             message.show response.message, response.status
 
   $(document).on "click", ".basket-recipes-table .destroy", ->
-    if $(this).hasClass('exist')
-      id = $(this).data("id")
-      if id
-        name = $(this).data("name")
-        $(this).closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
-
-    $(this).closest("tr").remove()
+    confirm_dialog () =>
+        Basket.deleteRecipe($(this))

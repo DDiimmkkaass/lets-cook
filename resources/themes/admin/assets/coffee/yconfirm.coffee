@@ -11,11 +11,26 @@ window.dialog = (title, message, $form, closure) ->
         className: "btn-success btn-flat btn-sm"
         callback: () ->
           if typeof closure == 'function'
-            console.log('function')
             closure $form
           else
-            console.log('form')
             $form.submit()
+
+
+window.confirm_dialog = (closure, message) ->
+  message = message || lang_deleteConfirmQuestion
+
+  bootbox.confirm
+    message: message
+    buttons:
+      cancel:
+        label: lang_cancel
+        className: "btn-default btn-flat btn-sm"
+      confirm:
+        label: lang_confirm
+        className: "btn-success btn-flat btn-sm"
+    callback: (result) ->
+      if result
+        closure()
 
 window.ajax_dialog = (url, $form, closure) ->
   url = url || '/admin/'

@@ -19,6 +19,18 @@ window.duplicate_row = ($this) ->
 
   fixCustomInputs($nrow)
 
+RowDuplication = {}
+
+RowDuplication.deleteRow = ($button) ->
+  if $button.hasClass('exist')
+    id = $button.data("id")
+    
+    if id
+      name = $button.data("name")
+      $button.closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
+
+  $button.closest(".duplication-row").remove()
+
 $(document).ready ->
   window.ic = $('.duplication-row').length
 
@@ -29,13 +41,5 @@ $(document).ready ->
     duplicate_row $(this)
 
   $(document).on "click", ".duplication .destroy", ->
-    $this = $(this)
-
-    if $this.hasClass('exist')
-      id = $this.data("id")
-      if id
-        name = $(this).data("name")
-        $(this).closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
-
-
-    $(this).closest(".duplication-row").remove()
+    confirm_dialog () =>
+        RowDuplication.deleteRow($(this))

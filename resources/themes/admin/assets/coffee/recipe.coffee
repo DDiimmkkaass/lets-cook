@@ -4,6 +4,17 @@ window.delete_recipe = (recipe_id) ->
 
   ajax_dialog(url, $form)
 
+Recipe = {}
+
+Recipe.deleteIngredient = ($button) ->
+  if $button.hasClass('exist')
+    id = $button.data("id")
+    if id
+      name = $button.data("name")
+      $button.closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
+
+  $button.closest("tr").remove()
+
 $(document).on 'ready', ->
   $('.ingredient-category-select').on "change", ->
     category = $(this).val()
@@ -44,7 +55,12 @@ $(document).on 'ready', ->
           processError response, null
         success: (response) =>
           if response.status is 'success'
-            unless $tab.find('.recipe-ingredients-table #ingredient_' + ingredient).length
+            _type = ''
+
+            if type != 'normal'
+              _type = type + '_'
+
+            unless $tab.find('.recipe-ingredients-table #ingredients_' + _type + ingredient).length
               $tab.find('.recipe-ingredients-table').append response.html
 
               fixCustomInputs($tab.find('.recipe-ingredients-table tr:last-child'))
@@ -54,10 +70,5 @@ $(document).on 'ready', ->
             message.show response.message, response.status
 
   $(document).on "click", ".recipe-ingredients-table .destroy", ->
-    if $(this).hasClass('exist')
-      id = $(this).data("id")
-      if id
-        name = $(this).data("name")
-        $(this).closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
-
-    $(this).closest("tr").remove()
+    confirm_dialog () =>
+        Recipe.deleteIngredient($(this))
