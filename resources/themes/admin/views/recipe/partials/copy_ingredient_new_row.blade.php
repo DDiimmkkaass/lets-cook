@@ -22,7 +22,7 @@
     </td>
     <td>
         <div class="form-group required @if ($errors->has($key.'.new.' .$id. '.count')) has-error @endif">
-            {!! Form::text($key.'[new][' .$id. '][count]', $ingredient->count, ['id' => $key.'.new.' .$id. '.count', 'class' => 'form-control input-sm', 'required' => true]) !!}
+            {!! Form::text($key.'[new][' .$id. '][count]', ceil($ingredient->count * $multiplier), ['id' => $key.'.new.' .$id. '.count', 'class' => 'form-control input-sm', 'required' => true]) !!}
         </div>
     </td>
     <td>

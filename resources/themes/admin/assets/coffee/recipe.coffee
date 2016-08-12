@@ -15,6 +15,15 @@ Recipe.deleteIngredient = ($button) ->
 
   $button.closest("tr").remove()
 
+Recipe.openCopyForm = () ->
+  $form = $('#recipe_copy_form')
+
+  bind = (if $form.find('#bind').is(":checked") then 1 else 0)
+
+  url = $form.attr('action') + '?portions=' + $form.find('#portions').val() + '&bind=' + bind
+
+  window.location = url
+
 $(document).on 'ready', ->
   $('.ingredient-category-select').on "change", ->
     category = $(this).val()
@@ -79,5 +88,20 @@ $(document).on 'ready', ->
     $form = $(this).closest('form')
 
     $form.validator('destroy').attr('action', $form.attr('action') + '?draft=1').submit()
+
+    return false
+
+  $(document).on "click", ".copy-recipe", (e) ->
+    e.preventDefault()
+
+    $.ajax
+      url: $(this).attr('href')
+      type: 'GET'
+      error: (response) =>
+        processError response, null
+      success: (response) =>
+        dialog(response.title, response.message, null, Recipe.openCopyForm)
+
+        fixCustomInputs($('#recipe_copy_form'))
 
     return false

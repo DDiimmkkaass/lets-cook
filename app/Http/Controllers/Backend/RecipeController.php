@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Http\Requests\Backend\Recipe\RecipeCopyRequest;
 use App\Http\Requests\Backend\Recipe\RecipeRequest;
 use App\Models\Basket;
 use App\Models\Category;
@@ -127,12 +128,37 @@ class RecipeController extends BackendController
     public function store(RecipeRequest $request)
     {
         try {
+            $bind = $request->get('bind', false);
+            $parent_id = $request->get('parent_id', 0);
+            
+            if ($bind && $parent_id) {
+                $parent_model = Recipe::findOrFail($parent_id);
+    
+                $model = Recipe::whereBindId($parent_model->bind_id)
+                    ->wherePortions($request->get('portions'))
+                    ->where('id', '<>', $parent_model->id)
+                    ->first();
+                
+                if ($model) {
+                    FlashMessages::add(
+                        'error',
+                        trans('messages.this recipe with the same number of portions is already exists')
+                    );
+
+                    return redirect()->back()->withInput();
+                }
+            }
+            
             DB::beginTransaction();
             
             $model = new Recipe($request->all());
             $model->save();
             
             $this->_saveRelationships($model, $request);
+            
+            if ($bind) {
+                $this->recipeService->bindRecipes($parent_model, $model);
+            }
             
             DB::commit();
             
@@ -172,10 +198,10 @@ class RecipeController extends BackendController
     public function edit($id)
     {
         try {
-            $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps', 'orders')
+            $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps', 'orders', 'files')
                 ->whereId($id)
                 ->firstOrFail();
-    
+            
             $page_title = '"'.$model->name.'" '.($model->draft ? view('recipe.partials.draft_label')->render() : '');
             
             $this->data('page_title', $page_title);
@@ -205,6 +231,22 @@ class RecipeController extends BackendController
     {
         try {
             $model = Recipe::whereId($id)->firstOrFail();
+    
+            if ($model->bind_id) {
+                $_model = Recipe::whereBindId($model->bind_id)
+                    ->wherePortions($request->get('portions'))
+                    ->where('id', '<>', $model->id)
+                    ->first();
+                
+                if ($_model) {
+                    FlashMessages::add(
+                        'error',
+                        trans('messages.this recipe with the same number of portions is already exists')
+                    );
+    
+                    return redirect()->back()->withInput();
+                }
+            }
             
             DB::beginTransaction();
             
@@ -236,18 +278,42 @@ class RecipeController extends BackendController
     }
     
     /**
-     * @param int $id
+     * @param int                                                 $recipe_id
+     * @param \App\Http\Requests\Backend\Recipe\RecipeCopyRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Response
      */
-    public function copy($id)
+    public function copy($recipe_id, RecipeCopyRequest $request)
     {
         try {
-            $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps')->whereId($id)->firstOrFail();
+            $portions = $request->get('portions');
+            
+            $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps', 'files')
+                ->whereId($recipe_id)
+                ->firstOrFail();
+            
+            if ($request->get('bind', false) && $model->portions == $portions) {
+                FlashMessages::add(
+                    'error',
+                    trans('messages.this recipe with the same number of portions is already exists')
+                );
+                
+                return redirect()->route('admin.'.$this->module.'.index');
+            }
+    
+            $this->data('multiplier', $portions / $model->portions);
+            
+            $model->portions = $portions;
             
             $this->data('model', $model);
             
-            $this->data('page_title', trans('labels.copy_recipe').' "'.$model->name.'"');
+            $this->data('bind', $request->get('bind', false));
+            
+            $this->data(
+                'page_title',
+                trans('labels.copy_recipe').' "'.$model->name.'" '.
+                ($model->draft ? view('recipe.partials.draft_label')->render() : '')
+            );
             
             $this->breadcrumbs(trans('labels.copy_recipe'));
             
@@ -332,6 +398,28 @@ class RecipeController extends BackendController
                 'status' => 'success',
                 'html'   => view('views.'.$this->module.'.partials.ingredient_row', compact('model', 'type', 'key'))
                     ->render(),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
+     * @param int $recipe_id
+     *
+     * @return array
+     */
+    public function getCopyForm($recipe_id)
+    {
+        try {
+            $model = Recipe::whereId($recipe_id)->firstOrFail();
+            
+            return [
+                'title'   => trans('labels.recipe_copy_form_title'),
+                'message' => view('views.'.$this->module.'.popups.copy_form')->with(['model' => $model])->render(),
             ];
         } catch (Exception $e) {
             return [

@@ -24,12 +24,15 @@ class RecipeRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->request->get('draft', false)) {
+        if (request('draft', false)) {
             return [
                 'image'        => ['regex:'.$this->image_regex],
                 'portions'     => 'numeric|min:0',
                 'cooking_time' => 'numeric|min:0',
                 'status'       => 'boolean',
+                
+                'parent_id' => 'required_id:bind,true|exists:recipes,id',
+                'bind'      => 'boolean',
                 
                 'baskets' => 'array',
                 
@@ -82,9 +85,12 @@ class RecipeRequest extends FormRequest
             'name'         => 'required',
             'image'        => ['regex:'.$this->image_regex],
             'recipe'       => 'required',
-            'portions'     => 'required|numeric|min:0',
+            'portions'     => 'required|numeric|in:'.implode(',', config('recipe.available_portions')),
             'cooking_time' => 'required|numeric|min:0',
             'status'       => 'required|boolean',
+            
+            'parent_id' => 'required_if:bind,true|exists:recipes,id',
+            'bind'      => 'boolean',
             
             'baskets' => 'required|array',
             
@@ -132,14 +138,14 @@ class RecipeRequest extends FormRequest
             'files.old.*.name'     => 'required',
             'files.old.*.src'      => [
                 'required',
-                'regex:'.$this->file_regex
+                'regex:'.$this->file_regex,
             ],
             'files.old.*.position' => 'numeric|min:0',
             
             'files.new.*.name'     => 'required',
             'files.new.*.src'      => [
                 'required',
-                'regex:'.$this->file_regex
+                'regex:'.$this->file_regex,
             ],
             'files.new.*.position' => 'numeric|min:0',
             

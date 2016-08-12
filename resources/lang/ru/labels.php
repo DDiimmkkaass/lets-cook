@@ -498,5 +498,8 @@ return array (
     'draft' => 'Черновик',
     'tab_files' => 'Файлы',
     'file' => 'Файл',
+    'recipe_copy_form_title' => 'Копировать рецепт?',
+    'new_count_of_portion' => 'Новое количество порций',
+    'bind_recipes' => 'Связать рецепты',
 );
 

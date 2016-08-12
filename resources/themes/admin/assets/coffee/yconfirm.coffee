@@ -15,7 +15,6 @@ window.dialog = (title, message, $form, closure) ->
           else
             $form.submit()
 
-
 window.confirm_dialog = (closure, message) ->
   message = message || lang_deleteConfirmQuestion
 

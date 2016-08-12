@@ -128,4 +128,5 @@ return array (
   'this recipe has not ordered any time' => 'Этот рецепт еще не заказывали',
   'ingredient successfully added' => 'Ингредиент успешно добавлен',
   'delete confirm question' => 'Вы действительно хотите удалить этот элемент?',
+  'this recipe with the same number of portions is already exists' => 'Этот рецепт с таким количеством порций уже существует',
 );

@@ -262,6 +262,14 @@ $router->group(
                     ]
                 );
                 $router->get(
+                    'recipe/{id}/get-copy-form',
+                    [
+                        'as'         => 'admin.recipe.get_copy_form',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Backend\RecipeController@getCopyForm',
+                    ]
+                );
+                $router->get(
                     'recipe/{id}/copy',
                     ['as' => 'admin.recipe.copy', 'uses' => 'Backend\RecipeController@copy']
                 );

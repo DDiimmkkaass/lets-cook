@@ -44,9 +44,11 @@ class RecipeService
                 'recipes.portions',
                 DB::raw('2 as base_ingredient'),
                 DB::raw('3 as recipe_price'),
-                DB::raw('(SELECT MAX(_or.created_at) as last_order FROM order_recipes _or
+                DB::raw(
+                    '(SELECT MAX(_or.created_at) as last_order FROM order_recipes _or
                         LEFT JOIN basket_recipes _br ON (_or.basket_recipe_id = _br.id)
-                        WHERE _br.recipe_id = recipes.id AND _or.created_at <= NOW()) as last_order'),
+                        WHERE _br.recipe_id = recipes.id AND _or.created_at <= NOW()) as last_order'
+                ),
                 'recipes.status',
                 'recipes.draft'
             )
@@ -71,7 +73,7 @@ class RecipeService
                                 ]
                             )->render().$html;
                     }
-    
+                    
                     if ($model->draft) {
                         $html .= view('recipe.partials.draft_label')->render();
                     }
@@ -105,7 +107,9 @@ class RecipeService
                     if (!empty($model->last_order)) {
                         $dt = Carbon::createFromFormat('Y-m-d H:i:s', $model->last_order);
                         
-                        return '<div class="text-center">'.trans('labels.w_label').$dt->weekOfYear.', '.$dt->year.'</div>';
+                        return '<div class="text-center">'.trans(
+                            'labels.w_label'
+                        ).$dt->weekOfYear.', '.$dt->year.'</div>';
                     }
                     
                     return '';
@@ -132,6 +136,20 @@ class RecipeService
             ->removeColumn('image')
             ->removeColumn('draft')
             ->make();
+    }
+    
+    /**
+     * @param \App\Models\Recipe $parent_model
+     * @param \App\Models\Recipe $model
+     */
+    public function bindRecipes(Recipe $parent_model, Recipe $model)
+    {
+        $bind_id = $parent_model->bind_id ? $parent_model->bind_id : md5($parent_model->id);
+        
+        $parent_model->bind_id = $model->bind_id = $bind_id;
+        
+        $parent_model->save();
+        $model->save();
     }
     
     /**
@@ -294,7 +312,7 @@ class RecipeService
             if (!isset($orders[$week])) {
                 $orders[$week] = 0;
             }
-    
+            
             $orders[$week] += 1;
         }
         
