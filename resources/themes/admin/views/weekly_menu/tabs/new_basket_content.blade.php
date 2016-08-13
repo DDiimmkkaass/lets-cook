@@ -61,7 +61,7 @@
                         @include('partials.image', ['src' => $recipe['image'], 'attributes' => ['width' => 100, 'class' => 'img-circle']])
                     </div>
 
-                    {!! Form::hidden('baskets['.$basket['id'].'_'.$basket['portions'].'][old]['.$key.'][main]', $recipe['main'] ? 1 : 0, ['id' => 'baskets_'.$basket['id'].'_'.$basket['portions'].'_old_'.$key.'_main', 'class' => 'main-checkbox']) !!}
+                    {!! Form::hidden('baskets['.$basket['id'].'_'.$basket['portions'].'][old]['.$key.'][main]', $recipe['main'] ? 1 : 0, ['id' => 'baskets_'.$basket['id'].'_'.$basket['portions'].'_old_'.$key.'_main', 'class' => 'main-checkbox main-input']) !!}
 
                     {!! Form::hidden('baskets['.$basket['id'].'_'.$basket['portions'].'][old]['.$key.'][image]', $recipe['image']) !!}
                     {!! Form::hidden('baskets['.$basket['id'].'_'.$basket['portions'].'][old]['.$key.'][name]', $recipe['name']) !!}
@@ -77,7 +77,7 @@
                         {!! Form::label('baskets_'.$basket['id'].'_'.$basket['portions'].'_old_'.$key.'_position', trans('labels.position'), ['class' => 'control-label col-sm-3']) !!}
 
                         <div class="col-sm-9">
-                            {!! Form::text('baskets['.$basket['id'].'_'.$basket['portions'].'][old]['.$key.'][position]', $recipe['position'], ['id' => 'baskets_'.$basket['id'].'_'.$basket['portions'].'_old_'.$key.'_position', 'class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+                            {!! Form::text('baskets['.$basket['id'].'_'.$basket['portions'].'][old]['.$key.'][position]', $recipe['position'], ['id' => 'baskets_'.$basket['id'].'_'.$basket['portions'].'_old_'.$key.'_position', 'class' => 'form-control input-sm position-input', 'aria-hidden' => 'true', 'required' => true]) !!}
                         </div>
                     </div>
                 </div>
@@ -109,7 +109,7 @@
                         @include('partials.image', ['src' => $recipe['image'], 'attributes' => ['width' => 100, 'class' => 'img-circle']])
                     </div>
 
-                    <input type="hidden" name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][main]" value="{!! $recipe['main'] ? 1 : 0 !!}" class="main-checkbox">
+                    <input type="hidden" name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][main]" value="{!! $recipe['main'] ? 1 : 0 !!}" class="main-checkbox main-input">
 
                     <input type="hidden" name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][recipe_id]" value="{!! $recipe['recipe_id'] !!}">
                     <input type="hidden" name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][name]" value="{!! $recipe['name'] !!}">
@@ -125,7 +125,7 @@
                         {!! Form::label('baskets['.$basket['id'].'_'.$basket['portions'].'][new]['.$recipe_key.'][position]', trans('labels.position'), ['class' => 'control-label col-sm-3']) !!}
 
                         <div class="col-sm-9">
-                            {!! Form::text('baskets['.$basket['id'].'_'.$basket['portions'].'][new]['.$recipe_key.'][position]', $recipe['position'], ['id' => 'baskets_'.$basket['id'].'_'.$basket['portions'].'_new_'.$recipe_key.'_portions', 'class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+                            {!! Form::text('baskets['.$basket['id'].'_'.$basket['portions'].'][new]['.$recipe_key.'][position]', $recipe['position'], ['id' => 'baskets_'.$basket['id'].'_'.$basket['portions'].'_new_'.$recipe_key.'_portions', 'class' => 'form-control input-sm position-input', 'aria-hidden' => 'true', 'required' => true]) !!}
                         </div>
                     </div>
                 </div>

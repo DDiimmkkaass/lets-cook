@@ -8,7 +8,7 @@
                     @lang('labels.portions'): {!! $model->portions !!}
                 </p>
                 <p class="font-size-12">
-                    @lang('labels.price'): {!! $model->getPrice() !!}
+                    @lang('labels.price'): {!! $model->getPrice() !!} {!! $currency !!}
                 </p>
 
                 <input type="hidden" name="baskets[{!! $basket_id.'_'.$portions !!}][new][{!! $model->id !!}][image]" value="{!! $model->image !!}">
@@ -22,7 +22,7 @@
                 @include('partials.image', ['src' => $model->image, 'attributes' => ['width' => 100, 'class' => 'img-circle']])
             </div>
 
-            {!! Form::hidden('baskets['.$basket_id.'_'.$portions.'][new]['.$model->id.'][main]', 0, ['id' => 'baskets_'.$basket_id.'_'.$portions.'_new_'.$model->id.'_main', 'class' => 'main-checkbox']) !!}
+            {!! Form::hidden('baskets['.$basket_id.'_'.$portions.'][new]['.$model->id.'][main]', 0, ['id' => 'baskets_'.$basket_id.'_'.$portions.'_new_'.$model->id.'_main', 'class' => 'main-checkbox main-input']) !!}
 
             <div class="clearfix"></div>
         </div>
@@ -31,7 +31,7 @@
             <div class="form-group margin-bottom-0 required">
                 {!! Form::label('baskets['.$basket_id.'_'.$portions.'][new]['.$model->id.'][position]', trans('labels.position'), ['class' => 'control-label col-sm-3']) !!}
                 <div class="col-sm-9">
-                    {!! Form::text('baskets['.$basket_id.'_'.$portions.'][new]['.$model->id.'][position]', 0, ['id' => 'baskets_'.$portions.'_'.$basket_id.'_new_'.$model->id.'_portions', 'class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+                    {!! Form::text('baskets['.$basket_id.'_'.$portions.'][new]['.$model->id.'][position]', 0, ['id' => 'baskets_'.$portions.'_'.$basket_id.'_new_'.$model->id.'_position', 'class' => 'form-control input-sm position-input', 'aria-hidden' => 'true', 'required' => true]) !!}
                 </div>
             </div>
         </div>

@@ -318,4 +318,27 @@ class RecipeService
         
         return $orders;
     }
+    
+    /**
+     * @param int  $recipe_id
+     * @param bool $copy
+     * @param int  $portions
+     *
+     * @return null|Recipe
+     */
+    public function getRecipeFormWeeklyMenu($recipe_id, $copy, $portions)
+    {
+        if ($copy) {
+            $recipe = Recipe::visible()
+                ->whereBindId(DB::raw('(SELECT bind_id FROM recipes WHERE id = \''.$recipe_id.'\')'))
+                ->wherePortions($portions)
+                ->first();
+            
+            return $recipe;
+        }
+        
+        $recipe = Recipe::visible()->findOrFail($recipe_id);
+        
+        return $recipe;
+    }
 }

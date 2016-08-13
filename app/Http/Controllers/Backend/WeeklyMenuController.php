@@ -11,9 +11,9 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Requests\Backend\WeeklyMenu\WeeklyMenuCreateRequest;
 use App\Http\Requests\Backend\WeeklyMenu\WeeklyMenuUpdateRequest;
 use App\Models\Basket;
-use App\Models\Recipe;
 use App\Models\WeeklyMenu;
 use App\Services\BasketService;
+use App\Services\RecipeService;
 use App\Services\WeeklyMenuService;
 use Carbon;
 use DB;
@@ -66,18 +66,26 @@ class WeeklyMenuController extends BackendController
     private $basketService;
     
     /**
+     * @var \App\Services\RecipeService
+     */
+    private $recipeService;
+    
+    /**
      * @param \Illuminate\Contracts\Routing\ResponseFactory $response
      * @param \App\Services\WeeklyMenuService               $weeklyMenuService
+     * @param \App\Services\RecipeService                   $recipeService
      * @param \App\Services\BasketService                   $basketService
      */
     public function __construct(
         ResponseFactory $response,
         WeeklyMenuService $weeklyMenuService,
+        RecipeService $recipeService,
         BasketService $basketService
     ) {
         parent::__construct($response);
         
         $this->weeklyMenuService = $weeklyMenuService;
+        $this->recipeService = $recipeService;
         $this->basketService = $basketService;
         
         Meta::title(trans('labels.weekly_menus'));
@@ -362,28 +370,28 @@ class WeeklyMenuController extends BackendController
     }
     
     /**
-     * @param int $basket_id
-     * @param int $portions
-     * @param int $recipe_id
+     * @param int  $basket_id
+     * @param int  $portions
+     * @param int  $recipe_id
+     * @param bool $copy
      *
      * @return array
      */
-    public function getRecipeItem($basket_id, $portions, $recipe_id)
+    public function getRecipeItem($basket_id, $portions, $recipe_id, $copy = false)
     {
         try {
-            $model = Recipe::visible()->findOrFail($recipe_id);
+            $model = $this->recipeService->getRecipeFormWeeklyMenu($recipe_id, $copy, $portions);
+            
+            $html = $model ?
+                view('views.'.$this->module.'.partials.recipe_item')
+                    ->with(['basket_id' => $basket_id, 'portions' => $portions, 'model' => $model])
+                    ->render() :
+                '';
             
             return [
-                'status' => 'success',
-                'html'   => view('views.'.$this->module.'.partials.recipe_item')
-                    ->with(
-                        [
-                            'basket_id' => $basket_id,
-                            'portions'  => $portions,
-                            'model'     => $model,
-                        ]
-                    )
-                    ->render(),
+                'status'    => 'success',
+                'html'      => $html,
+                'recipe_id' => $model ? $model->id : 0,
             ];
         } catch (Exception $e) {
             return [
@@ -403,11 +411,36 @@ class WeeklyMenuController extends BackendController
     {
         try {
             $basket = Basket::findOrFail($basket_id);
-            $recipes = $basket->allowed_recipes()->where('portions', $portions)->get();
+            $recipes = $basket->allowed_recipes()->visible()->where('portions', $portions)->get();
             
             return [
                 'status'  => 'success',
                 'recipes' => $recipes,
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
+     * @param int $basket_id
+     * @param int $portions
+     *
+     * @return array
+     */
+    public function getBasketCopyForm($basket_id, $portions)
+    {
+        try {
+            $model = Basket::whereId($basket_id)->firstOrFail();
+            
+            return [
+                'title'   => trans('labels.weekly_menu_basket_copy_form_title'),
+                'message' => view('views.'.$this->module.'.popups.basket_copy_form')
+                    ->with(['model' => $model, 'portions' => $portions])
+                    ->render(),
             ];
         } catch (Exception $e) {
             return [

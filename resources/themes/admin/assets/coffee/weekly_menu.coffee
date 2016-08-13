@@ -1,18 +1,18 @@
 window.checkLastBasketTabInList = () ->
   setTimeout () ->
-      $tabs = $('.weekly-menu-form .nav-tabs li:last')
-      $tab = $($tabs[$tabs.length - 1])
+    $tabs = $('.weekly-menu-form .nav-tabs li:last')
+    $tab = $($tabs[$tabs.length - 1])
 
-      content_id = $tab.find('a:first').attr('href')
-      $content = $('' + content_id)
+    content_id = $tab.find('a:first').attr('href')
+    $content = $('' + content_id)
 
-      $('.weekly-menu-form .nav-tabs li.active').removeClass 'active'
-      $('.weekly-menu-form .tab-pane.active').removeClass 'active'
+    $('.weekly-menu-form .nav-tabs li.active').removeClass 'active'
+    $('.weekly-menu-form .tab-pane.active').removeClass 'active'
 
-      $tab.addClass 'active'
-      $content.addClass 'active'
+    $tab.addClass 'active'
+    $content.addClass 'active'
 
-    , 300
+  , 300
 
 window.updateBasketInternalPrice = ($basket) ->
   price = 0;
@@ -49,6 +49,101 @@ WeeklyMenu.removeRecipe = ($button) ->
 
   updateBasketInternalPrice($basket)
 
+WeeklyMenu.addBasket = ($form, closure) ->
+  closure = closure || false
+
+  data = getFormData $form
+
+  unless $('#basket_' + data.basket_id + '_' + data.portions).length
+    $.ajax
+      url: '/admin/weekly_menu/add-basket'
+      type: 'GET'
+      dataType: 'json'
+      data: data
+      error: (response) =>
+        processError response, null
+      success: (response) =>
+        if response.status == 'success'
+          dModalHide()
+
+          $('.weekly-menu-form .nav-tabs').append(response.tab_html)
+          $('.weekly-menu-form .tab-content').append(response.content_html)
+
+          fixCustomInputs($('.weekly-menu-form'))
+
+          checkLastBasketTabInList()
+
+          if typeof closure == 'function'
+            closure()
+        else
+          message.show response.message, response.status
+  else
+    message.show lang_basketAlreadyAddedToList, 'warning'
+
+WeeklyMenu.addRecipe = (recipe_id, basket_id, portions, copy) ->
+  copy = copy || 0
+
+  $basket = $('#basket_recipes_' + basket_id + '_' + portions)
+
+  unless $basket.find('#recipe_' + recipe_id).length
+    $.ajax
+      url: '/admin/weekly_menu/' + basket_id + '/' + portions + '/get-recipe-item/' + recipe_id + '/' + copy
+      type: 'GET'
+      dataType: 'json'
+      error: (response) =>
+        processError response, null
+      success: (response) =>
+        if response.status is 'success'
+          if response.html != ''
+            unless $basket.find('#recipe_' + response.recipe_id).length
+              $basket.append response.html
+
+              fixCustomInputs($basket)
+
+              updateBasketInternalPrice($('#basket_' + basket_id + '_' + portions))
+
+              if copy
+                parent_basket_id = WeeklyMenu.copyParentBasketId
+                parent_portions = WeeklyMenu.copyParentPortions
+
+                $parent_recipe = $('#basket_recipes_' + parent_basket_id + '_' + parent_portions).find('#recipe_' + recipe_id)
+                $recipe = $('#basket_recipes_' + basket_id + '_' + portions).find('#recipe_' + response.recipe_id)
+
+                $recipe.find('.position-input').val $parent_recipe.find('.position-input').val()
+
+                if $parent_recipe.hasClass('main')
+                  $recipe.addClass('main')
+                  $recipe.find('.main-checkbox').val(1)
+            else
+              message.show lang_recipeAlreadyAddedToList, 'warning'
+
+            if $basket.find('.recipe-block').length
+              $basket.closest('.tab-pane').find('.main-recipe-helper-message').fadeIn()
+        else
+          message.show response.message, response.status
+  else
+    message.show lang_recipeAlreadyAddedToList, 'warning'
+
+WeeklyMenu.copyBasket = () ->
+  $form = $('#basket_copy_form')
+
+  WeeklyMenu.copyNewPortions = $form.find('#portions').val()
+
+  WeeklyMenu.addBasket($form, WeeklyMenu.copyRecipes)
+
+WeeklyMenu.copyRecipes = () ->
+  basket_id = WeeklyMenu.copyParentBasketId
+  portions = WeeklyMenu.copyParentPortions
+
+  $('#basket_recipes_' + basket_id + '_' + portions + ' .recipe-block').each () ->
+    recipe_id = $(this).attr('id')
+    recipe_id = recipe_id.split('_')
+
+    if recipe_id[1]
+      portions = WeeklyMenu.copyNewPortions
+
+      WeeklyMenu.addRecipe(recipe_id[1], basket_id, portions, 1)
+
 $(document).on 'ready', ->
   $('.menu-recipes-table').each () ->
     unless $(this).find('.recipe-block').length
@@ -77,30 +172,7 @@ $(document).on 'ready', ->
   $(document).on "click", ".weekly-menu-add-basket", (e) ->
     e.preventDefault()
 
-    data = getFormData $(this).closest('.basket-select-form')
-
-    unless $('#basket_' + data.basket_id + '_' + data.portions).length
-      $.ajax
-        url: '/admin/weekly_menu/add-basket'
-        type: 'GET'
-        dataType: 'json'
-        data: data
-        error: (response) =>
-          processError response, null
-        success: (response) =>
-          if response.status == 'success'
-            dModalHide()
-
-            $('.weekly-menu-form .nav-tabs').append(response.tab_html)
-            $('.weekly-menu-form .tab-content').append(response.content_html)
-
-            fixCustomInputs($('.weekly-menu-form'))
-
-            checkLastBasketTabInList()
-          else
-            message.show response.message, response.status
-    else
-      message.show lang_basketAlreadyAddedToList, 'warning'
+    WeeklyMenu.addBasket($(this).closest('.basket-select-form'))
 
     return false
 
@@ -108,39 +180,16 @@ $(document).on 'ready', ->
     e.preventDefault()
 
     confirm_dialog () =>
-        WeeklyMenu.removeBasket($(this))
+      WeeklyMenu.removeBasket($(this))
 
     return false
 
   $(document).on "change", '.menu-recipe-select', ->
-    recipe = $(this).val()
+    recipe_id = $(this).val()
     basket_id = $(this).data('basket')
     portions = $(this).data('portions')
 
-    $basket = $('#basket_recipes_' + basket_id + '_' + portions)
-
-    if recipe
-      $.ajax
-        url: '/admin/weekly_menu/' + basket_id + '/'  + portions + '/get-recipe-item/' + recipe
-        type: 'GET'
-        dataType: 'json'
-        error: (response) =>
-          processError response, null
-        success: (response) =>
-          if response.status is 'success'
-            unless $basket.find('#recipe_' + recipe).length
-              $basket.append response.html
-
-              fixCustomInputs($basket)
-
-              updateBasketInternalPrice($('#basket_' + basket_id + '_' + portions))
-            else
-              message.show lang_recipeAlreadyAddedToList, 'warning'
-
-            if $basket.find('.recipe-block').length
-              $basket.closest('.tab-pane').find('.main-recipe-helper-message').fadeIn()
-          else
-            message.show response.message, response.status
+    WeeklyMenu.addRecipe(recipe_id, basket_id, portions)
 
   $(document).on "click", ".menu-recipes-table .inner", ->
     $recipe = $(this).closest('.recipe-block')
@@ -154,11 +203,11 @@ $(document).on 'ready', ->
 
   $(document).on "click", ".menu-recipes-table .destroy", ->
     confirm_dialog () =>
-        WeeklyMenu.removeRecipe($(this))
+      WeeklyMenu.removeRecipe($(this))
 
   $('.menu-recipe-select.load').each () ->
     $.ajax
-      url: '/admin/weekly_menu/' + $(this).data('basket') + '/'  + $(this).data('portions') + '/get-basket-available-recipes'
+      url: '/admin/weekly_menu/' + $(this).data('basket') + '/' + $(this).data('portions') + '/get-basket-available-recipes'
       type: 'GET'
       dataType: 'json'
       error: (response) =>
@@ -173,3 +222,21 @@ $(document).on 'ready', ->
           $(this).append(options);
         else
           message.show response.message, response.status
+
+  $(document).on "click", ".copy-basket", (e) ->
+    e.preventDefault()
+
+    WeeklyMenu.copyParentBasketId = $(this).data('basket_id')
+    WeeklyMenu.copyParentPortions = $(this).data('portions')
+
+    $.ajax
+      url: $(this).data('href')
+      type: 'GET'
+      error: (response) =>
+        processError response, null
+      success: (response) =>
+        dialog(response.title, response.message, null, WeeklyMenu.copyBasket)
+
+        fixCustomInputs($('#basket_copy_form'))
+
+    return false

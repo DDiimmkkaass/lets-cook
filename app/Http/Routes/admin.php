@@ -319,7 +319,7 @@ $router->group(
                     ]
                 );
                 $router->get(
-                    'weekly_menu/{basket_id}/{portions}/get-recipe-item/{recipe_id}',
+                    'weekly_menu/{basket_id}/{portions}/get-recipe-item/{recipe_id}/{copy}',
                     [
                         'middleware' => 'ajax',
                         'as'         => 'admin.weekly_menu.get_recipe_item',
@@ -334,6 +334,14 @@ $router->group(
                         'uses'       => 'Backend\WeeklyMenuController@getBasketAvailableRecipes',
                     ]
                 )->where('basket_id', '[0-9]+')->where('portions', '[0-9]+');
+                $router->get(
+                    'weekly_menu/get-basket-copy-form/{basket_id}/{portions}',
+                    [
+                        'as'         => 'admin.weekly_menu.get_basket_copy_form',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Backend\WeeklyMenuController@getBasketCopyForm',
+                    ]
+                );
                 $router->resource('weekly_menu', 'Backend\WeeklyMenuController', ['except' => ['destroy']]);
                 
                 //cities

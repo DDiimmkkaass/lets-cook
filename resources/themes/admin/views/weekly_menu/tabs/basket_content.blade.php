@@ -65,7 +65,7 @@
                             @include('partials.image', ['src' => $recipe->recipe->image, 'attributes' => ['width' => 100, 'class' => 'img-circle']])
                         </div>
 
-                        {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][main]', $recipe->main ? 1 : 0, ['id' => 'baskets_'.$basket->basket_id.'_'.$basket->portions.'_old_'.$recipe->id.'_main', 'class' => 'main-checkbox']) !!}
+                        {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][main]', $recipe->main ? 1 : 0, ['id' => 'baskets_'.$basket->basket_id.'_'.$basket->portions.'_old_'.$recipe->id.'_main', 'class' => 'main-checkbox main-input']) !!}
 
                         {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][image]', $recipe->recipe->image) !!}
                         {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][name]', $recipe->recipe->name) !!}
@@ -80,7 +80,7 @@
                         <div class="form-group margin-bottom-0 required @if ($errors->has('baskets.'.$basket->basket_id.'.'.$basket->portions.'.old.'.$recipe->id.'.position')) has-error @endif">
                             {!! Form::label('baskets_'.$basket->basket_id.'_'.$basket->portions.'_old_'.$recipe->id.'_position', trans('labels.position'), ['class' => 'control-label col-sm-3']) !!}
                             <div class="col-sm-9">
-                                {!! Form::text('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][position]', $recipe->position, ['id' => 'baskets_'.$basket->basket_id.'_'.$basket->portions.'_old_'.$recipe->id.'_position', 'class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+                                {!! Form::text('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][position]', $recipe->position, ['id' => 'baskets_'.$basket->basket_id.'_'.$basket->portions.'_old_'.$recipe->id.'_position', 'class' => 'form-control input-sm position-input', 'aria-hidden' => 'true', 'required' => true]) !!}
                             </div>
                         </div>
                     </div>
