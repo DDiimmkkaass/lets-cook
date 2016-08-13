@@ -501,5 +501,6 @@ return array (
     'recipe_copy_form_title' => 'Копировать рецепт?',
     'new_count_of_portion' => 'Новое количество порций',
     'bind_recipes' => 'Связать рецепты',
+    'weekly_menu_basket_copy_form_title' => 'Копирование корзины',
 );
 
