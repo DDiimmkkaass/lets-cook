@@ -16,7 +16,7 @@ use App\Http\Requests\FormRequest;
  */
 class TagUpdateRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,23 +25,21 @@ class TagUpdateRequest extends FormRequest
     public function rules()
     {
         $id = $this->route()->parameter('tag');
-
+        
         $rules = [
-            'status'   => 'required|boolean',
-            'position' => 'integer',
-            'slug'     => 'required|unique:tags,slug,'.$id.',id',
+            'category_id' => 'exists:tag_categories,id',
         ];
-
+        
         $languageRules = [
-            'name' => 'required',
+            'name' => 'required|unique:tag_translations,name,'.$id.',tag_id',
         ];
-
+        
         foreach (config('app.locales') as $locale) {
             foreach ($languageRules as $name => $rule) {
                 $rules[$locale.'.'.$name] = $rule;
             }
         }
-
+        
         return $rules;
     }
 }

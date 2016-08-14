@@ -413,6 +413,9 @@ $router->group(
                         );
                     }
                 );
+    
+                //tag categories
+                $router->resource('tag_category', 'Backend\TagCategoryController');
             }
         );
         

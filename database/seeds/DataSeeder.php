@@ -50,7 +50,9 @@ class DataSeeder extends Seeder
             $this->call(_CitiesSeeder::class);
             $this->call(_UsersSeeder::class);
             $this->call(_OrdersSeeder::class);
-
+            $this->call(_TagCategoriesSeeder::class);
+            $this->call(_TagsSeeder::class);
+            
             Model::reguard();
         }
     }

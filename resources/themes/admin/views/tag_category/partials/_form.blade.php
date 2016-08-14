@@ -1,4 +1,4 @@
-@include('tag.partials._buttons', ['class' => 'buttons-top'])
+@include('tag_category.partials._buttons', ['class' => 'buttons-top'])
 
 <div class="row">
     <div class="col-md-12">
@@ -12,7 +12,7 @@
 
             <div class="tab-content">
                 <div class="tab-pane active" id="general">
-                    @include('tag.tabs.general')
+                    @include('tag_category.tabs.general')
                 </div>
             </div>
         </div>
@@ -20,4 +20,4 @@
     </div>
 </div>
 
-@include('tag.partials._buttons')
+@include('tag_category.partials._buttons')

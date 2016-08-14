@@ -8,11 +8,9 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Requests\Backend\Tag\TagCreateRequest;
-use App\Http\Requests\Backend\Tag\TagUpdateRequest;
-use App\Models\Tag;
+use App\Http\Requests\Backend\TagCategory\TagCategoryCreateRequest;
+use App\Http\Requests\Backend\TagCategory\TagCategoryUpdateRequest;
 use App\Models\TagCategory;
-use App\Traits\Controllers\AjaxFieldsChangerTrait;
 use Datatables;
 use Exception;
 use FlashMessages;
@@ -23,35 +21,32 @@ use Meta;
 use Response;
 
 /**
- * Class TagController
+ * Class TagCategoryController
  * @package App\Http\Controllers\Backend
  */
-class TagController extends BackendController
+class TagCategoryController extends BackendController
 {
-    
-    use AjaxFieldsChangerTrait;
-    
+
     /**
      * @var string
      */
-    public $module = "tag";
-    
+    public $module = "tag_category";
+
     /**
      * @var array
      */
     public $accessMap = [
-        'index'           => 'tag.read',
-        'create'          => 'tag.create',
-        'store'           => 'tag.create',
-        'show'            => 'tag.read',
-        'edit'            => 'tag.read',
-        'update'          => 'tag.write',
-        'destroy'         => 'tag.delete',
-        'ajaxFieldChange' => 'tag.write',
+        'index'   => 'tagcategory.read',
+        'create'  => 'tagcategory.create',
+        'store'   => 'tagcategory.create',
+        'show'    => 'tagcategory.read',
+        'edit'    => 'tagcategory.read',
+        'update'  => 'tagcategory.write',
+        'destroy' => 'tagcategory.delete',
     ];
-    
+
     /**
-     * @var Tag
+     * @var TagCategory
      */
     public $model;
     
@@ -61,17 +56,15 @@ class TagController extends BackendController
     public function __construct(ResponseFactory $response)
     {
         parent::__construct($response);
-        
-        Meta::title(trans('labels.tags'));
-        
-        $this->breadcrumbs(trans('labels.tags'), route('admin.'.$this->module.'.index'));
-        
-        $this->middleware('slug.set', ['only' => ['store', 'update']]);
+
+        Meta::title(trans('labels.tag_categories'));
+
+        $this->breadcrumbs(trans('labels.tag_categories'), route('admin.'.$this->module.'.index'));
     }
-    
+
     /**
      * Display a listing of the resource.
-     * GET /tag
+     * GET /tag_category
      *
      * @param \Illuminate\Http\Request $request
      *
@@ -80,97 +73,78 @@ class TagController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = Tag::with('translations', 'category')
-                ->joinTranslations('tags', 'tag_translations', 'id', 'tag_id')
-                ->select(
-                    'tags.id',
-                    'tag_translations.name',
-                    'category_id'
-                );
-            
+            $list = TagCategory::select('id', 'name', 'position');
+
             return $dataTables = Datatables::of($list)
-                ->filterColumn('id', 'where', 'tags.id', '=', '$1')
-                ->filterColumn('tag_translations.name', 'where', 'tag_translations.name', 'LIKE', '%$1%')
-                ->editColumn(
-                    'category_id',
-                    function ($model) {
-                        return link_to_route('admin.tag_category.edit', $model->category->name, $model->category_id)
-                            ->toHtml();
-                    }
-                )
+                ->filterColumn('id', 'where', 'tag_categories.id', '=', '$1')
+                ->filterColumn('name', 'where', 'tag_categories.name', 'LIKE', '%$1%')
                 ->editColumn(
                     'actions',
                     function ($model) {
                         return view(
                             'partials.datatables.control_buttons',
-                            ['model' => $model, 'type' => $this->module]
+                            [
+                                'model'           => $model,
+                                'type'            => $this->module,
+                            ]
                         )->render();
                     }
                 )
                 ->setIndexColumn('id')
-                ->removeColumn('meta_keywords')
-                ->removeColumn('meta_title')
-                ->removeColumn('meta_description')
-                ->removeColumn('translations')
-                ->removeColumn('category')
                 ->make();
         }
-        
-        $this->data('page_title', trans('labels.tags'));
-        $this->breadcrumbs(trans('labels.tags_list'));
-        
-        $this->_fillAdditionalTemplateData();
-        
+
+        $this->data('page_title', trans('labels.tag_categories'));
+        $this->breadcrumbs(trans('labels.tag_categories_list'));
+
         return $this->render('views.'.$this->module.'.index');
     }
-    
+
     /**
      * Show the form for creating a new resource.
-     * GET /tag/create
+     * GET /tag_category/create
      *
      * @return Response
      */
     public function create()
     {
-        $this->data('model', new Tag);
-        
-        $this->data('page_title', trans('labels.tag_create'));
-        
-        $this->breadcrumbs(trans('labels.tag_create'));
-        
-        $this->_fillAdditionalTemplateData();
-        
+        $this->data('model', new TagCategory);
+
+        $this->data('page_title', trans('labels.tag_category_creating'));
+
+        $this->breadcrumbs(trans('labels.tag_category_creating'));
+
         return $this->render('views.'.$this->module.'.create');
     }
-    
+
     /**
      * Store a newly created resource in storage.
-     * POST /tag
+     * POST /tag_category
      *
-     * @param TagCreateRequest $request
+     * @param TagCategoryCreateRequest $request
      *
      * @return \Response
      */
-    public function store(TagCreateRequest $request)
+    public function store(TagCategoryCreateRequest $request)
     {
         try {
-            $model = new Tag($request->all());
-            
+            $model = new TagCategory($request->all());
+
             $model->save();
-            
+
             FlashMessages::add('success', trans('messages.save_ok'));
-            
+
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.save_failed'));
-            
+
             return redirect()->back()->withInput();
         }
     }
-    
+
     /**
      * Display the specified resource.
-     * GET /tag/{id}
+     * GET /tag_category/{id}
      *
      * @param  int $id
      *
@@ -180,10 +154,10 @@ class TagController extends BackendController
     {
         return $this->edit($id);
     }
-    
+
     /**
      * Show the form for editing the specified resource.
-     * GET /tag/{id}/edit
+     * GET /tag_category/{id}/edit
      *
      * @param  int $id
      *
@@ -192,55 +166,53 @@ class TagController extends BackendController
     public function edit($id)
     {
         try {
-            $model = Tag::findOrFail($id);
-            
+            $model = TagCategory::findOrFail($id);
+
             $this->data('page_title', '"'.$model->name.'"');
-            
-            $this->breadcrumbs(trans('labels.tag_editing'));
-            
-            $this->_fillAdditionalTemplateData();
-            
+
+            $this->breadcrumbs(trans('labels.tag_category_editing'));
+
             return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
-            
+
             return redirect()->route('admin.'.$this->module.'.index');
         }
     }
-    
+
     /**
      * Update the specified resource in storage.
-     * PUT /tag/{id}
+     * PUT /tag_category/{id}
      *
-     * @param  int             $id
-     * @param TagUpdateRequest $request
+     * @param  int                  $id
+     * @param TagCategoryUpdateRequest $request
      *
      * @return \Response
      */
-    public function update($id, TagUpdateRequest $request)
+    public function update($id, TagCategoryUpdateRequest $request)
     {
         try {
-            $model = Tag::findOrFail($id);
-            
+            $model = TagCategory::findOrFail($id);
+
             $model->update($request->all());
-            
+
             FlashMessages::add('success', trans('messages.save_ok'));
-            
+
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
-            
+
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             FlashMessages::add("error", trans('messages.update_error'));
-            
+
             return redirect()->back()->withInput();
         }
     }
-    
+
     /**
      * Remove the specified resource from storage.
-     * DELETE /tag/{id}
+     * DELETE /tag_category/{id}
      *
      * @param  int $id
      *
@@ -249,29 +221,17 @@ class TagController extends BackendController
     public function destroy($id)
     {
         try {
-            $model = Tag::findOrFail($id);
-            
+            $model = TagCategory::findOrFail($id);
+
             $model->delete();
-            
+
             FlashMessages::add('success', trans("messages.destroy_ok"));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
             FlashMessages::add("error", trans('messages.delete_error'));
         }
-        
+
         return redirect()->route('admin.'.$this->module.'.index');
-    }
-    
-    /**
-     * fill additional template data
-     */
-    private function _fillAdditionalTemplateData()
-    {
-        $categories = ['' => trans('labels.please_select')];
-        foreach (TagCategory::all() as $category) {
-            $categories[$category->id] = $category->name;
-        }
-        $this->data('categories', $categories);
     }
 }

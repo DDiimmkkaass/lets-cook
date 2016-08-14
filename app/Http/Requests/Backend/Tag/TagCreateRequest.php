@@ -16,7 +16,7 @@ use App\Http\Requests\FormRequest;
  */
 class TagCreateRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,21 +25,19 @@ class TagCreateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'status'   => 'required|boolean',
-            'position' => 'integer',
-            'slug'     => 'required|unique:tags,slug',
+            'category_id' => 'exists:tag_categories,id',
         ];
-
+        
         $languageRules = [
-            'name' => 'required',
+            'name' => 'required|unique:tag_translations,name',
         ];
-
+        
         foreach (config('app.locales') as $locale) {
             foreach ($languageRules as $name => $rule) {
                 $rules[$locale.'.'.$name] = $rule;
             }
         }
-
+        
         return $rules;
     }
 }

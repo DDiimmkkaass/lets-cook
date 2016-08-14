@@ -6,13 +6,13 @@
         <div class="col-lg-12">
             <div class="box box-primary">
                 <div class="box-body">
-                    <div class="tags-table">
+                    <div class="tag_categories-table">
                         {!!
                             TablesBuilder::create(['id' => "datatable1", 'class' => "table table-bordered table-striped table-hover"], ['bStateSave' => true])
                             ->addHead([
                                 ['text' => trans('labels.id')],
                                 ['text' => trans('labels.name')],
-                                ['text' => trans('labels.category')],
+                                ['text' => trans('labels.position')],
                                 ['text' => trans('labels.actions')]
                             ])
                             ->addFoot([

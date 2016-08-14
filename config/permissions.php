@@ -87,11 +87,16 @@ return array (
     
     'purchase.read',
     'purchase.write',
-
-//    'tag.create',
-//    'tag.read',
-//    'tag.write',
-//    'tag.delete',
+    
+    'tagcategory.create',
+    'tagcategory.read',
+    'tagcategory.write',
+    'tagcategory.delete',
+    
+    'tag.create',
+    'tag.read',
+    'tag.write',
+    'tag.delete',
 
 //    'news.create',
 //    'news.read',

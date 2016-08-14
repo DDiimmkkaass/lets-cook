@@ -207,6 +207,38 @@
                 </li>
             @endif
 
+            @if ($user->hasAccess('tagcategory.read'))
+                <li class="{!! active_class('admin.tag_category*') !!}">
+                    <a href="{!! route('admin.tag_category.index') !!}">
+                        <i class="fa fa-sitemap"></i>
+                        <span>@lang('labels.tag_categories')</span>
+
+                        @if ($user->hasAccess('tagcategory.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_tag_category')"
+                                   data-href="{!! route('admin.tag_category.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
+            @if ($user->hasAccess('tag.read'))
+                <li class="{!! active_class('admin.tag*', 'active', 'admin.tag_category*') !!}">
+                    <a href="{!! route('admin.tag.index') !!}">
+                        <i class="fa fa-tags"></i>
+                        <span>@lang('labels.tags')</span>
+
+                        @if ($user->hasAccess('tag.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add')"
+                                   data-href="{!! route('admin.tag.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
             @if ($user->hasAccess('city.read'))
                 <li class="{!! active_class('admin.city*') !!}">
                     <a href="{!! route('admin.city.index') !!}">
