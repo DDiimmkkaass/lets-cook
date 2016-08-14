@@ -261,7 +261,7 @@ class IngredientService
         
         if (count($filters)) {
             foreach ($filters as $filter => $value) {
-                if ($value !== '') {
+                if ($value !== '' && $value !== null) {
                     switch ($filter) {
                         case 'sale_price':
                             if ($value > 0) {

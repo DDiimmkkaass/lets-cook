@@ -15,6 +15,7 @@ use App\Models\WeeklyMenu;
 use Carbon;
 use Datatables;
 use DB;
+use DebugBar\DebugBar;
 use Exception;
 use FlashMessages;
 use Illuminate\Database\Query\Builder;
@@ -34,7 +35,7 @@ class RecipeService
      */
     public function table(Request $request)
     {
-        $list = Recipe::with('baskets', 'ingredients')
+        $list = Recipe::with('baskets', 'ingredients', 'tags')
             ->joinBaskets()
             ->select(
                 'recipes.id',
@@ -42,7 +43,7 @@ class RecipeService
                 'recipes.image',
                 DB::raw('1 as baskets_list'),
                 'recipes.portions',
-                DB::raw('2 as base_ingredient'),
+                DB::raw('2 as recipe_tags'),
                 DB::raw('3 as recipe_price'),
                 DB::raw(
                     '(SELECT MAX(_or.created_at) as last_order FROM order_recipes _or
@@ -88,11 +89,15 @@ class RecipeService
                 }
             )
             ->editColumn(
-                'base_ingredient',
+                'recipe_tags',
                 function ($model) {
-                    $main_ingredient = $model->mainIngredient();
+                    $tags = '';
                     
-                    return $main_ingredient ? $main_ingredient->name : '';
+                    foreach ($model->tags as $tag) {
+                        $tags .= $tag->tag->name . ', ';
+                    }
+                    
+                    return trim($tags, ', ');
                 }
             )
             ->editColumn(
@@ -133,6 +138,7 @@ class RecipeService
             ->setIndexColumn('id')
             ->removeColumn('ingredients')
             ->removeColumn('baskets')
+            ->removeColumn('tags')
             ->removeColumn('image')
             ->removeColumn('draft')
             ->make();
@@ -155,9 +161,8 @@ class RecipeService
     /**
      * @param \App\Models\Recipe $model
      * @param array              $ingredients
-     * @param int                $main_ingredient
      */
-    public function processIngredients(Recipe $model, $ingredients = [], $main_ingredient = 0)
+    public function processIngredients(Recipe $model, $ingredients = [])
     {
         $data = isset($ingredients['remove']) ? $ingredients['remove'] : [];
         foreach ($data as $id) {
@@ -174,7 +179,6 @@ class RecipeService
             try {
                 $_ingredient = RecipeIngredient::findOrFail($id);
                 
-                $_ingredient['main'] = $main_ingredient == $_ingredient->ingredient_id ? true : false;
                 $_ingredient->fill($ingredient);
                 
                 $_ingredient->save();
@@ -189,7 +193,6 @@ class RecipeService
         $data = isset($ingredients['new']) ? $ingredients['new'] : [];
         foreach ($data as $id => $ingredient) {
             try {
-                $ingredient['main'] = $main_ingredient == $id ? true : false;
                 $ingredient['type'] = isset($ingredient['type']) ? $ingredient['type'] : 0;
                 $ingredient = new RecipeIngredient($ingredient);
                 
@@ -256,7 +259,7 @@ class RecipeService
         
         if (count($filters)) {
             foreach ($filters as $filter => $value) {
-                if ($value !== '') {
+                if ($value !== '' && $value !== 'null') {
                     switch ($filter) {
                         case 'name':
                             $list->where('recipes.name', 'LIKE', '%'.$value.'%');
@@ -267,9 +270,8 @@ class RecipeService
                         case 'portions':
                             $list->where('recipes.portions', $value);
                             break;
-                        case 'main_ingredient':
-                            $list->joinMainIngredient()
-                                ->where('ingredients.name', 'LIKE', '%'.$value.'%');
+                        case 'tags':
+                            $list->joinTags()->whereIn('tags.id', explode(',', $value));
                             break;
                         case 'status':
                             $list->where('recipes.status', $value);

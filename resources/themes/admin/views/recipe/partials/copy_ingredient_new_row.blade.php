@@ -30,15 +30,6 @@
             {!! Form::text($key.'[new][' .$id. '][position]', $ingredient->position, ['id' => $key.'.new.' .$id. '.position', 'class' => 'form-control input-sm', 'required' => true]) !!}
         </div>
     </td>
-    @if ($type == 'normal')
-        <td class="text-center">
-            <div class="form-group @if ($errors->has($key.'.new.' .$id. '.main')) has-error @endif">
-                <label for=$key.".new.{!! $id !!}.main" class="checkbox-label">
-                    {!! Form::radio('main_ingredient', $id, $ingredient->main, ['id' => $key.'.new.' .$id. '.main', 'class' => 'square main-ingredient']) !!}
-                </label>
-            </div>
-        </td>
-    @endif
     <td class="text-center coll-actions">
         <a class="btn btn-flat btn-danger btn-xs action destroy"><i class="fa fa-remove"></i></a>
     </td>

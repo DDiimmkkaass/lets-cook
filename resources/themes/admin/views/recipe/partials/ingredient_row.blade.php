@@ -32,19 +32,6 @@
                    value="0">
         </div>
     </td>
-    @if ($type == 'normal')
-        <td class="text-center">
-            <div class="form-group">
-                <label for="ingredient.new.{!! $model->id !!}.main" class="checkbox-label">
-                    <input type="radio"
-                           name="main_ingredient"
-                           value="{!! $model->id !!}"
-                           id="ingredient.new.{!! $model->id !!}.main"
-                           class="square main-ingredient">
-                </label>
-            </div>
-        </td>
-    @endif
     <td class="text-center">
         <a class="btn btn-flat btn-danger btn-xs action destroy"><i class="fa fa-remove"></i></a>
     </td>

@@ -26,9 +26,9 @@ trait ProcessTagsTrait
     {
         $tags = request($array_name, []);
 
-        $this->_removeDeleted($model, $tags);
+        $this->_removeDeletedTags($model, $tags);
 
-        $this->_saveNew($model, $tags);
+        $this->_saveNewTags($model, $tags);
     }
 
     /**
@@ -63,7 +63,7 @@ trait ProcessTagsTrait
      * @param       $model
      * @param array $tags
      */
-    private function _removeDeleted($model, $tags = [])
+    private function _removeDeletedTags($model, $tags = [])
     {
         $model->tags()->whereNotIn('tag_id', $tags)->delete();
     }
@@ -72,7 +72,7 @@ trait ProcessTagsTrait
      * @param       $model
      * @param array $tags
      */
-    private function _saveNew($model, $tags = [])
+    private function _saveNewTags($model, $tags = [])
     {
         $exists = $model->tags()->whereIn('tag_id', $tags)->lists('tag_id')->toArray();
 

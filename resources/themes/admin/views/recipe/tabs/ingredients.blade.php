@@ -8,7 +8,7 @@
         </div>
     </div>
 
-    <div class="form-group margin-bottom-25 @if ($errors->has('ingredients') || $errors->has('main_ingredient')) has-error @endif">
+    <div class="form-group margin-bottom-25 @if ($errors->has('ingredients')) has-error @endif">
         <div class="col-xs-12 margin-bottom-5 font-size-16 text-left">
             @lang('labels.ingredients')
         </div>
@@ -25,7 +25,6 @@
 
             <div class="position-relative error-block">
                 {!! $errors->first('ingredients', '<p class="help-block error">:message</p>') !!}
-                {!! $errors->first('main_ingredient', '<p class="help-block error">:message</p>') !!}
             </div>
         </div>
     </div>
@@ -39,7 +38,6 @@
             <th>{!! trans('labels.name') !!}</th>
             <th class="col-sm-1 text-center">{!! trans('labels.count') !!} <span class="required">*</span></th>
             <th class="col-sm-1 text-center">{!! trans('labels.position') !!} <span class="required">*</span></th>
-            <th class="col-sm-2 text-center">{!! trans('labels.main') !!}</th>
             <th class="col-sm-1 text-center">{!! trans('labels.delete') !!}</th>
         </tr>
 

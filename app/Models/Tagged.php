@@ -41,8 +41,7 @@ class Tagged extends Model
     {
         return $this->belongsTo(Tag::class, 'tag_id', 'id');
     }
-
-
+    
     /**
      * return tagged model via tagged_id & tagged_type
      *

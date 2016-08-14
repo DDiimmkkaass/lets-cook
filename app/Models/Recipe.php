@@ -8,7 +8,7 @@
 
 namespace App\Models;
 
-use App\Traits\Models\VisibleTrait;
+use App\Traits\Models\TaggableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -20,6 +20,7 @@ class Recipe extends Model
 {
     
     use SoftDeletes;
+    use TaggableTrait;
     
     /**
      * @var array
@@ -131,6 +132,18 @@ class Recipe extends Model
     }
     
     /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinTags($query)
+    {
+        return $query->leftJoin('tagged', 'tagged.taggable_id', '=', 'recipes.id')
+            ->whereRaw('taggable_type = \''.str_replace('\\', '\\\\', self::class).'\'')
+            ->leftJoin('tags', 'tags.id', '=', 'tagged.tag_id');
+    }
+    
+    /**
      * @param        $query
      *
      * @return mixed
@@ -138,40 +151,6 @@ class Recipe extends Model
     public function scopeVisible($query)
     {
         return $query->where($this->getTable().'.status', true)->where($this->getTable().'.draft', false);
-    }
-    
-    /**
-     * @param $query
-     *
-     * @return mixed
-     */
-    public function scopeJoinMainIngredient($query)
-    {
-        return $query->joinIngredients()
-            ->joinIngredientIngredient()
-            ->where('recipe_ingredients.main', true);
-    }
-    
-    /**
-     * set as value & return main ingredient for recipe
-     *
-     * @return RecipeIngredient|null
-     */
-    public function mainIngredient()
-    {
-        if (empty($this->main_ingredient)) {
-            $this->main_ingredient = null;
-            
-            foreach ($this->ingredients as $ingredient) {
-                if ($ingredient->main) {
-                    $this->attributes['main_ingredient'] = $ingredient->ingredient;
-                    
-                    continue;
-                }
-            }
-        }
-        
-        return $this->main_ingredient;
     }
     
     /**

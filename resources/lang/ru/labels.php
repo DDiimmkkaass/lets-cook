@@ -393,7 +393,6 @@ return array (
   'basket_editing' => 'Редактирование корзины',
   'basket' => 'Корзина',
   'portions' => 'Порций',
-  'main_ingredient' => 'Основной ингредиент',
   'count' => 'Количество',
   'main' => 'Основной',
   'cooking_time' => 'Время приготовления',

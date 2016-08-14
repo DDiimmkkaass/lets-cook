@@ -17,6 +17,7 @@ use App\Models\Recipe;
 use App\Services\RecipeService;
 use App\Traits\Controllers\AjaxFieldsChangerTrait;
 use App\Traits\Controllers\ProcessMediaTrait;
+use App\Traits\Controllers\ProcessTagsTrait;
 use DB;
 use Exception;
 use FlashMessages;
@@ -35,6 +36,7 @@ class RecipeController extends BackendController
     
     use AjaxFieldsChangerTrait;
     use ProcessMediaTrait;
+    use ProcessTagsTrait;
     
     /**
      * @var string
@@ -440,7 +442,7 @@ class RecipeController extends BackendController
         }
         $this->data('baskets', $baskets);
         
-        $portions = [];
+        $portions = ['' => trans('labels.please_select')];
         foreach (config('recipe.available_portions') as $portion) {
             $portions[$portion] = $portion.' '.trans_choice('labels.count_of_portions', $portion);
         }
@@ -450,6 +452,8 @@ class RecipeController extends BackendController
             'statuses',
             ['' => trans('labels.please_select'), '1' => trans('labels.status_on'), '0' => trans('labels.status_off')]
         );
+    
+        $this->data('tags', $this->getTagsList());
     }
     
     /**
@@ -491,6 +495,10 @@ class RecipeController extends BackendController
         }
         
         $this->data('selected_baskets', $selected_baskets);
+    
+        $this->data('tags', $this->getTagsList());
+    
+        $this->data('selected_tags', $this->getSelectedTagsList($model));
     }
     
     /**
@@ -501,17 +509,9 @@ class RecipeController extends BackendController
     {
         $model->baskets()->sync($request->get('baskets', []));
         
-        $this->recipeService->processIngredients(
-            $model,
-            $request->get('ingredients', []),
-            $request->get('main_ingredient', 0)
-        );
+        $this->recipeService->processIngredients($model, $request->get('ingredients', []));
         
-        $this->recipeService->processIngredients(
-            $model,
-            $request->get('ingredients_home', []),
-            0
-        );
+        $this->recipeService->processIngredients($model, $request->get('ingredients_home', []));
         
         $this->recipeService->processSteps(
             $model,
@@ -519,5 +519,7 @@ class RecipeController extends BackendController
         );
         
         $this->processMedia($model, 'files');
+        
+        $this->processTags($model);
     }
 }

@@ -39,6 +39,7 @@ class RecipeRequest extends FormRequest
                 'steps'            => 'array',
                 'ingredients'      => 'array',
                 'ingredients_home' => 'array',
+                'tags'             => 'array',
                 'files'            => 'array',
                 
                 'steps.old.*.image'    => ['regex:'.$this->image_regex],
@@ -52,12 +53,10 @@ class RecipeRequest extends FormRequest
                 'ingredients.old.*.ingredient_id' => 'exists:ingredients,id',
                 'ingredients.old.*.count'         => 'numeric|min:0',
                 'ingredients.old.*.position'      => 'numeric|min:0',
-                'ingredients.old.*.main'          => 'boolean',
                 
                 'ingredients.new.*.ingredient_id' => 'exists:ingredients,id',
                 'ingredients.new.*.count'         => 'numeric|min:0',
                 'ingredients.new.*.position'      => 'numeric|min:0',
-                'ingredients.new.*.main'          => 'boolean',
                 
                 'ingredients.remove' => 'array',
                 
@@ -70,6 +69,8 @@ class RecipeRequest extends FormRequest
                 'ingredients_home.new.*.position'      => 'numeric|min:0',
                 
                 'ingredients_home.remove' => 'array',
+                
+                'tags.*' => 'exists:tags,id',
                 
                 'files.old.*.src'      => ['regex:'.$this->file_regex],
                 'files.old.*.position' => 'numeric|min:0',
@@ -94,11 +95,10 @@ class RecipeRequest extends FormRequest
             
             'baskets' => 'required|array',
             
-            'main_ingredient' => 'required',
-            
             'steps'            => 'required|array',
             'ingredients'      => 'required|array',
             'ingredients_home' => 'array',
+            'tags'             => 'array',
             'files'            => 'array',
             
             'steps.old.*.name'        => 'required',
@@ -116,12 +116,10 @@ class RecipeRequest extends FormRequest
             'ingredients.old.*.ingredient_id' => 'required|exists:ingredients,id',
             'ingredients.old.*.count'         => 'required|numeric|min:0',
             'ingredients.old.*.position'      => 'required|numeric|min:0',
-            'ingredients.old.*.main'          => 'boolean',
             
             'ingredients.new.*.ingredient_id' => 'required|exists:ingredients,id',
             'ingredients.new.*.count'         => 'required|numeric|min:0',
             'ingredients.new.*.position'      => 'required|numeric|min:0',
-            'ingredients.new.*.main'          => 'boolean',
             
             'ingredients.remove' => 'array',
             
@@ -134,6 +132,8 @@ class RecipeRequest extends FormRequest
             'ingredients_home.new.*.position'      => 'required|numeric|min:0',
             
             'ingredients_home.remove' => 'array',
+            
+            'tags.*' => 'exists:tags,id',
             
             'files.old.*.name'     => 'required',
             'files.old.*.src'      => [
@@ -161,7 +161,6 @@ class RecipeRequest extends FormRequest
     public function messages()
     {
         return [
-            'main_ingredient.required' => trans('validation.recipe main ingredient'),
             'baskets.required'         => trans('validation.recipe baskets'),
             'steps.required'           => trans('validation.recipe steps'),
             'ingredients.required'     => trans('validation.recipe ingredients'),
