@@ -10,10 +10,8 @@ window.filterDataTable = ($table) ->
 
   url = $datatable.DataTable().ajax.url()
 
-  if url.indexOf('?') == -1
-    url = url  + '?' + params.join('&')
-  else
-    url = url  + '&' + params.join('&')
+  url = $datatable.DataTable().ajax.url().split('?');
+  url = url[0]  + '?' + params.join('&');
 
   $table.DataTable().ajax.url(url).load()
 
@@ -22,6 +20,9 @@ $(document).ready () ->
     fixCustomInputs($(this))
 
   $(document).on "keyup", 'input[type=\'text\'].datatable-filter', ->
+    filterDataTable($(this).closest('.filtered-datatable'))
+
+  $(document).on "change", 'input[type=\'text\'].datatable-date-filter', ->
     filterDataTable($(this).closest('.filtered-datatable'))
 
   $(document).on "change", 'select.datatable-filter', ->

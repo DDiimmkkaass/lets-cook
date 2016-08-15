@@ -15,7 +15,6 @@ use App\Models\WeeklyMenu;
 use Carbon;
 use Datatables;
 use DB;
-use DebugBar\DebugBar;
 use Exception;
 use FlashMessages;
 use Illuminate\Database\Query\Builder;
@@ -51,7 +50,7 @@ class RecipeService
                             AND _ri.type = '.RecipeIngredient::getTypeIdByName('normal').') as recipe_price'
                 ),
                 DB::raw(
-                    '(SELECT MAX(_or.created_at) as last_order FROM order_recipes _or
+                    '(SELECT MAX(_or.created_at) FROM order_recipes _or
                         LEFT JOIN basket_recipes _br ON (_or.basket_recipe_id = _br.id)
                         WHERE _br.recipe_id = recipes.id AND _or.created_at <= NOW()) as last_order'
                 ),
@@ -108,7 +107,7 @@ class RecipeService
             ->editColumn(
                 'recipe_price',
                 function ($model) {
-                    return $model->recipe_price.' '.currency();
+                    return (int) $model->recipe_price.' '.currency();
                 }
             )
             ->editColumn(
@@ -117,9 +116,9 @@ class RecipeService
                     if (!empty($model->last_order)) {
                         $dt = Carbon::createFromFormat('Y-m-d H:i:s', $model->last_order);
                         
-                        return '<div class="text-center">'.trans(
-                            'labels.w_label'
-                        ).$dt->weekOfYear.', '.$dt->year.'</div>';
+                        return '<div class="text-center">'.
+                                trans('labels.w_label').$dt->weekOfYear.', '.$dt->year.
+                            '</div>';
                     }
                     
                     return '';
@@ -222,7 +221,7 @@ class RecipeService
             ->editColumn(
                 'recipe_price',
                 function ($model) {
-                    return $model->recipe_price.' '.currency();
+                    return (int) $model->recipe_price.' '.currency();
                 }
             )
             ->editColumn(
@@ -231,9 +230,9 @@ class RecipeService
                     if (!empty($model->last_order)) {
                         $dt = Carbon::createFromFormat('Y-m-d H:i:s', $model->last_order);
                         
-                        return '<div class="text-center">'.trans(
-                            'labels.w_label'
-                        ).$dt->weekOfYear.', '.$dt->year.'</div>';
+                        return '<div class="text-center">'.
+                                trans('labels.w_label').$dt->weekOfYear.', '.$dt->year.
+                            '</div>';
                     }
                     
                     return '';
@@ -385,6 +384,18 @@ class RecipeService
                             break;
                         case 'price_to':
                             $list->having('recipe_price', '<=', $value);
+                            break;
+                        case 'last_order_from':
+                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
+                                $value = Carbon::createFromFormat('d-m-Y', $value)->startOfDay()->format('Y-m-d H:i:s');
+                                $list->having('last_order', '>=', $value);
+                            }
+                            break;
+                        case 'last_order_to':
+                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
+                                $value = Carbon::createFromFormat('d-m-Y', $value)->endOfDay()->format('Y-m-d H:i:s');
+                                $list->having('last_order', '<=', $value);
+                            }
                             break;
                         case 'tags':
                             $list->joinTags()->whereIn('tags.id', explode(',', $value));
