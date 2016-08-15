@@ -44,7 +44,12 @@ class RecipeService
                 DB::raw('1 as baskets_list'),
                 'recipes.portions',
                 DB::raw('2 as recipe_tags'),
-                DB::raw('3 as recipe_price'),
+                DB::raw('(SELECT SUM(_i.price * _ri.count) / 100
+                            FROM recipe_ingredients _ri
+                            LEFT JOIN ingredients _i ON (_ri.ingredient_id = _i.id)
+                            WHERE _ri.recipe_id = recipes.id 
+                            AND _ri.type = '.RecipeIngredient::getTypeIdByName('normal').') as recipe_price'
+                ),
                 DB::raw(
                     '(SELECT MAX(_or.created_at) as last_order FROM order_recipes _or
                         LEFT JOIN basket_recipes _br ON (_or.basket_recipe_id = _br.id)
@@ -103,7 +108,7 @@ class RecipeService
             ->editColumn(
                 'recipe_price',
                 function ($model) {
-                    return $model->getPrice().' '.currency();
+                    return $model->recipe_price.' '.currency();
                 }
             )
             ->editColumn(
@@ -158,7 +163,11 @@ class RecipeService
                 'recipes.name',
                 'recipes.image',
                 DB::raw('2 as recipe_tags'),
-                DB::raw('3 as recipe_price'
+                DB::raw('(SELECT SUM(_i.price * _ri.count) / 100
+                            FROM recipe_ingredients _ri
+                            LEFT JOIN ingredients _i ON (_ri.ingredient_id = _i.id)
+                            WHERE _ri.recipe_id = recipes.id 
+                            AND _ri.type = '.RecipeIngredient::getTypeIdByName('normal').') as recipe_price'
                 ),
                 DB::raw(
                     '(SELECT MAX(_or.created_at) as last_order FROM order_recipes _or
@@ -213,7 +222,7 @@ class RecipeService
             ->editColumn(
                 'recipe_price',
                 function ($model) {
-                    return $model->getPrice().' '.currency();
+                    return $model->recipe_price.' '.currency();
                 }
             )
             ->editColumn(
@@ -370,6 +379,12 @@ class RecipeService
                             break;
                         case 'portions':
                             $list->where('recipes.portions', $value);
+                            break;
+                        case 'price_from':
+                            $list->having('recipe_price', '>=', $value);
+                            break;
+                        case 'price_to':
+                            $list->having('recipe_price', '<=', $value);
                             break;
                         case 'tags':
                             $list->joinTags()->whereIn('tags.id', explode(',', $value));

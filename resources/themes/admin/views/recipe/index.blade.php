@@ -26,7 +26,7 @@
                                 ['text' => Form::select('datatable_filters[basket]', $baskets, null, ['class' => 'form-control select2 input-sm datatable-filter'])],
                                 ['text' => Form::select('datatable_filters[portions]', $portions, null, ['class' => 'form-control select2 input-sm datatable-filter'])],
                                 ['text' => Form::select('datatable_filters[tags]', $tags, null, ['class' => 'form-control select2 input-sm datatable-filter', 'multiple' => 'multiple'])],
-                                ['attr' => ['colspan' => 1]],
+                                ['text' => Form::text('datatable_filters[price_from]', '', ['class' => 'form-control input-sm datatable-filter']).' - '.Form::text('datatable_filters[price_to]', '', ['class' => 'form-control input-sm datatable-filter'])],
                                 ['attr' => ['colspan' => 1]],
                                 ['text' => Form::select('datatable_filters[status]', $statuses, null, ['class' => 'form-control select2 input-sm datatable-filter'])],
                                 ['attr' => ['colspan' => 1]],

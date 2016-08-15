@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "6e940c3eb2beff4fd4a8b4f7322e7b80",
-    "content-hash": "819f969de0d052989b6f12132cbd6f5c",
+    "hash": "7c75d308d606dd992b5f792b9a8042a5",
+    "content-hash": "4343c91729d0e3fa6d92fed8c8413078",
     "packages": [
         {
             "name": "barryvdh/elfinder-flysystem-driver",
@@ -170,16 +170,16 @@
         },
         {
             "name": "bllim/datatables",
-            "version": "v1.5.0-alpha",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/bllim/laravel4-datatables-package.git",
-                "reference": "30d8619f727be20c978bcc018b9d3d719a75bb22"
+                "url": "https://github.com/NewwayLibs/laravel4-datatables-package.git",
+                "reference": "b42c117ac88470ca4903286acd61cc86d7822c30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bllim/laravel4-datatables-package/zipball/30d8619f727be20c978bcc018b9d3d719a75bb22",
-                "reference": "30d8619f727be20c978bcc018b9d3d719a75bb22",
+                "url": "https://api.github.com/repos/NewwayLibs/laravel4-datatables-package/zipball/b42c117ac88470ca4903286acd61cc86d7822c30",
+                "reference": "b42c117ac88470ca4903286acd61cc86d7822c30",
                 "shasum": ""
             },
             "require": {
@@ -203,7 +203,6 @@
                     "Bllim\\Datatables": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -221,7 +220,10 @@
                 "laravel",
                 "laravel4"
             ],
-            "time": "2015-02-12 17:47:25"
+            "support": {
+                "source": "https://github.com/NewwayLibs/laravel4-datatables-package/tree/master"
+            },
+            "time": "2016-08-15 09:59:17"
         },
         {
             "name": "cartalyst/sentry",
@@ -1354,16 +1356,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.2.42",
+            "version": "v5.2.43",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d1bf46f359d2ede2d4ef847fb79d3758d868f2b7"
+                "reference": "5490b8f00564bb60839002f86828e27edd1e5610"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d1bf46f359d2ede2d4ef847fb79d3758d868f2b7",
-                "reference": "d1bf46f359d2ede2d4ef847fb79d3758d868f2b7",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/5490b8f00564bb60839002f86828e27edd1e5610",
+                "reference": "5490b8f00564bb60839002f86828e27edd1e5610",
                 "shasum": ""
             },
             "require": {
@@ -1480,7 +1482,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2016-08-08 13:39:44"
+            "time": "2016-08-10 12:23:59"
         },
         {
             "name": "laravelcollective/bus",
@@ -3983,12 +3985,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-translation-manager.git",
-                "reference": "b75bc2768e726126665494be76f08abff6ec3808"
+                "reference": "be4c04baa1422d9b52063e93269d536ff59e71cf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-translation-manager/zipball/b75bc2768e726126665494be76f08abff6ec3808",
-                "reference": "b75bc2768e726126665494be76f08abff6ec3808",
+                "url": "https://api.github.com/repos/barryvdh/laravel-translation-manager/zipball/be4c04baa1422d9b52063e93269d536ff59e71cf",
+                "reference": "be4c04baa1422d9b52063e93269d536ff59e71cf",
                 "shasum": ""
             },
             "require": {
@@ -4024,7 +4026,7 @@
                 "translations",
                 "translator"
             ],
-            "time": "2016-08-05 13:07:05"
+            "time": "2016-08-12 11:24:13"
         },
         {
             "name": "barryvdh/reflection-docblock",
@@ -5454,7 +5456,7 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "intervention/image": 20,
-        "bllim/datatables": 15,
+        "bllim/datatables": 20,
         "cartalyst/sentry": 20,
         "newway/tables_builder": 20,
         "laravelrus/localized-carbon": 20,
