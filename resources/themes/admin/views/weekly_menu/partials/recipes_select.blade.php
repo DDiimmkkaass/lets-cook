@@ -10,7 +10,7 @@
                     'data-portions' => $portions,
                     ], [
                     'bStateSave' => true,
-                    'ajax' => route('admin.recipe.index_find'),
+                    'ajax' => route('admin.recipe.index_find').'?datatable_filters[basket]='.$basket_id.'&datatable_filters[portions]='.$portions.'&datatable_filters[status]=1',
                     ])
                     ->addHead([
                         ['text' => trans('labels.id')],
