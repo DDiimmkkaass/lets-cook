@@ -23,7 +23,7 @@
                     ->addFoot([
                         [
                             'attr' => ['colspan' => 1],
-                            'text' => '<input type="hidden" name="datatable_filters[basket]" value="'.$basket_id.'"><input type="hidden" name="datatable_filters[portions]" value="'.$portions.'"><input type="hidden" name="datatable_filters[status]" value="1">',
+                            'text' => '<input type="hidden" class="datatable-filter" name="datatable_filters[basket]" value="'.$basket_id.'"><input type="hidden" class="datatable-filter", name="datatable_filters[portions]" value="'.$portions.'"><input type="hidden" class="datatable-filter" name="datatable_filters[status]" value="1">',
                         ],
                         ['text' => Form::text('datatable_filters[name]', '', ['class' => 'form-control input-sm datatable-filter'])],
                         ['text' => Form::select('datatable_filters[tags]', $tags, null, ['class' => 'form-control select2 input-sm datatable-filter', 'multiple' => 'multiple'])],
