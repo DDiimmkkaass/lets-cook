@@ -184,10 +184,10 @@ $(document).on 'ready', ->
 
     return false
 
-  $(document).on "change", '.menu-recipe-select', ->
-    recipe_id = $(this).val()
-    basket_id = $(this).data('basket')
-    portions = $(this).data('portions')
+  $(document).on "click", '.menu-recipe-select', ->
+    recipe_id = $(this).data('recipe_id')
+    basket_id = $(this).closest('.table').data('basket_id')
+    portions = $(this).closest('.table').data('portions')
 
     WeeklyMenu.addRecipe(recipe_id, basket_id, portions)
 

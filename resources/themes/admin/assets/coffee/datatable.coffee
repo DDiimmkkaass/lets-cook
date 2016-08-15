@@ -5,23 +5,24 @@ window.filterDataTable = ($table) ->
   $datatable = $('#' + $table.attr('id'))
   params = [];
 
-  $('.datatable-filter').each () ->
+  $table.find('.datatable-filter').each () ->
     params.push($(this).attr('name') + '=' + $(this).val())
 
-  url = $datatable.DataTable().ajax.url().split('?');
-  url = url[0]  + '?' + params.join('&');
+  url = $datatable.DataTable().ajax.url()
 
-  $table.DataTable().ajax.url(url).load();
+  if url.indexOf('?') == -1
+    url = url  + '?' + params.join('&')
+  else
+    url = url  + '&' + params.join('&')
+
+  $table.DataTable().ajax.url(url).load()
 
 $(document).ready () ->
   $('table.dataTable').on  'draw.dt', () ->
-    initCheckboxes()
+    fixCustomInputs($(this))
 
-    $(this).find('select.select2').each () ->
-      $(this).select2(select2Options)
-
-  $('input[type=\'text\'].datatable-filter').on "keyup", ->
+  $(document).on "keyup", 'input[type=\'text\'].datatable-filter', ->
     filterDataTable($(this).closest('.filtered-datatable'))
 
-  $('select.datatable-filter').on "change", ->
+  $(document).on "change", 'select.datatable-filter', ->
     filterDataTable($(this).closest('.filtered-datatable'))

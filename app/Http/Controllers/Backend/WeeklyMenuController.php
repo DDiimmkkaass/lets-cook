@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Requests\Backend\WeeklyMenu\WeeklyMenuCreateRequest;
 use App\Http\Requests\Backend\WeeklyMenu\WeeklyMenuUpdateRequest;
 use App\Models\Basket;
+use App\Models\Tag;
 use App\Models\WeeklyMenu;
 use App\Services\BasketService;
 use App\Services\RecipeService;
@@ -339,7 +340,11 @@ class WeeklyMenuController extends BackendController
             $portions = $request->get('portions', config('weekly_menu.default_portions_count'));
             
             $basket = Basket::whereId($request->get('basket_id'))->firstOrFail();
-            $recipes = $basket->allowed_recipes()->where('portions', $portions)->get();
+            
+            $tags = [];
+            foreach (Tag::with('translations')->get() as $tag) {
+                $tags[$tag->id] = $tag->name;
+            }
             
             return [
                 'status'       => 'success',
@@ -356,7 +361,7 @@ class WeeklyMenuController extends BackendController
                         [
                             'basket'   => $basket,
                             'portions' => $portions,
-                            'recipes'  => $recipes,
+                            'tags'     => $tags,
                         ]
                     )
                     ->render(),
@@ -407,30 +412,6 @@ class WeeklyMenuController extends BackendController
      *
      * @return array
      */
-    public function getBasketAvailableRecipes($basket_id, $portions)
-    {
-        try {
-            $basket = Basket::findOrFail($basket_id);
-            $recipes = $basket->allowed_recipes()->visible()->where('portions', $portions)->get();
-            
-            return [
-                'status'  => 'success',
-                'recipes' => $recipes,
-            ];
-        } catch (Exception $e) {
-            return [
-                'status'  => 'error',
-                'message' => trans('messages.an error has occurred, please reload the page and try again'),
-            ];
-        }
-    }
-    
-    /**
-     * @param int $basket_id
-     * @param int $portions
-     *
-     * @return array
-     */
     public function getBasketCopyForm($basket_id, $portions)
     {
         try {
@@ -459,6 +440,12 @@ class WeeklyMenuController extends BackendController
     private function _fillAdditionalTemplateData($model)
     {
         $this->data('baskets', $model->baskets);
+        
+        $tags = [];
+        foreach (Tag::with('translations')->get() as $tag) {
+            $tags[$tag->id] = $tag->name;
+        }
+        $this->data('tags', $tags);
     }
     
     /**

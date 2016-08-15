@@ -99,6 +99,19 @@ class RecipeController extends BackendController
     }
     
     /**
+     * Display a listing of the resource.
+     * GET /recipe/indexFind
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Response
+     */
+    public function indexFind(Request $request)
+    {
+        return $this->recipeService->tableFind($request);
+    }
+    
+    /**
      * Show the form for creating a new resource.
      * GET /recipe/create
      *

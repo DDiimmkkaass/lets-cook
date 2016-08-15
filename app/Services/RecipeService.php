@@ -35,7 +35,7 @@ class RecipeService
      */
     public function table(Request $request)
     {
-        $list = Recipe::with('baskets', 'ingredients', 'tags')
+        $list = Recipe::with('baskets', 'tags')
             ->joinBaskets()
             ->select(
                 'recipes.id',
@@ -140,6 +140,107 @@ class RecipeService
             ->removeColumn('baskets')
             ->removeColumn('tags')
             ->removeColumn('image')
+            ->removeColumn('draft')
+            ->make();
+    }
+    
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|\Bllim\Datatables\json
+     */
+    public function tableFind(Request $request)
+    {
+        $list = Recipe::with('tags')
+            ->joinBaskets()
+            ->select(
+                'recipes.id',
+                'recipes.name',
+                'recipes.image',
+                DB::raw('2 as recipe_tags'),
+                DB::raw('3 as recipe_price'
+                ),
+                DB::raw(
+                    '(SELECT MAX(_or.created_at) as last_order FROM order_recipes _or
+                        LEFT JOIN basket_recipes _br ON (_or.basket_recipe_id = _br.id)
+                        WHERE _br.recipe_id = recipes.id AND _or.created_at <= NOW()) as last_order'
+                ),
+                'recipes.status',
+                'recipes.draft'
+            )
+            ->visible()
+            ->groupBy('recipes.id');
+        
+        $this->_implodeFilters($list, $request);
+        
+        return $dataTables = Datatables::of($list)
+            ->filterColumn('id', 'where', 'recipes.id', '=', '$1')
+            ->filterColumn('name', 'where', 'recipes.name', 'LIKE', '%$1%')
+            ->editColumn(
+                'name',
+                function ($model) {
+                    $html = $model->name;
+                    
+                    if ($model->image) {
+                        $html = view(
+                                'partials.image',
+                                [
+                                    'src'        => $model->image,
+                                    'attributes' => ['width' => 50, 'class' => 'margin-right-10'],
+                                ]
+                            )->render().$html;
+                    }
+                    
+                    if ($model->draft) {
+                        $html .= view('recipe.partials.draft_label')->render();
+                    }
+                    
+                    return $html;
+                }
+            )
+            ->editColumn(
+                'recipe_tags',
+                function ($model) {
+                    $tags = '';
+                    
+                    foreach ($model->tags as $tag) {
+                        $tags .= $tag->tag->name . ', ';
+                    }
+                    
+                    return trim($tags, ', ');
+                }
+            )
+            ->editColumn(
+                'recipe_price',
+                function ($model) {
+                    return $model->getPrice().' '.currency();
+                }
+            )
+            ->editColumn(
+                'last_order',
+                function ($model) {
+                    if (!empty($model->last_order)) {
+                        $dt = Carbon::createFromFormat('Y-m-d H:i:s', $model->last_order);
+                        
+                        return '<div class="text-center">'.trans(
+                            'labels.w_label'
+                        ).$dt->weekOfYear.', '.$dt->year.'</div>';
+                    }
+                    
+                    return '';
+                }
+            )
+            ->editColumn(
+                'actions',
+                function ($model) {
+                    return view('recipe.datatables.control_buttons_find', ['model' => $model])->render();
+                }
+            )
+            ->setIndexColumn('id')
+            ->removeColumn('baskets')
+            ->removeColumn('tags')
+            ->removeColumn('image')
+            ->removeColumn('status')
             ->removeColumn('draft')
             ->make();
     }

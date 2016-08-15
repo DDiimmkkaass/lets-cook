@@ -273,6 +273,14 @@ $router->group(
                     'recipe/{id}/copy',
                     ['as' => 'admin.recipe.copy', 'uses' => 'Backend\RecipeController@copy']
                 );
+                $router->get(
+                    'recipe/index_find',
+                    [
+                        'as'         => 'admin.recipe.index_find',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Backend\RecipeController@indexFind',
+                    ]
+                );
                 $router->resource('recipe', 'Backend\RecipeController');
                 
                 //suppliers
@@ -391,29 +399,29 @@ $router->group(
                             'index',
                             ['as' => 'admin.purchase.index', 'uses' => 'Backend\PurchaseController@index']
                         );
-    
+                        
                         $router->get(
                             'edit',
                             ['as' => 'admin.purchase.edit', 'uses' => 'Backend\PurchaseController@edit']
                         );
-    
+                        
                         $router->get(
                             'show/{year}/{week}',
                             ['as' => 'admin.purchase.show', 'uses' => 'Backend\PurchaseController@show']
                         );
-    
+                        
                         $router->get(
                             'update/{id}',
                             ['as' => 'admin.purchase.update', 'uses' => 'Backend\PurchaseController@index']
                         );
-    
+                        
                         $router->get(
                             '{year}/{week}/download/{supplier_id?}',
                             ['as' => 'admin.purchase.download', 'uses' => 'Backend\PurchaseController@download']
                         );
                     }
                 );
-    
+                
                 //tag categories
                 $router->resource('tag_category', 'Backend\TagCategoryController');
             }

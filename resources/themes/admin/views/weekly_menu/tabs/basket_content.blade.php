@@ -1,4 +1,4 @@
-<div class="weekly-menu-prices-box margin-bottom-15 margin-top-10">
+<div class="weekly-menu-prices-box margin-bottom-40 margin-top-10">
     <div class="form-group">
         <label class="col-sm-2 control-label">@lang('labels.basket_price'):</label>
         <div class="col-sm-10">
@@ -14,27 +14,6 @@
             <div class="col-sm-1 with-after-helper currency-rub">
                 <input type="text" readonly="readonly" class="form-control input-sm basket-internal-price" value="{!! $basket->getPrice() !!}">
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="recipes-add-control">
-    <div class="form-group margin-bottom-25">
-        <div class="col-xs-12 margin-bottom-5 font-size-16 text-left">
-            @lang('labels.recipes')
-        </div>
-        <div class="col-sm-12 full-width-select">
-            <select class="form-control select2 menu-recipe-select input-sm add-recipe" aria-hidden="true" data-portions="{!! $basket->portions !!}" data-basket="{!! $basket->basket_id !!}">
-                <option value="">@lang('labels.please_select_recipe')</option>
-                @foreach($basket->basket->allowed_recipes()->where('portions', $basket->portions)->get() as $recipe)
-                    <option value="{!! $recipe->id !!}">{!! $recipe->name !!} (@lang('labels.portions_lowercase'): {!! $recipe->portions !!})</option>
-                @endforeach
-            </select>
-
-            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][name]" value="{!! $basket->basket->name !!}">
-            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][id]" value="{!! $basket->basket_id !!}">
-            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][portions]" value="{!! $basket->portions !!}">
-            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][price]" value="{!! $basket->basket->price !!}">
         </div>
     </div>
 </div>
@@ -95,6 +74,21 @@
         @endforeach
     @endif
 
+</div>
+
+<div class="clearfix"></div>
+
+<div class="recipes-add-control">
+    <div class="form-group">
+        <div class="col-sm-12">
+            @include('weekly_menu.partials.recipes_select', ['basket_id' => $basket->basket_id, 'portions' => $basket->portions])
+
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][name]" value="{!! $basket->basket->name !!}">
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][id]" value="{!! $basket->basket_id !!}">
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][portions]" value="{!! $basket->portions !!}">
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][price]" value="{!! $basket->basket->price !!}">
+        </div>
+    </div>
 </div>
 
 <div class="clearfix"></div>
