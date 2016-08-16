@@ -2,7 +2,9 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ProcessPaidOrdersForNextWeek;
 use App\Console\Commands\UpdateSearchIndex;
+use App\Console\Commands\ProcessTmplOrdersForNextWeek;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -16,6 +18,10 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         Commands\Inspire::class,
         UpdateSearchIndex::class,
+        
+        // orders
+        ProcessTmplOrdersForNextWeek::class,
+        ProcessPaidOrdersForNextWeek::class
     ];
 
     /**
@@ -27,6 +33,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('search:update-index')->cron('0 * * * *');
+        $schedule->command('orders:process-tmp-orders-for-next-week')->cron('0 0 * * 2');
+    
+        $schedule->command('orders:process-paid-orders-for-next-week')->cron('0 10 * * 5');
     }
 }

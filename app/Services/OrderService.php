@@ -37,6 +37,8 @@ class OrderService
             'payment_method',
             'status',
             'created_at',
+            'delivery_date',
+            'delivery_time',
             'total'
         );
         
@@ -94,6 +96,20 @@ class OrderService
                 }
             )
             ->editColumn(
+                'delivery_date',
+                function ($model) {
+                    $html = view(
+                        'partials.datatables.humanized_date',
+                        [
+                            'date'      => $model->delivery_date,
+                            'in_format' => 'd-m-Y',
+                        ]
+                    )->render();
+                    
+                    return $model->delivery_time.' '.$html;
+                }
+            )
+            ->editColumn(
                 'total',
                 function ($model) {
                     return $model->total.' '.currency();
@@ -115,6 +131,7 @@ class OrderService
             ->setIndexColumn('id')
             ->removeColumn('user_id')
             ->removeColumn('subscribe_period')
+            ->removeColumn('delivery_time')
             ->make();
     }
     
@@ -141,7 +158,7 @@ class OrderService
         $this->_saveRecipes($model, isset($input['recipes']) ? $input['recipes'] : []);
         
         $this->_saveAdditionalBaskets($model, isset($input['baskets']) ? $input['baskets'] : []);
-    
+        
         $this->_saveIngredients($model, isset($input['ingredients']) ? $input['ingredients'] : []);
     }
     

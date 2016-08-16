@@ -130,4 +130,8 @@ return array (
   'delete confirm question' => 'Вы действительно хотите удалить этот элемент?',
   'this recipe with the same number of portions is already exists' => 'Этот рецепт с таким количеством порций уже существует',
   'order has un editable status error' => 'Изменения не сохранены! Этот заказ нельзя редактировать',
+  'order no online payment' => 'Заказ имеет несовместимый способ оплаты',
+  'tmpl order successfully paid message :order_id' => 'Ваш заказ по подписке, № :order_id, был успешно автоматически оплачен и Вы получите его уже на следующей неделе.',
+  'tmpl order payment error message :order_id' => 'Ваш заказ по подписке, № :order_id, не был автоматически оплачен! Пожалуйста оплатите его вручную.',
+  'tmpl order payment error message' => 'Заказ по подписке, не был автоматически оплачен. Ошибка',
 );

@@ -66,7 +66,7 @@ if (!function_exists('get_last_query')) {
     {
         $queries = \DB::getQueryLog();
         $sql = end($queries);
-
+        
         if (!empty($sql['bindings'])) {
             $pdo = \DB::getPdo();
             foreach ($sql['bindings'] as $binding) {
@@ -79,7 +79,7 @@ if (!function_exists('get_last_query')) {
                     );
             }
         }
-
+        
         return $sql['query'];
     }
 }
@@ -97,31 +97,31 @@ if (!function_exists('active_class')) {
         $pattern = str_replace('.', '\.', $pattern);
         if (strpos($pattern, '*')) {
             $pattern = str_replace('*', '', $pattern);
-
+            
             $result = route_is("^$pattern") ? true : false;
         } else {
             $result = route_is("^$pattern$") ? true : false;
         }
-
+        
         $_result = false;
-
+        
         if ($exclude) {
             foreach ((array) $exclude as $_pattern) {
                 $_pattern = str_replace('.', '\.', $_pattern);
                 if (strpos($_pattern, '*')) {
                     $_pattern = str_replace('*', '', $_pattern);
-
+                    
                     $_result = route_is("^$_pattern") ? true : false;
                 } else {
                     $_result = route_is("^$_pattern$") ? true : false;
                 }
-
+                
                 if ($_result) {
                     break;
                 }
             }
         }
-
+        
         return $result && !$_result ? $class : '';
     }
 }
@@ -136,9 +136,9 @@ if (!function_exists('front_active_class')) {
     function front_active_class($pattern, $class = 'active')
     {
         $current = trim(Request::root().Request::getPathInfo(), '/');
-
+        
         $pattern = str_replace(['/', '.'], ['\/', '\.'], $pattern);
-
+        
         return preg_match("/$pattern/", $current) ? $class : '';
     }
 }
@@ -152,7 +152,7 @@ if (!function_exists('get_model_by_controller')) {
     function get_model_by_controller($class)
     {
         $class = explode('\\', str_replace('Controller', '', $class));
-
+        
         return array_pop($class);
     }
 }
@@ -178,20 +178,20 @@ if (!function_exists('get_templates')) {
     function get_templates($parent_folder = '')
     {
         $templates = [];
-
+        
         if ($parent_folder !== '' && File::exists($parent_folder)) {
             $folders = File::directories($parent_folder);
-
+            
             if (count($folders)) {
                 foreach ($folders as $folder) {
                     $folder = explode('/', $folder);
                     $folder = array_pop($folder);
-
+                    
                     $templates[$folder] = $folder;
                 }
             }
         }
-
+        
         return $templates;
     }
 }
@@ -221,7 +221,7 @@ if (!function_exists('delete_file')) {
         if (!File::exists($path)) {
             $path = base_path($path);
         }
-
+        
         if (File::exists($path)) {
             unlink($path);
         }
@@ -249,7 +249,7 @@ if (!function_exists('check_local')) {
     function check_local($url = null)
     {
         $url = $url ? : Request::root();
-
+        
         return get_url_host($url) == get_url_host(route('home'));
     }
 }
@@ -263,11 +263,11 @@ if (!function_exists('get_url_host')) {
     function get_url_host($url)
     {
         preg_match('/^((http[s]?|ftp):\/\/)?(www\.)?([\w\-\.]+)(\/)?(.*)$/i', $url, $host);
-
+        
         if (!empty($host)) {
             return !empty($host[4]) ? $host[4] : $url;
         }
-
+        
         return $url;
     }
 }
@@ -284,7 +284,7 @@ if (!function_exists('get_localized_date')) {
     function get_localized_date($date, $in_format = 'Y-m-d H:i:s', $time_format = false, $time_position = 'after')
     {
         $date = LocalizedCarbon::createFromFormat($in_format, $date);
-
+        
         return
             trim(
                 ($time_position == 'before' ? (($time_format) ? $date->format($time_format) : '') : '').' '.
@@ -321,16 +321,16 @@ if (!function_exists('get_part_with_search_text')) {
     function get_part_with_search_text($text, $search_text, $limit = null)
     {
         $limit = $limit ? : config('search.default_short_content_length');
-
+        
         $text = strip_tags($text);
         $len = (int) strlen($search_text);
-
+        
         $search_text_pos = (int) strpos(mb_strtolower($text), mb_strtolower($search_text)) + $len;
-
+        
         if ($search_text_pos < $limit) {
             return str_limit($text, $limit);
         }
-
+        
         return mb_strcut($text, $search_text_pos - $limit, $search_text_pos + $limit, 'UTF-8').'...';
     }
 }
@@ -347,17 +347,17 @@ if (!function_exists('mark_search_text')) {
         foreach (explode(' ', $search_text) as $text_part) {
             if (strlen($text_part) > 1) {
                 preg_match_all('/'.$text_part.'/iu', $text, $matches);
-
+                
                 if (count($matches)) {
                     $count = 0;
-
+                    
                     foreach ($matches[0] as $match) {
                         $text = str_replace($match, '<b>'.$match.'</b>', $text, $count);
                     }
                 }
             }
         }
-
+        
         return $text;
     }
 }
@@ -386,25 +386,25 @@ if (!function_exists('thumb')) {
     function thumb($path = '', $width, $height = null)
     {
         $thumb = null;
-
+        
         if (URL::isValidUrl($path)) {
             return $path;
         }
-
+        
         $height = $height ? : $width;
         $path = File::exists(public_path($path)) ? $path : false;
-
+        
         if ($path) {
             $img_info = getimagesize(public_path($path));
-
+            
             if (!empty($img_info)) {
                 $width = $width <= $img_info[0] ? $width : $img_info[0];
                 $height = $height <= $img_info[1] ? $height : $img_info[1];
             }
-
+            
             $thumb = url(Thumb::thumb($path, $width, $height)->link());
         }
-
+        
         return $thumb ? : 'http://www.placehold.it/'.$width.'x'.$height.'/EFEFEF/AAAAAA&text=no+image';
     }
 }
@@ -420,15 +420,15 @@ if (!function_exists('add_get_parameters')) {
     {
         $newParametersArray = [];
         $parameters = array_merge($_GET, $parameters);
-
+        
         foreach ($parameters as $name => $parameter) {
             $newParametersArray[] = "$name=$parameter";
         }
-
+        
         sort($newParametersArray);
-
+        
         $url = $url ? : Request::url();
-
+        
         return $url.'?'.implode('&', $newParametersArray);
     }
 }
@@ -445,27 +445,27 @@ if (!function_exists('update_get_parameters')) {
         $newParametersArray = [];
         $_keys = [];
         $_parameters = $_GET;
-
+        
         foreach ($_parameters as $_parameter => $_value) {
             if (isset($parameters[$_parameter])) {
                 $_value = explode(',', $_value);
                 $_value = array_merge($_value, (array) $parameters[$_parameter]);
                 $_value = implode(',', $_value);
             }
-
+            
             $newParametersArray[] = $_parameter.'='.$_value;
             $_keys = $_parameter;
         }
-
+        
         $parameters = array_except($parameters, $_keys);
         foreach ($parameters as $parameter => $value) {
             $newParametersArray[] = $parameter.'='.implode(',', (array) $value);
         }
-
+        
         sort($newParametersArray);
-
+        
         $url = $url ? : Request::url();
-
+        
         return $url.'?'.implode('&', $newParametersArray);
     }
 }
@@ -481,10 +481,10 @@ if (!function_exists('remove_get_parameters')) {
     {
         $newParametersArray = [];
         $_parameters = $_GET;
-
+        
         foreach ($_parameters as $_parameter => $_value) {
             $_value = explode(',', $_value);
-
+            
             if (isset($parameters[$_parameter])) {
                 $_value = array_filter(
                     $_value,
@@ -493,16 +493,16 @@ if (!function_exists('remove_get_parameters')) {
                     }
                 );
             }
-
+            
             if (!empty($_value)) {
                 $newParametersArray[] = $_parameter.'='.implode(',', $_value);
             }
         }
-
+        
         sort($newParametersArray);
-
+        
         $url = $url ? : Request::url();
-
+        
         return count($newParametersArray) ? $url.'?'.implode('&', $newParametersArray) : $url;
     }
 }
@@ -518,17 +518,17 @@ if (!function_exists('remove_get_parameter')) {
     {
         $newParametersArray = [];
         $_parameters = $_GET;
-
+        
         foreach ($_parameters as $_parameter => $_value) {
             if ($_parameter != $parameter) {
                 $newParametersArray[] = $_parameter.'='.$_value;
             }
         }
-
+        
         sort($newParametersArray);
-
+        
         $url = $url ? : Request::url();
-
+        
         return count($newParametersArray) ? $url.'?'.implode('&', $newParametersArray) : $url;
     }
 }
@@ -543,17 +543,17 @@ if (!function_exists('in_get')) {
     function in_get($parameter = '', $value = '')
     {
         $values = isset($_GET[$parameter]) ? $_GET[$parameter] : null;
-
+        
         if (!$values) {
             return false;
         }
-
+        
         $values = explode(',', $values);
-
+        
         if (!in_array($value, $values)) {
             return false;
         }
-
+        
         return true;
     }
 }
@@ -569,9 +569,9 @@ if (!function_exists('get_class_name_from_namespace')) {
         if (is_object($object)) {
             $object = class_basename($object);
         }
-
+        
         $object = explode('\\', $object);
-
+        
         return array_pop($object);
     }
 }
@@ -595,13 +595,13 @@ if (!function_exists('make_locales_fakers')) {
     function make_locales_fakers()
     {
         $fakers = [];
-
+        
         foreach (Config::get('app.locales') as $locale) {
             $fakers[$locale] = Faker\Factory::create(
                 config('laravellocalization.supportedLocales.'.$locale.'.regional')
             );
         }
-
+        
         return $fakers;
     }
 }
@@ -629,7 +629,7 @@ if (!function_exists('localize_url')) {
     {
         $locale = $locale ? : app()->getLocale();
         $url = $url ? ($url == '/' ? route('home') : $url) : URL::full();
-
+        
         return check_local($url) ? LaravelLocalization::getLocalizedURL($locale, $url) : $url;
     }
 }
@@ -648,7 +648,7 @@ if (!function_exists('localize_route')) {
     {
         $locale = $locale ? : app()->getLocale();
         $url = route($name, $parameters, $absolute, $route);
-
+        
         return LaravelLocalization::getLocalizedURL($locale, $url);
     }
 }
@@ -669,7 +669,7 @@ if (!function_exists('variable')) {
         if (is_null($key)) {
             return app('variable');
         }
-
+        
         return app('variable')->get($key, $default);
     }
 }
@@ -683,7 +683,7 @@ if (!function_exists('is_front')) {
         if (php_sapi_name() == 'cli') {
             return false;
         }
-
+        
         return request()->segment(1) !== 'admin';
     }
 }
@@ -701,7 +701,7 @@ if (!function_exists('currency')) {
         if (is_null($value)) {
             return session('currency');
         }
-
+        
         return session()->set('currency', $value);
     }
 }
@@ -715,5 +715,33 @@ if (!function_exists('get_recipe_ingredient_type_id')) {
     function get_recipe_ingredient_type_id($type)
     {
         return \App\Models\RecipeIngredient::getTypeIdByName($type);
+    }
+}
+
+if (!function_exists('admin_notify')) {
+    /**
+     * just a helper function to send admin email
+     *
+     * @param string      $message
+     * @param array       $context
+     * @param string|null $email
+     *
+     * @return string
+     */
+    function admin_notify($message, $context = [], $email = null)
+    {
+        if (!empty($message)) {
+            Mail::queue(
+                'emails.admin.notify',
+                [
+                    '_message' => $message,
+                    'context'  => serialize($context),
+                ],
+                function ($message) use ($email) {
+                    $message->to(empty($email) ? config('app.email') : $email, config('app.name'))
+                        ->subject('Сообщение с сайта '.config('app.name'));
+                }
+            );
+        }
     }
 }

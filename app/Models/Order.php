@@ -39,12 +39,8 @@ class Order extends Model
         'city',
         'address',
         'comment',
+        'admin_comment',
     ];
-    
-    /**
-     * @var array
-     */
-    protected $dates = ['delivery_date'];
     
     /**
      * @var array
@@ -86,7 +82,6 @@ class Order extends Model
      */
     protected static $payment_methods = [
         'cash',
-        'credit_card',
         'online'
     ];
     
@@ -120,6 +115,18 @@ class Order extends Model
     public function baskets()
     {
         return $this->belongsToMany(Basket::class);
+    }
+    
+    /**
+     * @param int|string $value
+     */
+    public function setStatusAttribute($value)
+    {
+        if (in_array($value, self::$statuses)) {
+            $value = self::getStatusIdByName($value);
+        }
+        
+        $this->attributes['status'] = $value;
     }
     
     /**
@@ -252,6 +259,14 @@ class Order extends Model
     public function editable()
     {
         return in_array($this->getStringStatus(), self::$editable_statuses);
+    }
+    
+    /**
+     * @return bool
+     */
+    public function canBePaidOnline()
+    {
+        return $this->getStringPaymentMethod() == 'online';
     }
     
     /**

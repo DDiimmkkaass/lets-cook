@@ -45,6 +45,9 @@
 
             @yield('content')
 
+            <div>
+                &copy; {!! link_to_route('home', config('app.name')) !!} {!! Carbon::now()->year !!}
+            </div>
         </div>
     </body>
 </html>

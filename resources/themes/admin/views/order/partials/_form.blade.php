@@ -49,6 +49,19 @@
             </div>
         </div>
 
+        <div class="box box-primary">
+            <div class="box-header">
+                <h4 class="margin-top-10 margin-bottom-0">@lang('labels.comments')</h4>
+            </div>
+            <div class="box-body">
+                <div class="form-group">
+                    <div class="col-xs-12">
+                        {!! Form::textarea('admin_comment', null, ['rows' => '4', 'placeholder' => trans('labels.comments'), 'class' => 'form-control input-sm height-auto']) !!}
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>
 

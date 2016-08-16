@@ -15,7 +15,8 @@
                                 ['text' => trans('labels.type')],
                                 ['text' => trans('labels.payment_method')],
                                 ['text' => trans('labels.status')],
-                                ['text' => trans('labels.date')],
+                                ['text' => trans('labels.created_at')],
+                                ['text' => trans('labels.delivery_date')],
                                 ['text' => trans('labels.order_total')],
                                 ['text' => trans('labels.actions')]
                             ])

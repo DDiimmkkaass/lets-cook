@@ -514,5 +514,5 @@ return array (
   'payment_method_cash' => 'Наличными',
   'payment_method_credit_card' => 'Банковской картой',
   'payment_method_online' => 'Онлайн оплата',
-    
+  'created_at' => 'Создан',
 );

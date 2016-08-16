@@ -266,6 +266,12 @@ class OrderController extends BackendController
             $statuses[$id] = trans('labels.order_status_'.$status);
         }
         $this->data('statuses', $statuses);
+    
+        $delivery_times= [];
+        foreach (config('order.delivery_times') as $delivery_time) {
+            $delivery_times[$delivery_time] = $delivery_time;
+        }
+        $this->data('delivery_times', $delivery_times);
         
         $cities = ['' => trans('labels.another')];
         foreach (City::all() as $city) {
