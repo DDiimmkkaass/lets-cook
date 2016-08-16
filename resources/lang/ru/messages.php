@@ -129,4 +129,5 @@ return array (
   'ingredient successfully added' => 'Ингредиент успешно добавлен',
   'delete confirm question' => 'Вы действительно хотите удалить этот элемент?',
   'this recipe with the same number of portions is already exists' => 'Этот рецепт с таким количеством порций уже существует',
+  'order has un editable status error' => 'Изменения не сохранены! Этот заказ нельзя редактировать',
 );

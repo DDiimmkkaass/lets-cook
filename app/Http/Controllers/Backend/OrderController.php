@@ -149,6 +149,12 @@ class OrderController extends BackendController
         
         try {
             $model = Order::findOrFail($id);
+    
+            if (!$model->editable()) {
+                FlashMessages::add('warning', trans('messages.order has un editable status error'));
+        
+                return redirect()->route('admin.'.$this->module.'.index');
+            }
             
             $input = $this->orderService->prepareUpdateData($request);
             

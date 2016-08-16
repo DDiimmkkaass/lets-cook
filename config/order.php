@@ -13,5 +13,10 @@ return [
         'днем',
         'вечером',
     ],
+    
+    /*
+     * time ahead, for which generated subscription orders
+     */
+    'subscribe_auto_generation_time' => 180 //in days
 
 ];

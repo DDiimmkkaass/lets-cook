@@ -61,10 +61,22 @@ class Order extends Model
      * @var array
      */
     protected static $statuses = [
-        0 => 'new',
-        1 => 'payed',
-        2 => 'canceled',
-        3 => 'edited',
+        'changes',
+        'paid',
+        'processed',
+        'tmpl',
+        'deleted',
+        'archived',
+    ];
+    
+    /**
+     * @var array
+     */
+    protected static $editable_statuses = [
+        'changes',
+        'paid',
+        'tmpl',
+        'archived',
     ];
     
     /**
@@ -221,6 +233,14 @@ class Order extends Model
         );
         
         return $total;
+    }
+    
+    /**
+     * @return bool
+     */
+    public function editable()
+    {
+        return in_array($this->getStringStatus(), self::$editable_statuses);
     }
     
     /**
