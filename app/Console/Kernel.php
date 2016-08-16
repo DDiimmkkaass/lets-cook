@@ -39,6 +39,6 @@ class Kernel extends ConsoleKernel
     
         $schedule->command('orders:process-paid-orders-for-next-week')->cron('0 10 * * 5');
     
-        $schedule->command('orders:archive-completed-orders')->cron('0 0 * * 3');
+        $schedule->command('orders:archive-completed-orders')->cron('0 0 * * 2');
     }
 }
