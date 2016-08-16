@@ -20,13 +20,10 @@ class _WeeklyMenusSeeder extends DataSeeder
         WeeklyMenu::whereNotNull('id')->forceDelete();
         DB::statement('ALTER TABLE `'.((new WeeklyMenu())->getTable()).'` AUTO_INCREMENT=1');
         
-        $now = Carbon::now();
-        $now1 = Carbon::now();
-        
-        foreach (range(1, 5) as $index) {
+        foreach (range(1, 10) as $index) {
             $input = [
-                'started_at' => $now->startOfWeek(),
-                'ended_at'   => $now1->endOfWeek(),
+                'week' => rand(1, 52),
+                'year' => 2016,
             ];
             
             $weekly_menu = new WeeklyMenu($input);
@@ -34,7 +31,7 @@ class _WeeklyMenusSeeder extends DataSeeder
             
             $baskets_count = Basket::basic()->count();
             $baskets = Basket::basic()->get()->random(rand(2, $baskets_count));
-    
+            
             foreach ($baskets as $basket) {
                 $_input = [
                     'weekly_menu_id' => $weekly_menu->id,
@@ -55,9 +52,6 @@ class _WeeklyMenusSeeder extends DataSeeder
                     );
                 }
             }
-            
-            $now = Carbon::now()->subDays(7 * $index);
-            $now1 = Carbon::now()->subDays(7 * $index);
         }
     }
 }
