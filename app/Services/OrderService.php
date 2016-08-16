@@ -34,6 +34,7 @@ class OrderService
             'user_id',
             'type',
             'subscribe_period',
+            'payment_method',
             'status',
             'created_at',
             'total'
@@ -60,6 +61,12 @@ class OrderService
                         '';
                     
                     return $html;
+                }
+            )
+            ->editColumn(
+                'payment_method',
+                function ($model) {
+                    return trans('labels.payment_method_'.$model->getStringPaymentMethod());
                 }
             )
             ->editColumn(

@@ -156,6 +156,7 @@ return array (
     'verify_call' => 'позвоните мне',
     'sale_price' => 'цена на продажу',
     'ingredients_home' => 'ингредиенты дома',
+    'payment_method' => 'способ оплаты',
   ),
   'recipe steps' => 'Вы должны добавить хотя бы один шаг',
   'recipe ingredients' => 'Вы должны выбрать хотя бы один ингредиент',

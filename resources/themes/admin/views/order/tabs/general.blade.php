@@ -70,6 +70,16 @@
     </div>
 </div>
 
+<div class="form-group required @if ($errors->has('payment_method')) has-error @endif">
+    {!! Form::label('payment_method', trans('labels.payment_method'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
+
+    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+        {!! Form::select('payment_method', $payment_methods, null, ['class' => 'form-control select2 input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+
+        {!! $errors->first('payment_method', '<p class="help-block error">:message</p>') !!}
+    </div>
+</div>
+
 <div class="form-group required @if ($errors->has('status')) has-error @endif">
     {!! Form::label('status', trans('labels.status'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 

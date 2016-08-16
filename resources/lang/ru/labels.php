@@ -509,4 +509,10 @@ return array (
   'tag_categories_list' => 'Список категорий тегов',
   'tag_category_creating' => 'Создание категории тегов',
   'tag_category_editing' => 'Редактирование категории тегов',
+  'payment_method' => 'Способ оплаты',
+  'payment_method_' => 'Не задан',
+  'payment_method_cash' => 'Наличными',
+  'payment_method_credit_card' => 'Банковской картой',
+  'payment_method_online' => 'Онлайн оплата',
+    
 );

@@ -28,10 +28,12 @@ class OrderUpdateRequest extends FormRequest
         
         
         $rules = [
+            'parent_id'        => 'exists:orders,id',
             'user_id'          => 'required|exists:users,id',
             'type'             => 'required|in:'.implode(',', array_keys(Order::getTypes())),
             'subscribe_period' => 'numeric|min:1|required_if:type,'.Order::getTypeIdByName('subscribe'),
             'status'           => 'required|in:'.implode(',', array_keys(Order::getStatuses())),
+            'payment_method'   => 'required|in:'.implode(',', array_keys(Order::getPaymentMethods())),
             'full_name'        => 'required',
             'email'            => 'required',
             'phone'            => 'required',

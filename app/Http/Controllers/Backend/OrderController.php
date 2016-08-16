@@ -254,6 +254,12 @@ class OrderController extends BackendController
             $subscribe_periods[$subscribe_period] = trans_choice('labels.subscribe_period_label', $subscribe_period);
         }
         $this->data('subscribe_periods', $subscribe_periods);
+    
+        $payment_methods = [];
+        foreach (Order::getPaymentMethods() as $id => $payment_method) {
+            $payment_methods[$id] = trans('labels.payment_method_'.$payment_method);
+        }
+        $this->data('payment_methods', $payment_methods);
         
         $statuses = [];
         foreach (Order::getStatuses() as $id => $status) {

@@ -13,6 +13,7 @@
                                 ['text' => trans('labels.id')],
                                 ['text' => trans('labels.user')],
                                 ['text' => trans('labels.type')],
+                                ['text' => trans('labels.payment_method')],
                                 ['text' => trans('labels.status')],
                                 ['text' => trans('labels.date')],
                                 ['text' => trans('labels.order_total')],

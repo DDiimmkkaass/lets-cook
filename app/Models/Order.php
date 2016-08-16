@@ -22,10 +22,12 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
+        'parent_id',
         'user_id',
         'type',
         'subscribe_period',
         'status',
+        'payment_method',
         'full_name',
         'email',
         'phone',
@@ -77,6 +79,15 @@ class Order extends Model
         'paid',
         'tmpl',
         'archived',
+    ];
+    
+    /**
+     * @var array
+     */
+    protected static $payment_methods = [
+        'cash',
+        'credit_card',
+        'online'
     ];
     
     /**
@@ -268,6 +279,14 @@ class Order extends Model
     }
     
     /**
+     * @return array
+     */
+    public static function getPaymentMethods()
+    {
+        return self::$payment_methods;
+    }
+    
+    /**
      * @param string $type
      *
      * @return int|null
@@ -300,6 +319,22 @@ class Order extends Model
     }
     
     /**
+     * @param string $payment_method
+     *
+     * @return int|null
+     */
+    public static function getPaymentMethodIdByName($payment_method)
+    {
+        foreach (self::$payment_methods as $id => $_payment_method) {
+            if ($_payment_method == $payment_method) {
+                return $id;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
      * @return string
      */
     public function getStringType()
@@ -321,6 +356,20 @@ class Order extends Model
         foreach (self::$statuses as $id => $status) {
             if ($id == $this->status) {
                 return $status;
+            }
+        }
+        
+        return '';
+    }
+    
+    /**
+     * @return string
+     */
+    public function getStringPaymentMethod()
+    {
+        foreach (self::$payment_methods as $id => $payment_method) {
+            if ($id == $this->payment_method) {
+                return $payment_method;
             }
         }
         
