@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Models\Basket;
 use App\Models\Order;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
@@ -52,9 +53,9 @@ class PurchaseService
     public function getForWeek($year, $week)
     {
         $list = [
-            'year'       => $year,
-            'week'       => $week,
-            'suppliers'  => [],
+            'year'      => $year,
+            'week'      => $week,
+            'suppliers' => [],
         ];
         
         $purchases = Purchase::with('ingredient', 'ingredient.category', 'ingredient.supplier')
@@ -70,12 +71,14 @@ class PurchaseService
         
         foreach ($purchases as $ingredient) {
             $_ingredient = $ingredient->ingredient;
-    
+            
             $supplier_id = $ingredient->purchase_manager ? 0 : $_ingredient->supplier_id;
             
             if (!isset($list['suppliers'][$supplier_id])) {
                 $list['suppliers'][$supplier_id] = [
-                    'name'       => $supplier_id == 0 ? trans('labels.purchase_manager_ingredients') : $_ingredient->supplier->name,
+                    'name'       => $supplier_id == 0 ? trans(
+                        'labels.purchase_manager_ingredients'
+                    ) : $_ingredient->supplier->name,
                     'position'   => $supplier_id == 0 ? 0 : $_ingredient->supplier->priority,
                     'categories' => [],
                 ];
@@ -88,7 +91,7 @@ class PurchaseService
                     'ingredients' => [],
                 ];
             }
-    
+            
             $list['suppliers'][$supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$ingredient->ingredient_id] = $ingredient;
         }
         
@@ -105,13 +108,13 @@ class PurchaseService
         $file_name = $this->_getDownloadFileName($year, $week, $supplier_id);
         
         $data = $this->_getPurchaseFor($year, $week, $supplier_id);
-    
+        
         foreach ($data as $key => $item) {
             $data[$key] = [
                 trans('labels.ingredient') => $item['ingredient'],
-                ' ' => ' ',
-                trans('labels.count') => $item['count'],
-                trans('labels.unit') => $item['unit'],
+                ' '                        => ' ',
+                trans('labels.count')      => $item['count'],
+                trans('labels.unit')       => $item['unit'],
             ];
         }
         
@@ -133,36 +136,80 @@ class PurchaseService
      */
     private function _getSuppliers()
     {
-        // TODO: add check of order status(processed)
-        $orders = Order::forNextWeek()->get(['id'])->pluck('id');
+        $orders = Order::ofStatus('processed')->forNextWeek()->get(['id'])->pluck('id');
         
-        $recipes = OrderRecipe::whereIn('order_id', $orders)
-            ->joinBasketRecipes()
-            ->select('recipe_id', DB::raw('count(recipe_id) as recipes_count'))
-            ->groupBy('recipe_id')
-            ->get()
-            ->keyBy('recipe_id');
+        $recipes = $this->_getRecipes($orders);
         
-        $ingredients = RecipeIngredient::with('ingredient', 'ingredient.category', 'ingredient.supplier')
-            ->joinIngredient()
-            ->joinIngredientSupplier()
-            ->joinIngredientCategory()
-            ->whereIn('recipe_id', $recipes->pluck('recipe_id'))
-            ->orderBy('suppliers.priority')
-            ->orderBy('categories.position')
-            ->get();
+        $ingredients = $this->_getIngredients($recipes);
         
         $suppliers = $this->_buildSuppliersTable($ingredients, $recipes);
-    
+        
         $this->_addOrderIngredients($suppliers, $orders);
         
         return $suppliers;
     }
     
     /**
+     * @param array $orders
+     *
+     * @return array
+     */
+    private function _getRecipes($orders)
+    {
+        $recipes = OrderRecipe::whereIn('order_id', $orders)
+            ->joinBasketRecipes()
+            ->select('recipe_id', DB::raw('count(recipe_id) as recipes_count'))
+            ->groupBy('recipe_id')
+            ->get()
+            ->keyBy('recipe_id')
+            ->toArray();
+        
+        $_baskets = Basket::additional()->joinBasketOrder()->joinOrders()
+            ->with('recipes')
+            ->whereIn('orders.id', $orders)
+            ->select('baskets.id', DB::raw('count(basket_id) as baskets_count'))
+            ->groupBy('basket_order.basket_id')
+            ->get();
+        
+        foreach ($_baskets as $basket) {
+            foreach ($basket->recipes as $recipe) {
+                if (!isset($recipes[$recipe->recipe_id])) {
+                    $recipes[$recipe->recipe_id] = [
+                        'recipe_id'     => $recipe->recipe_id,
+                        'recipes_count' => 0,
+                    ];
+                }
+                
+                $recipes[$recipe->recipe_id]['recipes_count'] += $basket->baskets_count;
+            }
+        }
+        
+        return $recipes;
+    }
+    
+    /**
+     * @param array $recipes
+     *
+     * @return Collection
+     */
+    private function _getIngredients($recipes = [])
+    {
+        $ingredients = RecipeIngredient::with('ingredient', 'ingredient.category', 'ingredient.supplier')
+            ->joinIngredient()
+            ->joinIngredientSupplier()
+            ->joinIngredientCategory()
+            ->whereIn('recipe_id', array_keys($recipes))
+            ->orderBy('suppliers.priority')
+            ->orderBy('categories.position')
+            ->get();
+        
+        return $ingredients;
+    }
+    
+    /**
      * @param Collection $ingredients
      * @param array      $recipes
-     * @param array|null       $suppliers
+     * @param array|null $suppliers
      *
      * @return array
      */
@@ -210,6 +257,10 @@ class PurchaseService
         return $suppliers;
     }
     
+    /**
+     * @param array $suppliers
+     * @param array $orders
+     */
     private function _addOrderIngredients(&$suppliers, $orders)
     {
         $ingredients = OrderIngredient::with('ingredient', 'ingredient.category', 'ingredient.supplier')
@@ -334,7 +385,11 @@ class PurchaseService
         }
         
         $list = $list->where('purchases.buy_count', '>', 0)
-            ->select(DB::raw('ingredients.name as ingredient'), DB::raw('buy_count as count'), DB::raw('units.name as unit'))
+            ->select(
+                DB::raw('ingredients.name as ingredient'),
+                DB::raw('buy_count as count'),
+                DB::raw('units.name as unit')
+            )
             ->get()
             ->toArray();
         

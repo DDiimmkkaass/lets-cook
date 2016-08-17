@@ -92,7 +92,7 @@ class Basket extends Model
      */
     public function scopeBasic($query)
     {
-        return $query->whereType(self::getTypeIdByName('basic'));
+        return $query->where($this->getTable().'.type', self::getTypeIdByName('basic'));
     }
     
     /**
@@ -102,7 +102,27 @@ class Basket extends Model
      */
     public function scopeAdditional($query)
     {
-        return $query->whereType(self::getTypeIdByName('additional'));
+        return $query->where($this->getTable().'.type', self::getTypeIdByName('additional'));
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinBasketOrder($query)
+    {
+        return $query->leftJoin('basket_order', 'basket_order.basket_id', '=', 'baskets.id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinOrders($query)
+    {
+        return $query->leftJoin('orders', 'orders.id', '=', 'basket_order.order_id');
     }
     
     /**
