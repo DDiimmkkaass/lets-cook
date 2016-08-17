@@ -213,7 +213,7 @@ class RecipeController extends BackendController
     public function edit($id)
     {
         try {
-            $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps', 'orders', 'files')
+            $model = Recipe::with('ingredients', 'home_ingredients', 'baskets', 'steps', 'files')
                 ->whereId($id)
                 ->firstOrFail();
             

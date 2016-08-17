@@ -47,6 +47,16 @@ class OrderRecipe extends Model
      *
      * @return mixed
      */
+    public function scopeJoinOrder($query)
+    {
+        return $query->leftJoin('orders', 'orders.id', '=', 'order_recipes.order_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
     public function scopeJoinBasketRecipes($query)
     {
         return $query->leftJoin('basket_recipes', 'basket_recipes.id', '=', 'order_recipes.basket_recipe_id');

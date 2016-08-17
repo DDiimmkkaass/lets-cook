@@ -224,6 +224,14 @@ class Order extends Model
     }
     
     /**
+     * @param $query
+     */
+    public function scopeJoinAdditionalBaskets($query)
+    {
+        $query->leftJoin('basket_order', 'basket_order.order_id', '=', 'orders.id');
+    }
+    
+    /**
      * @return bool
      */
     public function isSubscribe()

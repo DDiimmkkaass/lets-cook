@@ -8,6 +8,8 @@
 
 namespace App\Services;
 
+use App\Models\BasketRecipe;
+use App\Models\Order;
 use App\Models\Recipe;
 use App\Models\RecipeIngredient;
 use App\Models\RecipeStep;
@@ -433,19 +435,45 @@ class RecipeService
      */
     public function getStatisticOfOrder(Recipe $recipe)
     {
-        $orders = [];
+        $statistic = [];
         
-        foreach ($recipe->orders as $order_item) {
+        $order_recipes = $recipe->order_recipes()
+            ->joinOrder()
+            ->where('orders.status', Order::getStatusIdByName('archived'))
+            ->get();
+        
+        foreach ($order_recipes as $order_item) {
             $week = trans('labels.w_label').$order_item->created_at->weekOfYear.', '.$order_item->created_at->year;
             
-            if (!isset($orders[$week])) {
-                $orders[$week] = 0;
+            if (!isset($statistic[$week])) {
+                $statistic[$week] = 0;
             }
-            
-            $orders[$week] += 1;
+    
+            $statistic[$week] += 1;
+        }
+    
+        $additional_baskets = BasketRecipe::whereRecipeId($recipe->id)->whereNotNull('basket_id')
+            ->groupBy('basket_id')
+            ->get(['basket_id'])
+            ->pluck('basket_id')
+            ->toArray();
+        
+        $orders = Order::joinAdditionalBaskets()
+            ->ofStatus('archived')
+            ->whereIn('basket_id', $additional_baskets)
+            ->get();
+        
+        foreach ($orders as $order) {
+            $week = trans('labels.w_label').$order->created_at->weekOfYear.', '.$order->created_at->year;
+        
+            if (!isset($statistic[$week])) {
+                $statistic[$week] = 0;
+            }
+    
+            $statistic[$week] += 1;
         }
         
-        return $orders;
+        return $statistic;
     }
     
     /**

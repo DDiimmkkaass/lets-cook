@@ -32,9 +32,10 @@
                 @foreach($recipes as $recipe)
                     <tr id="recipe_{!! $recipe->basket_recipe_id !!}">
                         <td>
-                            <div class="form-group @if ($errors->has('recipes.old.' .$recipe->id. '.recipe_id')) has-error @endif">
-                                {!! Form::text('recipes[old][' .$recipe->id. '][basket_recipe_id]', $recipe->basket_recipe_id, ['id' => 'recipes.old.' .$recipe->id. '.basket_recipe_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
+                            <div class="form-group @if ($errors->has('recipes.old.' .$recipe->id. '.basket_recipe_id')) has-error @endif">
+                                {!! Form::text('recipes[old][' .$recipe->id. '][recipe_id]', $recipe->recipe_id, ['id' => 'recipes.old.' .$recipe->id. '.recipe_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
 
+                                {!! Form::hidden('recipes[old][' .$recipe->id. '][basket_recipe_id]', $recipe->basket_recipe_id) !!}
                                 {!! Form::hidden('recipes[old][' .$recipe->id. '][name]', $recipe->name) !!}
                             </div>
                         </td>
@@ -61,8 +62,10 @@
                         <tr id="recipe_{!! $recipe_key !!}">
                             <td>
                                 <div class="form-group @if ($errors->has('recipes.new.' .$recipe_key. '.basket_recipe_id')) has-error @endif">
-                                    {!! Form::text('recipes[new][' .$recipe_key. '][basket_recipe_id]', $recipe['basket_recipe_id'], ['id' => 'recipes.new.' .$recipe_key. '.basket_recipe_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
+                                    {!! Form::text('recipes[new][' .$recipe_key. '][recipe_id]', $recipe['recipe_id'], ['id' => 'recipes.new.' .$recipe_key. '.recipe_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
                                 </div>
+
+                                {!! Form::hidden('recipes[new][' .$recipe_key. '][basket_recipe_id]', $recipe['basket_recipe_id']) !!}
                             </td>
                             <td>
                                 <div class="form-group">

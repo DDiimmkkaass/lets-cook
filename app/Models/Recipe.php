@@ -69,7 +69,7 @@ class Recipe extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
      */
-    public function orders()
+    public function order_recipes()
     {
         return $this->hasManyThrough(OrderRecipe::class, BasketRecipe::class, 'recipe_id', 'basket_recipe_id')
             ->dateSorted();

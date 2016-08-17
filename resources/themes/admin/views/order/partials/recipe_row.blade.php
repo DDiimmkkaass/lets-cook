@@ -1,8 +1,10 @@
 <tr id="recipe_{!! $model->id !!}">
     <td>
         <div class="form-group">
-            <input type="text" class="form-control input-sm" name="recipes[new][{!! $model->id !!}][basket_recipe_id]"
-                   readonly="readonly" value="{!! $model->id !!}">
+            <input type="text" class="form-control input-sm" name="recipes[new][{!! $model->id !!}][recipe_id]"
+                   readonly="readonly" value="{!! $model->recipe_id !!}">
+
+            <input type="hidden" name="recipes[new][{!! $model->id !!}][basket_recipe_id]" value="{!! $model->id !!}">
         </div>
     </td>
     <td>
