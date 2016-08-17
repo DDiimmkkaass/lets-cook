@@ -127,7 +127,7 @@
 <div class="recipes-add-control">
     <div class="form-group">
         <div class="col-sm-12">
-            @include('weekly_menu.partials.recipes_select', ['basket_id' => $basket['id'], 'portions' => $basket['portions'])
+            @include('weekly_menu.partials.recipes_select', ['basket_id' => $basket['id'], 'portions' => $basket['portions']])
 
             <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][name]" value="{!! $basket['name'] !!}">
             <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][id]" value="{!! $basket['id'] !!}">

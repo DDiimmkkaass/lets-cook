@@ -35,3 +35,9 @@ message.show = (text, type) ->
     return
 
   return
+
+$(document).on "ready", () ->
+  $('.main-message').each () ->
+    setTimeout () =>
+        $(this).fadeOut(500).remove()
+    , 5000

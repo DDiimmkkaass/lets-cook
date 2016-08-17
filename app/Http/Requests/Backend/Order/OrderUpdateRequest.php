@@ -25,8 +25,6 @@ class OrderUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        
-        
         $rules = [
             'parent_id'        => 'exists:orders,id',
             'user_id'          => 'required|exists:users,id',
@@ -35,7 +33,7 @@ class OrderUpdateRequest extends FormRequest
             'status'           => 'required|in:'.implode(',', array_keys(Order::getStatuses())),
             'payment_method'   => 'required|in:'.implode(',', array_keys(Order::getPaymentMethods())),
             'full_name'        => 'required',
-            'email'            => 'required',
+            'email'            => 'required|email',
             'phone'            => 'required',
             'verify_call'      => 'boolean',
             
@@ -44,21 +42,23 @@ class OrderUpdateRequest extends FormRequest
             'city'          => 'required_without:city_id',
             'address'       => 'required',
             
-            'recipes.new.*' => 'array',
-            'recipes.old.*' => 'array',
+            'recipes.new'    => 'array|required_without:recipes.old',
+            'recipes.old'    => 'array|required_without:recipes.new',
+            'recipes.new.*'  => 'array|required_without:recipes.old',
+            'recipes.old.*'  => 'array|required_without:recipes.new',
             'recipes.remove' => 'array',
-
+            
             'baskets' => 'array',
             
-            'ingredients.new.*' => 'array',
-            'ingredients.old.*' => 'array',
+            'ingredients.new.*'  => 'array',
+            'ingredients.old.*'  => 'array',
             'ingredients.remove' => 'array',
             
             'recipes.old.*.basket_recipe_id' => 'required|exists:basket_recipes,id',
             'recipes.new.*.basket_recipe_id' => 'required|exists:basket_recipes,id',
-    
+            
             'baskets.*' => 'exists:baskets,id',
-
+            
             'ingredients.old.*.ingredient_id' => 'required|exists:ingredients,id',
             'ingredients.old.*.count'         => 'required|numeric|min:1',
             'ingredients.new.*.ingredient_id' => 'required|exists:ingredients,id',
@@ -66,5 +66,18 @@ class OrderUpdateRequest extends FormRequest
         ];
         
         return $rules;
+    }
+    
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'recipes.old.required_without' => trans('validation.you cant remove all recipes'),
+            'recipes.new.required_without' => trans('validation.you must add at least one recipe'),
+        ];
     }
 }

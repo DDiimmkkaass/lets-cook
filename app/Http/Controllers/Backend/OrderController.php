@@ -292,19 +292,14 @@ class OrderController extends BackendController
             );
         $this->data('recipes', $recipes);
     
-        $recipe = $recipes->first();
-        if ($recipe) {
-            $weekly_menu_basket_id = $recipes->first()->recipe->weekly_menu_basket_id;
-            $basket = WeeklyMenuBasket::with('recipes')->find($weekly_menu_basket_id);
-            $this->data('basket', $basket);
-    
+        $basket = $model->getMainBasket();
+        $this->data('basket', $basket);
+        if ($basket) {
             $basket_recipes = ['' => trans('labels.please_select')];
-            foreach ($basket->recipes as $recipe) {
+            foreach ($basket->recipes()->get() as $recipe) {
                 $basket_recipes[$recipe->id] = $recipe->recipe->name;
             }
             $this->data('basket_recipes', $basket_recipes);
-        } else {
-            $this->data('basket', false);
         }
         
         $this->data('additional_baskets', Basket::additional()->get());

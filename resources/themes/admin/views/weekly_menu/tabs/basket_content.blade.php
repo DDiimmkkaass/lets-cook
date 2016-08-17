@@ -3,7 +3,7 @@
         <label class="col-sm-2 control-label">@lang('labels.basket_price'):</label>
         <div class="col-sm-10">
             <div class="col-sm-1 with-after-helper currency-rub">
-                <input type="text" readonly="readonly" class="form-control input-sm" value="{!! $basket->basket->price !!}">
+                <input type="text" readonly="readonly" class="form-control input-sm" value="{!! $basket->getPrice() !!}">
             </div>
         </div>
     </div>
@@ -12,7 +12,7 @@
         <label class="col-sm-2 control-label">@lang('labels.internal_price'):</label>
         <div class="col-sm-10">
             <div class="col-sm-1 with-after-helper currency-rub">
-                <input type="text" readonly="readonly" class="form-control input-sm basket-internal-price" value="{!! $basket->getPrice() !!}">
+                <input type="text" readonly="readonly" class="form-control input-sm basket-internal-price" value="{!! $basket->getInternalPrice() !!}">
             </div>
         </div>
     </div>
@@ -86,7 +86,7 @@
             <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][name]" value="{!! $basket->basket->name !!}">
             <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][id]" value="{!! $basket->basket_id !!}">
             <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][portions]" value="{!! $basket->portions !!}">
-            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][price]" value="{!! $basket->basket->price !!}">
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][price]" value="{!! $basket->getPrice() !!}">
         </div>
     </div>
 </div>

@@ -1,4 +1,4 @@
-<div class="col-lg-12 padding-top-20">
+<div class="col-lg-12 padding-top-20 padding-left-0 padding-right-0">
     <div class="box box-primary">
         <div class="box-body">
             <div class="recipes-select-table">

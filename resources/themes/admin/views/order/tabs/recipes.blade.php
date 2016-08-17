@@ -4,12 +4,17 @@
     </h3>
 
     <div class="recipes-add-control">
-        <div class="form-group margin-bottom-25">
+        <div class="form-group margin-bottom-25 @if ($errors->has('recipes.new') || $errors->has('recipes.old')) has-error @endif">
             <div class="col-xs-12 margin-bottom-5 font-size-16 text-left">
                 @lang('labels.add_recipes')
             </div>
             <div class="col-sm-12 full-width-select">
                 {!! Form::select('add_recipes', $basket_recipes, null, ['id' => 'order_recipe_select', 'class' => 'form-control select2 order-recipe-select input-sm', 'aria-hidden' => 'true']) !!}
+
+                <div class="clearfix"></div>
+
+                {!! $errors->first('recipes.new', '<p class="help-block error position-relative">:message</p>') !!}
+                {!! $errors->first('recipes.old', '<p class="help-block error position-relative">:message</p>') !!}
             </div>
         </div>
     </div>

@@ -163,4 +163,6 @@ return array (
   'recipe main ingredient' => 'Вы должны выбрать основной ингредиент',
   'recipe baskets' => 'Вы должны выбрать хотя бы одину корзину для рецепта',
   'diff_in_days' => 'Промежуток между днями :attribute и :param должен быть равен :diff.',
+  'you cant remove all recipes' => 'Вы не можете удалить все рецепты',
+  'you must add at least one recipe' => 'Вы должны добавить не менее одного рецепта',
 );

@@ -4,7 +4,7 @@
             <label class="col-sm-2 control-label">@lang('labels.basket_price'):</label>
             <div class="col-sm-10">
                 <div class="col-sm-1 with-after-helper currency-rub">
-                    <input type="text" readonly="readonly" class="form-control input-sm" value="{!! $basket->price !!}">
+                    <input type="text" readonly="readonly" class="form-control input-sm" value="{!! $basket->getPrice() !!}">
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
                 <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][name]" value="{!! $basket->name !!}">
                 <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][id]" value="{!! $basket->id !!}">
                 <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][portions]" value="{!! $portions !!}">
-                <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][price]" value="{!! $basket->price !!}">
+                <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][price]" value="{!! $basket->getPrice($portions) !!}">
             </div>
         </div>
     </div>

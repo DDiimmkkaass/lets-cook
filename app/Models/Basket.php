@@ -106,6 +106,14 @@ class Basket extends Model
     }
     
     /**
+     * @return float
+     */
+    public function getPrice()
+    {
+        return $this->price;
+    }
+    
+    /**
      * @param string $type
      *
      * @return int|string

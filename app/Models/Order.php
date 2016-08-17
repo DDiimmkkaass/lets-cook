@@ -238,6 +238,11 @@ class Order extends Model
     {
         $total = 0;
         
+        $basket = $this->getMainBasket();
+        if ($basket) {
+            $total += $basket->getPrice();
+        }
+        
         $total += $this->baskets()->sum('price') / 100;
         
         $total += $this->ingredients()->get()->reduce(
@@ -247,6 +252,21 @@ class Order extends Model
         );
         
         return $total;
+    }
+    
+    /**
+     * @return WeeklyMenuBasket|null
+     */
+    public function getMainBasket()
+    {
+        $recipe = $this->recipes()->first();
+            
+        if ($recipe) {
+            return WeeklyMenuBasket::with('basket')
+                ->find($recipe->recipe->weekly_menu_basket_id);
+        }
+        
+        return null;
     }
     
     /**

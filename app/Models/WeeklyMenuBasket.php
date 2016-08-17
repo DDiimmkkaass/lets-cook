@@ -51,13 +51,21 @@ class WeeklyMenuBasket extends Model
     }
     
     /**
-     * @return int
+     * @return float
      */
     public function getPrice()
     {
+        return $this->basket->getPrice();
+    }
+    
+    /**
+     * @return int
+     */
+    public function getInternalPrice()
+    {
         if (empty($this->price)) {
             $this->price = 0;
-    
+            
             foreach ($this->recipes as $recipe) {
                 $this->attributes['price'] += $recipe->recipe->getPrice();
             }
