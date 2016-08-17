@@ -17,6 +17,6 @@ return [
     /*
      * time ahead, for which generated subscription orders
      */
-    'subscribe_auto_generation_time' => 180 //in days
+    'subscribe_auto_generation_time' => 25 //in weeks
 
 ];

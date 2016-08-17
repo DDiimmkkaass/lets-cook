@@ -160,12 +160,8 @@ class Order extends Model
      */
     public function setDeliveryDateAttribute($value)
     {
-        if (empty($value)) {
-            $this->attributes['delivery_date'] = null;
-        } else {
-            $this->attributes['delivery_date'] = Carbon::createFromFormat('d-m-Y', $value)
-                ->startOfDay()->format('Y-m-d H:i:s');
-        }
+        $this->attributes['delivery_date'] = Carbon::createFromFormat('d-m-Y', $value)
+            ->startOfDay()->format('Y-m-d H:i:s');
     }
     
     /**
@@ -185,7 +181,7 @@ class Order extends Model
      */
     public function getDeliveryDateAttribute($value)
     {
-        return empty($value) ? '' : Carbon::createFromFormat('Y-m-d H:i:s', $value)->startOfDay()->format('d-m-Y');
+        return Carbon::createFromFormat('Y-m-d H:i:s', $value)->startOfDay()->format('d-m-Y');
     }
     
     /**
@@ -251,6 +247,14 @@ class Order extends Model
         );
         
         return $total;
+    }
+    
+    /**
+     * @return \Carbon
+     */
+    public function getDeliveryDate()
+    {
+        return Carbon::createFromFormat('d-m-Y', $this->delivery_date)->startOfDay();
     }
     
     /**

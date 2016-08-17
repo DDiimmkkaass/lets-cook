@@ -134,4 +134,5 @@ return array (
   'tmpl order successfully paid message :order_id' => 'Ваш заказ по подписке, № :order_id, был успешно автоматически оплачен и Вы получите его уже на следующей неделе.',
   'tmpl order payment error message :order_id' => 'Ваш заказ по подписке, № :order_id, не был автоматически оплачен! Пожалуйста оплатите его вручную.',
   'tmpl order payment error message' => 'Заказ по подписке, не был автоматически оплачен. Ошибка',
+  'main basket not selected' => 'Основная корзина не выбрана',
 );

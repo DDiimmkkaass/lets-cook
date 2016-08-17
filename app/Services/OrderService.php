@@ -163,6 +163,37 @@ class OrderService
     }
     
     /**
+     * @param \App\Models\Order $order
+     *
+     * @return \App\Models\Order
+     */
+    public function createTmpl(Order $order)
+    {
+        $tmpl = $order->replicate();
+
+        $tmpl->parent_id = $order->id;
+        $tmpl->status = Order::getStatusIdByName('tmpl');
+        $tmpl->delivery_date = $this->_getDeliveryDateForTmplOrder($order);
+
+        $tmpl->save();
+
+        $tmpl->baskets()->sync($order->baskets()->get(['id'])->pluck('id')->toArray());
+
+        $order->load('recipes', 'ingredients');
+        $relations = $order->getRelations();
+        foreach ($relations as $relation_name => $relation) {
+            foreach ($relation as $record) {
+                $tmpl_record = $record->replicate();
+                $tmpl_record->order_id = $tmpl->id;
+                
+                $tmpl_record->push();
+            }
+        }
+
+        return $tmpl;
+    }
+    
+    /**
      * @param \App\Models\Order $model
      * @param array             $input
      */
@@ -255,5 +286,21 @@ class OrderService
                 );
             }
         }
+    }
+    
+    /**
+     * @param \App\Models\Order $parent_order
+     *
+     * @return string
+     */
+    private function _getDeliveryDateForTmplOrder(Order $parent_order)
+    {
+        $latest_tmpl_order = Order::whereId($parent_order->id)->orWhere('parent_id', $parent_order->id)
+            ->orderBy('id', 'DESC')
+            ->first();
+        
+        $delivery_date = $latest_tmpl_order->getDeliveryDate();
+        
+        return $delivery_date->addWeeks($parent_order->subscribe_period)->format('d-m-Y');
     }
 }

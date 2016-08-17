@@ -149,10 +149,10 @@ class OrderController extends BackendController
         
         try {
             $model = Order::findOrFail($id);
-    
+            
             if (!$model->editable()) {
                 FlashMessages::add('warning', trans('messages.order has un editable status error'));
-        
+                
                 return redirect()->route('admin.'.$this->module.'.index');
             }
             
@@ -161,7 +161,7 @@ class OrderController extends BackendController
             $model->fill($input);
             
             $this->orderService->saveRelationships($model, $input);
-    
+            
             $model->total = $model->getTotal();
             
             $model->save();
@@ -254,7 +254,7 @@ class OrderController extends BackendController
             $subscribe_periods[$subscribe_period] = trans_choice('labels.subscribe_period_label', $subscribe_period);
         }
         $this->data('subscribe_periods', $subscribe_periods);
-    
+        
         $payment_methods = [];
         foreach (Order::getPaymentMethods() as $id => $payment_method) {
             $payment_methods[$id] = trans('labels.payment_method_'.$payment_method);
@@ -266,8 +266,8 @@ class OrderController extends BackendController
             $statuses[$id] = trans('labels.order_status_'.$status);
         }
         $this->data('statuses', $statuses);
-    
-        $delivery_times= [];
+        
+        $delivery_times = [];
         foreach (config('order.delivery_times') as $delivery_time) {
             $delivery_times[$delivery_time] = $delivery_time;
         }
@@ -279,28 +279,34 @@ class OrderController extends BackendController
         }
         $this->data('cities', $cities);
         
-        $weekly_menu_basket_id = $model->recipes()->first()->recipe->weekly_menu_basket_id;
-        $basket = WeeklyMenuBasket::with('recipes')->find($weekly_menu_basket_id);
-        $this->data('basket', $basket);
-        
-        $basket_recipes = ['' => trans('labels.please_select')];
-        foreach ($basket->recipes as $recipe) {
-            $basket_recipes[$recipe->id] = $recipe->recipe->name;
-        }
-        $this->data('basket_recipes', $basket_recipes);
-        
-        $recipes = OrderRecipe::where('order_recipes.order_id', $model->id)->joinBasketRecipes()->joinRecipes()->get(
-            [
-                'order_recipes.id',
-                'order_recipes.basket_recipe_id',
-                'basket_recipes.recipe_id',
-                'recipes.name',
-                'recipes.image',
-                'recipes.portions',
-            ]
-        );
+        $recipes = $model->recipes()->joinBasketRecipes()->joinRecipes()
+            ->get(
+                [
+                    'order_recipes.id',
+                    'order_recipes.basket_recipe_id',
+                    'basket_recipes.recipe_id',
+                    'recipes.name',
+                    'recipes.image',
+                    'recipes.portions',
+                ]
+            );
         $this->data('recipes', $recipes);
     
+        $recipe = $recipes->first();
+        if ($recipe) {
+            $weekly_menu_basket_id = $recipes->first()->recipe->weekly_menu_basket_id;
+            $basket = WeeklyMenuBasket::with('recipes')->find($weekly_menu_basket_id);
+            $this->data('basket', $basket);
+    
+            $basket_recipes = ['' => trans('labels.please_select')];
+            foreach ($basket->recipes as $recipe) {
+                $basket_recipes[$recipe->id] = $recipe->recipe->name;
+            }
+            $this->data('basket_recipes', $basket_recipes);
+        } else {
+            $this->data('basket', false);
+        }
+        
         $this->data('additional_baskets', Basket::additional()->get());
         
         $this->data('selected_baskets', $model->baskets->keyBy('id')->toArray());
