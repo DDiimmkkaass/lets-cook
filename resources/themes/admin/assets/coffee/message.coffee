@@ -37,7 +37,11 @@ message.show = (text, type) ->
   return
 
 $(document).on "ready", () ->
+  message_num = 0
+
   $('.main-message').each () ->
     setTimeout () =>
         $(this).fadeOut(500).remove()
-    , 5000
+    , 5000 + message_num * 300
+
+    message_num++
