@@ -123,4 +123,4 @@ $(document).on "ready", () ->
 
   $(document).on "click", ".order-ingredients-table .destroy", ->
     confirm_dialog () =>
-        Order.deleteIngredient(O$(this))
+        Order.deleteIngredient($(this))
