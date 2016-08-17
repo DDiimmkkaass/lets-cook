@@ -219,8 +219,8 @@ class Order extends Model
      */
     public function scopeForNextWeek($query)
     {
-        return $query->where('delivery_date', '>=', Carbon::now()->addWeek()->startOfWeek())
-            ->where('delivery_date', '<=', Carbon::now()->addWeek()->endOfWeek());
+        return $query->where('delivery_date', '>=', Carbon::now()->addWeek()->startOfWeek()->subDay()->startOfDay())
+            ->where('delivery_date', '<=', Carbon::now()->addWeek()->startOfWeek()->endOfDay());
     }
     
     /**
