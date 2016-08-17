@@ -30,8 +30,8 @@ class RecipeRequest extends FormRequest
                 'portions'     => 'numeric|min:0',
                 'cooking_time' => 'numeric|min:0',
                 'status'       => 'boolean',
-                
-                'parent_id' => 'required_id:bind,true|exists:recipes,id',
+
+                'parent_id' => 'required_if:bind,true|exists:recipes,id',
                 'bind'      => 'boolean',
                 
                 'baskets' => 'array',
