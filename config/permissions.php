@@ -71,6 +71,7 @@ return array (
     'weeklymenu.write',
     'weeklymenu.delete',
     
+    'order.create',
     'order.read',
     'order.write',
     'order.delete',

@@ -1,20 +1,38 @@
 <div class="form-group required @if ($errors->has('user_id')) has-error @endif">
-    {!! Form::label('user_id', trans('labels.user_id'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
+    {!! Form::label('order_user_select', trans('labels.user_id'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
-        {!! Form::select('user_id', $users, null, ['class' => 'form-control select2 input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+        <select name="user_id" id="user_id" class="form-control select2 input-sm" aria-hidden="true" required="required">
+            <option value="">@lang('labels.please_select')</option>
+            @foreach($users as $user)
+                <option value="{!! $user->id !!}"
+                        data-full_name="{!! $user->getFullName() !!}"
+                        data-email="{!! $user->email !!}"
+                        data-link="{!! route('admin.user.edit', $user->id) !!}"
+                        @if ($user->id == $model->user_id) selected="selected" @endif
+                >
+                    {!! $user->getFullName() !!}
+                </option>
+            @endforeach
+        </select>
 
         {!! $errors->first('user_id', '<p class="help-block error">:message</p>') !!}
     </div>
 
-    <a class="display-block margin-top-5" href="{!! route('admin.user.edit', $model->user_id) !!}" title="@lang('labels.go_to_user')">@lang('labels.go_to_user')</a>
+    <a id="order_user_link"
+       target="_blank"
+       class="display-block margin-top-5"
+       href="@if ($model->exists) {!! route('admin.user.edit', $model->user_id) !!} @else#@endif"
+       title="@lang('labels.go_to_user')">
+        @lang('labels.go_to_user')
+    </a>
 </div>
 
 <div class="form-group required @if ($errors->has('full_name')) has-error @endif">
     {!! Form::label('full_name', trans('labels.full_name'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
-        {!! Form::text('full_name', null, ['placeholder' => trans('labels.full_name'), 'required' => true, 'class' => 'form-control input-sm']) !!}
+        {!! Form::text('full_name', null, ['id' => 'full_name', 'placeholder' => trans('labels.full_name'), 'required' => true, 'class' => 'form-control input-sm']) !!}
 
         {!! $errors->first('full_name', '<p class="help-block error">:message</p>') !!}
     </div>
@@ -24,7 +42,7 @@
     {!! Form::label('email', trans('labels.email'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
-        {!! Form::text('email', null, ['placeholder' => trans('labels.email'), 'class' => 'form-control input-sm', 'required' => true]) !!}
+        {!! Form::text('email', null, ['id' => 'email', 'placeholder' => trans('labels.email'), 'class' => 'form-control input-sm', 'required' => true]) !!}
 
         {!! $errors->first('email', '<p class="help-block error">:message</p>') !!}
     </div>

@@ -12,10 +12,10 @@ use App\Http\Requests\FormRequest;
 use App\Models\Order;
 
 /**
- * Class OrderUpdateRequest
+ * Class OrderRequest
  * @package App\Http\Requests\Backend\Order
  */
-class OrderUpdateRequest extends FormRequest
+class OrderRequest extends FormRequest
 {
     
     /**

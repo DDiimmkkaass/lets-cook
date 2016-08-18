@@ -8,15 +8,14 @@
 
 namespace App\Http\Controllers\Backend;
 
-use App\Http\Requests\Backend\Order\OrderUpdateRequest;
+use App\Http\Requests\Backend\Order\OrderRequest;
 use App\Models\Basket;
 use App\Models\BasketRecipe;
 use App\Models\City;
 use App\Models\Group;
 use App\Models\Ingredient;
 use App\Models\Order;
-use App\Models\OrderRecipe;
-use App\Models\WeeklyMenuBasket;
+use App\Models\WeeklyMenu;
 use App\Services\OrderService;
 use DB;
 use Exception;
@@ -45,6 +44,8 @@ class OrderController extends BackendController
     public $accessMap = [
         'index'  => 'order.read',
         'show'   => 'order.read',
+        'create' => 'order.write',
+        'store'  => 'order.write',
         'edit'   => 'order.read',
         'update' => 'order.write',
     ];
@@ -95,6 +96,71 @@ class OrderController extends BackendController
     }
     
     /**
+     * Show the form for creating a new resource.
+     * GET /recipe/create
+     *
+     * @return \Response
+     */
+    public function create()
+    {
+        $model = new Order();
+        
+        $this->data('model', $model);
+        
+        $this->data('page_title', trans('labels.order_creating'));
+        
+        $this->breadcrumbs(trans('labels.order_creating'));
+        
+        $this->_fillAdditionalTemplateData($model);
+        
+        return $this->render('views.'.$this->module.'.create');
+    }
+    
+    /**
+     * Store a newly created resource in storage.
+     * POST /recipe
+     *
+     * @param \App\Http\Requests\Backend\Order\OrderRequest $request
+     *
+     * @return \Response
+     */
+    public function store(OrderRequest $request)
+    {
+        DB::beginTransaction();
+        
+        try {
+            $input = $this->orderService->prepareInputData($request);
+            
+            $model = new Order($input);
+            $model->save();
+            
+            $this->orderService->saveRelationships($model, $input);
+            
+            $model->total = $model->getTotal();
+            
+            $model->save();
+            
+            DB::commit();
+            
+            FlashMessages::add('success', trans('messages.save_ok'));
+            
+            return redirect()->route('admin.'.$this->module.'.index');
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            
+            FlashMessages::add('error', trans('messages.record_not_found'));
+            
+            return redirect()->route('admin.'.$this->module.'.index');
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            FlashMessages::add("error", trans('messages.save_error'));
+            
+            return redirect()->back()->withInput();
+        }
+    }
+    
+    /**
      * Display the specified resource.
      * GET /order/{id}
      *
@@ -139,22 +205,16 @@ class OrderController extends BackendController
      * PUT /order/{id}
      *
      * @param  int               $id
-     * @param OrderUpdateRequest $request
+     * @param OrderRequest $request
      *
      * @return \Response
      */
-    public function update($id, OrderUpdateRequest $request)
+    public function update($id, OrderRequest $request)
     {
         DB::beginTransaction();
         
         try {
             $model = Order::findOrFail($id);
-            
-            if (!$model->editable()) {
-                FlashMessages::add('warning', trans('messages.order has un editable status error'));
-                
-                return redirect()->route('admin.'.$this->module.'.index');
-            }
             
             $input = $this->orderService->prepareUpdateData($request);
             
@@ -183,6 +243,40 @@ class OrderController extends BackendController
             FlashMessages::add("error", trans('messages.update_error'));
             
             return redirect()->back()->withInput();
+        }
+    }
+    
+    /**
+     * @param int $basket_id
+     *
+     * @return array
+     */
+    public function getBasketRecipes($basket_id)
+    {
+        try {
+            $html = view('partials.selects.option', ['item' => ['id' => '', 'name' => trans('labels.please_select')]])
+                ->render();
+            
+            $recipes = BasketRecipe::where('weekly_menu_basket_id', $basket_id)->get();
+            
+            $recipes->each(
+                function ($item, $index) use (&$html) {
+                    return $html .= view(
+                        'partials.selects.option',
+                        ['item' => ['id' => $item->id, 'name' => $item->recipe->name]]
+                    )->render();
+                }
+            );
+            
+            return [
+                'status' => 'success',
+                'html'   => $html,
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
         }
     }
     
@@ -237,11 +331,7 @@ class OrderController extends BackendController
      */
     private function _fillAdditionalTemplateData(Order $model)
     {
-        $users = [];
-        foreach (Group::with('users')->clients()->first()->users as $user) {
-            $users[$user->id] = $user->getFullName();
-        }
-        $this->data('users', $users);
+        $this->data('users', Group::with('users')->clients()->first()->users);
         
         $types = [];
         foreach (Order::getTypes() as $id => $type) {
@@ -291,7 +381,7 @@ class OrderController extends BackendController
                 ]
             );
         $this->data('recipes', $recipes);
-    
+        
         $basket = $model->getMainBasket();
         $this->data('basket', $basket);
         if ($basket) {
@@ -300,7 +390,18 @@ class OrderController extends BackendController
                 $basket_recipes[$recipe->id] = $recipe->recipe->name;
             }
             $this->data('basket_recipes', $basket_recipes);
+        } else {
+            $this->data('basket_recipes', ['' => trans('labels.please_select_basket')]);
         }
+        
+        $baskets = ['' => trans('labels.please_select')];
+        $weekly_menu = WeeklyMenu::current()->first();
+        if ($weekly_menu) {
+            foreach ($weekly_menu->baskets()->get() as $basket) {
+                $baskets[$basket->id] = $basket->basket->name;
+            }
+        }
+        $this->data('baskets', $baskets);
         
         $this->data('additional_baskets', Basket::additional()->get());
         

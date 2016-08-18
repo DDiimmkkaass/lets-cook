@@ -181,7 +181,7 @@ class Order extends Model
      */
     public function getDeliveryDateAttribute($value)
     {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $value)->startOfDay()->format('d-m-Y');
+        return empty($value) ? '' : Carbon::createFromFormat('Y-m-d H:i:s', $value)->startOfDay()->format('d-m-Y');
     }
     
     /**
@@ -282,7 +282,7 @@ class Order extends Model
      */
     public function getDeliveryDate()
     {
-        return Carbon::createFromFormat('d-m-Y', $this->delivery_date)->startOfDay();
+        return empty($this->delivery_date) ? '' : Carbon::createFromFormat('d-m-Y', $this->delivery_date)->startOfDay();
     }
     
     /**

@@ -35,6 +35,21 @@ Order.deleteIngredient = ($button) ->
   $button.closest("tr").remove()
 
 $(document).on "ready", () ->
+  #user select
+  $('#user_id').on "select2:select", () ->
+    if $(this).val()
+      $option = $(this).find('option:selected')
+
+      $('#full_name').val $option.data('full_name')
+      $('#email').val $option.data('email')
+
+      $('#order_user_link').attr 'href', $option.data('link')
+    else
+      $('#full_name').val ''
+      $('#email').val ''
+
+      $('#order_user_link').attr 'href', '#'
+
   #subscribe period
   Order.processSubscribePeriod()
 
@@ -48,6 +63,29 @@ $(document).on "ready", () ->
     Order.processCity()
 
   #main basket
+  $('.order-basket-select').on "change", ->
+    basket = $(this).val()
+
+    if basket
+      $.ajax
+        url: '/admin/order/get-basket-recipes/' + basket
+        type: 'GET'
+        dataType: 'json'
+        error: (response) =>
+          processError response, null
+        success: (response) =>
+          if response.status is 'success'
+            $('.order-recipe-select').html response.html
+
+            $('.order-recipes-table [id^="recipe_"]').each () ->
+              $(this).fadeOut(500, () =>
+                 $(this).remove()
+              );
+
+            fixCustomInputs($(this).closest('.tab-pane'))
+          else
+            message.show response.message, response.status
+
   $('.order-recipe-select').on "change", ->
     recipe = $(this).val()
 

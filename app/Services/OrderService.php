@@ -140,7 +140,7 @@ class OrderService
      *
      * @return array
      */
-    public function prepareUpdateData(Request $request)
+    public function prepareInputData(Request $request)
     {
         $data = $request->all();
         

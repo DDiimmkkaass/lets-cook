@@ -155,6 +155,13 @@
                     <a href="{!! route('admin.order.index') !!}">
                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                         <span>@lang('labels.orders')</span>
+
+                        @if ($user->hasAccess('order.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.order')"
+                                   data-href="{!! route('admin.order.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
                     </a>
                 </li>
             @endif
