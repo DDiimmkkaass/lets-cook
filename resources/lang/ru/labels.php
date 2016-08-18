@@ -456,6 +456,7 @@ return array (
   'orders_list' => 'Список заказов',
   'order' => 'Заказ',
   'order_editing' => 'Редактирование заказа',
+  'order_creating' => 'Создание заказа',
   'another' => 'Другой',
   'tab_delivery' => 'Доставка',
   'enter_a_city' => 'Введите город',
