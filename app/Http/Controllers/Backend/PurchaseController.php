@@ -103,14 +103,14 @@ class PurchaseController extends BackendController
     }
     
     /**
-     * @param int $week
      * @param int $year
+     * @param int $week
      *
      * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function show($week, $year)
+    public function show($year, $week)
     {
-        if ($week == Carbon::now()->addWeek()->weekOfYear && $year == Carbon::now()->addWeek()->year) {
+        if ($year == Carbon::now()->addWeek()->year && $week == Carbon::now()->addWeek()->weekOfYear) {
             return redirect()->route('admin.'.$this->module.'.edit');
         }
         
