@@ -159,6 +159,7 @@ return array (
     'payment_method' => 'способ оплаты',
     'additional_parameter' => 'дополнительный параметр',
     'repacking' => 'переупаковка',
+    'package' => 'пакет',
   ),
   'recipe steps' => 'Вы должны добавить хотя бы один шаг',
   'recipe ingredients' => 'Вы должны выбрать хотя бы один ингредиент',

@@ -8,6 +8,31 @@
     </div>
 </div>
 
+<div class="form-group required @if ($errors->has('package')) has-error @endif">
+    {!! Form::label('package', trans('labels.package'), ['class' => 'control-label col-xs-12 col-sm-3 col-md-2']) !!}
+
+    <div class="col-xs-12 col-sm-9 col-md-10">
+        <div class="col-xs-6 col-sm-4 col-md-2 padding-left-0">
+            <div class="checkbox-label">
+                {!! Form::radio('package', 1, null, ['id' => 'package', 'class' => 'square']) !!}
+
+                <span class="title">{!! trans('labels.package') !!} 1</span>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-4 col-md-2">
+            <div class="checkbox-label">
+                {!! Form::radio('package', 2, null, ['id' => 'package', 'class' => 'square']) !!}
+
+                <span class="title">{!! trans('labels.package') !!} 2</span>
+            </div>
+        </div>
+
+        <div class="clearfix"></div>
+
+        {!! $errors->first('package', '<p class="help-block error">:message</p>') !!}
+    </div>
+</div>
+
 <div class="form-group required @if ($errors->has('position')) has-error @endif">
     {!! Form::label('position', trans('labels.position'), ['class' => 'control-label col-xs-12 col-sm-3 col-md-2']) !!}
 

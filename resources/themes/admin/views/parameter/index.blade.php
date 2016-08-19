@@ -12,6 +12,7 @@
                             ->addHead([
                                 ['text' => trans('labels.id')],
                                 ['text' => trans('labels.name')],
+                                ['text' => trans('labels.package')],
                                 ['text' => trans('labels.position')],
                                 ['text' => trans('labels.actions')]
                             ])

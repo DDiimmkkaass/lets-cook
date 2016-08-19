@@ -73,7 +73,7 @@ class ParameterController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = Parameter::select('id', 'name', 'position');
+            $list = Parameter::select('id', 'name', 'package', 'position');
 
             return $dataTables = Datatables::of($list)
                 ->filterColumn('id', 'where', 'parameters.id', '=', '$1')

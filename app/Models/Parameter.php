@@ -17,17 +17,18 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Parameter extends Model
 {
-
+    
     use PositionSortedTrait;
-
+    
     /**
      * @var array
      */
     protected $fillable = [
         'name',
+        'package',
         'position',
     ];
-
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */

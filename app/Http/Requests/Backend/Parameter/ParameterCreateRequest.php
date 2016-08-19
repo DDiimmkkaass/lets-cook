@@ -16,7 +16,7 @@ use App\Http\Requests\FormRequest;
  */
 class ParameterCreateRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,6 +26,7 @@ class ParameterCreateRequest extends FormRequest
     {
         return [
             'name'     => 'required|unique:parameters,name',
+            'package'  => 'required|integer|in:1,2',
             'position' => 'integer',
         ];
     }

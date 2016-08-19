@@ -28,6 +28,7 @@ class ParameterUpdateRequest extends FormRequest
 
         return [
             'name'     => 'required|unique:parameters,name,'.$id.',id',
+            'package'  => 'required|integer|in:1,2',
             'position' => 'integer',
         ];
     }
