@@ -106,6 +106,7 @@ class PurchaseService
     public function download($year, $week, $supplier_id = false)
     {
         $file_name = $this->_getDownloadFileName($year, $week, $supplier_id);
+        $tab_name = $this->_getSheetTabName($supplier_id);
         
         $data = $this->_getPurchaseFor($year, $week, $supplier_id);
         
@@ -120,9 +121,9 @@ class PurchaseService
         
         Excel::create(
             $file_name,
-            function ($excel) use ($data) {
+            function ($excel) use ($data, $tab_name) {
                 $excel->sheet(
-                    trans('labels.sheet_1'),
+                    $tab_name,
                     function ($sheet) use ($data) {
                         $sheet->fromArray($data);
                     }
@@ -366,6 +367,22 @@ class PurchaseService
         
         return str_replace(' ', '_', trans('labels.list_of_purchase')).
         '_'.trans('labels.w_label').$week.'_'.$year.($supplier ? '_'.str_replace(' ', '_', $supplier) : '');
+    }
+    
+    /**
+     * @param int|bool $supplier
+     *
+     * @return string
+     */
+    private function _getSheetTabName($supplier = false)
+    {
+        if ($supplier > 0) {
+            $name = Supplier::whereId($supplier)->first()->name;
+        } elseif ($supplier !== false) {
+            $name = trans('labels.purchase_manager_excel_title');
+        }
+    
+        return $name;
     }
     
     /**
