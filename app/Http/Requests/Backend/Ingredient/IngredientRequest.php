@@ -33,7 +33,7 @@ class IngredientRequest extends FormRequest
             'supplier_id' => 'required|exists:suppliers,id',
             'unit_id'     => 'required|exists:units,id',
             
-            'parameters.*' => 'exists:parameters,id',
+            'additional_parameter' => 'exists:parameters,id',
             
             'nutritional_values.*.id'    => 'exists:nutritional_values,id',
             'nutritional_values.*.value' => 'numeric',

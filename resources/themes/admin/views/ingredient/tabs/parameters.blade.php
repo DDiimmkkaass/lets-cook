@@ -1,15 +1,16 @@
 @foreach($parameters as $key => $parameter)
-
-    <div class="form-group @if ($errors->has('parameters['.$key.']')) has-error @endif">
-        {!! Form::label('parameters_'.$key, $parameter->name, ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
-
-        <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-            <label for="parameters_{!! $key !!}" class="checkbox-label">
-                {!! Form::checkbox('parameters['.$key.']', $parameter->id, isset($selected_parameters[$parameter->id]) ? true : false, ['id' => 'parameters_'.$key, 'class' => 'square']) !!}
+    <div class="form-group @if ($errors->has('additional_parameter')) has-error @endif">
+        <div class="col-xs-12">
+            <label for="parameters_{!! $key !!}" class="checkbox-label margin-left-10">
+                {!! Form::radio('additional_parameter', $parameter->id, isset($selected_parameters[$parameter->id]) ? true : false, ['id' => 'additional_parameter_'.$key, 'class' => 'square']) !!}
+                <span class="title">{!! $parameter->name !!}</span>
             </label>
-
-            {!! $errors->first('parameters['.$key.']', '<p class="help-block error">:message</p>') !!}
         </div>
     </div>
-
 @endforeach
+
+@if ($errors->has('additional_parameter'))
+    <div class="form-group has-error">
+        {!! $errors->first('additional_parameter', '<p class="help-block error">:message</p>') !!}
+    </div>
+@endif

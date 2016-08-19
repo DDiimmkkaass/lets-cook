@@ -455,7 +455,7 @@ class IngredientController extends BackendController
      */
     private function _saveRelationships(Ingredient $model, Request $request)
     {
-        $model->parameters()->sync($request->get('parameters', []));
+        $model->parameters()->sync((array) $request->get('additional_parameter', []));
         
         foreach ($request->get('nutritional_values', []) as $nutritional_value) {
             $_model = IngredientNutritionalValue::firstOrNew(

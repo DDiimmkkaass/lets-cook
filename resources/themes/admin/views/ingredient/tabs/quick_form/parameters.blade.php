@@ -2,8 +2,8 @@
 
     <div class="form-group margin-bottom-10">
         <div class="col-xs-1">
-            <label for="parameters_{!! $key !!}" class="checkbox-label">
-                {!! Form::checkbox('parameters['.$key.']', $parameter->id, false, ['id' => 'parameters_'.$key, 'class' => 'square']) !!}
+            <label for="additional_parameter_{!! $key !!}" class="checkbox-label">
+                {!! Form::radio('additional_parameter', $parameter->id, false, ['id' => 'additional_parameter_'.$key, 'class' => 'square']) !!}
             </label>
         </div>
 
