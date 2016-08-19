@@ -165,4 +165,6 @@ return array (
   'diff_in_days' => 'Промежуток между днями :attribute и :param должен быть равен :diff.',
   'you cant remove all recipes' => 'Вы не можете удалить все рецепты',
   'you must add at least one recipe' => 'Вы должны добавить не менее одного рецепта',
+  'delivery_date_day_of_week' => 'День доставки может быть только в воскресенье или понедельник',
+  'delivery_date_date' => 'После четверга доставка может быть только на следующей неделе',
 );

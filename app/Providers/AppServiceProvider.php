@@ -2,13 +2,17 @@
 
 namespace App\Providers;
 
-use App\Validators\DiffInDaysValidator;
+use App\Validators\AppValidator;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use Barryvdh\TranslationManager\ManagerServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Validator;
 
+/**
+ * Class AppServiceProvider
+ * @package App\Providers
+ */
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -18,12 +22,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Validator::resolver(function($translator, $data, $rules, $messages)
-        {
-            return new DiffInDaysValidator($translator, $data, $rules, $messages);
-        });
+        $this->_registerValidators();
     }
-
+    
     /**
      * Register any application services.
      *
@@ -32,10 +33,10 @@ class AppServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind('App\Contracts\Permissions', 'App\Http\Providers\PermissionsProvider');
-
+        
         $this->_registerDevDependencies();
     }
-
+    
     /**
      * Register any application dev dependencies.
      *
@@ -48,5 +49,17 @@ class AppServiceProvider extends ServiceProvider
             $this->app->register(IdeHelperServiceProvider::class);
             $this->app->register(ManagerServiceProvider::class);
         }
+    }
+    
+    /**
+     * Register any custom validators for application.
+     */
+    private function _registerValidators()
+    {
+        Validator::resolver(
+            function ($translator, $data, $rules, $messages) {
+                return new AppValidator($translator, $data, $rules, $messages);
+            }
+        );
     }
 }

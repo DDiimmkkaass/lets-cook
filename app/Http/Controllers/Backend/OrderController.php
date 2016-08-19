@@ -216,7 +216,7 @@ class OrderController extends BackendController
         try {
             $model = Order::findOrFail($id);
             
-            $input = $this->orderService->prepareUpdateData($request);
+            $input = $this->orderService->prepareInputData($request);
             
             $model->fill($input);
             
