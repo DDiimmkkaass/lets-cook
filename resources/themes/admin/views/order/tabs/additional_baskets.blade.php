@@ -5,7 +5,7 @@
                 <label for="baskets_{!! $basket->id !!}" class="checkbox-label">
                     {!! Form::checkbox('baskets['.$basket->id.']', $basket->id, isset($selected_baskets[$basket->id]) ? true : false, ['id' => 'baskets_'.$basket->id, 'class' => 'square']) !!}
                 </label>
-                <span class="margin-left-10 basket-name"><b>{!! $basket->name !!}</b> ({!! $basket->price !!} {!! $currency !!}) </span>
+                <span class="margin-left-10 basket-name"><b>{!! link_to_route('admin.basket.show', $basket->name, [$basket->id, 'type' => 'additional'], ['target' => '_blank']) !!}</b> ({!! $basket->price !!} {!! $currency !!}) </span>
 
                 {!! $errors->first('baskets['.$basket->id.']', '<p class="help-block error">:message</p>') !!}
             </div>

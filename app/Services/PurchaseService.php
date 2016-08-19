@@ -33,8 +33,8 @@ class PurchaseService
     public function generate()
     {
         $list = [
-            'year' => Carbon::now()->addWeek()->year,
-            'week' => Carbon::now()->addWeek()->weekOfYear,
+            'year' => Carbon::now()->year,
+            'week' => Carbon::now()->weekOfYear,
         ];
         
         $list['suppliers'] = $this->_getSuppliers();
@@ -199,6 +199,7 @@ class PurchaseService
             ->joinIngredientSupplier()
             ->joinIngredientCategory()
             ->whereIn('recipe_id', array_keys($recipes))
+            ->where('recipe_ingredients.type', RecipeIngredient::getTypeIdByName('normal'))
             ->orderBy('suppliers.priority')
             ->orderBy('categories.position')
             ->get();

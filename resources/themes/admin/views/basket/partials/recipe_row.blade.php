@@ -12,7 +12,7 @@
             @if ($model->image)
                 @include('partials.image', ['src' => $model->image, 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
             @endif
-            {!! $model->name !!} <span class="lover-case">(@lang('labels.portions'): {!! $model->portions !!})</span>
+            {!! link_to_route('admin.recipe.show', $model->name, $model->id, ['target' => '_blank']) !!} <span class="lover-case">(@lang('labels.portions'): {!! $model->portions !!})</span>
 
             <input type="hidden" name="recipes[new][{!! $model->id !!}][image]" value="{!! $model->image !!}">
             <input type="hidden" name="recipes[new][{!! $model->id !!}][name]" value="{!! $model->name !!}">

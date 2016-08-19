@@ -74,8 +74,8 @@ class Purchase extends Model
      */
     public function scopeForNextWeek($query)
     {
-        return $query->where('year', Carbon::now()->addWeek()->year)
-            ->where('week', Carbon::now()->addWeek()->weekOfYear);
+        return $query->where('year', Carbon::now()->year)
+            ->where('week', Carbon::now()->weekOfYear);
     }
     
     /**
