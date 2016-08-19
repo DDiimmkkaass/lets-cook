@@ -157,6 +157,8 @@ return array (
     'sale_price' => 'цена на продажу',
     'ingredients_home' => 'ингредиенты дома',
     'payment_method' => 'способ оплаты',
+    'additional_parameter' => 'дополнительный параметр',
+    'repacking' => 'переупаковка',
   ),
   'recipe steps' => 'Вы должны добавить хотя бы один шаг',
   'recipe ingredients' => 'Вы должны выбрать хотя бы один ингредиент',

@@ -518,4 +518,5 @@ return array (
   'created_at' => 'Создан',
   'please_select_basket' => 'Виберите корзину',
   'for_current_week' => 'На текущую неделю',
+  'need_repacking' => 'Необходима переупаковка',
 );

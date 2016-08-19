@@ -222,7 +222,9 @@ class IngredientController extends BackendController
         try {
             DB::beginTransaction();
             
-            $model = new Ingredient($request->all());
+            $input = $this->ingredientService->prepareInputData($request);
+            
+            $model = new Ingredient($input);
             $model->save();
             
             $this->_saveRelationships($model, $request);
@@ -253,8 +255,10 @@ class IngredientController extends BackendController
     {
         try {
             DB::beginTransaction();
+    
+            $input = $this->ingredientService->prepareInputData($request);
             
-            $model = new Ingredient($request->all());
+            $model = new Ingredient($input);
             $model->save();
             
             $this->_saveRelationships($model, $request);
@@ -332,7 +336,9 @@ class IngredientController extends BackendController
             
             DB::beginTransaction();
             
-            $model->update($request->all());
+            $input = $this->ingredientService->prepareInputData($request);
+            
+            $model->update($input);
             
             $this->_saveRelationships($model, $request);
             

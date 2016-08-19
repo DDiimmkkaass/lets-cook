@@ -29,6 +29,7 @@ class Ingredient extends Model
         'image',
         'price',
         'sale_price',
+        'repacking',
         'supplier_id',
         'category_id',
         'unit_id',

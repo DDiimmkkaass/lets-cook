@@ -253,6 +253,20 @@ class IngredientService
     }
     
     /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function prepareInputData(Request $request)
+    {
+        $input = $request->all();
+        
+        $input['repacking'] = isset($input['repacking']) ? 1 : 0;
+        
+        return $input;
+    }
+    
+    /**
      * @param Builder $list
      */
     private function _implodeFilters(&$list)

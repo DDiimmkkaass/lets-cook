@@ -11,6 +11,8 @@
 
 @if ($errors->has('additional_parameter'))
     <div class="form-group has-error">
-        {!! $errors->first('additional_parameter', '<p class="help-block error">:message</p>') !!}
+        <div class="col-xs-12">
+            {!! $errors->first('additional_parameter', '<p class="help-block error">:message</p>') !!}
+        </div>
     </div>
 @endif
