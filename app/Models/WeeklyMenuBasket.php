@@ -59,6 +59,14 @@ class WeeklyMenuBasket extends Model
     }
     
     /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->basket->name;
+    }
+    
+    /**
      * @return int
      */
     public function getInternalPrice()

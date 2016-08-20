@@ -128,7 +128,7 @@ $directions: top right bottom left
 @each $property in $properties
   @each $direction in $directions
     $i: 0
-    @while $i <= 25
+    @while $i <= 30
       .#{$property}-#{$direction}-#{$i}
         #{$property}-#{$direction}: #{$i}px
       $i: $i + 5
@@ -136,7 +136,7 @@ $directions: top right bottom left
 $properties: margin padding
 @each $property in $properties
   $i: 0
-  @while $i <= 25
+  @while $i <= 30
     .#{$property}-#{$i}
       #{$property}: #{$i}px
       $i: $i + 5
@@ -515,6 +515,15 @@ table.dataTable
       .input-sm
         width: 70px!important
     th:nth-child(5)
+      width: 200px!important
+      .input-sm
+        width: 90px!important
+
+/*orders-table*/
+/*recipes table*/
+.orders-table
+  tfoot
+    th:nth-child(2)
       width: 200px!important
       .input-sm
         width: 90px!important

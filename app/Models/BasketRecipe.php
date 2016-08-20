@@ -40,6 +40,14 @@ class BasketRecipe extends Model
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function weekly_menu_basket()
+    {
+        return $this->belongsTo(WeeklyMenuBasket::class, 'weekly_menu_basket_id')->with('basket');
+    }
+    
+    /**
      * @param int $value
      */
     public function setBasketIdAttribute($value)
@@ -63,5 +71,17 @@ class BasketRecipe extends Model
     public function scopeJoinRecipe($query)
     {
         return $query->leftJoin('recipes', 'recipes.id', '=', 'basket_recipes.recipe_id');
+    }
+    
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return str_limit(str_slug($this->weekly_menu_basket->getName()), 3, '').''.
+            $this->position.'-'.
+            $this->recipe->name.'-'.
+            $this->weekly_menu_basket->portions;
+        
     }
 }

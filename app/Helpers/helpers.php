@@ -296,6 +296,22 @@ if (!function_exists('get_localized_date')) {
     }
 }
 
+if (!function_exists('day_of_week')) {
+    /**
+     * @param string $date
+     * @param string $in_format
+     *
+     * @return string
+     */
+    function day_of_week($date, $in_format = 'Y-m-d H:i:s')
+    {
+        return trans_choice(
+            'labels.day_of_week_to_string',
+            LocalizedCarbon::createFromFormat($in_format, $date)->dayOfWeek
+        );
+    }
+}
+
 if (!function_exists('get_hashed_url')) {
     /**
      * @param        $model

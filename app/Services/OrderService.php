@@ -8,12 +8,16 @@
 
 namespace App\Services;
 
+use App\Models\Basket;
 use App\Models\Order;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
+use Carbon;
 use Datatables;
+use DB;
 use Exception;
 use FlashMessages;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
 /**
@@ -24,9 +28,11 @@ class OrderService
 {
     
     /**
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array|\Bllim\Datatables\json
      */
-    public function table()
+    public function table(Request $request)
     {
         $list = Order::select(
             'id',
@@ -41,6 +47,8 @@ class OrderService
             'delivery_time',
             'total'
         );
+        
+        $this->_implodeFilters($list, $request);
         
         return $dataTables = Datatables::of($list)
             ->filterColumn('id', 'where', 'orders.id', '=', '$1')
@@ -106,7 +114,7 @@ class OrderService
                         ]
                     )->render();
                     
-                    return $model->delivery_time.' '.$html;
+                    return '<div class="text-center">'.$model->delivery_time.' '.$html.'<div>';
                 }
             )
             ->editColumn(
@@ -133,6 +141,74 @@ class OrderService
             ->removeColumn('subscribe_period')
             ->removeColumn('delivery_time')
             ->make();
+    }
+    
+    /**
+     * @return array
+     */
+    public function getOrdersStatistic()
+    {
+        $statistic = [
+            'days'               => [],
+            'baskets'            => [],
+            'additional_baskets' => [],
+            'count'              => 0,
+            'sum'                => 0,
+            'sum_with_discount'  => 0,
+        ];
+        
+        $orders = Order::notOfStatus(['archived', 'deleted'])->forNextWeek()->get();
+        
+        foreach ($orders as $order) {
+            if (!isset($statistic['days'][$order->delivery_date])) {
+                $statistic['days'][$order->delivery_date] = [
+                    'day'               => $order->delivery_date,
+                    'title'             => day_of_week($order->delivery_date, 'd-m-Y'),
+                    'count'             => 0,
+                    'sum'               => 0,
+                    'sum_with_discount' => 0,
+                ];
+            }
+            
+            $statistic['days'][$order->delivery_date]['count']++;
+            $statistic['days'][$order->delivery_date]['sum'] += $order->total;
+            $statistic['days'][$order->delivery_date]['sum_with_discount'] += $order->total;
+            
+            $statistic['count']++;
+            $statistic['sum'] += $order->total;
+            $statistic['sum_with_discount'] += $order->total;
+        }
+        
+        $recipes = OrderRecipe::with('recipe', 'recipe.recipe', 'recipe.weekly_menu_basket', 'order')
+            ->whereIn('order_id', $orders->pluck('id'))
+            ->get();
+        
+        foreach ($recipes as $recipe) {
+            if (!isset($statistic['baskets'][$recipe->recipe->weekly_menu_basket_id])) {
+                $statistic['baskets'][$recipe->recipe->weekly_menu_basket_id] = [
+                    'name'    => $recipe->recipe->weekly_menu_basket->basket->name,
+                    'recipes' => [],
+                ];
+            }
+            
+            if (!isset($statistic['baskets'][$recipe->recipe->weekly_menu_basket_id]['recipes'][$recipe->recipe->id])) {
+                $statistic['baskets'][$recipe->recipe->weekly_menu_basket_id]['recipes'][$recipe->recipe->id] = [
+                    'recipe' => $recipe->recipe,
+                    'count'  => 0,
+                ];
+            }
+            
+            $statistic['baskets'][$recipe->recipe->weekly_menu_basket_id]['recipes'][$recipe->recipe->id]['count']++;
+        }
+        
+        $statistic['additional_baskets'] = Basket::additional()->joinBasketOrder()->joinOrders()
+            ->with('recipes')
+            ->whereIn('orders.id', $orders->pluck('id'))
+            ->select('baskets.id', 'baskets.name', DB::raw('SUM(baskets.price) as total'), DB::raw('count(basket_id) as count'))
+            ->groupBy('basket_order.basket_id')
+            ->get();
+        
+        return $statistic;
     }
     
     /**
@@ -170,15 +246,15 @@ class OrderService
     public function createTmpl(Order $order)
     {
         $tmpl = $order->replicate();
-
+        
         $tmpl->parent_id = $order->id;
         $tmpl->status = Order::getStatusIdByName('tmpl');
         $tmpl->delivery_date = $this->_getDeliveryDateForTmplOrder($order);
-
+        
         $tmpl->save();
-
+        
         $tmpl->baskets()->sync($order->baskets()->get(['id'])->pluck('id')->toArray());
-
+        
         $order->load('recipes', 'ingredients');
         $relations = $order->getRelations();
         foreach ($relations as $relation_name => $relation) {
@@ -189,7 +265,7 @@ class OrderService
                 $tmpl_record->push();
             }
         }
-
+        
         return $tmpl;
     }
     
@@ -302,5 +378,35 @@ class OrderService
         $delivery_date = $latest_tmpl_order->getDeliveryDate();
         
         return $delivery_date->addWeeks($parent_order->subscribe_period)->format('d-m-Y');
+    }
+    
+    /**
+     * @param Builder $list
+     * @param Request $request
+     */
+    private function _implodeFilters(&$list, $request)
+    {
+        $filters = $request->get('datatable_filters');
+        
+        if (count($filters)) {
+            foreach ($filters as $filter => $value) {
+                if ($value !== '' && $value !== 'null') {
+                    switch ($filter) {
+                        case 'delivery_date_from':
+                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
+                                $value = Carbon::createFromFormat('d-m-Y', $value)->startOfDay()->format('Y-m-d H:i:s');
+                                $list->where('orders.delivery_date', '>=', $value);
+                            }
+                            break;
+                        case 'delivery_date_to':
+                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
+                                $value = Carbon::createFromFormat('d-m-Y', $value)->endOfDay()->format('Y-m-d H:i:s');
+                                $list->where('orders.delivery_date', '<=', $value);
+                            }
+                            break;
+                    }
+                }
+            }
+        }
     }
 }

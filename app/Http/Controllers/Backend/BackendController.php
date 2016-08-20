@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\BaseController;
+use App\Services\OrderService;
 use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use JavaScript;
@@ -127,10 +128,16 @@ class BackendController extends BaseController
     }
     
     /**
+     * @param \App\Services\OrderService $orderService
+     *
      * @return \Illuminate\Contracts\View\View
      */
-    public function getIndex()
+    public function getIndex(OrderService $orderService)
     {
+        $this->data('statistic', $orderService->getOrdersStatistic());
+    
+        $this->data('page_title', trans('labels.home'));
+        
         return $this->render();
     }
     

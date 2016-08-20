@@ -86,8 +86,10 @@ class OrderController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            return $this->orderService->table();
+            return $this->orderService->table($request);
         }
+    
+        $this->data('statistic', $this->orderService->getOrdersStatistic());
         
         $this->data('page_title', trans('labels.orders'));
         $this->breadcrumbs(trans('labels.orders_list'));

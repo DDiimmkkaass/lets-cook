@@ -211,7 +211,28 @@ class Order extends Model
      */
     public function scopeOfStatus($query, $status)
     {
-        return $query->whereStatus(self::getStatusIdByName($status));
+        $statuses = [];
+        foreach ((array) $status as $value) {
+            $statuses[] = self::getStatusIdByName($value);
+        }
+        
+        return $query->whereIn('status', $statuses);
+    }
+    
+    /**
+     * @param        $query
+     * @param string $status
+     *
+     * @return mixed
+     */
+    public function scopeNotOfStatus($query, $status)
+    {
+        $statuses = [];
+        foreach ((array) $status as $value) {
+            $statuses[] = self::getStatusIdByName($value);
+        }
+        
+        return $query->whereNotIn('status', $statuses);
     }
     
     /**
