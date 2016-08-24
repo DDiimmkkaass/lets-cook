@@ -4,9 +4,9 @@ namespace App\Console;
 
 use App\Console\Commands\ArchiveCompletedOrders;
 use App\Console\Commands\GenerateTmplOrders;
-use App\Console\Commands\ProcessPaidOrdersForNextWeek;
+use App\Console\Commands\ProcessPaidOrdersForCurrentWeek;
 use App\Console\Commands\UpdateSearchIndex;
-use App\Console\Commands\ProcessTmplOrdersForNextWeek;
+use App\Console\Commands\ProcessTmplOrdersForCurrentWeek;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -23,8 +23,8 @@ class Kernel extends ConsoleKernel
         
         // orders
         GenerateTmplOrders::class,
-        ProcessTmplOrdersForNextWeek::class,
-        ProcessPaidOrdersForNextWeek::class,
+        ProcessTmplOrdersForCurrentWeek::class,
+        ProcessPaidOrdersForCurrentWeek::class,
         ArchiveCompletedOrders::class
     ];
 
@@ -39,9 +39,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('orders:generate-tmpl-orders')->cron('0 0 * * 2');
         
-        $schedule->command('orders:process-tmp-orders-for-next-week')->cron('0 0 * * 2');
+        $schedule->command('orders:process-tmp-orders-for-current-week')->cron('0 0 * * 2');
     
-        $schedule->command('orders:process-paid-orders-for-next-week')->cron('0 10 * * 5');
+        $schedule->command('orders:process-paid-orders-for-current-week')->cron('0 10 * * 5');
     
         $schedule->command('orders:archive-completed-orders')->cron('0 0 * * 2');
     }

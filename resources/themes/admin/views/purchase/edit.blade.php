@@ -10,7 +10,9 @@
 
                 @foreach($list['suppliers'] as $supplier_id => $supplier)
 
-                    @include('purchase.partials.supplier')
+                    @if ($supplier_id)
+                        @include('purchase.partials.supplier')
+                    @endif
 
                 @endforeach
 

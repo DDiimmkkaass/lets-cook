@@ -130,7 +130,10 @@ class PurchaseController extends BackendController
      */
     public function edit()
     {
-        $list = $this->purchaseService->generate();
+        $year = Carbon::now()->year;
+        $week = Carbon::now()->weekOfYear;
+        
+        $list = $this->purchaseService->getForWeek($year, $week);
         
         $this->data('list', $list);
         
@@ -159,13 +162,13 @@ class PurchaseController extends BackendController
     public function ajaxFieldChange($purchase_id)
     {
         try {
-            $model = Purchase::forNextWeek()->whereId($purchase_id)->first();
+            $model = Purchase::forCurrentWeek()->whereId($purchase_id)->first();
             
             if ($model) {
                 $field = request('field', null);
                 $value = request('value', null);
                 
-                if (!empty($field)) {
+                if (!empty($field) && in_array($field, Purchase::getChangeableFields())) {
                     $model->{$field} = $value;
                     
                     if ($model->save()) {

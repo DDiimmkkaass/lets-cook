@@ -263,7 +263,7 @@ class Order extends Model
     /**
      * @param $query
      */
-    public function scopeForNextWeek($query)
+    public function scopeForCurrentWeek($query)
     {
         $year = Carbon::now()->year;
         $week = Carbon::now()->weekOfYear;
@@ -285,6 +285,36 @@ class Order extends Model
     public function isSubscribe()
     {
         return $this->type == self::getTypeIdByName('subscribe');
+    }
+    
+    /**
+     * @return bool
+     */
+    public function forCurrentWeek()
+    {
+        $year = Carbon::now()->year;
+        $week = Carbon::now()->weekOfYear;
+        
+        $from = Carbon::create($year, 1, 1)->startOfWeek()->addWeeks($week)->endOfWeek()->startOfDay();
+        $to = Carbon::create($year, 1, 1)->startOfWeek()->addWeeks($week)->endOfWeek()->addDay()->endOfDay();
+        
+        return $this->delivery_date >= $from && $this->delivery_date <= $to;
+    }
+    
+    /**
+     * @param string|null $status
+     *
+     * @return bool|string
+     */
+    public function status($status = null)
+    {
+        $_status = $this->getStringStatus();
+        
+        if (!$status) {
+            return $_status;
+        }
+        
+        return $_status == $status;
     }
     
     /**

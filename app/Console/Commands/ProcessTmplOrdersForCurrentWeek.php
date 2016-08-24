@@ -10,24 +10,24 @@ use Event;
 use Exception;
 
 /**
- * Class ProcessTmplOrdersForNextWeek
+ * Class ProcessTmplOrdersForCurrentWeek
  * @package App\Console\Commands
  */
-class ProcessTmplOrdersForNextWeek extends Command
+class ProcessTmplOrdersForCurrentWeek extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'orders:process-tmp-orders-for-next-week';
+    protected $signature = 'orders:process-tmp-orders-for-current-week';
     
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Process tmpl orders with delivery for the next week';
+    protected $description = 'Process tmpl orders with delivery for the current week';
     
     /**
      * @var \App\Services\PaymentService
@@ -55,7 +55,7 @@ class ProcessTmplOrdersForNextWeek extends Command
     {
         $this->log('Start '.$this->description);
         
-        foreach (Order::ofStatus('tmpl')->forNextWeek()->get() as $order) {
+        foreach (Order::ofStatus('tmpl')->forCurrentWeek()->get() as $order) {
             try {
                 $this->log('process order #'.$order->id, 'info', $order->toArray());
                 

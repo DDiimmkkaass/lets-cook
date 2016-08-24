@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Order;
+use App\Observers\OrderObserver;
 use App\Validators\AppValidator;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
@@ -23,6 +25,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->_registerValidators();
+    
+        $this->_registerModelsObservers();
     }
     
     /**
@@ -61,5 +65,13 @@ class AppServiceProvider extends ServiceProvider
                 return new AppValidator($translator, $data, $rules, $messages);
             }
         );
+    }
+    
+    /**
+     * Register any models observers for application.
+     */
+    private function _registerModelsObservers()
+    {
+        Order::observe(OrderObserver::class);
     }
 }

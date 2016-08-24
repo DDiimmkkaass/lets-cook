@@ -5,24 +5,24 @@ namespace App\Console\Commands;
 use App\Models\Order;
 
 /**
- * Class ProcessPaidOrdersForNextWeek
+ * Class ProcessPaidOrdersForCurrentWeek
  * @package App\Console\Commands
  */
-class ProcessPaidOrdersForNextWeek extends Command
+class ProcessPaidOrdersForCurrentWeek extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'orders:process-paid-orders-for-next-week';
+    protected $signature = 'orders:process-paid-orders-for-current-week';
     
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Set "processed" status for all "paid" orders with delivery for the next week';
+    protected $description = 'Set "processed" status for all "paid" orders with delivery for the current week';
     
     /**
      * Create a new command instance.
@@ -41,7 +41,7 @@ class ProcessPaidOrdersForNextWeek extends Command
     {
         $this->log('Start '.$this->description);
         
-        Order::ofStatus('paid')->forNextWeek()->update(['status' => Order::getStatusIdByName('processed')]);
+        Order::ofStatus('paid')->forCurrentWeek()->update(['status' => Order::getStatusIdByName('processed')]);
         
         $this->log('End '.$this->description);
     }

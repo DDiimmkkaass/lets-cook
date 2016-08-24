@@ -1,14 +1,4 @@
 $(document).on "ready", () ->
-  $('.purchase-form .in_stock-checkbox-input').on 'switchChange.bootstrapSwitch', () ->
-    if $(this).is(":checked")
-      $(this).closest('.ingredient-block').find('.buy_count-text-input').val(0).change()
-    else
-      $(this)
-        .closest('.ingredient-block')
-        .find('.buy_count-text-input')
-        .val($(this).closest('.ingredient-block').find('.count-text-input').val())
-        .change()
-
   $('.purchase-form .purchase_manager-checkbox-input').on 'switchChange.bootstrapSwitch', () ->
     $purchase_manager_block = $(this).closest('#purchase_manager')
 

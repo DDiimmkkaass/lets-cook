@@ -39,9 +39,7 @@ class PurchaseService
         
         $list['suppliers'] = $this->_getSuppliers();
         
-        $list = $this->_processIngredients($list);
-        
-        return $list;
+        $this->_processIngredients($list);
     }
     
     /**
@@ -53,9 +51,10 @@ class PurchaseService
     public function getForWeek($year, $week)
     {
         $list = [
-            'year'      => $year,
-            'week'      => $week,
-            'suppliers' => [],
+            'year'       => $year,
+            'week'       => $week,
+            'suppliers'  => [],
+            'categories' => [],
         ];
         
         $purchases = Purchase::with('ingredient', 'ingredient.category', 'ingredient.supplier')
@@ -72,27 +71,35 @@ class PurchaseService
         foreach ($purchases as $ingredient) {
             $_ingredient = $ingredient->ingredient;
             
-            $supplier_id = $ingredient->purchase_manager ? 0 : $_ingredient->supplier_id;
-            
-            if (!isset($list['suppliers'][$supplier_id])) {
-                $list['suppliers'][$supplier_id] = [
-                    'name'       => $supplier_id == 0 ? trans(
-                        'labels.purchase_manager_ingredients'
-                    ) : $_ingredient->supplier->name,
-                    'position'   => $supplier_id == 0 ? 0 : $_ingredient->supplier->priority,
+            if (!isset($list['suppliers'][$_ingredient->supplier_id])) {
+                $list['suppliers'][$_ingredient->supplier_id] = [
+                    'name'       => $_ingredient->supplier->name,
+                    'position'   => $_ingredient->supplier->priority,
                     'categories' => [],
                 ];
             }
-            
-            if (!isset($list['suppliers'][$supplier_id]['categories'][$_ingredient->category_id])) {
-                $list['suppliers'][$supplier_id]['categories'][$_ingredient->category_id] = [
-                    'name'        => $_ingredient->category->name,
-                    'position'    => $_ingredient->category->position,
-                    'ingredients' => [],
-                ];
+    
+            if ($ingredient->purchase_manager) {
+                if (!isset($list['categories'][$_ingredient->category_id])) {
+                    $list['categories'][$_ingredient->category_id] = [
+                        'name'        => $_ingredient->category->name,
+                        'position'    => $_ingredient->category->position,
+                        'ingredients' => [],
+                    ];
+                }
+    
+                $list['categories'][$_ingredient->category_id]['ingredients'][$ingredient->ingredient_id] = $ingredient;
+            } else {
+                if (!isset($list['suppliers'][$_ingredient->supplier_id]['categories'][$_ingredient->category_id])) {
+                    $list['suppliers'][$_ingredient->supplier_id]['categories'][$_ingredient->category_id] = [
+                        'name'        => $_ingredient->category->name,
+                        'position'    => $_ingredient->category->position,
+                        'ingredients' => [],
+                    ];
+                }
+    
+                $list['suppliers'][$_ingredient->supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$ingredient->ingredient_id] = $ingredient;
             }
-            
-            $list['suppliers'][$supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$ingredient->ingredient_id] = $ingredient;
         }
         
         return $list;
@@ -137,7 +144,7 @@ class PurchaseService
      */
     private function _getSuppliers()
     {
-        $orders = Order::ofStatus('processed')->forNextWeek()->get(['id'])->pluck('id');
+        $orders = Order::ofStatus('processed')->forCurrentWeek()->get(['id'])->pluck('id');
         
         $recipes = $this->_getRecipes($orders);
         
@@ -285,7 +292,6 @@ class PurchaseService
     private function _processIngredients($list)
     {
         $ingredients = [];
-        $list['categories'] = [];
         
         $exists_purchases = Purchase::with('ingredient')
             ->where('year', $list['year'])
@@ -301,9 +307,8 @@ class PurchaseService
                             array_merge(
                                 $ingredient,
                                 [
-                                    'year'      => $list['year'],
-                                    'week'      => $list['week'],
-                                    'buy_count' => $ingredient['count'],
+                                    'year' => $list['year'],
+                                    'week' => $list['week'],
                                 ]
                             )
                         );
@@ -319,25 +324,6 @@ class PurchaseService
                         }
                     }
                     
-                    if ($purchase->purchase_manager) {
-                        if (!isset($list['categories'][$category_id])) {
-                            $list['categories'][$category_id] = [
-                                'name'        => $list['suppliers'][$supplier_id]['categories'][$category_id]['name'],
-                                'ingredients' => [],
-                            ];
-                        }
-                        
-                        $list['categories'][$category_id]['ingredients'][$ingredient_id] = $purchase;
-                        
-                        unset($list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'][$ingredient_id]);
-                        
-                        if (empty($list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'])) {
-                            unset($list['suppliers'][$supplier_id]['categories'][$category_id]);
-                        }
-                    } else {
-                        $list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'][$ingredient_id] = $purchase;
-                    }
-                    
                     $ingredients[] = $ingredient_id;
                 }
             }
@@ -346,8 +332,6 @@ class PurchaseService
         Purchase::where('week', $list['week'])->where('year', $list['year'])
             ->whereNotIn('ingredient_id', $ingredients)
             ->delete();
-        
-        return $list;
     }
     
     /**
@@ -381,7 +365,7 @@ class PurchaseService
         } elseif ($supplier !== false) {
             $name = trans('labels.purchase_manager_excel_title');
         }
-    
+        
         return $name;
     }
     
@@ -402,12 +386,11 @@ class PurchaseService
             $list = $list->where('purchases.purchase_manager', true);
         }
         
-        $list = $list->where('purchases.buy_count', '>', 0)
-            ->select(
-                DB::raw('ingredients.name as ingredient'),
-                DB::raw('buy_count as count'),
-                DB::raw('units.name as unit')
-            )
+        $list = $list->select(
+            DB::raw('ingredients.name as ingredient'),
+            'purchases.count',
+            DB::raw('units.name as unit')
+        )
             ->get()
             ->toArray();
         

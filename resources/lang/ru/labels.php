@@ -486,7 +486,6 @@ return array (
   'download_xlsx_file' => 'Скачать .xls файл',
   'ingredient' => 'Ингредиент',
   'in_stock' => 'На складе',
-  'buy_count' => 'Количество для закупки',
   'purchase_manager' => 'Закупаеться вручную',
   'for_next_week' => 'На следующую неделю',
   'save_draft' => 'Сохранить черновик',

@@ -25,7 +25,6 @@
                         <th class="text-center">@lang('labels.price')</th>
                         <th class="text-center">@lang('labels.count')</th>
                         <th class="text-center">@lang('labels.in_stock')</th>
-                        <th class="text-center">@lang('labels.buy_count')</th>
                         <th class="text-center">@lang('labels.purchase_manager')</th>
                     </tr>
                     </thead>
@@ -34,10 +33,13 @@
                         <tr id="ingredient_{!! $ingredient->ingredient_id !!}" data-supplier_id="{!! $supplier_id !!}" data-category_id="{!! $category_id !!}" data-ingredient_id="{!! $ingredient->ingredient_id !!}" class="ingredient-block">
                             <td>{!! link_to_route('admin.ingredient.edit', $ingredient->ingredient->name, [$ingredient->ingredient_id], ['target' => '_blank']) !!}</td>
                             <td class="text-center">{!! $ingredient->ingredient->unit->name !!}</td>
-                            <td class="text-center">@include('purchase.partials.text_input', ['model' => $ingredient, 'field' => 'price', 'url' => route('admin.purchase.set_ingredient_price', $ingredient->id)])</td>
-                            <td class="text-center">@include('purchase.partials.text_input', ['model' => $ingredient, 'field' => 'count', 'type' => 'purchase'])</td>
+                            <td class="text-center">@include('purchase.partials.text_input', ['model' => $ingredient->ingredient, 'field' => 'price', 'url' => route('admin.purchase.set_ingredient_price', $ingredient->id), 'type' => 'purchase'])</td>
+                            <td class="text-center">
+                                <div class="col-sm-6 col-sm-push-3">
+                                    <input class="input-sm form-control" type="text" value="{!! $ingredient->count !!}" readonly="readonly">
+                                </div>
+                            </td>
                             <td class="text-center">@include('partials.datatables.toggler', ['model' => $ingredient, 'field' => 'in_stock', 'type' => 'purchase'])</td>
-                            <td class="text-center">@include('purchase.partials.text_input', ['model' => $ingredient, 'field' => 'buy_count', 'type' => 'purchase'])</td>
                             <td class="text-center">@include('partials.datatables.toggler', ['model' => $ingredient, 'field' => 'purchase_manager', 'type' => 'purchase'])</td>
                         </tr>
                     @endforeach

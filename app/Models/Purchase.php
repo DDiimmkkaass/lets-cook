@@ -26,11 +26,18 @@ class Purchase extends Model
         'supplier_id',
         'year',
         'week',
+        'price',
         'count',
         'in_stock',
-        'buy_count',
-        'purchase_manager',
+        '',
     ];
+    
+    /**
+     * fields that can be changed by ajax
+     *
+     * @var array
+     */
+    protected static $changeable_fields = ['price', 'in_stock', 'purchase_manager'];
     
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -83,7 +90,7 @@ class Purchase extends Model
      *
      * @return mixed
      */
-    public function scopeForNextWeek($query)
+    public function scopeForCurrentWeek($query)
     {
         return $query->forWeek(Carbon::now()->year, Carbon::now()->weekOfYear);
     }
@@ -143,5 +150,13 @@ class Purchase extends Model
         $ended_at = $dt->endOfWeek()->format('Y-m-d');
         
         return $started_at.' - '.$ended_at;
+    }
+    
+    /**
+     * @return array
+     */
+    public static function getChangeableFields()
+    {
+        return self::$changeable_fields;
     }
 }
