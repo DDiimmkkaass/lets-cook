@@ -8,7 +8,6 @@ use App\Models\Order;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
 use App\Models\RecipeIngredient;
-use App\Models\User;
 use App\Models\WeeklyMenu;
 
 /**
@@ -32,7 +31,7 @@ class _OrdersSeeder extends DataSeeder
             $type = rand(1, 2);
             
             $city_id = rand(0, 1) > 0 ? City::all()->random(1)->id : null;
-    
+            
             if ($i % 2 == 0) {
                 $delivery_date = Carbon::now()->endOfWeek()->startOfDay()->format('d-m-Y');
             } else {
@@ -52,7 +51,7 @@ class _OrdersSeeder extends DataSeeder
                 'delivery_date'    => $delivery_date,
                 'delivery_time'    => $delivery_times[rand(0, count($delivery_times) - 1)],
                 'city_id'          => $city_id,
-                'city'             => $city_id ? null : $this->faker->city,
+                'city_name'        => $city_id ? null : $this->faker->city,
                 'address'          => $this->faker->address,
                 'comment'          => $this->getLocalizedFaker()->realText(rand(50, 100)),
             ];
@@ -76,23 +75,23 @@ class _OrdersSeeder extends DataSeeder
                         );
                     }
                 }
-    
+                
                 $recipes = $basket->recipes->pluck('recipe_id')->toArray();
                 $ingredients = RecipeIngredient::with('ingredient')
                     ->home()
                     ->whereIn('recipe_id', $recipes)
                     ->get();
-    
+                
                 $ingredients_count = $ingredients->count();
                 if ($ingredients_count) {
                     $ingredients = $ingredients->random(rand(1, $ingredients_count > 2 ? 2 : $ingredients_count));
-        
+                    
                     if (count($ingredients) == 1) {
                         $basket_recipe_id = BasketRecipe::where('weekly_menu_basket_id', $basket->id)
                             ->where('recipe_id', $ingredients->recipe_id)
                             ->first()
                             ->id;
-            
+                        
                         OrderIngredient::create(
                             [
                                 'order_id'         => $order->id,
@@ -108,7 +107,7 @@ class _OrdersSeeder extends DataSeeder
                                 ->where('recipe_id', $ingredient->recipe_id)
                                 ->first()
                                 ->id;
-                
+                            
                             OrderIngredient::create(
                                 [
                                     'order_id'         => $order->id,
@@ -122,7 +121,7 @@ class _OrdersSeeder extends DataSeeder
                     }
                 }
             }
-    
+            
             $baskets_count = Basket::additional()->count();
             if ($baskets_count) {
                 $baskets = Basket::additional()->get()

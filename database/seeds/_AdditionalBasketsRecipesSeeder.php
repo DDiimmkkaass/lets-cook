@@ -14,11 +14,13 @@ class _AdditionalBasketsRecipesSeeder extends DataSeeder
      */
     public function run()
     {
-        foreach (Basket::additional()->get() as $basket) {
-            for ($i = 0; $i < rand(1, 2); $i++) {
-                $basket->recipes()->create([
-                    'recipe_id' => Recipe::all()->random()->id,
-                ]);
+        foreach (Basket::with('recipes')->additional()->get() as $basket) {
+            if (count($basket->recipes)) {
+                for ($i = 0; $i < rand(1, 2); $i++) {
+                    $basket->recipes()->create([
+                        'recipe_id' => $basket->recipes->random()->id,
+                    ]);
+                }
             }
         }
     }
