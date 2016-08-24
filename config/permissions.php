@@ -89,6 +89,8 @@ return array (
     'purchase.read',
     'purchase.write',
     
+    'packaging.read',
+    
     'tagcategory.create',
     'tagcategory.read',
     'tagcategory.write',
