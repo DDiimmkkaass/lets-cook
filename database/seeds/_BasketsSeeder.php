@@ -1,5 +1,6 @@
 <?php
 use App\Models\Basket;
+use App\Models\Recipe;
 
 /**
  * Class _BasketsSeeder

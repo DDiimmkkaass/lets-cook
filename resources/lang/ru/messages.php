@@ -135,4 +135,7 @@ return array (
   'tmpl order payment error message :order_id' => 'Ваш заказ по подписке, № :order_id, не был автоматически оплачен! Пожалуйста оплатите его вручную.',
   'tmpl order payment error message' => 'Заказ по подписке, не был автоматически оплачен. Ошибка',
   'main basket not selected' => 'Основная корзина не выбрана',
+  'no ingredients who need a repackaging' => 'Нет ингредиентов, которым необходима переупаковка',
+  'wrong tab id name' => 'Неведопустимое значение идентификатора вкладки',
+  'no orders' => 'Заказы отсутствуют',
 );

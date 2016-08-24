@@ -61,7 +61,15 @@ class User extends SentryUser implements FrontLink
     {
         return $this->belongsToMany(Group::class, 'users_groups', 'user_id');
     }
-
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'user_id');
+    }
+    
     /**
      * @param      $q
      */

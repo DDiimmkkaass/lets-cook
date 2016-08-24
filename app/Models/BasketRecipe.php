@@ -42,6 +42,14 @@ class BasketRecipe extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
+    public function basket()
+    {
+        return $this->belongsTo(Basket::class, 'basket_id');
+    }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function weekly_menu_basket()
     {
         return $this->belongsTo(WeeklyMenuBasket::class, 'weekly_menu_basket_id')->with('basket');
@@ -78,10 +86,12 @@ class BasketRecipe extends Model
      */
     public function getName()
     {
-        return str_limit(str_slug($this->weekly_menu_basket->getName()), 3, '').''.
+        $basket = empty($this->basket_id) ? $this->weekly_menu_basket : $this->basket;
+        
+        return str_limit(str_slug($basket->getName()), 3, '').''.
             $this->position.'-'.
             $this->recipe->name.'-'.
-            $this->weekly_menu_basket->portions;
+            (empty($this->basket_id) ? $this->weekly_menu_basket->portions : '');
         
     }
 }

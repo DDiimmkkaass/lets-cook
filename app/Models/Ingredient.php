@@ -199,6 +199,27 @@ class Ingredient extends Model
      *
      * @return mixed
      */
+    public function scopeJoinParameters($query)
+    {
+        return $query->leftJoin('ingredient_parameter', 'ingredient_parameter.ingredient_id', '=', 'ingredients.id')
+            ->leftJoin('parameters', 'parameters.id', '=', 'ingredient_parameter.parameter_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinRecipeIngredients($query)
+    {
+        return $query->leftJoin('recipe_ingredients', 'recipe_ingredients.ingredient_id', '=', 'ingredients.id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
     public function scopeCompleted($query)
     {
         return $query->whereNotNull('category_id')->whereNotNull('supplier_id')->whereNotNull('unit_id');

@@ -10,6 +10,7 @@ namespace App\Http\Requests\Backend\Order;
 
 use App\Http\Requests\FormRequest;
 use App\Models\Order;
+use Carbon\Carbon;
 
 /**
  * Class OrderRequest
@@ -37,9 +38,11 @@ class OrderRequest extends FormRequest
             'phone'            => 'required',
             'verify_call'      => 'boolean',
             
-            'delivery_date' => 'required|date_format:"d-m-Y"|delivery_date_day_of_week|delivery_date_date',
+            'delivery_date' => 'required|date_format:"d-m-Y"|after:'.
+                Carbon::now()->endOfDay()->format('d-m-Y').
+                '|delivery_date_day_of_week|delivery_date_date',
             'delivery_time' => 'required',
-            'city'          => 'required_without:city_id',
+            'city_name'     => 'required_without:city_id',
             'address'       => 'required',
             
             'recipes.new'    => 'array|required_without:recipes.old',

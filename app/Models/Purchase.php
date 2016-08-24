@@ -30,7 +30,6 @@ class Purchase extends Model
         'in_stock',
         'buy_count',
         'purchase_manager',
-        'price',
     ];
     
     /**
@@ -69,13 +68,24 @@ class Purchase extends Model
     
     /**
      * @param $query
+     * @param int $year
+     * @param int $week
+     *
+     * @return mixed
+     */
+    public function scopeForWeek($query, $year, $week)
+    {
+        return $query->where('year', $year)->where('week', $week);
+    }
+    
+    /**
+     * @param $query
      *
      * @return mixed
      */
     public function scopeForNextWeek($query)
     {
-        return $query->where('year', Carbon::now()->year)
-            ->where('week', Carbon::now()->weekOfYear);
+        return $query->forWeek(Carbon::now()->year, Carbon::now()->weekOfYear);
     }
     
     /**
@@ -83,7 +93,7 @@ class Purchase extends Model
      */
     public function scopeJoinIngredient($query)
     {
-        $query->leftJoin('ingredients', 'ingredients.id', '=', 'purchases.ingredient_id');
+        return $query->leftJoin('ingredients', 'ingredients.id', '=', 'purchases.ingredient_id');
     }
     
     /**
@@ -91,7 +101,15 @@ class Purchase extends Model
      */
     public function scopeJoinIngredientUnit($query)
     {
-        $query->leftJoin('units', 'units.id', '=', 'ingredients.unit_id');
+        return $query->leftJoin('units', 'units.id', '=', 'ingredients.unit_id');
+    }
+    
+    /**
+     * @param $query
+     */
+    public function scopeJoinIngredientRecipe($query)
+    {
+        return $query->leftJoin('units', 'units.id', '=', 'ingredients.unit_id');
     }
     
     /**

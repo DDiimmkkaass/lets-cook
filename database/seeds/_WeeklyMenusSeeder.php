@@ -20,36 +20,46 @@ class _WeeklyMenusSeeder extends DataSeeder
         WeeklyMenu::whereNotNull('id')->forceDelete();
         DB::statement('ALTER TABLE `'.((new WeeklyMenu())->getTable()).'` AUTO_INCREMENT=1');
         
-        foreach (range(1, 10) as $index) {
+        foreach (range(0, 5) as $index) {
+            $week = Carbon::now()->weekOfYear + $index;
+            
             $input = [
-                'week' => rand(1, 52),
-                'year' => 2016,
+                'week' => $week,
+                'year' => Carbon::create(Carbon::now()->year, 1, 1)->startOfWeek()->addWeeks($week)->year,
             ];
             
             $weekly_menu = new WeeklyMenu($input);
             $weekly_menu->save();
             
-            $baskets_count = Basket::basic()->count();
-            $baskets = Basket::basic()->get()->random(rand(2, $baskets_count));
-            
-            foreach ($baskets as $basket) {
-                $_input = [
-                    'weekly_menu_id' => $weekly_menu->id,
-                    'basket_id'      => $basket->id,
-                    'portions'       => rand(0, 1) ? 2 : 4,
-                ];
+            foreach (Basket::basic()->get() as $basket) {
+                $portions = rand(0, 1) ? 2 : 4;
                 
-                $_basket = WeeklyMenuBasket::create($_input);
+                $count = $basket->allowed_recipes()->where('portions', $portions)->count();
                 
-                $count = $basket->allowed_recipes()->count();
-                foreach ($basket->allowed_recipes()->get()->random(rand(3, $count < 5 ? $count : 5)) as $recipe) {
-                    BasketRecipe::create(
-                        [
-                            'weekly_menu_basket_id' => $_basket->id,
-                            'recipe_id'             => $recipe->id,
-                            'main'                  => rand(0, 1),
-                        ]
-                    );
+                if ($count) {
+                    $_input = [
+                        'weekly_menu_id' => $weekly_menu->id,
+                        'basket_id'      => $basket->id,
+                        'portions'       => $portions,
+                    ];
+                    
+                    $_basket = WeeklyMenuBasket::create($_input);
+                    
+                    $recipes = $basket->allowed_recipes()
+                        ->where('portions', $portions)
+                        ->get()
+                        ->random(rand($count > 3 ? 3 : $count, $count < 5 ? $count : 5));
+                    
+                    foreach ($recipes as $key => $recipe) {
+                        BasketRecipe::create(
+                            [
+                                'weekly_menu_basket_id' => $_basket->id,
+                                'recipe_id'             => $recipe->id,
+                                'main'                  => rand(0, 1),
+                                'position'              => $key,
+                            ]
+                        );
+                    }
                 }
             }
         }

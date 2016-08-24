@@ -158,7 +158,7 @@ class PurchaseService
     private function _getRecipes($orders)
     {
         $recipes = OrderRecipe::whereIn('order_id', $orders)
-            ->joinBasketRecipes()
+            ->joinBasketRecipe()
             ->select('recipe_id', DB::raw('count(recipe_id) as recipes_count'))
             ->groupBy('recipe_id')
             ->get()

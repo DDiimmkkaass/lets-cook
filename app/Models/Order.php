@@ -36,7 +36,7 @@ class Order extends Model
         'delivery_date',
         'delivery_time',
         'city_id',
-        'city',
+        'city_name',
         'address',
         'comment',
         'admin_comment',
@@ -82,7 +82,7 @@ class Order extends Model
      */
     protected static $payment_methods = [
         'cash',
-        'online'
+        'online',
     ];
     
     /**
@@ -91,6 +91,14 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id');
     }
     
     /**
@@ -185,14 +193,6 @@ class Order extends Model
     }
     
     /**
-     * @return string
-     */
-    public function getUserFullName()
-    {
-        return $this->full_name;
-    }
-    
-    /**
      * @param        $query
      * @param string $type
      *
@@ -237,11 +237,38 @@ class Order extends Model
     
     /**
      * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeFinished($query)
+    {
+        return $query->ofStatus('archived');
+    }
+    
+    /**
+     * @param     $query
+     * @param int $year
+     * @param int $week
+     *
+     * @return
+     */
+    public function scopeForWeek($query, $year, $week)
+    {
+        $from = Carbon::create($year, 1, 1)->startOfWeek()->addWeeks($week)->endOfWeek()->startOfDay();
+        $to = Carbon::create($year, 1, 1)->startOfWeek()->addWeeks($week)->endOfWeek()->addDay()->endOfDay();
+        
+        return $query->where('delivery_date', '>=', $from)->where('delivery_date', '<=', $to);
+    }
+    
+    /**
+     * @param $query
      */
     public function scopeForNextWeek($query)
     {
-        return $query->where('delivery_date', '>=', Carbon::now()->addWeek()->startOfWeek()->subDay()->startOfDay())
-            ->where('delivery_date', '<=', Carbon::now()->addWeek()->startOfWeek()->endOfDay());
+        $year = Carbon::now()->year;
+        $week = Carbon::now()->weekOfYear;
+        
+        return $query->forWeek($year, $week);
     }
     
     /**
@@ -249,7 +276,7 @@ class Order extends Model
      */
     public function scopeJoinAdditionalBaskets($query)
     {
-        $query->leftJoin('basket_order', 'basket_order.order_id', '=', 'orders.id');
+        return $query->leftJoin('basket_order', 'basket_order.order_id', '=', 'orders.id');
     }
     
     /**
@@ -289,13 +316,63 @@ class Order extends Model
     public function getMainBasket()
     {
         $recipe = $this->recipes()->first();
-            
+        
         if ($recipe) {
             return WeeklyMenuBasket::with('basket')
                 ->find($recipe->recipe->weekly_menu_basket_id);
         }
         
         return null;
+    }
+    
+    /**
+     * @param bool $with_portions
+     *
+     * @return string
+     */
+    public function getMainBasketName($with_portions = false)
+    {
+        $basket = $this->getMainBasket();
+        
+        if (!$basket) {
+            return '';
+        }
+        
+        return $basket->getName().($with_portions ? $basket->portions : '');
+    }
+    
+    /**
+     * @return string
+     */
+    public function getUserFullName()
+    {
+        return $this->full_name;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getFullAddress()
+    {
+        $address = trans('labels.city_short').' ';
+        
+        if (empty($this->city_id)) {
+            $address .= $this->city_name;
+        } else {
+            $address .= $this->city->name;
+        }
+        
+        return trim($address.' '.$this->address);
+    }
+    
+    /**
+     * @param string $delimiter
+     *
+     * @return string
+     */
+    public function getPhones($delimiter = '<br>')
+    {
+        return $this->phone.(empty($this->additional_phone) ? '' : $delimiter).$this->additional_phone;
     }
     
     /**
@@ -442,5 +519,15 @@ class Order extends Model
         }
         
         return '';
+    }
+    
+    /**
+     * @param string $payment_method
+     *
+     * @return bool
+     */
+    public function paymentMethod($payment_method)
+    {
+        return $this->payment_method == self::getPaymentMethodIdByName($payment_method);
     }
 }

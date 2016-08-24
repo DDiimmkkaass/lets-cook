@@ -1,6 +1,9 @@
 <?php
 use App\Models\Category;
 use App\Models\Ingredient;
+use App\Models\IngredientNutritionalValue;
+use App\Models\NutritionalValue;
+use App\Models\Parameter;
 use App\Models\Supplier;
 use App\Models\Unit;
 
@@ -18,7 +21,7 @@ class _IngredientsSeeder extends DataSeeder
     {
         Ingredient::whereNotNull('id')->delete();
         DB::statement('ALTER TABLE `'.((new Ingredient())->getTable()).'` AUTO_INCREMENT=1');
-
+        
         foreach (range(1, 20) as $index) {
             $input = [
                 'name'        => $this->getLocalizedFaker()->word,
@@ -29,8 +32,21 @@ class _IngredientsSeeder extends DataSeeder
                 'category_id' => Category::all()->random(1)->id,
                 'unit_id'     => Unit::all()->random(1)->id,
             ];
-
-            Ingredient::create($input);
+            
+            $ingredient = Ingredient::create($input);
+            
+            $parameter_id = Parameter::all()->random()->id;
+            $ingredient->parameters()->sync([$parameter_id]);
+            
+            foreach (NutritionalValue::all() as $item) {
+                IngredientNutritionalValue::create(
+                    [
+                        'ingredient_id'        => $ingredient->id,
+                        'nutritional_value_id' => $item->id,
+                        'value'                => rand(10, 500),
+                    ]
+                );
+            }
         }
     }
 }

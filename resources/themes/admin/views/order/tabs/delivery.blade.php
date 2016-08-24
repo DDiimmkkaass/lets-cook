@@ -31,13 +31,13 @@
     </div>
 </div>
 
-<div id="order-city-block" class="form-group @if ($errors->has('city')) has-error @endif @if (!empty($model->city_id)) hidden @endif">
-    {!! Form::label('city', trans('labels.enter_a_city'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
+<div id="order-city-block" class="form-group @if ($errors->has('city_name')) has-error @endif @if (!empty($model->city_id)) hidden @endif">
+    {!! Form::label('city_name', trans('labels.enter_a_city'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-5 col-md-4 col-lg-3">
-        {!! Form::text('city', null, ['placeholder' => trans('labels.city'), 'class' => 'form-control input-sm']) !!}
+        {!! Form::text('city_name', null, ['placeholder' => trans('labels.city'), 'class' => 'form-control input-sm']) !!}
 
-        {!! $errors->first('city', '<p class="help-block error">:message</p>') !!}
+        {!! $errors->first('city_name', '<p class="help-block error">:message</p>') !!}
     </div>
 </div>
 

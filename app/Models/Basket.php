@@ -133,6 +133,11 @@ class Basket extends Model
         return $this->price;
     }
     
+    public function getName()
+    {
+        return $this->name;
+    }
+    
     /**
      * @param string $type
      *

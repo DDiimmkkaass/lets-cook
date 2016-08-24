@@ -371,7 +371,7 @@ class OrderController extends BackendController
         }
         $this->data('cities', $cities);
         
-        $recipes = $model->recipes()->joinBasketRecipes()->joinRecipes()
+        $recipes = $model->recipes()->joinBasketRecipe()->joinRecipe()
             ->get(
                 [
                     'order_recipes.id',

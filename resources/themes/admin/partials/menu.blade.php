@@ -197,6 +197,22 @@
                 </li>
             @endif
 
+            <li class="header">@lang('labels.packaging')</li>
+            @if ($user->hasAccess('packaging.read'))
+                <li class="{!! active_class('admin.packaging.edit') !!}">
+                    <a href="{!! route('admin.packaging.current') !!}">
+                        <i class="fa fa-list-ol"></i>
+                        <span>@lang('labels.list_of_packaging')</span>
+                    </a>
+                </li>
+                <li class="{!! active_class('admin.packaging*', 'active', 'admin.packaging.current*') !!}">
+                    <a href="{!! route('admin.packaging.index') !!}">
+                        <i class="fa fa-history"></i>
+                        <span>@lang('labels.history_of_packaging')</span>
+                    </a>
+                </li>
+            @endif
+
             <li class="header">@lang('labels.content')</li>
             @if ($user->hasAccess('page.read'))
                 <li class="{!! active_class('admin.page*') !!}">

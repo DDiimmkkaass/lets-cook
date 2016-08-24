@@ -57,7 +57,7 @@ class OrderRecipe extends Model
      *
      * @return mixed
      */
-    public function scopeJoinBasketRecipes($query)
+    public function scopeJoinBasketRecipe($query)
     {
         return $query->leftJoin('basket_recipes', 'basket_recipes.id', '=', 'order_recipes.basket_recipe_id');
     }
@@ -67,7 +67,7 @@ class OrderRecipe extends Model
      *
      * @return mixed
      */
-    public function scopeJoinRecipes($query)
+    public function scopeJoinRecipe($query)
     {
         return $query->leftJoin('recipes', 'recipes.id', '=', 'basket_recipes.recipe_id');
     }

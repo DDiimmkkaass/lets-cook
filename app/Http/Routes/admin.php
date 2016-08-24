@@ -430,6 +430,44 @@ $router->group(
                     }
                 );
                 
+                //packaging
+                $router->group(
+                    ['prefix' => 'packaging'],
+                    function ($router) {
+                        $router->get(
+                            'index',
+                            ['as' => 'admin.packaging.index', 'uses' => 'Backend\PackagingController@index']
+                        );
+                        
+                        $router->get(
+                            'current',
+                            ['as' => 'admin.packaging.current', 'uses' => 'Backend\PackagingController@current']
+                        );
+                        
+                        $router->get(
+                            'show/{year}/{week}',
+                            ['as' => 'admin.packaging.show', 'uses' => 'Backend\PackagingController@show']
+                        );
+                        
+                        $router->get(
+                            'tab/{tab}/{year}/{week}',
+                            [
+                                'middleware' => 'ajax',
+                                'as'         => 'admin.packaging.tab',
+                                'uses'       => 'Backend\PackagingController@tab',
+                            ]
+                        );
+    
+                        $router->get(
+                            'download/{tab}/{year}/{week}',
+                            [
+                                'as'         => 'admin.packaging.download',
+                                'uses'       => 'Backend\PackagingController@download',
+                            ]
+                        );
+                    }
+                );
+                
                 //tag categories
                 $router->resource('tag_category', 'Backend\TagCategoryController');
             }

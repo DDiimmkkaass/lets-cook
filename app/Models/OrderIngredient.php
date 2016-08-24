@@ -22,6 +22,7 @@ class OrderIngredient extends Model
      */
     protected $fillable = [
         'order_id',
+        'basket_recipe_id',
         'ingredient_id',
         'name',
         'count',
@@ -41,6 +42,24 @@ class OrderIngredient extends Model
     public function ingredient()
     {
         return $this->belongsTo(Ingredient::class)->with('unit')->withTrashed();
+    }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function recipe()
+    {
+        return $this->belongsTo(BasketRecipe::class, 'basket_recipe_id')->with('recipe');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinBasketRecipe($query)
+    {
+        return $query->leftJoin('basket_recipes', 'basket_recipes.id', '=', 'order_ingredients.basket_recipe_id');
     }
     
     /**
@@ -71,6 +90,27 @@ class OrderIngredient extends Model
     public function scopeJoinIngredientCategory($query)
     {
         return $query->leftJoin('categories', 'categories.id', '=', 'ingredients.category_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinIngredientUnit($query)
+    {
+        return $query->leftJoin('units', 'units.id', '=', 'ingredients.unit_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinIngredientParameters($query)
+    {
+        return $query->leftJoin('ingredient_parameter', 'ingredient_parameter.ingredient_id', '=', 'ingredients.id')
+            ->leftJoin('parameters', 'parameters.id', '=', 'ingredient_parameter.parameter_id');
     }
     
     /**

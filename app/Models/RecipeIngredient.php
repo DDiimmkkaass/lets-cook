@@ -53,7 +53,7 @@ class RecipeIngredient extends Model
      */
     public function ingredient()
     {
-        return $this->belongsTo(Ingredient::class)->with('unit');
+        return $this->belongsTo(Ingredient::class)->withTrashed()->with('unit');
     }
     
     /**
