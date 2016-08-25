@@ -196,14 +196,15 @@ $(document).on 'ready', ->
     return false
 
   $(document).on "click", ".menu-recipes-table .inner", ->
-    $recipe = $(this).closest('.recipe-block')
+    unless $(this).hasClass 'inner-show'
+      $recipe = $(this).closest('.recipe-block')
 
-    unless $recipe.hasClass 'main'
-      $recipe.addClass 'main'
-      $recipe.find('.main-checkbox').val(1)
-    else
-      $recipe.removeClass 'main'
-      $recipe.find('.main-checkbox').val(0)
+      unless $recipe.hasClass 'main'
+        $recipe.addClass 'main'
+        $recipe.find('.main-checkbox').val(1)
+      else
+        $recipe.removeClass 'main'
+        $recipe.find('.main-checkbox').val(0)
 
   $(document).on "click", ".menu-recipes-table .destroy", ->
     confirm_dialog () =>

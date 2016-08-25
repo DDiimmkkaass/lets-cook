@@ -215,7 +215,27 @@ class WeeklyMenuController extends BackendController
      */
     public function show($id)
     {
-        return $this->edit($id);
+        try {
+            $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.recipes.recipe.ingredients')
+                ->whereId($id)
+                ->firstOrFail();
+    
+            $this->data(
+                'page_title',
+                trans('labels.weekly_menu').': '.
+                trans('labels.w_label').$model->week.', '.$model->year.' ('.$model->getWeekDates().')'
+            );
+        
+            $this->breadcrumbs(trans('labels.weekly_menu_show'));
+        
+            $this->_fillAdditionalTemplateData($model);
+        
+            return $this->render('views.'.$this->module.'.show', compact('model'));
+        } catch (ModelNotFoundException $e) {
+            FlashMessages::add('error', trans('messages.record_not_found'));
+        
+            return redirect()->route('admin.'.$this->module.'.index');
+        }
     }
     
     /**
@@ -232,6 +252,12 @@ class WeeklyMenuController extends BackendController
             $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.recipes.recipe.ingredients')
                 ->whereId($id)
                 ->firstOrFail();
+    
+            if ($model->old()) {
+                FlashMessages::add('error', trans('messages.you cannot edit old weekly menu'));
+                
+                return redirect()->route('admin.'.$this->module.'.show', $model->id);
+            }
             
             if ($model->isCurrentWeekMenu()) {
                 return redirect()->route('admin.'.$this->module.'.current');
@@ -239,9 +265,8 @@ class WeeklyMenuController extends BackendController
             
             $this->data(
                 'page_title',
-                trans('labels.weekly_menu').': '.trans(
-                    'labels.w_label'
-                ).$model->week.', '.$model->year.' ('.$model->getWeekDates().')'
+                trans('labels.weekly_menu').': '.
+                trans('labels.w_label').$model->week.', '.$model->year.' ('.$model->getWeekDates().')'
             );
             
             $this->breadcrumbs(trans('labels.weekly_menu_editing'));
@@ -271,6 +296,12 @@ class WeeklyMenuController extends BackendController
         
         try {
             $model = WeeklyMenu::findOrFail($id);
+    
+            if ($model->old()) {
+                FlashMessages::add('error', trans('messages.you cannot edit old weekly menu'));
+        
+                return redirect()->route('admin.'.$this->module.'.index');
+            }
             
             $input = $request->all();
             

@@ -138,4 +138,5 @@ return array (
   'no ingredients who need a repackaging' => 'Нет ингредиентов, которым необходима переупаковка',
   'wrong tab id name' => 'Неведопустимое значение идентификатора вкладки',
   'no orders' => 'Заказы отсутствуют',
+  'you cannot edit old weekly menu' => 'Вы не можете редактировать меню за прошедшие недели',
 );

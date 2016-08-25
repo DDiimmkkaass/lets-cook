@@ -56,6 +56,14 @@ class WeeklyMenu extends Model
     }
     
     /**
+     * @return bool
+     */
+    public function old()
+    {
+        return $this->year <= Carbon::now()->year && $this->week < Carbon::now()->weekOfYear;
+    }
+    
+    /**
      * @param $query
      *
      * @return mixed

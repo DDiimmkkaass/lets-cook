@@ -48,10 +48,7 @@ class WeeklyMenuService
             ->addColumn(
                 'actions',
                 function ($model) {
-                    return view(
-                        'partials.datatables.control_buttons',
-                        ['model' => $model, 'type' => 'weekly_menu', 'without_delete' => true]
-                    )->render();
+                    return view('weekly_menu.datatables.control_buttons', ['model' => $model])->render();
                 }
             )
             ->setIndexColumn('id')
