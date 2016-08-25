@@ -338,6 +338,8 @@ class PurchaseService
      */
     private function _getDownloadFileName($year, $week, $supplier_id = false)
     {
+        $supplier = false;
+        
         if ($supplier_id > 0) {
             $supplier = Supplier::whereId($supplier_id)->first()->name;
         } elseif ($supplier_id !== false) {
@@ -404,6 +406,7 @@ class PurchaseService
         
         $list = $list->select(
             DB::raw('ingredients.name as ingredient'),
+            'purchases.in_stock',
             'categories.name as category',
             'suppliers.name as supplier',
             'purchases.price',

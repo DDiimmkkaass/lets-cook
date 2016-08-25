@@ -15,6 +15,7 @@
 
         <tr>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.ingredient')</th>
+            <th style="background-color: #cccccc; text-align: center;">@lang('labels.in_stock')</th>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.category')</th>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.count')</th>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.unit')</th>
@@ -27,6 +28,7 @@
         @foreach($list as $ingredient)
             <tr>
                 <td>{!! $ingredient['ingredient'] !!}</td>
+                <td style="text-align: center">@if ($ingredient['in_stock']) @lang('labels.yes') @endif</td>
                 <td style="background-color: #dddddd;">{!! $ingredient['category'] !!}</td>
                 <td style="text-align: right;">{!! $ingredient['count'] !!}</td>
                 <td style="background-color: #dddddd; text-align: left;">{!! $ingredient['unit'] !!}</td>

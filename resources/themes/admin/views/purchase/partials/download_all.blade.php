@@ -5,6 +5,7 @@
         <tbody>
         <tr>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.ingredient')</th>
+            <th style="background-color: #cccccc; text-align: center;">@lang('labels.in_stock')</th>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.category')</th>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.supplier')</th>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.price') {!! $currency !!}</th>
@@ -19,6 +20,7 @@
         @foreach($list as $ingredient)
             <tr>
                 <td>{!! $ingredient['ingredient'] !!}</td>
+                <td style="text-align: center">@if ($ingredient['in_stock']) @lang('labels.yes') @endif</td>
                 <td style="background-color: #dddddd;">{!! $ingredient['category'] !!}</td>
                 <td style="background-color: #dddddd;">{!! $ingredient['supplier'] !!}</td>
                 <td style="background-color: #dddddd;">{!! $ingredient['price'] !!}</td>
