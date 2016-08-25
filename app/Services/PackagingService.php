@@ -71,6 +71,51 @@ class PackagingService
      *
      * @return array
      */
+    public function stickersForWeek($year, $week)
+    {
+        $orders = Order::ofStatus('processed')->forWeek($year, $week)->get(['id'])->pluck('id');
+        
+        $recipes = $this->_getOrderedRecipes($orders);
+        $this->_addOrderedIngredients($orders, $recipes);
+        
+        $baskets = [];
+        
+        foreach ($recipes as $key => $recipe) {
+            $basket_id = $recipe['basket_id'].'_'.$recipe['portions'];
+            
+            if (!isset($baskets[$basket_id])) {
+                $baskets[$basket_id] = [
+                    'name'      => $recipe['basket_name'],
+                    'basket_id' => $recipe['basket_id'],
+                    'portions'  => $recipe['portions'],
+                    'recipes'   => [],
+                ];
+            }
+            
+            if (!isset($baskets[$basket_id]['recipes'][$recipe['basket_recipe_id']])) {
+                $ingredients = empty($recipe['ingredients']) ? [] : $recipe['ingredients'];
+                
+                $baskets[$basket_id]['recipes'][$recipe['basket_recipe_id']] = [
+                    'name'          => $recipe['name'],
+                    'recipe_id'     => $recipe['recipe_id'],
+                    'position'      => $recipe['position'],
+                    'recipes_count' => $recipe['recipes_count'] - (count($ingredients)),
+                    'ingredients'   => $ingredients,
+                ];
+            }
+            
+            unset($recipes[$key]);
+        }
+        
+        return $baskets;
+    }
+    
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return array
+     */
     public function usersForWeek($year, $week)
     {
         $users = [];
@@ -147,8 +192,8 @@ class PackagingService
     }
     
     /**
-     * @param $year
-     * @param $week
+     * @param int $year
+     * @param int $week
      *
      * @return mixed
      */
@@ -170,8 +215,8 @@ class PackagingService
     }
     
     /**
-     * @param $year
-     * @param $week
+     * @param int $year
+     * @param int $week
      *
      * @return mixed
      */
@@ -199,8 +244,31 @@ class PackagingService
     }
     
     /**
-     * @param $year
-     * @param $week
+     * @param int $year
+     * @param int $week
+     *
+     * @return mixed
+     */
+    public function downloadStickers($year, $week)
+    {
+        $list = $this->stickersForWeek($year, $week);
+        
+        return Excel::create(
+            trans('labels.stickers').' '.trans('labels.w_label').$week.', '.$year,
+            function ($excel) use ($list, $year, $week) {
+                $excel->sheet(
+                    trans('labels.stickers'),
+                    function ($sheet) use ($list) {
+                        $sheet->loadView('views.packaging.download.stickers')->with('list', $list);
+                    }
+                );
+            }
+        )->download('xls');
+    }
+    
+    /**
+     * @param int $year
+     * @param int $week
      *
      * @return mixed
      */
@@ -222,8 +290,8 @@ class PackagingService
     }
     
     /**
-     * @param $year
-     * @param $week
+     * @param int $year
+     * @param int $week
      *
      * @return mixed
      */
@@ -273,11 +341,18 @@ class PackagingService
     {
         $recipes = OrderRecipe::whereIn('order_id', $orders)
             ->joinBasketRecipe()
+            ->joinWeeklyMenuBasket()
+            ->joinBasket()
             ->joinRecipe()
             ->select(
+                DB::raw('weekly_menu_baskets.basket_id as basket_id'),
+                DB::raw('baskets.type as basket_type'),
+                DB::raw('baskets.name as basket_name'),
+                DB::raw('order_recipes.basket_recipe_id as basket_recipe_id'),
                 'recipes.name',
-                'recipes.portions',
                 'basket_recipes.recipe_id',
+                'basket_recipes.position',
+                DB::raw('weekly_menu_baskets.portions as portions'),
                 DB::raw('count(order_recipes.basket_recipe_id) as recipes_count')
             )
             ->groupBy('basket_recipes.recipe_id')
@@ -289,7 +364,7 @@ class PackagingService
         $_baskets = Basket::additional()->joinBasketOrder()->joinOrders()
             ->with('recipes')
             ->whereIn('orders.id', $orders)
-            ->select('baskets.id', DB::raw('count(basket_id) as baskets_count'))
+            ->select('baskets.id', 'baskets.name', DB::raw('count(basket_id) as baskets_count'))
             ->groupBy('basket_order.basket_id')
             ->get();
         
@@ -297,10 +372,15 @@ class PackagingService
             foreach ($basket->recipes as $recipe) {
                 if (!isset($recipes[$recipe->recipe_id])) {
                     $recipes[$recipe->recipe_id] = [
-                        'recipe_id'     => $recipe->recipe_id,
-                        'name'          => $recipe->recipe->name,
-                        'portions'      => $recipe->recipe->portions,
-                        'recipes_count' => 0,
+                        'basket_id'        => $basket->id,
+                        'basket_type'      => $basket->type,
+                        'basket_name'      => $basket->name,
+                        'basket_recipe_id' => $recipe->id,
+                        'recipe_id'        => $recipe->recipe_id,
+                        'name'             => $recipe->recipe->name,
+                        'position'         => $recipe->position,
+                        'portions'         => $recipe->recipe->portions,
+                        'recipes_count'    => 0,
                     ];
                 }
                 
@@ -312,7 +392,7 @@ class PackagingService
     }
     
     /**
-     * @param Collection $recipes
+     * @param array|Collection $recipes
      */
     private function _addIngredients(&$recipes)
     {

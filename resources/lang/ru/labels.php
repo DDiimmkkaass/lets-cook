@@ -551,4 +551,8 @@ return array (
   'filled_by_the_user' => 'Заполняется клиентом',
   'autograph' => 'Подпись',
   'ingredients_image' => 'Изображение с ингредиентами',
+  'download_xlsx_file_with_recipes' => 'Скачкть .xls файл рецептов',
+  'download_xlsx_file_with_stickers' => 'Скачкть .xls файл стикеров',
+  'stickers' => 'Стикеры',
+  'number_of_recipe' => 'Номер рецепта',
 );

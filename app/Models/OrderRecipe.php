@@ -67,6 +67,31 @@ class OrderRecipe extends Model
      *
      * @return mixed
      */
+    public function scopeJoinWeeklyMenuBasket($query)
+    {
+        return $query->leftJoin(
+            'weekly_menu_baskets',
+            'weekly_menu_baskets.id',
+            '=',
+            'basket_recipes.weekly_menu_basket_id'
+        );
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinBasket($query)
+    {
+        return $query->leftJoin('baskets', 'baskets.id', '=', 'weekly_menu_baskets.basket_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
     public function scopeJoinRecipe($query)
     {
         return $query->leftJoin('recipes', 'recipes.id', '=', 'basket_recipes.recipe_id');

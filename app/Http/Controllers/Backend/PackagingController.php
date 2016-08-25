@@ -46,6 +46,11 @@ class PackagingController extends BackendController
     protected $tabs = ['repackaging', 'recipes', 'users', 'deliveries'];
     
     /**
+     * @var array
+     */
+    protected $downloads = ['repackaging', 'recipes', 'stickers', 'users', 'deliveries'];
+    
+    /**
      * @var \App\Services\PackagingService
      */
     private $packagingService;
@@ -193,8 +198,8 @@ class PackagingController extends BackendController
     public function download($tab, $year, $week)
     {
         try {
-            if (!in_array($tab, $this->tabs)) {
-                throw new Exception(trans('messages.wrong tab id name'));
+            if (!in_array($tab, $this->downloads)) {
+                throw new Exception(trans('messages.wrong download file request'));
             }
             
             return $this->packagingService->{'download'.studly_case($tab)}($year, $week);

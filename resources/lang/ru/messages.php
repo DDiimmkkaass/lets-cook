@@ -137,6 +137,7 @@ return array (
   'main basket not selected' => 'Основная корзина не выбрана',
   'no ingredients who need a repackaging' => 'Нет ингредиентов, которым необходима переупаковка',
   'wrong tab id name' => 'Неведопустимое значение идентификатора вкладки',
+  'wrong download file request' => 'Неведопустимое значение запроса для скачивания',
   'no orders' => 'Заказы отсутствуют',
   'you cannot edit old weekly menu' => 'Вы не можете редактировать меню за прошедшие недели',
 );

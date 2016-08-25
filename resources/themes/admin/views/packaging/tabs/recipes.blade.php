@@ -2,9 +2,13 @@
     <div class="box-body table-responsive no-padding">
         <div class="margin-bottom-10">
             <div class="col-sm-12 text-right">
+                <a class="download-stickers btn btn-flat btn-primary btn-sm margin-right-10" target="_blank"
+                   href="{!! route('admin.packaging.download', ['stickers', $year, $week]) !!}">
+                    @lang('labels.download_xlsx_file_with_stickers')
+                </a>
                 <a class="download btn btn-flat btn-success btn-sm" target="_blank"
                    href="{!! route('admin.packaging.download', ['recipes', $year, $week]) !!}">
-                    @lang('labels.download_xlsx_file')
+                    @lang('labels.download_xlsx_file_with_recipes')
                 </a>
             </div>
 
