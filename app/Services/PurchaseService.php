@@ -78,7 +78,7 @@ class PurchaseService
                     'categories' => [],
                 ];
             }
-    
+            
             if ($ingredient->purchase_manager) {
                 if (!isset($list['categories'][$_ingredient->category_id])) {
                     $list['categories'][$_ingredient->category_id] = [
@@ -87,7 +87,7 @@ class PurchaseService
                         'ingredients' => [],
                     ];
                 }
-    
+                
                 $list['categories'][$_ingredient->category_id]['ingredients'][$ingredient->ingredient_id] = $ingredient;
             } else {
                 if (!isset($list['suppliers'][$_ingredient->supplier_id]['categories'][$_ingredient->category_id])) {
@@ -97,7 +97,7 @@ class PurchaseService
                         'ingredients' => [],
                     ];
                 }
-    
+                
                 $list['suppliers'][$_ingredient->supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$ingredient->ingredient_id] = $ingredient;
             }
         }
@@ -113,26 +113,19 @@ class PurchaseService
     public function download($year, $week, $supplier_id = false)
     {
         $file_name = $this->_getDownloadFileName($year, $week, $supplier_id);
-        $tab_name = $this->_getSheetTabName($supplier_id);
+        $sheet_name = $this->_getSheetTabName($supplier_id);
+        $view = $this->_getViewName($supplier_id);
         
-        $data = $this->_getPurchaseFor($year, $week, $supplier_id);
+        $list = $this->_getPurchaseFor($year, $week, $supplier_id);
         
-        foreach ($data as $key => $item) {
-            $data[$key] = [
-                trans('labels.ingredient') => $item['ingredient'],
-                ' '                        => ' ',
-                trans('labels.count')      => $item['count'],
-                trans('labels.unit')       => $item['unit'],
-            ];
-        }
-        
-        Excel::create(
+        return Excel::create(
             $file_name,
-            function ($excel) use ($data, $tab_name) {
+            function ($excel) use ($list, $view, $sheet_name) {
                 $excel->sheet(
-                    $tab_name,
-                    function ($sheet) use ($data) {
-                        $sheet->fromArray($data);
+                    get_excel_sheet_name($sheet_name),
+                    function ($sheet) use ($list, $view, $sheet_name) {
+                        $sheet->loadView('views.purchase.partials.'.$view)
+                            ->with(['list' => $list, 'title' => $sheet_name]);
                     }
                 );
             }
@@ -210,6 +203,7 @@ class PurchaseService
             ->where('recipe_ingredients.type', RecipeIngredient::getTypeIdByName('normal'))
             ->orderBy('suppliers.priority')
             ->orderBy('categories.position')
+            ->orderBy('ingredients.name')
             ->get();
         
         return $ingredients;
@@ -279,6 +273,7 @@ class PurchaseService
             ->whereIn('order_id', $orders)
             ->orderBy('suppliers.priority')
             ->orderBy('categories.position')
+            ->orderBy('ingredients.name')
             ->get();
         
         $suppliers = $this->_buildSuppliersTable($ingredients, [], $suppliers);
@@ -337,15 +332,15 @@ class PurchaseService
     /**
      * @param int      $year
      * @param int      $week
-     * @param int|bool $supplier
+     * @param int|bool $supplier_id
      *
      * @return string
      */
-    private function _getDownloadFileName($year, $week, $supplier = false)
+    private function _getDownloadFileName($year, $week, $supplier_id = false)
     {
-        if ($supplier > 0) {
-            $supplier = Supplier::whereId($supplier)->first()->name;
-        } elseif ($supplier !== false) {
+        if ($supplier_id > 0) {
+            $supplier = Supplier::whereId($supplier_id)->first()->name;
+        } elseif ($supplier_id !== false) {
             $supplier = trans('labels.purchase_manager_excel_title');
         }
         
@@ -354,19 +349,35 @@ class PurchaseService
     }
     
     /**
-     * @param int|bool $supplier
+     * @param int|bool $supplier_id
      *
      * @return string
      */
-    private function _getSheetTabName($supplier = false)
+    private function _getSheetTabName($supplier_id = false)
     {
-        if ($supplier > 0) {
-            $name = Supplier::whereId($supplier)->first()->name;
-        } elseif ($supplier !== false) {
-            $name = trans('labels.purchase_manager_excel_title');
+        $name = trans('labels.purchase');
+        
+        if ($supplier_id > 0) {
+            $name .= ' - '.Supplier::whereId($supplier_id)->first()->name;
+        } elseif ($supplier_id !== false) {
+            $name .= ' - '.trans('labels.purchase_manager_excel_title');
         }
         
         return $name;
+    }
+    
+    /**
+     * @param bool|int $supplier_id
+     *
+     * @return string
+     */
+    private function _getViewName($supplier_id = false)
+    {
+        if ($supplier_id === false) {
+            return 'download_all';
+        }
+        
+        return 'download';
     }
     
     /**
@@ -378,7 +389,12 @@ class PurchaseService
      */
     private function _getPurchaseFor($year, $week, $supplier_id = false)
     {
-        $list = Purchase::joinIngredient()->joinIngredientUnit()->where('year', $year)->where('week', $week);
+        $list = Purchase::joinIngredient()
+            ->joinIngredientUnit()
+            ->joinIngredientCategory()
+            ->joinIngredientSupplier()
+            ->where('year', $year)
+            ->where('week', $week);
         
         if ($supplier_id > 0) {
             $list = $list->where('purchases.supplier_id', $supplier_id);
@@ -388,9 +404,15 @@ class PurchaseService
         
         $list = $list->select(
             DB::raw('ingredients.name as ingredient'),
+            'categories.name as category',
+            'suppliers.name as supplier',
+            'purchases.price',
             'purchases.count',
             DB::raw('units.name as unit')
         )
+            ->orderBy('suppliers.name')
+            ->orderBy('categories.name')
+            ->orderBy('ingredients.name')
             ->get()
             ->toArray();
         

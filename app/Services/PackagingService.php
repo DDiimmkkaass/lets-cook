@@ -228,9 +228,7 @@ class PackagingService
             trans('labels.tab_packaging_recipes').' '.trans('labels.w_label').$week.', '.$year,
             function ($excel) use ($data, $year, $week) {
                 foreach ($data as $recipe) {
-                    $sheet = preg_replace('/['.preg_quote(':*?""<>|~!@#$%^&=`').']/', '_', $recipe['name']);
-                    $sheet = str_replace(['\\', '/'], '_', $sheet);
-                    str_limit($sheet, 31, '');
+                    $sheet = get_excel_sheet_name($recipe['name']);
                     
                     $excel->sheet(
                         $sheet,

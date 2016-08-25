@@ -480,7 +480,7 @@ return array (
   'purchase_manager_ingredients' => 'Ингредиенти для закупки вручную',
   'sheet_1' => 'Лист 1',
   'purchase_manager_excel_title' => 'закупаються вручную',
-  'list_of_purchase' => 'Список закупок',
+  'list_of_purchase' => 'Закупочный лист',
   'history_of_purchasing' => 'История закупок',
   'current_week' => 'Текущая неделя',
   'list_of_purchasing' => 'Лист закупок',
@@ -555,4 +555,5 @@ return array (
   'download_xlsx_file_with_stickers' => 'Скачкть .xls файл стикеров',
   'stickers' => 'Стикеры',
   'number_of_recipe' => 'Номер рецепта',
+  'download_report' => 'Скачать отчет',
 );

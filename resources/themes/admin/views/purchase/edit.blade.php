@@ -4,6 +4,9 @@
 
     <div class="row">
         <div class="col-lg-12">
+
+            @include('purchase.partials._buttons', ['class' => 'buttons-top'])
+
             {!! Form::open(['role' => 'form', 'method' => 'post', 'class' => 'form-horizontal purchase-form']) !!}
 
                 @include('purchase.partials.purchase_manager_table')
@@ -17,6 +20,9 @@
                 @endforeach
 
             {!! Form::close() !!}
+
+            @include('purchase.partials._buttons')
+
         </div>
     </div>
 

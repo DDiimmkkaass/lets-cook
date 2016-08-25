@@ -761,3 +761,18 @@ if (!function_exists('admin_notify')) {
         }
     }
 }
+
+if (!function_exists('get_excel_sheet_name')) {
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
+    function get_excel_sheet_name($name)
+    {
+        $name = preg_replace('/['.preg_quote(':*?""<>|~!@#$%^&=`').']/', '_', $name);
+        $name = str_replace(['\\', '/'], '_', $name);
+        
+        return str_limit($name, 31, '');
+    }
+}
