@@ -158,6 +158,12 @@ $router->group(
                 
                 //--lets cook routes
                 
+                //files download
+                $router->get(
+                    'download-file',
+                    ['as' => 'admin.download.file', 'uses' => 'Backend\BackendController@downloadFile']
+                );
+                
                 //category
                 $router->get(
                     'category/{id}/get-delete-form',
@@ -457,12 +463,12 @@ $router->group(
                                 'uses'       => 'Backend\PackagingController@tab',
                             ]
                         );
-    
+                        
                         $router->get(
                             'download/{tab}/{year}/{week}',
                             [
-                                'as'         => 'admin.packaging.download',
-                                'uses'       => 'Backend\PackagingController@download',
+                                'as'   => 'admin.packaging.download',
+                                'uses' => 'Backend\PackagingController@download',
                             ]
                         );
                     }

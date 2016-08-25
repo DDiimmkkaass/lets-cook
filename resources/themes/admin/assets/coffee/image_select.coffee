@@ -1,11 +1,11 @@
 $(document).ready () ->
   $(document).on 'click', '.show-elfinder-button', () ->
-    button = $(this)
+    $button = $(this)
 
     $('<div >').dialog
       modal: true
       width: '80%'
-      title: button.data('title')
+      title: $button.data('title')
       open: (event, ui) ->
         $('.ui-dialog').css('z-index', 9999)
         $('.ui-widget-overlay').css('z-index', 9998)
@@ -17,7 +17,13 @@ $(document).ready () ->
             getfile:
               oncomplete: 'destroy'
           getFileCallback: (file) ->
-            $(button.data('target')).val('/' + file.path).trigger("change")
+            _file = '/' + file.path
+            $($button.data('target')).val(_file).trigger("change")
+
+            $download_button = $button.parent().find('.download-file-button a')
+            if $download_button.length
+              $download_button.attr('href', $download_button.data('href') + '=' + _file)
+
             $('button.ui-dialog-titlebar-close').click()
             return
         ).elfinder 'instance'

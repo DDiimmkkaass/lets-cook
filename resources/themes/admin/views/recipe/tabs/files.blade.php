@@ -3,7 +3,7 @@
         <tbody>
         <tr>
             <th class="col-sm-5">{!! trans('labels.file') !!}<span class="required">*</span></th>
-            <th class="col-sm-5">{!! trans('labels.name') !!}</th>
+            <th class="col-sm-5">{!! trans('labels.name') !!}<span class="required">*</span></th>
             <th class="col-sm-1">{!! trans('labels.position') !!}</th>
             <th class="col-sm-1 text-center">{!! trans('labels.delete') !!}</th>
         </tr>
@@ -13,7 +13,7 @@
                 <tr class="duplication-row">
                     <td>
                         <div class="form-group required @if ($errors->has('files.old.' .$file->id. '.src')) has-error @endif">
-                            {!! Form::elfinderInput('files[old][' .$file->id. '][src]', $file->src, ['required' => true]) !!}
+                            {!! Form::elfinderInput('files[old][' .$file->id. '][src]', $file->src, ['required' => true, 'readonly' => true]) !!}
 
                             {!! $errors->first('files.old.' .$file->id. '.src', '<p class="help-block error">:message</p>') !!}
                         </div>
@@ -54,7 +54,7 @@
                     <tr class="duplication-row">
                         <td>
                             <div class="form-group required @if ($errors->has('files.new.' .$file_key. '.src')) has-error @endif">
-                                {!! Form::elfinderInput('files[new][' .$file_key. '][src]', $file['src'], ['required' => true]) !!}
+                                {!! Form::elfinderInput('files[new][' .$file_key. '][src]', $file['src'], ['required' => true, 'readonly' => true]) !!}
 
                                 {!! Form::hidden('files[new][' .$file_key. '][type]', $file['type']) !!}
 
@@ -96,7 +96,7 @@
                 <tr class="duplication-row">
                     <td>
                         <div class="form-group required">
-                            {!! Form::elfinderInput('files[new][' .$file->id. '][src]', $file->src, ['required' => true]) !!}
+                            {!! Form::elfinderInput('files[new][' .$file->id. '][src]', $file->src, ['required' => true, 'readonly' => true]) !!}
 
                             {!! Form::hidden('files[new][' .$file->id. '][type]', 3) !!}
                         </div>
@@ -139,7 +139,7 @@
         <tr class="duplication-row duplicate">
             <td>
                 <div class="form-group">
-                    {!! Form::elfinderInput('', '', ['data-name' => 'files[new][replaseme][src]', 'data-required' => true]) !!}
+                    {!! Form::elfinderInput('', '', ['data-name' => 'files[new][replaseme][src]', 'data-required' => true, 'readonly' => true]) !!}
 
                     <input type="hidden" class="form-control hidden" data-name="files[new][replaseme][type]" value="3">
                 </div>

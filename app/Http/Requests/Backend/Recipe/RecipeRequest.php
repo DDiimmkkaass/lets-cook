@@ -72,10 +72,8 @@ class RecipeRequest extends FormRequest
                 
                 'tags.*' => 'exists:tags,id',
                 
-                'files.old.*.src'      => ['regex:'.$this->file_regex],
                 'files.old.*.position' => 'numeric|min:0',
                 
-                'files.new.*.src'      => ['regex:'.$this->file_regex],
                 'files.new.*.position' => 'numeric|min:0',
                 
                 'files.remove' => 'array',
@@ -136,17 +134,11 @@ class RecipeRequest extends FormRequest
             'tags.*' => 'exists:tags,id',
             
             'files.old.*.name'     => 'required',
-            'files.old.*.src'      => [
-                'required',
-                'regex:'.$this->file_regex,
-            ],
+            'files.old.*.src'      => 'required',
             'files.old.*.position' => 'numeric|min:0',
             
             'files.new.*.name'     => 'required',
-            'files.new.*.src'      => [
-                'required',
-                'regex:'.$this->file_regex,
-            ],
+            'files.new.*.src'      => 'required',
             'files.new.*.position' => 'numeric|min:0',
             
             'files.remove' => 'array',

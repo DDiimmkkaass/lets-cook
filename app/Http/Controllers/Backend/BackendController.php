@@ -142,6 +142,20 @@ class BackendController extends BaseController
     }
     
     /**
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function downloadFile()
+    {
+        $file = request('file', null);
+        
+        if ($file) {
+            return response()->download(public_path($file));
+        }
+        
+        return redirect()->back();
+    }
+    
+    /**
      * @param string $view
      * @param array  $data
      *
