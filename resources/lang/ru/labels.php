@@ -550,4 +550,5 @@ return array (
   'places' => 'Мест',
   'filled_by_the_user' => 'Заполняется клиентом',
   'autograph' => 'Подпись',
+  'ingredients_image' => 'Изображение с ингредиентами',
 );
