@@ -18,10 +18,6 @@
                 </li>
 
                 <li>
-                    <a aria-expanded="false" href="#tab_recipe" data-toggle="tab">@lang('labels.tab_recipe')</a>
-                </li>
-
-                <li>
                     <a aria-expanded="false" href="#steps" data-toggle="tab">@lang('labels.tab_cooking_steps')</a>
                 </li>
 
@@ -53,10 +49,6 @@
 
                 <div class="tab-pane" id="ingredients_home">
                     @include('recipe.tabs.ingredients_home')
-                </div>
-
-                <div class="tab-pane" id="tab_recipe">
-                    @include('recipe.tabs.recipe')
                 </div>
 
                 <div class="tab-pane" id="steps">

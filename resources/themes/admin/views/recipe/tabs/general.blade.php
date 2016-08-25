@@ -47,3 +47,14 @@
         {!! $errors->first('ingredients_image', '<p class="help-block error">:message</p>') !!}
     </div>
 </div>
+
+<div class="form-group required @if ($errors->has('recipe')) has-error @endif">
+    {!! Form::label('recipe', trans('labels.recipe'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
+
+    <div class="col-xs-8 col-sm-7 col-md-10">
+        {!! Form::textarea('recipe', null, ['id' => 'recipe', 'rows' => '3', 'class' => 'form-control input-sm', 'required' => true]) !!}
+
+        {!! $errors->first('recipe', '<p class="help-block error">:message</p>') !!}
+    </div>
+</div>
+@include('partials.tabs.ckeditor', ['id' => 'recipe'])
