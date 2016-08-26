@@ -159,7 +159,7 @@ class Ingredient extends Model
     /**
      * @return bool
      */
-    public function isSold()
+    public function inSale()
     {
         return $this->sale_price > 0;
     }

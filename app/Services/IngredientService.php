@@ -107,7 +107,7 @@ class IngredientService
             ->editColumn(
                 'sale_price',
                 function ($model) {
-                    return $model->isSold() ? $model->sale_price.' '.currency() : trans('labels.not_sales');
+                    return $model->inSale() ? $model->sale_price.' '.currency() : trans('labels.not_sales');
                 }
             )
             ->editColumn(

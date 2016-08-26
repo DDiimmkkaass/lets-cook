@@ -34,7 +34,49 @@ Order.deleteIngredient = ($button) ->
 
   $button.closest("tr").remove()
 
+Order.getBasketRecipes = ($basket_select) ->
+  basket_id = $basket_select.val()
+
+  if basket_id
+    $.ajax
+      url: '/admin/order/get-basket-recipes/' + basket_id
+      type: 'GET'
+      dataType: 'json'
+      error: (response) =>
+        processError response, null
+      success: (response) =>
+        if response.status is 'success'
+          $('.order-recipe-select').html response.html
+
+          fixCustomInputs($basket_select.closest('.tab-pane'))
+        else
+          message.show response.message, response.status
+
+Order.getBasketRecipesIngredients = ($basket_select) ->
+  basket_id = $basket_select.val()
+
+  if basket_id
+    $.ajax
+      url: '/admin/order/get-basket-recipes-ingredients/' + basket_id
+      type: 'GET'
+      dataType: 'json'
+      error: (response) =>
+        processError response, null
+      success: (response) =>
+        if response.status is 'success'
+          $ingredients_select = $('.order-ingredient-select')
+
+          $ingredients_select.html response.html
+
+          fixCustomInputs($ingredients_select.closest('.tab-pane'))
+        else
+          message.show response.message, response.status
+
 $(document).on "ready", () ->
+  Order.getBasketRecipes($('.order-basket-select'))
+
+  Order.getBasketRecipesIngredients($('.order-basket-select'))
+
   #user select
   $('#user_id').on "select2:select", () ->
     if $(this).val()
@@ -64,27 +106,20 @@ $(document).on "ready", () ->
 
   #main basket
   $('.order-basket-select').on "change", ->
-    basket = $(this).val()
+    Order.getBasketRecipes($(this))
 
-    if basket
-      $.ajax
-        url: '/admin/order/get-basket-recipes/' + basket
-        type: 'GET'
-        dataType: 'json'
-        error: (response) =>
-          processError response, null
-        success: (response) =>
-          if response.status is 'success'
-            $('.order-recipe-select').html response.html
+    Order.getBasketRecipesIngredients($(this))
 
-            $('.order-recipes-table [id^="recipe_"]').each () ->
-              $(this).fadeOut(500, () =>
-                 $(this).remove()
-              );
+    $('.order-recipes-table [id^="recipe_"]').each () ->
+      $(this).fadeOut(500, () =>
+        $(this).remove()
+      );
 
-            fixCustomInputs($(this).closest('.tab-pane'))
-          else
-            message.show response.message, response.status
+    $('.order-ingredients-table [id^="ingredient_"]').each () ->
+      $(this).fadeOut(500, () =>
+        $(this).remove()
+      );
+
 
   $('.order-recipe-select').on "change", ->
     recipe = $(this).val()
@@ -112,52 +147,29 @@ $(document).on "ready", () ->
         Order.deleteRecipe($(this))
 
   #ingredients
-  options = $.extend
-    ajax:
-      url: '/admin/ingredient/find/'
-      dataType: 'json'
-      delay: 0
-      data: (params) ->
-        return {
-          text: params.term
-          in_sales: true
-        }
-      processResults: (data, params) ->
-        return {
-          results: data
-        }
-      cache: true
-    escapeMarkup: (markup) ->
-      return markup
-    minimumInputLength: 2
-    templateResult: (item) ->
-      return '<div id="' + item.id + '">' + item.name + '</div>'
-    templateSelection: (item) ->
-      return '<div id="' + item.id + '">' + item.name + '</div>'
-    , select2Options
+  $('.order-ingredient-select').on "change", ->
+    $option = $(this).find('option:selected')
 
-  $order_ingredients_select = $('#order_ingredient_select')
-  $order_ingredients_select.select2(options)
+    ingredient_id = $option.data('ingredient_id')
+    basket_recipe_id = $option.data('basket_recipe_id')
 
-  $order_ingredients_select.on "select2:select", () ->
-    ingredient = $(this).val()
+    if ingredient_id
+      $.ajax
+        url: '/admin/order/get-ingredient-row/' + basket_recipe_id + '/' + ingredient_id
+        type: 'GET'
+        dataType: 'json'
+        error: (response) =>
+          processError response, null
+        success: (response) =>
+          if response.status is 'success'
+            unless $('.order-ingredients-table #ingredient_' + basket_recipe_id + '_' + ingredient_id).length
+              $('.order-ingredients-table').append response.html
 
-    $.ajax
-      url: '/admin/order/get-ingredient-row/' + ingredient
-      type: 'GET'
-      dataType: 'json'
-      error: (response) =>
-        processError response, null
-      success: (response) =>
-        if response.status is 'success'
-          unless $('.order-ingredients-table #ingredient_' + ingredient).length
-            $('.order-ingredients-table').append response.html
-
-            fixCustomInputs($('.order-ingredients-table tr:last-child'))
+              fixCustomInputs($('.order-ingredients-table tr:last-child'))
+            else
+              message.show lang_ingredientAlreadyAddedToList, 'warning'
           else
-            message.show lang_ingredientAlreadyAddedToList, 'warning'
-        else
-          message.show response.message, response.status
+            message.show response.message, response.status
 
   $(document).on "click", ".order-ingredients-table .destroy", ->
     confirm_dialog () =>

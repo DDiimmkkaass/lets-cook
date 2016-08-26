@@ -371,6 +371,14 @@ $router->group(
                     ]
                 );
                 $router->get(
+                    'order/get-basket-recipes-ingredients/{basket_id}',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.order.get_basket_recipes_ingredients',
+                        'uses'       => 'Backend\OrderController@getBasketRecipesIngredients',
+                    ]
+                );
+                $router->get(
                     'order/get-recipe-row/{recipe_id}',
                     [
                         'middleware' => 'ajax',
@@ -379,7 +387,7 @@ $router->group(
                     ]
                 );
                 $router->get(
-                    'order/get-ingredient-row/{ingredient_id}',
+                    'order/get-ingredient-row/{basket_recipe_id}/{ingredient_id}',
                     [
                         'middleware' => 'ajax',
                         'as'         => 'admin.order.get_ingredient_row',

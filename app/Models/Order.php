@@ -306,7 +306,7 @@ class Order extends Model
      *
      * @return bool|string
      */
-    public function status($status = null)
+    public function isStatus($status = null)
     {
         $_status = $this->getStringStatus();
         

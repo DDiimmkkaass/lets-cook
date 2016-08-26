@@ -19,7 +19,7 @@
             @lang('labels.add_recipes')
         </div>
         <div class="col-sm-12 full-width-select">
-            {!! Form::select('add_recipes', $basket_recipes, null, ['id' => 'order_recipe_select', 'class' => 'form-control select2 order-recipe-select input-sm', 'aria-hidden' => 'true']) !!}
+            {!! Form::select('add_recipes', ['' => trans('labels.please_select_basket')], null, ['id' => 'order_recipe_select', 'class' => 'form-control select2 order-recipe-select input-sm', 'aria-hidden' => 'true']) !!}
 
             <div class="clearfix"></div>
 

@@ -15,6 +15,7 @@ use App\Models\City;
 use App\Models\Group;
 use App\Models\Ingredient;
 use App\Models\Order;
+use App\Models\RecipeIngredient;
 use App\Models\WeeklyMenu;
 use App\Services\OrderService;
 use DB;
@@ -23,6 +24,7 @@ use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Meta;
 use Response;
 
@@ -88,7 +90,7 @@ class OrderController extends BackendController
         if ($request->get('draw')) {
             return $this->orderService->table($request);
         }
-    
+        
         $this->data('statistic', $this->orderService->getOrdersStatistic());
         
         $this->data('page_title', trans('labels.orders'));
@@ -186,7 +188,11 @@ class OrderController extends BackendController
     public function edit($id)
     {
         try {
-            $model = Order::with('ingredients', 'baskets')->findOrFail($id);
+            $model = Order::with(
+                'ingredients',
+                'ingredients.recipe',
+                'baskets'
+            )->findOrFail($id);
             
             $this->data('page_title', trans('labels.order').': #'.$model->id);
             
@@ -206,7 +212,7 @@ class OrderController extends BackendController
      * Update the specified resource in storage.
      * PUT /order/{id}
      *
-     * @param  int               $id
+     * @param  int         $id
      * @param OrderRequest $request
      *
      * @return \Response
@@ -283,6 +289,69 @@ class OrderController extends BackendController
     }
     
     /**
+     * @param int $basket_id
+     *
+     * @return array
+     */
+    public function getBasketRecipesIngredients($basket_id)
+    {
+        try {
+            $ingredients = [];
+            
+            $html = view('partials.selects.option', ['item' => ['id' => '', 'name' => trans('labels.please_select')]])
+                ->render();
+            
+            $recipes = BasketRecipe::with('recipe.home_ingredients')
+                ->where('weekly_menu_basket_id', $basket_id)
+                ->get();
+            
+            foreach ($recipes as $recipe) {
+                foreach ($recipe->recipe->home_ingredients as $ingredient) {
+                    if ($ingredient->ingredient->inSale()) {
+                        $ingredients[] = [
+                            'ingredient_id'    => $ingredient->ingredient_id,
+                            'name'             => $ingredient->ingredient->name,
+                            'basket_recipe_id' => $recipe->id,
+                            'recipe_name'      => $ingredient->recipe->name,
+                        ];
+                    }
+                }
+            }
+            
+            $ingredients = new Collection($ingredients);
+            $ingredients = $ingredients->sortBy('name');
+            
+            foreach ($ingredients as $key => $ingredient) {
+                $name = $ingredient['name'].' ('.$ingredient['recipe_name'].')';
+                
+                $html .= view(
+                    'partials.selects.option',
+                    [
+                        'item' => [
+                            'id'         => $key,
+                            'name'       => $name,
+                            'attributes' => [
+                                'data-ingredient_id'    => $ingredient['ingredient_id'],
+                                'data-basket_recipe_id' => $ingredient['basket_recipe_id'],
+                            ],
+                        ],
+                    ]
+                )->render();
+            }
+            
+            return [
+                'status' => 'success',
+                'html'   => $html,
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
      * @param int $recipe_id
      *
      * @return array
@@ -305,18 +374,34 @@ class OrderController extends BackendController
     }
     
     /**
+     * @param int $basket_recipe_id
      * @param int $ingredient_id
      *
      * @return array
      */
-    public function getIngredientRow($ingredient_id)
+    public function getIngredientRow($basket_recipe_id, $ingredient_id)
     {
         try {
-            $model = Ingredient::inSales()->whereId($ingredient_id)->firstOrFail();
+            $basket_recipe = BasketRecipe::with('recipe')->findOrFail($basket_recipe_id);
+            
+            $model = Ingredient::joinRecipeIngredients()
+                ->inSales()
+                ->where('ingredients.id', $ingredient_id)
+                ->where('recipe_ingredients.recipe_id', $basket_recipe->recipe_id)
+                ->where('recipe_ingredients.type', RecipeIngredient::getTypeIdByName('home'))
+                ->select(
+                    'ingredients.id',
+                    'ingredients.name',
+                    'ingredients.image',
+                    'recipe_ingredients.count'
+                )
+                ->firstOrFail();
             
             return [
                 'status' => 'success',
-                'html'   => view('views.'.$this->module.'.partials.ingredient_row', compact('model'))->render(),
+                'html'   => view('views.'.$this->module.'.partials.ingredient_row')
+                    ->with(compact('basket_recipe', 'model'))
+                    ->render(),
             ];
         } catch (Exception $e) {
             return [
@@ -387,20 +472,20 @@ class OrderController extends BackendController
         $basket = $model->getMainBasket();
         $this->data('basket', $basket);
         if ($basket) {
-            $basket_recipes = ['' => trans('labels.please_select')];
-            foreach ($basket->recipes()->get() as $recipe) {
-                $basket_recipes[$recipe->id] = $recipe->recipe->name;
-            }
-            $this->data('basket_recipes', $basket_recipes);
+            $baskets = [
+                $basket->id => $basket->basket->name.' ('.
+                    trans('labels.portions_lowercase').' '.
+                    $basket->portions.')',
+            ];
         } else {
-            $this->data('basket_recipes', ['' => trans('labels.please_select_basket')]);
-        }
-        
-        $baskets = ['' => trans('labels.please_select')];
-        $weekly_menu = WeeklyMenu::current()->first();
-        if ($weekly_menu) {
-            foreach ($weekly_menu->baskets()->get() as $basket) {
-                $baskets[$basket->id] = $basket->basket->name;
+            $baskets = ['' => trans('labels.please_select')];
+            $weekly_menu = WeeklyMenu::current()->first();
+            if ($weekly_menu) {
+                foreach ($weekly_menu->baskets()->get() as $basket) {
+                    $baskets[$basket->id] = $basket->basket->name.' ('.
+                        trans('labels.portions_lowercase').' '.
+                        $basket->portions.')';
+                }
             }
         }
         $this->data('baskets', $baskets);

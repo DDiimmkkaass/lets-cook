@@ -3,8 +3,14 @@
         <div class="col-xs-12 margin-bottom-5 font-size-16 text-left">
             @lang('labels.add_ingredients')
         </div>
+
         <div class="col-sm-12 full-width-select">
-            {!! Form::select('add_ingredients', [], null, ['id' => 'order_ingredient_select', 'class' => 'form-control order-ingredient-select input-sm', 'aria-hidden' => 'true']) !!}
+            <select name="add_ingredients"
+                    id="order_ingredient_select"
+                    class="form-control select2 order-ingredient-select input-sm"
+                    aria-hidden="true">
+                <option value="">@lang('labels.please_select_basket')</option>
+            </select>
         </div>
     </div>
 </div>
@@ -21,7 +27,7 @@
 
         @if (count($model->ingredients))
             @foreach($model->ingredients as $ingredient)
-                <tr id="ingredient_{!! $ingredient->ingredient_id !!}">
+                <tr id="ingredient_{!! $ingredient->basket_recipe_id.'_'.$ingredient->ingredient_id !!}">
                     <td>
                         <div class="form-group @if ($errors->has('ingredients.old.' .$ingredient->id. '.ingredient_id')) has-error @endif">
                             {!! Form::text('ingredients[old][' .$ingredient->id. '][ingredient_id]', $ingredient->ingredient_id, ['id' => 'ingredients.old.' .$ingredient->id. '.ingredient_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
@@ -34,7 +40,7 @@
                             @if ($ingredient->getImage())
                                 @include('partials.image', ['src' => $ingredient->getImage(), 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
                             @endif
-                            {!! link_to_route('admin.ingredient.show', $ingredient->getName(), $ingredient->ingredient_id, ['target' => '_blank']) !!}
+                            {!! link_to_route('admin.ingredient.show', $ingredient->getName().' ('.$ingredient->recipe->recipe->name.')', $ingredient->ingredient_id, ['target' => '_blank']) !!}
                         </div>
                     </td>
                     <td>
@@ -64,10 +70,13 @@
                                 @if ($ingredient['image'])
                                     @include('partials.image', ['src' => $ingredient['image'], 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
                                 @endif
-                                {!! link_to_route('admin.ingredient.show', $ingredient['name'], $ingredient['ingredient_id'], ['target' => '_blank']) !!}
+                                {!! link_to_route('admin.ingredient.show', $ingredient['name'].' ('.$ingredient['recipe_name'].')', $ingredient['ingredient_id'], ['target' => '_blank']) !!}
 
                                 {!! Form::hidden('ingredients[new][' .$ingredient_key. '][image]', $ingredient['image']) !!}
                                 {!! Form::hidden('ingredients[new][' .$ingredient_key. '][name]', $ingredient['name']) !!}
+                                {!! Form::hidden('ingredients[new][' .$ingredient_key. '][name]', $ingredient['name']) !!}
+                                {!! Form::hidden('ingredients[new][' .$ingredient_key. '][basket_recipe_id]', $ingredient['basket_recipe_id']) !!}
+                                {!! Form::hidden('ingredients[new][' .$ingredient_key. '][recipe_name]', $ingredient['recipe_name']) !!}
                             </div>
                         </td>
                         <td>
