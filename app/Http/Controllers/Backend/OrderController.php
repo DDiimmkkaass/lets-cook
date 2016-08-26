@@ -418,7 +418,7 @@ class OrderController extends BackendController
      */
     private function _fillAdditionalTemplateData(Order $model)
     {
-        $this->data('users', Group::with('users')->clients()->first()->users);
+        $this->data('users', Group::clients()->first()->users()->active()->get());
         
         $types = [];
         foreach (Order::getTypes() as $id => $type) {
