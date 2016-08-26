@@ -157,7 +157,7 @@ class OrderService
             'sum_with_discount'  => 0,
         ];
         
-        $orders = Order::notOfStatus(['archived', 'deleted'])->forCurrentWeek()->get();
+        $orders = Order::notOfStatus(['archived', 'deleted'])->forCurrentWeek()->orderBy('delivery_date')->get();
         
         foreach ($orders as $order) {
             if (!isset($statistic['days'][$order->delivery_date])) {
