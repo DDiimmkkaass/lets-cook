@@ -244,4 +244,15 @@ class Ingredient extends Model
     {
         return $query->where('sale_price', '=', 0);
     }
+    
+    /**
+     * @param        $query
+     * @param string $order
+     *
+     * @return mixed
+     */
+    public function scopeNameSorted($query, $order = 'ASC')
+    {
+        return $query->orderBy('name', $order);
+    }
 }

@@ -11,11 +11,11 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Requests\Backend\WeeklyMenu\WeeklyMenuCreateRequest;
 use App\Http\Requests\Backend\WeeklyMenu\WeeklyMenuUpdateRequest;
 use App\Models\Basket;
-use App\Models\Tag;
 use App\Models\WeeklyMenu;
 use App\Services\BasketService;
 use App\Services\RecipeService;
 use App\Services\WeeklyMenuService;
+use App\Traits\Controllers\ProcessTagsTrait;
 use Carbon;
 use DB;
 use Exception;
@@ -32,6 +32,8 @@ use Response;
  */
 class WeeklyMenuController extends BackendController
 {
+
+    use ProcessTagsTrait;
     
     /**
      * @var string
@@ -371,11 +373,8 @@ class WeeklyMenuController extends BackendController
             $portions = $request->get('portions', config('weekly_menu.default_portions_count'));
             
             $basket = Basket::whereId($request->get('basket_id'))->firstOrFail();
-            
-            $tags = [];
-            foreach (Tag::with('translations')->get() as $tag) {
-                $tags[$tag->id] = $tag->name;
-            }
+    
+            $tags = $this->getTagsList();
             
             return [
                 'status'       => 'success',
@@ -472,11 +471,7 @@ class WeeklyMenuController extends BackendController
     {
         $this->data('baskets', $model->baskets);
         
-        $tags = [];
-        foreach (Tag::with('translations')->get() as $tag) {
-            $tags[$tag->id] = $tag->name;
-        }
-        $this->data('tags', $tags);
+        $this->data('tags', $this->getTagsList());
     }
     
     /**

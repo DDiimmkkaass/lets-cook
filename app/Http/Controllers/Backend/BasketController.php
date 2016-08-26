@@ -345,11 +345,11 @@ class BasketController extends BackendController
         if ($this->type == 'additional') {
             $recipes = ['' => trans('labels.please_select_recipe')];
             if ($model->exists) {
-                foreach ($model->allowed_recipes()->visible()->get(['id', 'name']) as $item) {
+                foreach ($model->allowed_recipes()->visible()->nameSorted()->get(['id', 'name']) as $item) {
                     $recipes[$item->id] = $item->name;
                 }
             } else {
-                foreach (Recipe::visible()->get(['id', 'name']) as $item) {
+                foreach (Recipe::visible()->nameSorted()->get(['id', 'name']) as $item) {
                     $recipes[$item->id] = $item->name;
                 }
             }

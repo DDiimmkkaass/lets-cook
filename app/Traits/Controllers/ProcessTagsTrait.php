@@ -37,7 +37,7 @@ trait ProcessTagsTrait
     public function getTagsList()
     {
         $tags = [];
-        foreach (Tag::with('translations')->visible()->get() as $tag) {
+        foreach (Tag::with('translations')->get()->sortBy('name') as $tag) {
             $tags[$tag->id] = $tag->name;
         }
 

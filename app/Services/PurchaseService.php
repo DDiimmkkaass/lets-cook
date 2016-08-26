@@ -65,6 +65,7 @@ class PurchaseService
             ->where('week', $list['week'])
             ->orderBy('suppliers.priority')
             ->orderBy('categories.position')
+            ->orderBy('ingredients.name')
             ->get(['purchases.*'])
             ->keyBy('ingredient_id');
         
@@ -413,8 +414,8 @@ class PurchaseService
             'purchases.count',
             DB::raw('units.name as unit')
         )
-            ->orderBy('suppliers.name')
-            ->orderBy('categories.name')
+            ->orderBy('suppliers.priority')
+            ->orderBy('categories.position')
             ->orderBy('ingredients.name')
             ->get()
             ->toArray();

@@ -264,7 +264,11 @@ class CategoryController extends BackendController
     public function completedIngredients($category_id)
     {
         try {
-            $ingredients = Ingredient::completed()->whereCategoryId($category_id)->get()->toArray();
+            $ingredients = Ingredient::completed()
+                ->whereCategoryId($category_id)
+                ->nameSorted()
+                ->get()
+                ->toArray();
 
             return [
                 'status'      => 'success',

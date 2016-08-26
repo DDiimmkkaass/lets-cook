@@ -199,7 +199,7 @@
 
             <li class="header">@lang('labels.packaging')</li>
             @if ($user->hasAccess('packaging.read'))
-                <li class="{!! active_class('admin.packaging.edit') !!}">
+                <li class="{!! active_class('admin.packaging.current') !!}">
                     <a href="{!! route('admin.packaging.current') !!}">
                         <i class="fa fa-list-ol"></i>
                         <span>@lang('labels.list_of_packaging')</span>

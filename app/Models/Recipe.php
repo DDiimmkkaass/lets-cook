@@ -155,6 +155,17 @@ class Recipe extends Model
     }
     
     /**
+     * @param        $query
+     * @param string $order
+     *
+     * @return mixed
+     */
+    public function scopeNameSorted($query, $order = 'ASC')
+    {
+        return $query->orderBy($this->getTable().'.name', $order);
+    }
+    
+    /**
      * set and return price of recipe
      *
      * @return int|mixed

@@ -418,19 +418,19 @@ class IngredientController extends BackendController
     private function _fillAdditionalTemplateData($model = null)
     {
         $this->units = ['' => trans('labels.please_select')];
-        foreach (Unit::all() as $unit) {
+        foreach (Unit::positionSorted()->get() as $unit) {
             $this->units[$unit->id] = $unit->name;
         }
         $this->data('units', $this->units);
         
         $this->categories = ['' => trans('labels.please_select')];
-        foreach (Category::all() as $category) {
+        foreach (Category::positionSorted()->get() as $category) {
             $this->categories[$category->id] = $category->name;
         }
         $this->data('categories', $this->categories);
         
         $this->suppliers = ['' => trans('labels.please_select')];
-        foreach (Supplier::all() as $supplier) {
+        foreach (Supplier::prioritySorted()->get() as $supplier) {
             $this->suppliers[$supplier->id] = $supplier->name;
         }
         $this->data('suppliers', $this->suppliers);

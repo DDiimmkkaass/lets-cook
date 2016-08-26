@@ -269,7 +269,7 @@ class TagController extends BackendController
     private function _fillAdditionalTemplateData()
     {
         $categories = ['' => trans('labels.please_select')];
-        foreach (TagCategory::all() as $category) {
+        foreach (TagCategory::positionSorted()->get() as $category) {
             $categories[$category->id] = $category->name;
         }
         $this->data('categories', $categories);

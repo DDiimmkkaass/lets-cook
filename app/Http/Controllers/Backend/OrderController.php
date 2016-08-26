@@ -267,7 +267,11 @@ class OrderController extends BackendController
             
             $recipes = BasketRecipe::where('weekly_menu_basket_id', $basket_id)->get();
             
-            $recipes->each(
+            $recipes->sortBy(
+                function ($item) {
+                    return $item->recipe->name;
+                }
+            )->each(
                 function ($item, $index) use (&$html) {
                     return $html .= view(
                         'partials.selects.option',
@@ -451,7 +455,7 @@ class OrderController extends BackendController
         $this->data('delivery_times', $delivery_times);
         
         $cities = ['' => trans('labels.another')];
-        foreach (City::all() as $city) {
+        foreach (City::positionSorted()->get() as $city) {
             $cities[$city->id] = $city->name;
         }
         $this->data('cities', $cities);
@@ -490,7 +494,7 @@ class OrderController extends BackendController
         }
         $this->data('baskets', $baskets);
         
-        $this->data('additional_baskets', Basket::additional()->get());
+        $this->data('additional_baskets', Basket::additional()->positionSorted()->get());
         
         $this->data('selected_baskets', $model->baskets->keyBy('id')->toArray());
     }
