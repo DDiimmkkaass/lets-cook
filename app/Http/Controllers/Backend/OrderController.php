@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Http\Requests\Backend\Order\OrderCommentCreateRequest;
 use App\Http\Requests\Backend\Order\OrderRequest;
 use App\Models\Basket;
 use App\Models\BasketRecipe;
@@ -15,6 +16,7 @@ use App\Models\City;
 use App\Models\Group;
 use App\Models\Ingredient;
 use App\Models\Order;
+use App\Models\OrderComment;
 use App\Models\RecipeIngredient;
 use App\Models\WeeklyMenu;
 use App\Services\OrderService;
@@ -191,7 +193,8 @@ class OrderController extends BackendController
             $model = Order::with(
                 'ingredients',
                 'ingredients.recipe',
-                'baskets'
+                'baskets',
+                'comments'
             )->findOrFail($id);
             
             $this->data('page_title', trans('labels.order').': #'.$model->id);
@@ -251,6 +254,36 @@ class OrderController extends BackendController
             FlashMessages::add("error", trans('messages.update_error'));
             
             return redirect()->back()->withInput();
+        }
+    }
+    
+    /**
+     * @param \App\Http\Requests\Backend\Order\OrderCommentCreateRequest $request
+     *
+     * @return array
+     */
+    public function storeComment(OrderCommentCreateRequest $request)
+    {
+        try {
+            $order = Order::findOrFail($request->get('order_id'));
+            
+            $comment = new OrderComment([
+                'user_id' => $this->user->id,
+                'comment' => $request->get('order_comment')
+            ]);
+    
+            $order->comments()->save($comment);
+            
+            return [
+                'status'  => 'success',
+                'comment' => view('order.partials.comment', ['comment' => $comment])->render(),
+                'message' => trans('messages.comment successfully added'),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
         }
     }
     

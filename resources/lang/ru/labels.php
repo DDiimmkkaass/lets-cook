@@ -435,7 +435,7 @@ return array (
   'weekly_menu' => 'Меню на неделю',
   'weekly_menus_list' => 'Список меню на неделю',
   'order_status_' => 'Не задан',
-  'order_status_changes' => 'Изменен',
+  'order_status_changed' => 'Изменен',
   'order_status_paid' => 'Оплачен',
   'order_status_processed' => 'Обрабатываеться',
   'order_status_tmpl' => 'По подписке',
@@ -556,4 +556,8 @@ return array (
   'stickers' => 'Стикеры',
   'number_of_recipe' => 'Номер рецепта',
   'download_report' => 'Скачать отчет',
+  'status_comment' => 'Комментарий к статусу',
+  'status_comment_placeholder' => 'Введите причину изменения статуса',
+  'status_changed_to' => 'Статус изменен на',
+  'type_a_comment' => 'Введите комментарий',
 );

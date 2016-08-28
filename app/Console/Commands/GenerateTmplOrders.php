@@ -57,7 +57,7 @@ class GenerateTmplOrders extends Command
     
         $this->log('max date = '.$check_date);
         
-        foreach (Order::ofType('subscribe')->limit(1)->get() as $order) {
+        foreach (Order::ofType('subscribe')->get() as $order) {
             $all = false;
             
             $this->log('start process order # '.$order->id);

@@ -39,7 +39,6 @@ class Order extends Model
         'city_name',
         'address',
         'comment',
-        'admin_comment',
     ];
     
     /**
@@ -59,7 +58,7 @@ class Order extends Model
      * @var array
      */
     protected static $statuses = [
-        'changes',
+        'changed',
         'paid',
         'processed',
         'tmpl',
@@ -71,7 +70,7 @@ class Order extends Model
      * @var array
      */
     protected static $editable_statuses = [
-        'changes',
+        'changed',
         'paid',
         'tmpl',
         'archived',
@@ -123,6 +122,14 @@ class Order extends Model
     public function baskets()
     {
         return $this->belongsToMany(Basket::class);
+    }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function comments()
+    {
+        return $this->hasMany(OrderComment::class)->with('user');
     }
     
     /**

@@ -8,6 +8,14 @@ Order.processCity = () ->
   else
     $city_block.addClass('hidden').removeClass('required').find('input').removeAttr('required').val('')
 
+Order.processStatus = () ->
+  $status_block = $('#status-comment-block')
+
+  unless parseInt($('[name=\'status\']').val()) == parseInt($('[name=\'old_status\']').val())
+    $status_block.removeClass('hidden').addClass('required').find('textarea').attr('required', 'required')
+  else
+    $status_block.addClass('hidden').removeClass('required').find('textarea').removeAttr('required').val('')
+
 Order.processSubscribePeriod = () ->
   $subscribe_period_block = $('#subscribe-period-block')
 
@@ -104,6 +112,38 @@ $(document).on "ready", () ->
   $('.order-city-id-select').on "change", () ->
     Order.processCity()
 
+  #comments
+  Order.processStatus()
+
+  $('.order-status-select').on "change", () ->
+    Order.processStatus()
+
+  $('.order-comment-form button').on "click", (e) ->
+    e.preventDefault()
+
+    $form = $(this).closest('.order-comment-form')
+
+    data =
+      order_id: $form.find('#order_id').val()
+      order_comment: $form.find('#order_comment').val()
+
+    $.ajax
+      url: $form.data('action')
+      type: 'POST'
+      dataType: 'json'
+      data: data
+      error: (response) =>
+        processError response, $form
+      success: (response) =>
+        if response.status is 'success'
+          $form.find('#order_comment').val('')
+
+          $('.comments-block').append(response.comment)
+
+        message.show response.message, response.status
+
+    return false
+
   #main basket
   $('.order-basket-select').on "change", ->
     Order.getBasketRecipes($(this))
@@ -144,7 +184,7 @@ $(document).on "ready", () ->
 
   $(document).on "click", ".order-recipes-table .destroy", ->
     confirm_dialog () =>
-        Order.deleteRecipe($(this))
+      Order.deleteRecipe($(this))
 
   #ingredients
   $('.order-ingredient-select').on "change", ->
@@ -173,4 +213,4 @@ $(document).on "ready", () ->
 
   $(document).on "click", ".order-ingredients-table .destroy", ->
     confirm_dialog () =>
-        Order.deleteIngredient($(this))
+      Order.deleteIngredient($(this))

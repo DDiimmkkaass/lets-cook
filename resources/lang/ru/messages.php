@@ -140,4 +140,10 @@ return array (
   'wrong download file request' => 'Неведопустимое значение запроса для скачивания',
   'no orders' => 'Заказы отсутствуют',
   'you cannot edit old weekly menu' => 'Вы не можете редактировать меню за прошедшие недели',
+  'comment successfully added' => 'Комментарий успешно добавлен',
+  'auto generated tmpl order' => 'Автогенерированный tmpl заказ',
+  'order successfully auto paid' => 'Автоматическая оплата заказа прошла успешно',
+  'paid order successfully transferred to the processing' => 'Оплаченный заказ успешно передан в обработку',
+  'archive completed order' => 'Архивация завершенного заказа',
+  'order auto paid failed' => 'Автоматическая оплата заказа завершилась ошибкой',
 );

@@ -10,6 +10,7 @@ namespace App\Services;
 
 use App\Models\Basket;
 use App\Models\Order;
+use App\Models\OrderComment;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
 use Carbon;
@@ -19,6 +20,7 @@ use Exception;
 use FlashMessages;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Sentry;
 
 /**
  * Class OrderService
@@ -204,7 +206,12 @@ class OrderService
         $statistic['additional_baskets'] = Basket::additional()->joinBasketOrder()->joinOrders()
             ->with('recipes')
             ->whereIn('orders.id', $orders->pluck('id'))
-            ->select('baskets.id', 'baskets.name', DB::raw('SUM(baskets.price) as total'), DB::raw('count(basket_id) as count'))
+            ->select(
+                'baskets.id',
+                'baskets.name',
+                DB::raw('SUM(baskets.price) as total'),
+                DB::raw('count(basket_id) as count')
+            )
             ->groupBy('basket_order.basket_id')
             ->get();
         
@@ -236,6 +243,8 @@ class OrderService
         $this->_saveAdditionalBaskets($model, isset($input['baskets']) ? $input['baskets'] : []);
         
         $this->_saveIngredients($model, isset($input['ingredients']) ? $input['ingredients'] : []);
+        
+        $this->_saveComments($model, isset($input['status_comment']) ? $input['status_comment'] : '');
     }
     
     /**
@@ -266,7 +275,44 @@ class OrderService
             }
         }
         
+        $this->addSystemOrderComment($tmpl, trans('messages.auto generated tmpl order'), 'tmpl');
+        
         return $tmpl;
+    }
+    
+    /**
+     * @param \App\Models\Order $model
+     * @param string            $comment
+     * @param bool              $status
+     */
+    public function addSystemOrderComment(Order $model, $comment, $status = false)
+    {
+        $comment = new OrderComment(
+            [
+                'comment' => $comment,
+                'status'  => $status,
+            ]
+        );
+        
+        $model->comments()->save($comment);
+    }
+    
+    /**
+     * @param \App\Models\Order $model
+     * @param string            $comment
+     * @param string            $status
+     */
+    public function addAdminOrderComment(Order $model, $comment, $status = '')
+    {
+        $comment = new OrderComment(
+            [
+                'user_id' => Sentry::getUser()->getId(),
+                'comment' => $comment,
+                'status'  => empty($status) ? $model->getStringStatus() : $status,
+            ]
+        );
+        
+        $model->comments()->save($comment);
     }
     
     /**
@@ -362,6 +408,15 @@ class OrderService
                 );
             }
         }
+    }
+    
+    /**
+     * @param \App\Models\Order $model
+     * @param string            $comment
+     */
+    private function _saveComments(Order $model, $comment)
+    {
+        $this->addAdminOrderComment($model, $comment, $model->getStringStatus());
     }
     
     /**

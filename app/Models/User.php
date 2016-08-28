@@ -13,19 +13,19 @@ use Cartalyst\Sentry\Users\Eloquent\User as SentryUser;
  */
 class User extends SentryUser implements FrontLink
 {
-
+    
     use FieldableTrait;
-
+    
     /**
      * @var array
      */
     protected $with = ['info'];
-
+    
     /**
      * @var string
      */
     protected $table = "users";
-
+    
     /**
      * The attributes that are mass assignable.
      *
@@ -35,7 +35,7 @@ class User extends SentryUser implements FrontLink
         'email',
         'password',
     ];
-
+    
     /**
      * The attributes excluded from the model's JSON form.
      *
@@ -45,7 +45,7 @@ class User extends SentryUser implements FrontLink
         'password',
         'remember_token',
     ];
-
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\hasOne
      */
@@ -53,7 +53,7 @@ class User extends SentryUser implements FrontLink
     {
         return $this->hasOne(UserInfo::class, 'user_id');
     }
-
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\belongsToMany
      */
@@ -71,13 +71,21 @@ class User extends SentryUser implements FrontLink
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function order_comments()
+    {
+        return $this->hasMany(OrderComment::class);
+    }
+    
+    /**
      * @param      $q
      */
     public function scopeJoinInfo($q)
     {
         return $q->leftJoin('user_info', 'users.id', '=', 'user_info.user_id');
     }
-
+    
     /**
      * @param $query
      *
@@ -87,7 +95,7 @@ class User extends SentryUser implements FrontLink
     {
         return $query->whereActivated(true);
     }
-
+    
     /**
      * @param string $persistCode
      *
@@ -97,7 +105,7 @@ class User extends SentryUser implements FrontLink
     {
         return true;
     }
-
+    
     /**
      * @return string
      */
@@ -106,10 +114,10 @@ class User extends SentryUser implements FrontLink
         if (empty($this->info->full_name)) {
             return '';
         }
-
+        
         return $this->info->full_name;
     }
-
+    
     /**
      * @return string
      */
@@ -118,10 +126,10 @@ class User extends SentryUser implements FrontLink
         if (empty($this->info->phone)) {
             return '';
         }
-
+        
         return $this->info->phone;
     }
-
+    
     /**
      * @return string
      */
@@ -133,7 +141,7 @@ class User extends SentryUser implements FrontLink
         
         return $this->info->birthday;
     }
-
+    
     /**
      * @return string
      */
@@ -142,10 +150,10 @@ class User extends SentryUser implements FrontLink
         if (empty($this->info->gender)) {
             return null;
         }
-
+        
         return $this->info->gender;
     }
-
+    
     /**
      * @return string
      */
@@ -154,10 +162,10 @@ class User extends SentryUser implements FrontLink
         if (empty($this->info->avatar)) {
             return config('user.no_image');
         }
-
+        
         return $this->info->avatar;
     }
-
+    
     /**
      * @return mixed
      */
@@ -165,7 +173,7 @@ class User extends SentryUser implements FrontLink
     {
         return $this->full_name;
     }
-
+    
     /**
      * @return bool
      */
@@ -173,7 +181,7 @@ class User extends SentryUser implements FrontLink
     {
         return !empty($this->id);
     }
-
+    
     /**
      * update user last login
      */
@@ -181,10 +189,10 @@ class User extends SentryUser implements FrontLink
     {
         $this->ip_address = request()->getClientIp();
         $this->last_activity = Carbon::now()->toDateTimeString();
-
+        
         $this->save();
     }
-
+    
     /**
      * @return string
      */

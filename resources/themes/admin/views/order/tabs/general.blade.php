@@ -102,9 +102,20 @@
     {!! Form::label('status', trans('labels.status'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-        {!! Form::select('status', $statuses, null, ['class' => 'form-control select2 input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+        {!! Form::select('status', $statuses, null, ['class' => 'form-control select2 input-sm order-status-select', 'aria-hidden' => 'true', 'required' => true]) !!}
+        {!! Form::hidden('old_status', old('old_status') ?: $model->status) !!}
 
         {!! $errors->first('status', '<p class="help-block error">:message</p>') !!}
+    </div>
+</div>
+
+<div id="status-comment-block" class="form-group required @if ($errors->has('status_comment')) has-error @endif hidden">
+    {!! Form::label('status_comment', trans('labels.status_comment'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
+
+    <div class="col-xs-12 col-sm-6 col-md-7">
+        {!! Form::textarea('status_comment', null, ['rows' => '2', 'placeholder' => trans('labels.status_comment_placeholder'), 'class' => 'form-control input-sm height-auto']) !!}
+
+        {!! $errors->first('status_comment', '<p class="help-block error">:message</p>') !!}
     </div>
 </div>
 

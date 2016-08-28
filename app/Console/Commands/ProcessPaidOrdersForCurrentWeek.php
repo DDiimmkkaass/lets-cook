@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Order;
+use App\Services\OrderService;
 
 /**
  * Class ProcessPaidOrdersForCurrentWeek
@@ -25,11 +26,20 @@ class ProcessPaidOrdersForCurrentWeek extends Command
     protected $description = 'Set "processed" status for all "paid" orders with delivery for the current week';
     
     /**
-     * Create a new command instance.
+     * @var \App\Services\OrderService
      */
-    public function __construct()
+    private $orderService;
+    
+    /**
+     * Create a new command instance.
+     *
+     * @param \App\Services\OrderService $orderService
+     */
+    public function __construct(OrderService $orderService)
     {
         parent::__construct();
+        
+        $this->orderService = $orderService;
     }
     
     /**
@@ -40,8 +50,19 @@ class ProcessPaidOrdersForCurrentWeek extends Command
     public function handle()
     {
         $this->log('Start '.$this->description);
-        
-        Order::ofStatus('paid')->forCurrentWeek()->update(['status' => Order::getStatusIdByName('processed')]);
+    
+        foreach (Order::ofStatus('paid')->forCurrentWeek()->get() as $order) {
+            $order->status = Order::getStatusIdByName('processed');
+            $order->save();
+            
+            $this->orderService->addSystemOrderComment(
+                $order,
+                trans('messages.paid order successfully transferred to the processing'),
+                'processed'
+            );
+    
+            $this->log('order #'.$order->id.' successfully set processed status, order status changed to "processed"', 'info');
+        }
         
         $this->log('End '.$this->description);
     }

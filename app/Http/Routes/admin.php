@@ -394,6 +394,14 @@ $router->group(
                         'uses'       => 'Backend\OrderController@getIngredientRow',
                     ]
                 );
+                $router->post(
+                    'order/comment',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.order.comment.store',
+                        'uses'       => 'Backend\OrderController@storeComment',
+                    ]
+                );
                 $router->resource('order', 'Backend\OrderController', ['except' => ['destroy']]);
                 
                 //purchase

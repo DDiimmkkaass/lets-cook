@@ -28,6 +28,7 @@ class VerifyCsrfToken extends BaseVerifier
         'admin/elfinder',
         'admin/elfinder/ckeditor4',
         'admin/variable/value/update',
+        'admin/order/comment',
     ];
 
     /**

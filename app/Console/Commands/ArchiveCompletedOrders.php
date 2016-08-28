@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Order;
+use App\Services\OrderService;
 
 /**
  * Class ArchiveCompletedOrders
@@ -25,11 +26,19 @@ class ArchiveCompletedOrders extends Command
     protected $description = 'Archive completed on current week orders';
     
     /**
-     * Create a new command instance.
+     * @var \App\Services\OrderService
      */
-    public function __construct()
+    private $orderService;
+    
+    /**
+     * Create a new command instance.
+     *
+     * @param \App\Services\OrderService $orderService
+     */
+    public function __construct(OrderService $orderService)
     {
         parent::__construct();
+        $this->orderService = $orderService;
     }
     
     /**
@@ -40,8 +49,19 @@ class ArchiveCompletedOrders extends Command
     public function handle()
     {
         $this->log('Start '.$this->description);
-        
-        Order::ofStatus('processed')->update(['status' => Order::getStatusIdByName('archived')]);
+    
+        foreach (Order::ofStatus('processed')->get() as $order) {
+            $order->status = Order::getStatusIdByName('archived');
+            $order->save();
+            
+            $this->orderService->addSystemOrderComment(
+                $order,
+                trans('messages.archive completed order'),
+                'archived'
+            );
+    
+            $this->log('competed order #'.$order->id.' successfully archived, order status changed to "archived"', 'info');
+        }
         
         $this->log('End '.$this->description);
     }
