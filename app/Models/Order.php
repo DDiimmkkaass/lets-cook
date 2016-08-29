@@ -300,8 +300,8 @@ class Order extends Model
         $year = Carbon::now()->year;
         $week = Carbon::now()->weekOfYear;
         
-        $from = Carbon::create($year, 1, 1)->startOfWeek()->addWeeks($week)->endOfWeek()->startOfDay();
-        $to = Carbon::create($year, 1, 1)->startOfWeek()->addWeeks($week)->endOfWeek()->addDay()->endOfDay();
+        $from = Carbon::create($year, 1, 1)->startOfWeek()->addWeeks($week)->endOfWeek()->format('d-m-Y');
+        $to = Carbon::create($year, 1, 1)->startOfWeek()->addWeeks($week)->endOfWeek()->addDay()->format('d-m-Y');
         
         return $this->delivery_date >= $from && $this->delivery_date <= $to;
     }
