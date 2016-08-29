@@ -9,6 +9,7 @@
 namespace App\Http\Requests\Backend\Basket;
 
 use App\Http\Requests\FormRequest;
+use App\Models\Basket;
 
 /**
  * Class BasketUpdateRequest
@@ -25,15 +26,15 @@ class BasketUpdateRequest extends FormRequest
     public function rules()
     {
         $id = $this->route()->parameter('basket');
-
-        return [
+        $type = request()->get('type', null);
+    
+        $rules = [
             'name'     => 'required|unique:baskets,name,'.$id.',id',
-            'price'    => 'required|numeric|min:0',
             'position' => 'integer',
 
             'recipes.new' => 'array',
             'recipes.old' => 'array',
-
+            
             'recipes.old.*.recipe_id' => 'required_with:recipes.old|exists:recipes,id',
             'recipes.old.*.main'      => 'boolean',
             'recipes.old.*.position'  => 'required_with:recipes.old|numeric|min:0',
@@ -42,5 +43,21 @@ class BasketUpdateRequest extends FormRequest
             'recipes.new.*.main'      => 'boolean',
             'recipes.new.*.position'  => 'required_with:recipes.new|numeric|min:0',
         ];
+    
+        if ($type == 'basic') {
+            $rules['prices'] = 'array';
+        
+            foreach (config('recipe.available_portions') as $portion) {
+                foreach (range(1, config('weekly_menu.menu_days')) as $day) {
+                    $rules['prices.'.$portion.'.'.$day] = 'required|numeric|min:0';
+                }
+            }
+        }
+    
+        if ($type == 'additional') {
+            $rules['price'] = 'required|numeric|min:0';
+        }
+        
+        return $rules;
     }
 }

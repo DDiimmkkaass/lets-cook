@@ -9,17 +9,30 @@
                     <a aria-expanded="false" href="#general" data-toggle="tab">@lang('labels.tab_general')</a>
                 </li>
 
+                @if ($type == 'basic')
+                    <li>
+                        <a aria-expanded="false" href="#prices" data-toggle="tab">@lang('labels.tab_prices')</a>
+                    </li>
+                @endif
+
                 @if ($type == 'additional')
                     <li>
                         <a aria-expanded="false" href="#recipes" data-toggle="tab">@lang('labels.tab_recipes')</a>
                     </li>
                 @endif
+
             </ul>
 
             <div class="tab-content">
                 <div class="tab-pane active" id="general">
                     @include('basket.tabs.general')
                 </div>
+
+                @if ($type == 'basic')
+                    <div class="tab-pane" id="prices">
+                        @include('basket.tabs.prices')
+                    </div>
+                @endif
 
                 @if ($type == 'additional')
                     <div class="tab-pane" id="recipes">

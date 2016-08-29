@@ -27,6 +27,7 @@ class Basket extends Model
         'name',
         'description',
         'price',
+        'prices',
         'position',
     ];
     
@@ -45,7 +46,7 @@ class Basket extends Model
     {
         return $this->belongsToMany(Recipe::class);
     }
-
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -63,6 +64,20 @@ class Basket extends Model
     }
     
     /**
+     * @param array $value
+     */
+    public function setPricesAttribute($value)
+    {
+        foreach ($value as $portion => $days) {
+            foreach ($days as $day => $price) {
+                $value[$portion][$day] = (int) ($price * 100);
+            }
+        }
+        
+        $this->attributes['prices'] = json_encode($value);
+    }
+    
+    /**
      * @param int $value
      *
      * @return float
@@ -70,6 +85,28 @@ class Basket extends Model
     public function getPriceAttribute($value)
     {
         return $value / 100;
+    }
+    
+    /**
+     * @param array $value
+     *
+     * @return array
+     */
+    public function getPricesAttribute($value)
+    {
+        $values = [];
+
+        if (!empty($value)) {
+            $value = (array) json_decode($value);
+            
+            foreach ($value as $portion => $days) {
+                foreach ((array) $days as $day => $price) {
+                    $values[$portion][$day] = $price / 100;
+                }
+            }
+        }
+        
+        return $values;
     }
     
     /**
@@ -126,13 +163,41 @@ class Basket extends Model
     }
     
     /**
-     * @return float
+     * @param string $type
+     *
+     * @return bool
      */
-    public function getPrice()
+    public function isType($type)
     {
-        return $this->price;
+        return $this->type == self::getTypeIdByName($type);
     }
     
+    /**
+     * @param int $portions
+     * @param int $days
+     *
+     * @return array|float
+     */
+    public function getPrice($portions = 0, $days = 0)
+    {
+        if ($this->isType('additional')) {
+            return $this->price;
+        }
+    
+        if ($portions == 0 && $days == 0) {
+            return $this->prices;
+        }
+        
+        if ($portions > 0 && $days == 0) {
+            return isset($this->prices[$portions]) ? $this->prices[$portions] : [];
+        }
+        
+        return isset($this->prices[$portions][$days]) ? $this->prices[$portions][$days] : 0;
+    }
+    
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;

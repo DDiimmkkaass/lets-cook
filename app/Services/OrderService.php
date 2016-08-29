@@ -259,6 +259,7 @@ class OrderService
         $tmpl->parent_id = $order->id;
         $tmpl->status = Order::getStatusIdByName('tmpl');
         $tmpl->delivery_date = $this->_getDeliveryDateForTmplOrder($order);
+        $tmpl->total = 0;
         
         $tmpl->save();
         

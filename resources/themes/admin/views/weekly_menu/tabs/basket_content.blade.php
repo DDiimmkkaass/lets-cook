@@ -2,9 +2,15 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">@lang('labels.basket_price'):</label>
         <div class="col-sm-10">
-            <div class="col-sm-1 with-after-helper currency-rub">
-                <input type="text" readonly="readonly" class="form-control input-sm" value="{!! $basket->getPrice() !!}">
-            </div>
+            @foreach($basket->getPrice() as $day => $price)
+                <div class="col-sm-2">
+                    <input type="text"
+                           name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][prices][{!! $day !!}]"
+                           readonly="readonly"
+                           class="form-control input-sm"
+                           value="{!! $day . ' ' . trans_choice('labels.count_of_days', $day) !!}: {!! $price !!} {!! $currency !!}">
+                </div>
+            @endforeach
         </div>
     </div>
 
@@ -86,7 +92,6 @@
             <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][name]" value="{!! $basket->basket->name !!}">
             <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][id]" value="{!! $basket->basket_id !!}">
             <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][portions]" value="{!! $basket->portions !!}">
-            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][price]" value="{!! $basket->getPrice() !!}">
         </div>
     </div>
 </div>

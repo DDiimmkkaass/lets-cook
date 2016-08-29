@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Models\Basket;
 use App\Models\BasketRecipe;
 use App\Models\WeeklyMenu;
 use App\Models\WeeklyMenuBasket;
@@ -34,7 +35,7 @@ class WeeklyMenuService
                 'week',
                 function ($model) {
                     return trans('labels.w_label').$model->week.
-                        ($model->isCurrentWeekMenu() ?
+                    ($model->isCurrentWeekMenu() ?
                         view('views.weekly_menu.partials.current_week_menu_label')->render() :
                         '');
                 }
@@ -59,15 +60,19 @@ class WeeklyMenuService
      * @param \App\Models\WeeklyMenu $model
      * @param array                  $data
      *
-     * @return WeeklyMenuBasket
+     * @return \App\Models\WeeklyMenuBasket
      */
     public function saveBasket(WeeklyMenu $model, $data = [])
     {
-        $basket = $model->baskets()->firstOrNew($data);
+        $weekly_menu_basket = $model->baskets()->firstOrNew($data);
         
-        $basket->save();
+        $weekly_menu_basket->prices = Basket::whereId($weekly_menu_basket->basket_id)
+            ->first()
+            ->getPrice($weekly_menu_basket->portions);
         
-        return $basket;
+        $weekly_menu_basket->save();
+        
+        return $weekly_menu_basket;
     }
     
     /**

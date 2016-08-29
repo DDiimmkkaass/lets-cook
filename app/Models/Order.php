@@ -331,7 +331,9 @@ class Order extends Model
         
         $basket = $this->getMainBasket();
         if ($basket) {
-            $total += $basket->getPrice();
+            $days = count($this->recipes);
+            
+            $total += $basket->getPrice(null, $days);
         }
         
         $total += $this->baskets()->sum('price') / 100;

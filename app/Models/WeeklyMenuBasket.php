@@ -24,6 +24,7 @@ class WeeklyMenuBasket extends Model
         'weekly_menu_id',
         'basket_id',
         'portions',
+        'prices',
     ];
     
     /**
@@ -51,11 +52,54 @@ class WeeklyMenuBasket extends Model
     }
     
     /**
+     * @param array $value
+     */
+    public function setPricesAttribute($value)
+    {
+        foreach ($value as $day => $price) {
+            $value[$day] = (int) ($price * 100);
+        }
+        
+        $this->attributes['prices'] = json_encode($value);
+    }
+    
+    /**
+     * @param array $value
+     *
+     * @return array
+     */
+    public function getPricesAttribute($value)
+    {
+        $values = [];
+        
+        if (!empty($value)) {
+            $value = (array) json_decode($value);
+            
+            foreach ($value as $day => $price) {
+                $values[$day] = $price / 100;
+            }
+        }
+        
+        return $values;
+    }
+    
+    /**
+     * @param int $portions
+     * @param int $days
+     *
      * @return float
      */
-    public function getPrice()
+    public function getPrice($portions = 0, $days = 0)
     {
-        return $this->basket->getPrice();
+        return $this->basket->getPrice(empty($portions) ? $this->portions : $portions, $days);
+    }
+    
+    /**
+     * @return float
+     */
+    public function getWeekPrice()
+    {
+        return $this->prices;
     }
     
     /**

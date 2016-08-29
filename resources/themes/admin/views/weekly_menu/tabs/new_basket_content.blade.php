@@ -2,9 +2,17 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">@lang('labels.basket_price'):</label>
         <div class="col-sm-10">
-            <div class="col-sm-1 with-after-helper currency-rub">
-                <input type="text" readonly="readonly" class="form-control input-sm" value="{!! $basket['price'] !!}">
-            </div>
+            @if (isset($basket['prices']))
+                @foreach($basket['prices'] as $day => $price)
+                    <div class="col-sm-2">
+                        <input type="text"
+                               name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][prices][{!! $day !!}]"
+                               readonly="readonly"
+                               class="form-control input-sm"
+                               value="{!! $price !!}">
+                    </div>
+                @endforeach
+            @endif
         </div>
     </div>
 
@@ -132,7 +140,6 @@
             <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][name]" value="{!! $basket['name'] !!}">
             <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][id]" value="{!! $basket['id'] !!}">
             <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][portions]" value="{!! $basket['portions'] !!}">
-            <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][price]" value="{!! $basket['price'] !!}">
         </div>
     </div>
 </div>

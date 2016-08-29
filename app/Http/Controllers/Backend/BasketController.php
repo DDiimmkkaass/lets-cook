@@ -101,31 +101,40 @@ class BasketController extends BackendController
         if ($request->get('draw')) {
             $list = Basket::ofType($this->type)->select('id', 'name', 'position', 'price', 'type');
             
-            return $dataTables = Datatables::of($list)
+            $dataTables = Datatables::of($list)
                 ->filterColumn('id', 'where', 'baskets.id', '=', '$1')
-                ->filterColumn('name', 'where', 'baskets.name', 'LIKE', '%$1%')
-                ->editColumn(
+                ->filterColumn('name', 'where', 'baskets.name', 'LIKE', '%$1%');
+            
+            if ($this->type == 'additional') {
+                $dataTables = $dataTables->editColumn(
                     'price',
                     function ($model) {
-                        return $model->price.' '.currency();
+                        return $model->getPrice().' '.currency();
                     }
-                )
-                ->editColumn(
-                    'actions',
-                    function ($model) {
-                        return view(
-                            'basket.datatables.control_buttons',
-                            [
-                                'model'       => $model,
-                                'type'        => $this->module,
-                                'basket_type' => $this->type,
-                            ]
-                        )->render();
-                    }
-                )
+                );
+            }
+            
+            $dataTables = $dataTables->editColumn(
+                'actions',
+                function ($model) {
+                    return view(
+                        'basket.datatables.control_buttons',
+                        [
+                            'model'       => $model,
+                            'type'        => $this->module,
+                            'basket_type' => $this->type,
+                        ]
+                    )->render();
+                }
+            )
                 ->setIndexColumn('id')
-                ->removeColumn('type')
-                ->make();
+                ->removeColumn('type');
+    
+            if ($this->type == 'basic') {
+                $dataTables = $dataTables->removeColumn('price');
+            }
+            
+            return $dataTables->make();
         }
         
         $this->data('page_title', trans('labels.'.$this->type.'_baskets'));
@@ -143,15 +152,15 @@ class BasketController extends BackendController
     public function create()
     {
         $model = new Basket();
-
+        
         $this->data('model', $model);
         
         $this->data('page_title', trans('labels.basket_creating'));
         
         $this->breadcrumbs(trans('labels.basket_creating'));
-
+        
         $this->_fillAdditionalTemplateData($model);
-
+        
         return $this->render('views.'.$this->module.'.create');
     }
     
@@ -218,7 +227,7 @@ class BasketController extends BackendController
             $this->data('page_title', '"'.$model->name.'"');
             
             $this->breadcrumbs(trans('labels.basket_editing'));
-
+            
             $this->_fillAdditionalTemplateData($model);
             
             return $this->render('views.'.$this->module.'.edit', compact('model'));
@@ -241,14 +250,14 @@ class BasketController extends BackendController
     public function update($id, BasketUpdateRequest $request)
     {
         DB::beginTransaction();
-
+        
         try {
             $model = Basket::findOrFail($id);
             
             $model->update($request->all());
-
+            
             $this->_saveRelationships($model, $request);
-
+            
             DB::commit();
             
             FlashMessages::add('success', trans('messages.save_ok'));
@@ -256,13 +265,13 @@ class BasketController extends BackendController
             return redirect()->route('admin.'.$this->module.'.index', ['type' => $this->type]);
         } catch (ModelNotFoundException $e) {
             DB::rollBack();
-
+            
             FlashMessages::add('error', trans('messages.record_not_found'));
             
             return redirect()->route('admin.'.$this->module.'.index', ['type' => $this->type]);
         } catch (Exception $e) {
             DB::rollBack();
-
+            
             FlashMessages::add("error", trans('messages.update_error'));
             
             return redirect()->back()->withInput();
@@ -294,7 +303,7 @@ class BasketController extends BackendController
         
         return redirect()->route('admin.'.$this->module.'.index', ['type' => $this->type]);
     }
-
+    
     /**
      * @param int $recipe_id
      *
@@ -304,7 +313,7 @@ class BasketController extends BackendController
     {
         try {
             $model = Recipe::visible()->findOrFail($recipe_id);
-
+            
             return [
                 'status' => 'success',
                 'html'   => view('views.'.$this->module.'.partials.recipe_row', compact('model'))->render(),
@@ -334,7 +343,7 @@ class BasketController extends BackendController
         
         throw new UnExistedBasketTypeException();
     }
-
+    
     /**
      * fill additional template data
      *
