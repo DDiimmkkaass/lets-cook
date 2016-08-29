@@ -417,7 +417,9 @@ class OrderService
      */
     private function _saveComments(Order $model, $comment)
     {
-        $this->addAdminOrderComment($model, $comment, $model->getStringStatus());
+        if (!empty($comment)) {
+            $this->addAdminOrderComment($model, $comment, $model->getStringStatus());
+        }
     }
     
     /**
