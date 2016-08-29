@@ -53,6 +53,7 @@ class DataSeeder extends Seeder
             $this->call(_OrdersSeeder::class);
             $this->call(_TagCategoriesSeeder::class);
             $this->call(_TagsSeeder::class);
+            $this->call(_CouponsSeeder::class);
             
             Model::reguard();
         }

@@ -71,10 +71,14 @@ return array (
     'weeklymenu.write',
     'weeklymenu.delete',
     
+    'coupon.create',
+    'coupon.read',
+    'coupon.write',
+    'coupon.delete',
+    
     'order.create',
     'order.read',
     'order.write',
-    'order.delete',
     
     'supplier.create',
     'supplier.read',

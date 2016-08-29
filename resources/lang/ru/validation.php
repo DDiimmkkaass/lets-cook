@@ -162,6 +162,11 @@ return array (
     'package' => 'пакет',
     'status_comment' => 'комментарий',
     'order_comment' => 'комментарий',
+    'discount' => 'скидка',
+    'discount_type' => 'тип скидки',
+    'expired_at' => 'дата завершения',
+    'users_count' => 'количество пользователей',
+    'code' => 'код',
   ),
   'recipe steps' => 'Вы должны добавить хотя бы один шаг',
   'recipe ingredients' => 'Вы должны выбрать хотя бы один ингредиент',
@@ -172,4 +177,5 @@ return array (
   'you must add at least one recipe' => 'Вы должны добавить не менее одного рецепта',
   'delivery_date_day_of_week' => 'День доставки может быть только в воскресенье или понедельник',
   'delivery_date_date' => 'После четверга доставка может быть только на следующей неделе',
+  'coupon started_at date_format error' => 'После дата начала не соответствует формату :format.',
 );

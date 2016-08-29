@@ -150,6 +150,21 @@
             @endif
 
             <li class="header">@lang('labels.orders')</li>
+            @if ($user->hasAccess('coupon.read'))
+                <li class="{!! active_class('admin.coupon*') !!}">
+                    <a href="{!! route('admin.coupon.index') !!}">
+                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                        <span>@lang('labels.coupons')</span>
+
+                        @if ($user->hasAccess('coupon.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_coupon')"
+                                   data-href="{!! route('admin.coupon.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
             @if ($user->hasAccess('order.read'))
                 <li class="{!! active_class('admin.order*') !!}">
                     <a href="{!! route('admin.order.index') !!}">
@@ -157,7 +172,7 @@
                         <span>@lang('labels.orders')</span>
 
                         @if ($user->hasAccess('order.create'))
-                            <small class="label create-label pull-right bg-green" title="@lang('labels.order')"
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_order')"
                                    data-href="{!! route('admin.order.create') !!}">
                                 <i class="fa fa-plus"></i>
                             </small>

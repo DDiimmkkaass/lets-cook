@@ -170,8 +170,6 @@ class Order extends Model
     
     /**
      * @param string $value
-     *
-     * @return float
      */
     public function setDeliveryDateAttribute($value)
     {
@@ -192,7 +190,7 @@ class Order extends Model
     /**
      * @param $value
      *
-     * @return float
+     * @return string
      */
     public function getDeliveryDateAttribute($value)
     {

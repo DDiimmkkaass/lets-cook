@@ -146,4 +146,6 @@ return array (
   'paid order successfully transferred to the processing' => 'Оплаченный заказ успешно передан в обработку',
   'archive completed order' => 'Архивация завершенного заказа',
   'order auto paid failed' => 'Автоматическая оплата заказа завершилась ошибкой',
+  'discount count helper message' => '0 - без ограничений',
+  'coupon dates helper message' => 'пусто - без ограничений',
 );

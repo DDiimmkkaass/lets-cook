@@ -361,6 +361,9 @@ $router->group(
                 //cities
                 $router->resource('city', 'Backend\CityController');
                 
+                //coupons
+                $router->resource('coupon', 'Backend\CouponController');
+                
                 //orders
                 $router->get(
                     'order/get-basket-recipes/{basket_id}',
