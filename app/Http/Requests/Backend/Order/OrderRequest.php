@@ -39,10 +39,9 @@ class OrderRequest extends FormRequest
             'phone'            => 'required',
             'verify_call'      => 'boolean',
             
-            'delivery_date' => 'required|date_format:"d-m-Y"|after:'.
-                Carbon::now()->endOfDay()->format('d-m-Y').
-                '|delivery_date_day_of_week|delivery_date_date',
+            'delivery_date' => 'required|date_format:"d-m-Y"',
             'delivery_time' => 'required',
+            
             'city_name'     => 'required_without:city_id',
             'address'       => 'required',
             
@@ -68,6 +67,12 @@ class OrderRequest extends FormRequest
             'ingredients.new.*.ingredient_id' => 'required|exists:ingredients,id',
             'ingredients.new.*.count'         => 'required|numeric|min:1',
         ];
+        
+        if ($this->request->get('delivery_date') != $this->request->get('old_delivery_date')) {
+            $rules['delivery_date'] .= '|after:'.Carbon::now()->endOfDay()->format('d-m-Y').
+                '|delivery_date_day_of_week'.
+                '|delivery_date_date';
+        }
         
         return $rules;
     }

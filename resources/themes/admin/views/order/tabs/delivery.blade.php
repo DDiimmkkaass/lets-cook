@@ -4,6 +4,7 @@
     <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
         <div class="input-group">
             {!! Form::text('delivery_date', null, ['placeholder' => trans('labels.delivery_date'), 'class' => 'form-control input-sm inputmask-delivery_date datepicker-delivery_date']) !!}
+            {!! Form::hidden('old_delivery_date', $model->delivery_date) !!}
             <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
         </div>
 
