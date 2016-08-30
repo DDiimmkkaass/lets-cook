@@ -1,16 +1,16 @@
 <?php
 
 use App\Models\Variable;
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Migrations\Migration;
 
-class VariablesSeeder extends Seeder
+class PopulateVariablesTable extends Migration
 {
     /**
-     * Run the database seeds.
+     * Run the migrations.
      *
      * @return void
      */
-    public function run()
+    public function up()
     {
         $variables = [
             'stop_ordering_date' => [
@@ -45,7 +45,7 @@ class VariablesSeeder extends Seeder
                 'status' => true,
                 'value'  => 'ООО «Доставка Здорового Питания»',
             ],
-
+            
             'moscow_phone' => [
                 'type'   => 'text',
                 'name'   => 'Телефон в Москве',
@@ -55,14 +55,22 @@ class VariablesSeeder extends Seeder
         ];
         
         foreach ($variables as $key => $variable) {
-            if (!Variable::whereKey($key)->first()) {
-                $variable['key'] = $key;
-                
-                $model = new Variable($variable);
-                $model->type = Variable::getTypeKeyByName($variable['type']);
-                
-                $model->save();
-            }
+            $variable['key'] = $key;
+            
+            $model = new Variable($variable);
+            $model->type = Variable::getTypeKeyByName($variable['type']);
+            
+            $model->save();
         }
+    }
+    
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        //
     }
 }
