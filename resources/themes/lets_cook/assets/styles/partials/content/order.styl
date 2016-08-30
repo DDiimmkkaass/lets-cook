@@ -1,0 +1,1372 @@
+
+/* ----- ORDER ----- */
+
+
+// ORDER MAIN
+.order-main
+  background-color: $bg-yellow-1
+  color: $font-black-1
+
+  &__wrapper
+    max-width: 100%
+
+    +bp('1024')
+      margin: 0 auto
+      max-width: 980px
+
+  &__top
+    js-display: flex; display: flex
+    flex-direction: column
+    padding-top: 140px * (310 / 720)
+
+    +bp('480')
+      padding-top: 140px * (470 / 720)
+
+    +bp('768')
+      padding-top: 140px
+
+    +bp('1024')
+      flex-direction: row
+      justify-content: space-between
+      align-items: flex-start
+      padding-top: 90px
+
+  &__title
+    @extend .georgia-title
+    text-transform: none
+    text-align: center
+
+    +bp('1024')
+      text-align: left
+      font-family: $ptsans-narrow-bold
+      font-style: normal
+      fs(48px)
+
+  &__subTitle
+    text-align: center
+    fsh(20px * (310 / 720), 52 / 20)
+
+    +bp('480')
+      fs(20px * (470 / 720))
+
+    +bp('768')
+      fs(20px)
+
+    +bp('1024')
+      fsh(14px, 42 / 14)
+
+  &__result
+    margin-top: 20px * (310 / 720)
+    padding: (30px * (310 / 720)) 0
+    background: url('../images/yellow-bg.png') top left repeat
+
+    +bp('480')
+      margin-top: 20px * (470 / 720)
+      padding: (30px * (470 / 720)) 0
+
+    +bp('768')
+      margin-top: 20px
+      padding: 30px 0
+
+    +bp('1024')
+      margin-top: 0
+      padding: 20px 0
+      background: none
+
+  &__result-wrapper
+    margin: 0 auto
+    padding: 0 20px
+    max-width: 320px
+    js-display: flex; display: flex
+    justify-content: space-between
+    align-items: center
+
+    +bp('480')
+      max-width: 480px
+
+    +bp('768')
+      max-width: 700px
+
+    +bp('1024')
+      padding: 0
+
+  &__count-list
+    margin: 0; padding: 0; list-style-type: none
+    fs(0px)
+
+  &__count-item
+    display: inline-block
+
+    +bp('480')
+      margin-right: 50px * (470 / 720)
+
+    +bp('768')
+      margin-right: 50px
+
+    +bp('1024')
+      margin-right: 30px
+
+    &:not(:last-of-type)
+      margin-right: 50px * (310 / 720)
+
+
+    span:nth-child(1)
+      vertical-align: middle
+      display: inline-block
+      size: 60px * (310 / 720)
+      border-radius: 50%
+      background-color: $bg-red-1
+      text-align: center
+      color: $font-white-1
+      fsh(38px * (310 / 720), 60px * (310 / 720))
+      font-family: $georgia
+      font-style: italic
+      font-weight: bold
+
+      +bp('480')
+        size: 60px * (470 / 720)
+        fsh(38px * (470 / 720), 60px * (470 / 720))
+
+      +bp('768')
+        size: 60px
+        fsh(38px, 60px)
+
+      +bp('1024')
+        size: 50px
+        font-family: $ptsans-narrow-regular
+        font-style: normal
+        font-weight: normal
+        fsh(30px, 50px)
+        color: $font-yellow-2
+
+    span:nth-child(2)
+      vertical-align: middle
+      margin-left: 5px
+      display: inline-block
+      fsh(25px * (310 / 720), 60px * (310 / 720))
+
+      +bp('480')
+        margin-left: 8px
+        fsh(25px * (470 / 720), 60px * (470 / 720))
+
+      +bp('768')
+        margin-left: 12px
+        fsh(25px, 60px)
+
+      +bp('1024')
+        fsh(14px, 50px)
+
+
+
+  &__right
+    display: none
+    text-align: right
+
+    +bp('1024')
+      display: block
+
+  &__price
+    font-family: $ptsans-narrow-bold
+    fsh(60px * (310 / 720), 1)
+
+    +bp('480')
+      fs(60px * (470 / 720))
+
+    +bp('768')
+      fs(60px)
+
+    &[data-device='mobile']
+      +bp('1024')
+        display: none
+
+    span
+      font-family: $ptsans-narrow-regular
+      margin-left: 5px
+      fs(30px * (310 / 720))
+
+      +bp('480')
+        fs(30px * (470 / 720))
+        margin-left: 8px
+
+      +bp('768')
+        fs(30px)
+        margin-left: 12px
+
+  &__make-order
+
+    &[data-device='desktop']
+      margin-top: 18px
+
+    &[data-device='mobile']
+      background-color: $bg-green-1
+
+  &__list
+    margin: 0; padding: 0; list-style-type: none
+    js-display: flex; display: flex
+    flex-wrap: wrap
+    background: url('../images/yellow-bg.png') top center repeat
+
+  &__item
+    width: 33.3333333%
+
+    +bp('1024')
+      width: (976px / 5)
+
+      &:not(:last-of-type)
+        margin-right: 1px
+
+  &__link
+    display: block
+    text-decoration: none
+
+  &__img
+    background: $bg-green-1 center center / cover no-repeat
+
+  &__item-title
+    margin: 0
+    size: 100% auto
+    padding: (8px * (310 / 720)) (15px * (310 / 720))
+    background-color: $bg-green-2 // default -- need to set own in HTML
+    color: $font-yellow-2 // default -- need to SET in HTML
+    font-family: $ptsans-narrow-bold
+    fsh(20px * (310 / 720), 1.25)
+
+    +bp('480')
+      padding: (8px * (470 / 720)) (15px * (470 / 720))
+      fs(20px * (470 / 720))
+
+    +bp('768')
+      padding: 8px 15px
+      fs(20px)
+
+    +bp('1024')
+      padding: 5px 12px
+      fs(14px)
+
+  &__desc
+    padding: (30px * (310 / 720)) (20px * (310 / 720))
+    font-family: $ptsans-regular
+    color: $font-black-1
+    fsh(20px * (310 / 720), 1.35)
+
+    +bp('480')
+      padding: (30px * (470 / 720)) (20px * (470 / 720))
+      fs(20px * (470 / 720))
+
+    +bp('768')
+      padding: 30px 20px
+      fs(20px)
+
+    +bp('1024')
+      padding: 50px 0
+      width: (630 / 980) * 100%
+      fs(14px)
+
+    p
+      margin: 0
+
+      &:not(:last-of-type)
+        margin: 0 0 (35px * (310 / 720))
+
+        +bp('480')
+          margin: 0 0 (35px * (470 / 720))
+
+        +bp('768')
+          margin: 0 0 35px
+
+        +bp('1024')
+          margin: 0 0 35px
+
+
+
+// ORDER INGRIDIENTS
+.order-ing
+  max-height: 120px * (310 / 720)
+  background-color: $bg-orange-1
+  overflow: hidden
+  will-change: max-height
+  transition: max-height 0.5s
+
+  +bp('480')
+    max-height: 120px * (470 / 720)
+
+  +bp('768')
+    max-height: 120px
+
+  +bp('1024')
+    max-height: none
+
+  &__title
+    background-color: $bg-orange-1
+
+    &[data-active]
+      & > span:nth-child(1)
+        display: none
+
+      & > span:nth-child(2)
+        display: inline-block
+
+    span
+      text-decoration: underline
+
+      &:nth-child(1)
+        display: inline-block
+
+      &:nth-child(2)
+        display: none
+
+  &__lists
+    js-display: flex; display: flex
+    flex-direction: column
+    margin: 0 auto
+    max-width: 980px
+
+    +bp('1024')
+      flex-direction: row
+      justify-content: space-between
+
+  &__list-wrapper
+    position: relative
+    width: 100%
+    margin-bottom: 20px * (310 / 720)
+    padding: 0 (20px * (310 / 720))
+
+    +bp('480')
+      margin-bottom: 20px * (470 / 720)
+      padding: 0 (20px * (470 / 720))
+
+    +bp('768')
+      margin-bottom: 20px
+      padding: 0 20px
+
+    +bp('1024')
+      width: 32%
+      padding: 40px 0 0
+
+      &::before
+        content: ''
+
+    &::before
+      absolute: top -1px left 0
+      size: 0
+      border-style: solid
+      border-width: 17px 17px 0 0
+      border-color: $bg-yellow-1 transparent transparent transparent;
+
+  &__list-title
+    margin: 0
+    font-family: $ptsans-bold
+    fsh(45px * (310 / 720), 1)
+
+    +bp('480')
+      fs(45px * (470 / 720))
+
+    +bp('768')
+      fs(45px)
+
+    +bp('1024')
+      fs(20px)
+
+  &__list
+    margin: (40px * (310 / 720)) 0 0; padding: 0; list-style-type: none
+    fsh(30px * (310 / 720), 1.25)
+
+    +bp('480')
+      margin: (40px * (470 / 720)) 0 0
+      fs(30px * (470 / 720))
+
+    +bp('768')
+      margin: 40px 0 0
+      fs(30px)
+
+    +bp('1024')
+      margin: 24px 0 0
+      fs(14px)
+
+    li
+      margin-bottom: 10px
+      js-display: flex; display: flex
+      justify-content: space-between
+      align-items: center
+
+      +bp('1024')
+        margin-bottom: 15px
+
+      span
+        width: 62%
+
+        +bp('480')
+          width: 62%
+
+        +bp('768')
+          width: 75%
+
+        +bp('1024')
+          width: 62%
+
+
+// ORDER ADD MORE
+.order-add-more
+  background-color: $bg-yellow-1
+
+  +bp('1024')
+    padding-bottom: 40px
+
+  &__title
+    text-align: center
+    line-height: 120px * (310 / 720)
+    background-color: $bg-red-1
+    color: $font-white-1
+    text-transform: none
+
+    +bp('480')
+      line-height: 120px * (470 / 720)
+
+    +bp('768')
+      line-height: 120px
+
+    +bp('1024')
+      background-color: transparent
+      color: $font-black-1
+      text-transform: lowercase
+
+  &__list
+    position: relative
+    z-index: 1
+
+    +bp('1024')
+      &::before
+        content: ''
+
+    &::before
+      absolute: bottom -20px left 0
+      z-index: -1
+      size: 100% 70px
+      background: url('../images/yellow-bg.png') top left repeat
+
+  &__list-wrapper
+    margin: 0 auto; padding: 0; list-style-type: none
+    js-display: flex; display: flex
+    justify-content: space-between
+    max-width: 980px
+
+  &__item
+    width: 25%
+
+    +bp('1024')
+      width: (220 / 980) * 100%
+
+.more-item
+  cursor: pointer
+
+  &[data-active]
+    .more-item__img
+      &::before
+        content: ''
+
+  &:hover
+    .more-item__img
+      &::before
+        absolute: top 0 left 0
+        size: 100%
+        border: 7px solid $bg-green-1
+
+        +bp('1024')
+          content: ''
+
+
+
+  &__img
+    position: relative
+    size: 100% auto
+    background: $bg-green-1 center center / cover no-repeat
+
+    &::before
+      absolute: top 0 left 0
+      size: 100%
+      border: (7px * (310 / 720)) solid $bg-green-1
+
+      +bp('480')
+        border-width: 7px * (480 / 720)
+
+      +bp('768')
+        border-width: 7px
+
+      +bp('1024')
+        border-width: 0px
+
+  &__info
+
+    &[data-device='mobile']
+      padding: (12px * (310 / 720)) (7px * (310 / 720))
+      text-align: center
+
+      +bp('480')
+        padding: (12px * (470 / 720)) (7px * (470 / 720))
+
+      +bp('768')
+        padding: 12px 7px
+
+      +bp('1024')
+        display: none
+
+    &[data-device='desktop']
+      display: none
+
+      +bp('1024')
+        display: block
+
+  &__title
+    margin: 0
+
+    &[data-device='mobile']
+      font-family: $ptsans-narrow-bold
+      fsh(28px * (310 / 720), 1)
+      color: $font-yellow-2
+      text-transform: uppercase
+      text-decoration: underline
+
+      +bp('480')
+        fs(28px * (470 / 720))
+
+      +bp('768')
+        fs(28px)
+
+    &[data-device='desktop']
+      margin: 18px 0 12px
+      font-family: $ptsans-bold
+      fsh(20px, 1)
+      color: $font-black-1
+
+  &__desc
+    height: 55px
+    font-family: $ptsans-regular
+    fsh(14px, 1.25)
+    overflow: hidden
+
+  &__price
+    &[data-device='mobile']
+      margin-top: 10px * (310 / 720)
+      font-family: $georgia
+      font-style: italic
+      fsh(24px * (310 / 720), 1)
+      color: $font-yellow-2
+      font-weight: bold
+
+      +bp('480')
+        margin-top: 10px * (470 / 720)
+        fs(24px * (470 / 720))
+
+      +bp('768')
+        margin-top: 10px
+        fs(24px)
+
+      span
+        margin-left: 5px
+
+    &[data-device='desktop']
+      font-family: $ptsans-narrow-bold
+      fsh(28px, 1)
+
+      span
+        margin-left: 7px
+        font-family: $ptsans-narrow-regular
+        fsh(14px, 1)
+
+  &__bottom
+    margin-top: 24px
+    js-display: flex; display: flex
+    justify-content: space-between
+    align-items: flex-end
+
+  &__add
+    align-self: flex-end
+
+
+// ORDER ADDRESS AND DATE
+.order-addr-date
+
+  &__title
+    margin: 0
+    background-color: $bg-yellow-1
+    text-align: center
+
+    +bp('1024')
+      background-color: transparent
+      color: $font-black-1
+      text-transform: lowercase
+
+    span[data-device='mobile']
+      display: inline-block
+      line-height: 120px * (310 / 720)
+      color: $font-black-1
+      text-transform: none
+
+      +bp('480')
+        line-height: 120px * (470 / 720)
+
+      +bp('768')
+        line-height: 120px
+
+      +bp('1024')
+        display: none
+
+    span[data-device='desktop']
+      display: none
+      line-height: 140px
+
+      +bp('1024')
+        display: inline-block
+
+  &__wrapper
+    background: url('../images/yellow-bg.png') top left repeat
+
+    +bp('1024')
+      background: url('../images/transparent-bg.png') top left repeat
+
+    &:nth-of-type(2)
+      +bp('1024')
+        margin-top: 20px
+
+  &__inner
+    margin: 0 auto
+    js-display: flex; display: flex
+    justify-content: space-between
+    align-items: flex-start
+    max-width: 980px
+
+    &[data-order='1']
+      padding: 15px 9px 0
+
+    &[data-order='2']
+      padding: 20px 9px 12px
+
+    +bp('480')
+      &[data-order='1']
+        padding: 15px 12px 0
+
+      &[data-order='2']
+        padding: 25px 12px 15px
+
+    +bp('768')
+      &[data-order='1']
+        padding: 24px 20px 0
+
+      &[data-order='2']
+        padding: 34px 20px 24px
+
+    +bp('1024')
+      justify-content: flex-start
+      align-items: center
+
+      &[data-order='1']
+        padding: 14px 0
+
+      &[data-order='2']
+        padding: 14px 0
+
+  &__subTitle
+    display: none
+
+    +bp('1024')
+      display: inline-block
+      width: 150px
+      font-family: $ptsans-bold
+      fsh(20px, 1)
+
+  &__date-select
+    margin: 0
+    fs(0px)
+    width: 45%
+
+    +bp('1024')
+      width: (230 / 980) * 100%
+
+    &[data-select='time']
+
+      +bp('1024')
+        margin-left: 30px
+
+    &[data-select='city']
+      display: none
+
+      +bp('1024')
+        display: inline-block
+
+    &[data-select='address']
+      width: 100%
+
+      +bp('1024')
+        width: 58.5%
+        margin-left: 30px
+
+    & > select, & > input
+      width: calc(100% - (70px * (310 / 720)))
+      vertical-align: top
+      background-color: $base-bg-color
+      text-align: left
+
+      +bp('480')
+        width: calc(100% - (70px * (470 / 720)))
+
+      +bp('768')
+        width: calc(100% - 70px)
+
+      +bp('1024')
+        width: 100%
+        background-color: transparent
+
+    & > input
+      background-color: $base-bg-color
+
+    label
+      display: inline-block
+      vertical-align: top
+      width: 70px * (310 / 720)
+      padding-right: 17px * (310 / 720)
+      text-align: right
+      color: $font-black-1
+      font-family: $ptsans-narrow-regular
+      fsh(25px * (310 / 720), 80px * (310 / 720))
+
+      +bp('480')
+        width: 70px * (470 / 720)
+        padding-right: 17px * (470 / 720)
+        fsh(25px * (470 / 720), 80px * (470 / 720))
+
+      +bp('768')
+        width: 70px
+        padding-right: 17px
+        fsh(25px, 80px)
+
+      +bp('1024')
+        display: none
+
+  &__comment
+    padding: (15px * (310 / 720)) (20px * (310 / 720)) (30px * (310 / 720))
+
+    +bp('480')
+      padding: (15px * (470 / 720)) (20px * (470 / 720)) (30px * (470 / 720))
+
+    +bp('768')
+      padding: 15px 20px 30px
+
+    +bp('1024')
+      margin: 0 auto
+      max-width: 980px
+      padding: 30px 0 40px
+
+  &__comment-wrapper
+    max-width: 980px
+
+    +bp('1024')
+      margin: 0 0 0 auto
+      width: 58.4%
+
+
+  &__comment-title
+
+    span[data-device='mobile']
+      display: inline-block
+      text-align: right
+      color: $font-black-1
+      font-family: $ptsans-narrow-regular
+      fsh(25px * (310 / 720), 2.2)
+
+      +bp('480')
+        fs(25px * (470 / 720))
+
+      +bp('768')
+        fs(25px)
+
+      +bp('1024')
+        display: none
+
+    span[data-device='desktop']
+      display: none
+      width: 80%
+      font-family: $ptsans-regular
+      fsh(14px, 1.2)
+      margin-bottom: 10px
+
+      +bp('1024')
+        display: inline-block
+
+  &__input
+    width: 100%
+    text-align: left
+
+  &__terms
+    margin-top: 30px * (310 / 720)
+
+    +bp('480')
+      margin-top: 30px * (470 / 720)
+
+    +bp('768')
+      margin-top: 30px
+
+    & > .square-checkbox__text
+      width: 100%
+
+      +bp('1024')
+        width: 70%
+
+
+// ORDER PAYMENT
+.order-payment
+  padding-bottom: 20px * (310px / 720px)
+  background-color: $font-black-1
+  color: $base-bg-color
+
+  +bp('480')
+    padding-bottom: 20px * (470px / 720px)
+
+  +bp('768')
+    padding-bottom: 20px
+
+  +bp('1024')
+    padding-bottom: 65px
+    background-color: $font-black-1
+    color: $font-yellow-2
+
+  &__title
+    text-align: center
+    text-transform: none
+    line-height: 120px * (310 / 720)
+
+    +bp('480')
+      line-height: 120px * (470 / 720)
+
+    +bp('768')
+      line-height: 120px
+
+    +bp('1024')
+      line-height: 140px
+
+  &__list
+    margin: 0 auto; padding: 0 (20px * (310 / 720)); list-style-type: none
+    js-display: flex; display: flex
+    justify-content: space-between
+    max-width: 980px
+
+    +bp('480')
+      padding: 0 (20px * (470 / 720))
+
+    +bp('768')
+      padding: 0 20px
+
+  &__item
+    display: inline-block
+    width: 48.5%
+    position: relative
+    z-index: 1
+
+    +bp('1024')
+      width: 31.5%
+
+    &:last-of-type
+      display: none
+
+      +bp('1024')
+        display: inline-block
+
+    span[data-device='mobile']
+      display: inline-block
+      text-decoration: underline
+
+      +bp('1024')
+        display: none
+
+    span[data-device='desktop']
+      display: none
+
+      +bp('1024')
+        display: inline-block
+
+    input[name='order-payment']
+      display: none
+
+      &:checked + label
+        color: $font-black-1
+
+        &:before
+          content: ''
+
+        span
+          text-decoration: none
+
+        +bp('1024')
+          color: $font-yellow-1
+
+    label
+      display: inline-block
+      width: 100%
+
+      &:hover
+        cursor: pointer
+
+        span
+          text-decoration: underline
+
+      &::before
+        absolute: top 0 left 0
+        size: 100%
+        background-color: $bg-orange-1
+        z-index: -1
+
+        +bp('1024')
+          background-color: $bg-green-2
+
+// ORDER SUBSCRIBE
+.order-subscribe
+  js-display: flex; display: flex
+  flex-direction: column
+  padding-bottom: 20px * (310px / 720px)
+  background-color: $bg-green-2
+  color: $base-bg-color
+
+  +bp('480')
+    padding-bottom: 20px * (470px / 720px)
+
+  +bp('768')
+    padding-bottom: 20px
+
+  +bp('1024')
+    flex-direction: row
+    justify-content: center
+    align-items: center
+    padding-bottom: 0
+    background: linear-gradient(to right, rgba(29,81,55,1) 0%, rgba(65,130,62,1) 100%);    color: $font-yellow-2
+
+  &__title
+    margin: 0
+    font-weight: normal
+    text-align: center
+
+    span[data-device='mobile']
+      display: inline-block
+      color: $font-white-1
+      text-transform: none
+      line-height: 120px * (310 / 720)
+
+      +bp('480')
+        line-height: 120px * (470 / 720)
+
+      +bp('768')
+        line-height: 120px
+
+      +bp('1024')
+        display: none
+
+    span[data-device='desktop']
+      display: none
+      fsh(14px, 30px)
+
+      +bp('1024')
+        display: inline-block
+
+  &__list
+    margin: 0 auto; padding: 0 (20px * (310 / 720)); list-style-type: none
+    width: 100%
+    js-display: flex; display: flex
+    justify-content: space-between
+    max-width: 980px
+
+    +bp('480')
+      padding: 0 (20px * (470 / 720))
+
+    +bp('768')
+      padding: 0 20px
+
+    +bp('1024')
+      margin: 0
+      padding: 0 35px
+      justify-content: center
+      width: auto
+
+  &__item
+    display: inline-block
+    width: 48.5%
+    position: relative
+    z-index: 1
+    background-color: transparent
+
+    &:nth-of-type(2)
+      margin-left: 25px
+
+    +bp('1024')
+      size: auto
+      line-height: 80px
+      padding: 0
+      border: none
+
+    span[data-device='mobile']
+      display: inline-block
+      text-decoration: underline
+
+      +bp('1024')
+        display: none
+
+    span[data-device='desktop']
+      display: none
+      vertical-align: middle
+      font-family: $ptsans-regular
+      text-transform: none
+      fsh(14px, 2)
+
+      +bp('1024')
+        display: inline-block
+
+    input[name='order-subscribe']
+      display: none
+
+      &:checked + label
+        color: $font-black-1
+
+        &:before
+          content: ''
+
+        &::after
+          content: ''
+
+        span
+          text-decoration: none
+
+        +bp('1024')
+          color: $font-yellow-1
+
+    label
+      display: inline-block
+      width: 100%
+
+      +bp('1024')
+        width: auto
+        padding-left: 27px
+        vertical-align: middle
+
+      &:hover
+        cursor: pointer
+
+        span
+          text-decoration: underline
+
+      &::before
+        absolute: top 0 left 0
+        size: 100%
+        background-color: $bg-orange-1
+        z-index: -1
+
+        +bp('1024')
+          content: ''
+          top: 52%
+          transform: translateY(-50%)
+          background-color: $base-bg-color
+          size: 20px
+          border: 1px solid $bg-black-1
+
+      &::after
+        absolute: top 46.5% left 5px
+        size: 10px
+        background-color: transparent
+
+        +bp('1024')
+          background-color: $bg-green-1
+
+
+
+  &__terms
+    display: none
+    font-family: $ptsans-regular
+    fsh(14px, 80px)
+    color: $font-yellow-1
+    
+    &:hover
+      text-decoration: none
+
+    +bp('1024')
+      display: inline-block
+
+
+// ORDER SUBMIT
+.order-submit
+  margin-bottom: 120px * (310 / 720)
+  background-color: $bg-yellow-1
+
+  +bp('480')
+    margin-bottom: 120px * (480 / 720)
+
+  +bp('768')
+    margin-bottom: 120px
+
+  +bp('1024')
+    margin-bottom: 0px
+    background: linear-gradient(to right, rgba(29,81,55,1) 0%, rgba(101,177,69,1) 100%);
+
+  &__wrapper
+    margin: 0 auto
+    js-display: flex; display: flex
+    flex-direction: column
+    max-width: 980px
+
+    +bp('1024')
+      flex-direction: row
+      justify-content: space-between
+      align-items: center
+      padding: 50px 0
+
+  &__left
+    js-display: flex; display: flex
+    flex-direction: column
+    align-items: center
+    width: 100%
+    padding: 20px * (310 / 720)
+    background: url('../images/yellow-bg.png') top left repeat
+
+    +bp('480')
+      padding: 20px * (310 / 720)
+
+    +bp('768')
+      padding: 20px
+
+    +bp('1024')
+      padding: 0
+      width: (420 / 989) * 100%
+      background: none
+
+  &__right
+    text-align: center
+    padding: 20px * (310 / 720)
+
+    +bp('480')
+      padding: 20px * (310 / 720)
+
+    +bp('768')
+      padding: 20px
+
+    +bp('1024')
+      padding: 0
+
+    button[name='order-submit']
+      @extend .green-large-button;
+      margin: 0 auto
+      width: 100%
+      max-width: 480px
+
+      +bp('1024')
+        display: block
+        size 193px 48px
+        background-color: $bg-black-1
+        border-radius: 7px
+        text-align: center
+        fsh(13px, 48px)
+        text-transform: uppercase
+        text-decoration: none
+        color: $font-yellow-2
+        cursor: pointer
+        border: none; outline: none
+        font-family: $ptsans-caption-regular
+
+
+    span[data-device='mobile']
+      display: inline-block
+      text-decoration: underline
+
+      +bp('1024')
+        display: none
+
+    span[data-device='desktop']
+      display: none
+
+      +bp('1024')
+        display: inline-block
+
+  &__price
+
+    &[data-device='mobile']
+      display: inline-block
+      margin-top: 20px * (310 / 720)
+
+      +bp('480')
+        margin-top: 20px * (470 / 720)
+
+      +bp('768')
+        margin-top: 20px
+
+      +bp('1024')
+        display: none
+
+    &[data-device='desktop']
+      display: none
+      font-family: $ptsans-narrow-bold
+      fsh(60px, 80px)
+
+      +bp('1024')
+        display: block
+
+      span
+        margin-left: 10px
+        font-family: $ptsans-narrow-regular
+        fs(30px)
+
+.order-promocode
+  js-display: flex; display: flex
+  justify-content: center
+  align-items: center
+
+  +bp('1024')
+    flex-direction: column
+
+  &__title
+    display: inline-block
+    vertical-align: top
+    margin: 0
+    font-weight: normal
+
+    span[data-device='mobile']
+      display: inline-block
+      font-family: $ptsans-narrow-regular
+      fsh(40px * (310 / 720), 80px * (310 / 720))
+
+      +bp('480')
+        fsh(40px * (470 / 720), 80px * (470 / 720))
+
+      +bp('768')
+        fsh(40px, 80px)
+
+      +bp('1024')
+        display: none
+
+    span[data-device='desktop']
+      display: none
+      fsh(14px, 1.25)
+      color: $font-white-1
+
+      +bp('1024')
+        display: inline-block
+
+
+  &__inputs
+    display: inline-block
+    vertical-align: top
+    font-size: 0
+
+    +bp('1024')
+      margin: 14px 0 0 -14px
+
+    input[name='order-promocode__text']
+      display: inline-block
+      margin: 0 (25px * (310 / 720))
+      width: 200px * (310 / 720)
+
+      &::-webkit-input-placeholder
+        color: transparent
+
+      &::-moz-placeholder
+        color: transparent
+
+      &:-ms-input-placeholder
+        color: transparent
+
+      &:-moz-placeholder
+        color: transparent
+
+      &::placeholder
+        color: transparent
+
+      +bp('480')
+        margin: 0 (25px * (470 / 720))
+        width: 200px * (470 / 720)
+
+      +bp('768')
+        margin: 0 25px
+        width: 200px
+
+      +bp('1024')
+        margin: 0
+        size: 250px 48px
+
+        &::-webkit-input-placeholder
+          color: $font-gray-1
+
+        &::-moz-placeholder
+          color: $font-gray-1
+
+        &:-ms-input-placeholder
+          color: $font-gray-1
+
+        &:-moz-placeholder
+          color: $font-gray-1
+
+        &::placeholder
+          color: $font-gray-1
+
+    input[name='order-promocode__submit']
+      size: (200px * (310 / 720)) (80px * (310 / 720))
+      background: $bg-black-1
+      outline: none
+      appearance: none
+      border: none
+      cursor: pointer
+      font-family: $ptsans-narrow-regular
+      color: $font-white-1
+      fsh(32px * (310 / 720), 80px * (310 / 720))
+
+      &:hover
+        text-decoration: underline
+
+      +bp('480')
+        size: (200px * (470 / 720)) (80px * (470 / 720))
+        fsh(32px * (470 / 720), 80px * (470 / 720))
+
+      +bp('768')
+        size: 200px 80px
+        fsh(32px, 80px)
+
+      +bp('1024')
+        size: 150px 48px
+        fsh(13px, 48px)
+        text-transform: uppercase
+        border-top-right-radius: 5px
+        border-bottom-right-radius: 5px
+        color: $font-yellow-1
+
+
+
+// ORDER YOU GET
+.order-you-get
+  display: none
+  padding-bottom: 60px
+
+  +bp('1024')
+    display: block
+
+  &__title
+    text-align: center
+    line-height: 120px * (310 / 720)
+
+    +bp('480')
+      line-height: 120px * (470 / 720)
+
+    +bp('768')
+      line-height: 120px
+
+
+  &__list
+    margin: 0 auto; padding: 0; list-style-type: none
+    js-display: flex; display: flex
+    justify-content: space-between
+    max-width: 980px
+
+  &__item
+    width: 30.5%
+
+  &__img
+    size: 100% 200px
+    background: $bg-green-1 center center / cover no-repeat
+
+  &__desc
+    margin-top: 15px
+    fsh(14px, 1.3)
+    color: $font-black-1
+
+/* ----- end ORDER ----- */

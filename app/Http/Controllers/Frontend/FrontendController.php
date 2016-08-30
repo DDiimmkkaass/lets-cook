@@ -143,7 +143,7 @@ class FrontendController extends BaseController
      * @param string $view
      * @param array  $data
      *
-     * @return $this
+     * @return \Illuminate\Contracts\View\View
      */
     public function render($view = '', array $data = [])
     {

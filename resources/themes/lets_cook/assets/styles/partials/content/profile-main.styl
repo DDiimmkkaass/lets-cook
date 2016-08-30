@@ -1,0 +1,155 @@
+
+
+/* ----- PROFILE MAIN ----- */
+
+.profile-main
+
+  &__title
+    background-color: $bg-black-2
+
+
+.profile-contacts
+  background-color: $bg-yellow-3
+  text-align: center
+
+  +bp('1024')
+    padding-top: 32px
+
+  &__list
+    margin: 0; padding: 10px 0 15px; list-style-type: none
+    background: url('../images/yellow-bg.png') top left repeat
+
+    li
+      &:not(:last-child)
+        margin-bottom: 24px
+
+      &[data-contacts='name']
+        font-family: $ptsans-bold
+        fsh(24px, 1.25)
+        color: $font-red-1
+
+      &[data-contacts='birth']
+        font-family: $ptsans-regular
+        fsh(18px, 1.25)
+        color: $font-black-2
+
+      &[data-contacts='mail']
+        font-family: $ptsans-bold
+        fsh(18px, 1.25)
+        color: $font-red-1
+
+      &[data-contacts='phone']
+        font-family: $ptsans-bold
+        fsh(24px, 1.25)
+        color: $font-red-1
+
+      &[data-contacts='more-phone']
+        font-family: $ptsans-regular
+        fsh(18px, 1.25)
+        color: $font-regular
+
+      &[data-contacts='address']
+        font-family: $ptsans-regular
+        fsh(18px, 1.25)
+        color: $font-regular
+
+
+.profile-badges
+
+  &__list
+    position: relative
+    margin: 0; padding: 15px 0 85px; list-style-type: none
+    background-color: $bg-yellow-2
+    font-family: $ptsans-bold
+
+    &::before
+      content: ''
+      absolute: bottom 0 left 0
+      size: 100% 65px
+      background: url('../images/yellow-bg.png') top left repeat
+
+    li
+      color: $font-black-2
+      text-align: center
+      fsh(24px, 1.25)
+
+      &:not(:last-child)
+        margin-bottom: 34px
+
+      span
+        color: $font-red-1
+
+
+.profile-coupons
+  padding: 14px 0 24px
+  background-color: $bg-yellow-3
+
+  &__table
+    width: 100%
+
+    caption
+      font-family: $ptsans-regular
+      fsh(24px, 42px)
+      color: $font-black-2
+
+    thead
+      background-color: $bg-red-1
+      text-align: left
+      font-family: $ptsans-bold
+      fsh(24px, 1.15)
+      color: $font-white-2
+
+    tbody
+      font-family: $ptsans-regular
+      color: $font-black-2
+      fsh(24px, 1.25)
+
+      tr
+        &:nth-child(even)
+          background-color: $bg-orange-4
+
+    th, td
+      padding: 15px 18px
+
+      &:nth-child(1)
+        width: (360 / 1200) * 100%
+        padding-left: 40px
+
+      &:nth-child(2)
+        width: (140 / 1200) * 100%
+
+      &:nth-child(3)
+        width: (170 / 1200) * 100%
+
+      &:nth-child(4)
+        width: (200 / 1200) * 100%
+
+      &:nth-child(5)
+        width: (140 / 1200) * 100%
+
+      &:nth-child(6)
+        width: (190 / 1200) * 100%
+        padding-right: 40px
+        text-decoration: underline
+
+        &[data-chosen]
+          font-family: $ptsans-bold
+
+
+  &__add-new
+    margin: 25px 0 0 40px
+    fs(0px)
+
+    input[name='add-coupons-text']
+      vertical-align: top
+
+    input[name='add-coupons-submit']
+      margin-left: 20px
+      vertical-align: top
+
+
+
+/* ----- end PROFILE MAIN ----- */
+
+
+

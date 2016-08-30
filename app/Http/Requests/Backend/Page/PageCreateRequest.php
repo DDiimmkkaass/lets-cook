@@ -9,7 +9,6 @@
 namespace App\Http\Requests\Backend\Page;
 
 use App\Http\Requests\FormRequest;
-use Config;
 
 /**
  * Class PageCreateRequest
@@ -17,7 +16,7 @@ use Config;
  */
 class PageCreateRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,23 +24,26 @@ class PageCreateRequest extends FormRequest
      */
     public function rules()
     {
+        $templates = get_templates(base_path('resources/themes/'.config('app.theme').'/views/page/templates'), true);
+        
         $rules = [
             'status'   => 'required|boolean',
             'slug'     => 'unique:pages,slug',
             'position' => 'required|integer',
+            'template' => 'required|in:'.implode(',', $templates),
             'image'    => ['regex:'.$this->image_regex],
         ];
-
+        
         $languageRules = [
             'name' => 'required',
         ];
-
+        
         foreach (config('app.locales') as $locale) {
             foreach ($languageRules as $name => $rule) {
                 $rules[$locale.'.'.$name] = $rule;
             }
         }
-
+        
         return $rules;
     }
 }

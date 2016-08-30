@@ -1,0 +1,119 @@
+<?php
+
+use App\Models\Page;
+
+class PagesSeeder extends DatabaseSeeder
+{
+    
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        $slug = 'pervyj-raz';
+        if (!Page::whereSlug($slug)->first()) {
+            $input = [
+                'slug'     => $slug,
+                'position' => 0,
+                'status'   => 1,
+                'template' => 'default',
+            ];
+            
+            foreach (config('app.locales') as $locale) {
+                $input[$locale] = [
+                    'name'             => 'Первый раз',
+                    'short_content'    => 'Первый раз',
+                    'content'          => 'Первый раз',
+                    'meta_keywords'    => 'Первый раз',
+                    'meta_title'       => 'Первый раз',
+                    'meta_description' => 'Первый раз',
+                ];
+            }
+            
+            $model = new Page($input);
+            $model->save();
+            
+            $this->pageService->setExternalUrl($model);
+        }
+        
+        $slug = 'dostavka-i-oplata';
+        if (!Page::whereSlug($slug)->first()) {
+            $input = [
+                'slug'     => $slug,
+                'position' => 0,
+                'status'   => 1,
+                'template' => 'default',
+            ];
+            
+            foreach (config('app.locales') as $locale) {
+                $input[$locale] = [
+                    'name'             => 'Доставка и оплата',
+                    'short_content'    => 'Доставка и оплата',
+                    'content'          => 'Доставка и оплата',
+                    'meta_keywords'    => 'Доставка и оплата',
+                    'meta_title'       => 'Доставка и оплата',
+                    'meta_description' => 'Доставка и оплата',
+                ];
+            }
+            
+            $model = new Page($input);
+            $model->save();
+            
+            $this->pageService->setExternalUrl($model);
+        }
+        
+        $slug = 'polzovatelskoe-soglashenie';
+        if (!Page::whereSlug($slug)->first()) {
+            $input = [
+                'slug'     => $slug,
+                'position' => 0,
+                'status'   => 1,
+                'template' => 'default',
+            ];
+            
+            foreach (config('app.locales') as $locale) {
+                $input[$locale] = [
+                    'name'             => 'Пользовательское соглашение',
+                    'short_content'    => 'Пользовательское соглашение',
+                    'content'          => 'Пользовательское соглашение',
+                    'meta_keywords'    => 'Пользовательское соглашение',
+                    'meta_title'       => 'Пользовательское соглашение',
+                    'meta_description' => 'Пользовательское соглашение',
+                ];
+            }
+            
+            $model = new Page($input);
+            $model->save();
+            
+            $this->pageService->setExternalUrl($model);
+        }
+        
+        $slug = 'politika-obrabotki-personalnyh-dannyh';
+        if (!Page::whereSlug($slug)->first()) {
+            $input = [
+                'slug'     => $slug,
+                'position' => 0,
+                'status'   => 1,
+                'template' => 'default',
+            ];
+            
+            foreach (config('app.locales') as $locale) {
+                $input[$locale] = [
+                    'name'             => 'Политика обработки персональных данных',
+                    'short_content'    => 'Политика обработки персональных данных',
+                    'content'          => 'Политика обработки персональных данных',
+                    'meta_keywords'    => 'Политика обработки персональных данных',
+                    'meta_title'       => 'Политика обработки персональных данных',
+                    'meta_description' => 'Политика обработки персональных данных',
+                ];
+            }
+            
+            $model = new Page($input);
+            $model->save();
+            
+            $this->pageService->setExternalUrl($model);
+        }
+    }
+}

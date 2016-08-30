@@ -41,9 +41,9 @@ class PageController extends FrontendController
 
         $this->pageService = $pageService;
     }
-
+    
     /**
-     * @return $this
+     * @return \Illuminate\Contracts\View\View
      */
     public function getHome()
     {
@@ -55,11 +55,11 @@ class PageController extends FrontendController
 
         $this->fillMeta($model, $this->module);
 
-        return $this->render('home');
+        return $this->render($this->module.'.templates.'.$model->template);
     }
-
+    
     /**
-     * @return $this|\App\Http\Controllers\Frontend\PageController
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function getPage()
     {
@@ -78,11 +78,19 @@ class PageController extends FrontendController
 
         $this->fillMeta($model, $this->module);
 
-        return $this->render($this->pageService->getPageTemplate($model));
+        return $this->render($this->module.'.templates.'.$model->template);
+    }
+    
+    /**
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function contacts()
+    {
+        return $this->render('contacts');
     }
 
     /**
-     * @return $this
+     * @return \Illuminate\Http\Response
      */
     public function notFound()
     {

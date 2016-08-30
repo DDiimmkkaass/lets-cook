@@ -26,7 +26,7 @@ class NewsCreateRequest extends FormRequest
     {
         $rules = [
             'status'     => 'required|boolean',
-            'slug'       => 'unique:pages,slug',
+            'slug'       => 'unique:news,slug',
             'position'   => 'required|integer',
             'image'      => ['regex:'.$this->image_regex],
             'publish_at' => 'date_format:d-m-Y',

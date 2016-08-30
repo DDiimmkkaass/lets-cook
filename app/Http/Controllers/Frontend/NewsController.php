@@ -41,7 +41,7 @@ class NewsController extends FrontendController
     }
 
     /**
-     * @return $this|\App\Http\Controllers\Frontend\NewsController
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -53,7 +53,7 @@ class NewsController extends FrontendController
     /**
      * @param string $slug
      *
-     * @return $this|\App\Http\Controllers\Frontend\NewsController
+     * @return \Illuminate\Contracts\View\View
      */
     public function show($slug = '')
     {

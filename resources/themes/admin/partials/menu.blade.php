@@ -129,7 +129,7 @@
             @if ($user->hasAccess('weeklymenu.read'))
                 <li class="{!! active_class('admin.weekly_menu.current*') !!}">
                     <a href="{!! route('admin.weekly_menu.current') !!}">
-                        <i class="fa fa-bars"></i>
+                        <i class="icon-list-alt"></i>
                         <span>@lang('labels.current_week_menu')</span>
                     </a>
                 </li>
@@ -277,6 +277,38 @@
                 </li>
             @endif
 
+            @if ($user->hasAccess('news.read'))
+                <li class="{!! active_class('admin.news*') !!}">
+                    <a href="{!! route('admin.news.index') !!}">
+                        <i class="fa fa-rss"></i>
+                        <span>@lang('labels.blog')</span>
+
+                        @if ($user->hasAccess('news.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_news')"
+                                   data-href="{!! route('admin.news.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
+            @if ($user->hasAccess('article.read'))
+                <li class="{!! active_class('admin.article*') !!}">
+                    <a href="{!! route('admin.article.index') !!}">
+                        <i class="fa fa-newspaper-o"></i>
+                        <span>@lang('labels.articles')</span>
+
+                        @if ($user->hasAccess('article.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_article')"
+                                   data-href="{!! route('admin.article.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
             @if ($user->hasAccess('city.read'))
                 <li class="{!! active_class('admin.city*') !!}">
                     <a href="{!! route('admin.city.index') !!}">
@@ -286,6 +318,22 @@
                         @if ($user->hasAccess('city.create'))
                             <small class="label create-label pull-right bg-green" title="@lang('labels.add_city')"
                                    data-href="{!! route('admin.city.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
+            @if ($user->hasAccess('menu.read'))
+                <li class="{!! active_class('admin.menu*') !!}">
+                    <a href="{!! route('admin.menu.index') !!}">
+                        <i class="fa fa-bars"></i>
+                        <span>@lang('labels.menus')</span>
+
+                        @if ($user->hasAccess('menu.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add')"
+                                   data-href="{!! route('admin.menu.create') !!}">
                                 <i class="fa fa-plus"></i>
                             </small>
                         @endif

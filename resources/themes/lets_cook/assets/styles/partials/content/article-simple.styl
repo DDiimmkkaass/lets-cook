@@ -1,0 +1,137 @@
+
+/* ----- ARTICLE SIMPLE ----- */
+
+.article-simple
+
+  &__title
+    background-color: $bg-yellow-4
+    color: $bg-black-2
+
+  &__img
+    size: 100% auto
+    padding-bottom: (406 / 1200) * 100%
+    background: $bg-green-1 center center / cover no-repeat
+
+  &__content
+    margin: 0 auto
+    max-width: 980px
+    padding: 0 (20px * (310 / 720)) 30px
+
+    +bp('480')
+      padding: 0 (20px * (470 / 720)) 40px
+
+    +bp('768')
+      padding: 0 20px 50px
+
+    +bp('1024')
+      padding: 0 0 60px 0
+
+
+  &__share
+    margin: 10px 0
+
+    +bp('480')
+      margin: 14px 0
+
+    +bp('768')
+      margin: 18px 0
+
+    +bp('1024')
+      margin: 23px 0
+
+  &__tag
+    margin: 35px 0
+
+  &__text
+    font-family: $ptsans-regular
+    fsh(14px, 1.25)
+    color: $font-black-2
+
+    p
+      margin-bottom: 20px
+
+
+.article-share
+
+  &__title
+    display: inline-block
+    margin: 0 45px 10px 0
+    font-family: $ptsans-regular
+    fsh(18px, 27px)
+    color: $font-black-2
+
+    +bp('1024')
+      margin: 0 45px 0 0
+
+  &__list
+    margin: 0; padding: 0; list-style-type: none
+    display: inline-block
+    fs(0px)
+
+  &__item
+    display: inline-block
+    position: relative
+    margin: 0 7px 7px 0
+    size: auto 27px
+    padding: 0 8px 0 45px
+    fsh(14px, 27px)
+    font-family: $ptsans-regular
+    color: $font-white-1
+    cursor: pointer
+
+    &::before
+      absolute: left 8px top 0
+      size: 45px 100%
+      font-family: $fontello
+
+    &[data-share='facebook']
+      background-color: #19559b
+
+      &::before
+        content: 'X'
+
+    &[data-share='google-plus']
+      background-color: #fe3f2b
+
+      &::before
+        content: 'X'
+
+    &[data-share='twitter']
+      background-color: #00aeca
+
+      &::before
+        content: 'X'
+
+    &[data-share='linkedin']
+      background-color: #0086a9
+
+      &::before
+        content: 'X'
+
+    &[data-share='pinterest']
+      background-color: #0086a9
+
+      &::before
+        content: 'X'
+
+    &[data-share='vkontakte']
+      background-color: #4c75a3
+
+      &::before
+        content: 'X'
+
+    &[data-share='instagram']
+      background-color: #864c2d
+
+      &::before
+        content: 'X'
+
+
+.article-tags
+  margin: 35px 0; padding: 0; list-style-type: none
+
+  &__item
+    @extend .transparent-green-regular-button
+    margin-right: 15px
+
+/* ----- end ARTICLE SIMPLE ----- */

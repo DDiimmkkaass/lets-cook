@@ -1,0 +1,877 @@
+
+/* ----- MAIN ----- */
+
+// LET COOK
+.let-cook
+  js-display: flex
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  height: 480px * (310 / 720)
+  background: url('../images/let-cook-bg.jpg') center center no-repeat;
+  background-size: cover
+  color: $font-white-1
+
+  +bp('480')
+    height: 480px * (470 / 720)
+
+  +bp('768')
+    height: 480px
+
+  &__supTitle
+    margin: 0
+    fs(17px * (310 / 720))
+    text-transform: uppercase
+
+    +bp('480')
+      fs(17px * (470 / 720))
+
+    +bp('768')
+      fs(17px)
+
+    +bp('1024')
+      fs(17px)
+
+
+  &__title
+    font-family: $ptsans-narrow-bold
+    margin: 7px 0 0
+    fsh(66px * (310 / 720), 1)
+    text-transform: uppercase
+
+    +bp('480')
+      margin: 10px 0 2px
+      fs(66px * (470 / 720))
+
+    +bp('768')
+      margin: 20px 0 5px
+      fs(66px)
+
+    +bp('1024')
+      fs(84px)
+
+  &__subTitle
+    @extend .georgia-title
+
+// MAKE ORDER
+.make-order
+
+  &--mobile
+    +bp('1024')
+      display: none
+
+    .choose-basket
+      display: block
+      size: 100% 120px * (310 / 720)
+      background-color: $bg-green-2
+      text-align: center
+      text-transform uppercase
+      font-family: $ptsans-narrow-regular
+      fsh(40px * (310 / 720), 3)
+      color: $font-yellow-1
+
+      +bp('480')
+        height: 120px * (470 / 720)
+        fs(40px * (470 / 720))
+
+      +bp('768')
+        height: 120px
+        fs(40px)
+
+    .demo-dinner
+      @extend .make-order--mobile .choose-basket
+      background-color: $bg-red-1
+
+  &--desktop
+    margin-top: 35px
+    display: none
+    fs(0px)
+
+    +bp('1024')
+      display: block
+
+    .choose-basket
+      display: inline-block
+
+    .demo-dinner
+      margin-left: 25px
+      display: inline-block
+      fs(14px, 48px)
+      color: $font-white-1
+
+      &:hover
+        text-decoration: none
+
+// ABOUT FOOD
+.about-food
+
+  &__list
+    display: none
+    margin: 0 auto
+    padding: 42px 0 56px
+    list-style-type: none
+    width: 930px
+
+    +bp('1024')
+      js-display: flex
+      display: flex
+      justify-content: space-between
+
+  &__item
+    width: 172px
+
+  &__img
+    size: 172px
+    border-radius: 50%
+    background-color: $bg-green-2
+    background-position: center center
+    background-size: cover
+    background-repeat: no-repeat
+
+  &__title
+    margin: 3px auto 0
+    width: 80%
+    text-align: center
+    fsh(14px, 1.25)
+    color: $bg-green-2
+
+//ABOUTS SERVICE
+.about-service
+  position: relative
+  background-color: $bg-green-3
+  overflow: hidden
+  size: 100% auto
+  padding: 60px * (310 / 720) 0
+  max-height: 120px * (310 / 720)
+  will-change: max-height
+  transition: max-height 0.5s
+
+  &[data-active='true']
+    max-height: 1000px
+
+  +bp('480')
+    padding: 60px * (470 / 720) 0
+    max-height: 120px * (470 / 720)
+
+  +bp('768')
+    padding: 60px 0
+    max-height: 120px
+
+  &__title
+    absolute: top 50% left 50%
+    z-index: 1
+    width: 100%
+    transform: translate(-50%, -50%)
+    text-align: center
+    fs(0px)
+    cursor: pointer
+    opacity: 1
+    visibility: visible
+    will-change: opacity, visibility
+    transition: all 0.5s 0.5s
+
+    &[data-active='false']
+      opacity: 0
+      visibility: hidden
+
+    &::before
+      content: ''
+      display: inline-block
+      vertical-align: middle
+      height: 100%
+
+  &__icon
+    position: relative
+    display: inline-block
+    size: 69px * (310 / 720)
+    border: 6px * (310 / 720) solid $font-yellow-2
+    border-radius: 50%
+    vertical-align: middle
+
+    &::before
+      content: ''
+      absolute: top 50% left 50%
+      transform: translate(-34%, -38%) rotate(360deg)
+      size: 0
+      border-style: solid
+      border-width: (11px * (310 / 720)) 0 (11px * (310 / 720)) (22px * (310 / 720))
+      border-color: transparent transparent transparent $font-yellow-2
+
+      +bp('480')
+        transform: translate(-34%, -50%) rotate(360deg)
+        border-width: (11px * (470 / 720)) 0 (11px * (470 / 720)) (22px * (470 / 720))
+
+      +bp('768')
+        transform: translate(-34%, -50%) rotate(360deg)
+        border-width: 11px 0 11px 22px
+
+    +bp('480')
+      size: 69px * (470 / 720)
+      border-width: 6px * (470 / 720)
+
+    +bp('768')
+      size: 69px
+      border-width: 6px
+
+  &__text
+    margin-left: 24px * (310 / 720)
+    display: inline-block
+    vertical-align: middle
+    font-family: $ptsans-narrow-regular
+    fsh(32px * (310 / 720), 69px * (310 / 720))
+    color: $font-yellow-2
+
+    +bp('480')
+      margin-left: 24px * (470 / 720)
+      fsh(32px * (470 / 720), 69px * (310 / 720))
+
+    +bp('768')
+      margin-left: 24px
+      fsh(32px, 69px)
+
+    +bp('1024')
+      fs(28px)
+
+  &__content
+    position: relative
+    margin: 0 37px * (310 / 720)
+    max-width: 1125px
+    max-height: 0px
+    background-color: $bg-green-4
+    will-change: max-height
+    transition: max-height 0.5s
+    overflow: hidden
+
+    &[data-active='true']
+      max-height: 2000px
+
+    +bp('480')
+      margin: 0 37px * (470 / 720)
+
+    +bp('768')
+      margin: 0 37px
+
+    +bp('1024')
+      fs(28px)
+
+    +bp('1280')
+      margin: 0 auto
+
+  &__close
+    absolute: top 0 right 0
+    z-index: 1
+    size: 34px
+    cursor: pointer
+
+    +bp('480')
+      absolute: top 4px right 4px
+
+    +bp('768')
+      absolute: top 12px right 12px
+
+    &::before, &::after
+      content: ''
+      absolute: top 50% left 50%
+      transform: translate(-50%, -50%) rotate(-45deg)
+      size: 45px * (310 / 720) 5px * (310 / 720)
+      background-color: $font-yellow-2
+      border-radius: 5px
+
+      +bp('480')
+        size: 45px * (470 / 720) 5px * (470 / 720)
+
+      +bp('768')
+        size: 45px 5px
+
+    &::after
+      transform: translate(-46%, -50%) rotate(45deg)
+
+      +bp('480')
+        transform: translate(-47%, -50%) rotate(45deg)
+
+      +bp('768')
+        transform: translate(-50%, -50%) rotate(45deg)
+
+// RECIPES AND BASKETS
+.recipes-and-baskets
+  js-display: flex
+  display: flex
+
+  &__item
+
+    &:first-of-type
+      display: none
+
+      +bp('1024')
+        display: block
+        width: 50%
+
+    &:last-of-type
+      width: 100%
+
+      +bp('1024')
+        js-display: flex
+        display: flex
+        flex-direction: column
+        justify-content: center
+        width: 50%
+
+.recipes-menu
+
+  &__choose
+    margin: 0; padding: 0
+    list-style-type: none
+    js-display: flex
+    display: flex
+    justify-content: center
+    align-items: center
+    height: 60px
+    background-color: $bg-orange-2
+
+  &__chooseItem
+    display: inline-block
+    fsh(14px, 16px)
+    color: $font-yellow-2
+    padding-bottom: 1px
+    border-bottom: 1px dashed $font-yellow-2
+    cursor: pointer
+
+    &:hover, &[data-active]
+      padding-bottom: 0
+      border-bottom: 3px solid $font-yellow-2
+
+    &:last-of-type
+      margin-left: 40px
+
+  &__content
+    margin: 0; padding: 0; list-style-type: none
+    position: relative
+    background: url('../images/recipes-bg.jpg') center center / cover no-repeat;
+
+  &__contentItem
+    absolute: top 0 left 0
+    size: 100% auto
+    opacity: 0
+    visibility: hidden
+    will-change: opacity, visibility
+    transition: all 0.3s
+
+    &[data-active]
+      opacity: 1
+      visibility: visible
+
+  &__list
+    margin: 0; padding: 0; list-style-type: none
+    js-display: flex
+    display: flex
+    flex-wrap: wrap
+
+    &[data-direction='column']
+      flex-direction: column
+
+  &__item
+    width: 50%
+
+  &__link
+    display: block
+    position: relative
+    size: 100%
+    text-decoration: none
+
+  &__img
+    background: #346048 center center / cover no-repeat
+
+  &__title
+    size: 100% auto
+    margin: 0; padding: 3px 12px
+    js-display: flex
+    display: flex
+    justify-content: center
+    align-content: center
+    flex-direction: column
+    background-color: $bg-orange-2
+    text-align: center
+    font-family: $ptsans-regular
+    fsh(14px, 17px)
+    color: $font-yellow-2
+
+  &__all
+    absolute: left 75% top 100% - (100% / 6)
+    transform: translate(-50%, -50%)
+    display: inline-block
+
+    &[data-position='1'] {
+      absolute: left 50% top 200%
+    }
+
+    &[data-position='2'] {
+      absolute: left 50% top 200%
+    }
+
+    &[data-position='3'] {
+      absolute: left 75% top 50%
+    }
+
+    &[data-position='4'] {
+      absolute: left 50% top 125%
+    }
+
+    &[data-position='5'] {
+      absolute: left 75% top 100% - (100% / 6)
+    }
+
+    &[data-position='6'] {
+      absolute: left 75% top 100% - (100% / 6)
+    }
+
+
+.baskets-menu
+  padding: (40px * (310 / 720)) (65px * (310 / 720)) (75px * (310 / 720))
+  background-color: $bg-orange-1
+
+  +bp('480')
+    padding: (40px * (470 / 720)) (65px * (470 / 720)) (75px * (470 / 720))
+
+  +bp('768')
+    padding: 40px 65px 75px
+
+  +bp('1024')
+    padding: 15px 5%
+
+  &__title
+    @extend .georgia-title
+    text-align: center
+    color: $font-white-1
+
+    +bp('1024')
+      text-align: left
+
+  &__list
+    margin: 40px * (310 / 720) auto 0
+    width: 100%
+    max-width: 460px
+    border-collapse: collapse
+    font-family: $ptsans-narrow-regular
+    color: $font-black-1
+
+    +bp('480')
+      margin: 40px * (470 / 720) auto 0
+
+    +bp('768')
+      margin: 40px auto 0
+      max-width: 700px
+
+    +bp('1024')
+      margin: 40px 0 0
+      max-width: 550px
+
+    & tr
+      td:first-child
+        fsh(40px * (310 / 720), 1.2)
+        text-decoration: underline
+
+        +bp('480')
+          fs(40px * (470 / 720))
+
+        +bp('768')
+          fs(40px)
+
+        +bp('1024')
+          fs(24px)
+
+      td:nth-child(2)
+        fsh(24px * (310 / 720), 1.2)
+        color: $font-black-1
+
+        +bp('480')
+          fs(24px * (470 / 720))
+
+        +bp('768')
+          fs(24px)
+
+        +bp('1024')
+          fs(15px)
+
+      td:nth-child(3)
+        fsh(24px * (310 / 720), 1.2)
+        color: $font-black-1
+
+        +bp('480')
+          fs(24px * (470 / 720))
+
+        +bp('768')
+          fs(24px)
+
+        +bp('1024')
+          fs(15px)
+
+    & td
+      padding: (17px * (310 / 720)) 0
+
+      +bp('480')
+        padding: (17px * (470 / 720)) 0
+
+      +bp('768')
+        padding: 17px 0
+
+      +bp('1024')
+        padding: 4px 0
+
+      a
+        color: $font-black-1
+
+      span
+        font-family: $ptsans-bold
+        fs(17px)
+
+  &__desc
+    display: none
+    margin-top: 50px
+    font-family: $ptsans-regular
+    fsh(14px, 18px)
+    color: $font-black-1
+
+    +bp('1024')
+      display: block
+
+    span
+      font-family: $ptsans-bold-italic
+
+  &__details
+    display: none
+    margin-top: 35px
+
+    +bp('1024')
+      display: inline-block
+
+
+
+// OUR DIFFERENCE
+.our-diff
+  padding: 74px 0 70px
+  display: none
+
+  +bp('1024')
+    display: block
+
+  &__heading
+    @extend .georgia-title
+    text-align: center
+
+  &__list
+    margin: 40px auto 0; padding: 0 30px; list-style-type: none
+    max-width: 1078px
+    js-display: flex; display: flex
+    justify-content: space-between
+
+  &__item
+    width: (220 / 1018) * 100%
+    color: $bg-black-1
+
+  &__img
+    width: 100%
+    max-height: 120px
+
+  &__title
+    margin: 15px 0
+    font-family: $ptsans-bold
+    fsh(20px, 1.15)
+
+  &__desc
+    font-family: $ptsans-regular
+    fsh(14px, 16px)
+
+
+
+// FREE DELIVERY
+.free-delivery
+  height: 260px * (310 / 720)
+  js-display: flex; display: flex
+  flex-direction: column
+  justify-content: center
+  background: linear-gradient(to right, rgba(29,81,55,1) 0%, rgba(101,177,69,1) 100%);
+  text-align: center
+
+  +bp('480')
+    height: 260px * (470 / 720)
+
+  +bp('768')
+    height: 260px
+
+  &__title
+    @extend .georgia-title
+    line-height: 1.4
+    color: $font-white-1
+
+  &__subTitle
+    font-family: $ptsans-bold
+    fsh(24px * (310 / 720), 1.4)
+    color: $font-white-1
+    text-transform: uppercase
+
+    +bp('480')
+      fs(24px * (470 / 720))
+
+    +bp('768')
+      fs(24px)
+
+    +bp('1024')
+      fs(17px)
+
+  &__desc
+    display: none
+    font-family: $ptsans-bold
+    fsh(17px, 2.5)
+    color: $font-black-1
+
+    +bp('1024')
+      display: block
+
+// REVIEWS BLOCK
+.spec-review
+  display: none
+  padding: 65px 0 80px
+  background-color: $bg-red-2
+
+  +bp('1024')
+    display: block
+
+  &__title
+    @extend .georgia-title
+    text-align: center
+    color: $font-yellow-2
+
+  &__main
+    margin: 50px auto 0
+    js-display: flex; display: flex
+    justify-content: space-between
+    align-items: flex-start
+    max-width: 980px
+    color: $font-yellow-2
+
+  &__img
+    size: 172px
+    border-radius: 50%
+    background: $bg-green-2 center center / cover no-repeat
+
+  &__inner
+    position: relative
+    width: 980px - (172 + 17)
+    fsh(14px, 1.25)
+
+  &__text
+    position: relative
+    padding: 20px 56px
+    will-change: height
+    transition: height 0.3s
+    overflow: hidden
+
+    &::before
+      content: '«'
+      absolute: top -7px left -2px
+      fsh(70px, 32px)
+
+    &::after
+      content: '»'
+      absolute: bottom 7px right -2px
+      fsh(70px, 32px)
+
+    p
+      margin: 20px 0
+
+      &:first-child
+        margin-top: 0
+
+  &__toggle
+    absolute: bottom 0 right 56px
+    size: 80px 17px
+    z-index: 1
+
+  &__show
+    absolute: top 0 left 0
+    color: $font-yellow-2
+    text-decoration: underline
+    opacity: 1; visibility: visible
+    will-change: opacity, visibility
+    transition: all 0.5s;
+    cursor: pointer
+
+    &:hover
+      text-decoration: none
+
+    &[data-active='false']
+      opacity: 0; visibility: hidden
+
+  &__hide
+    absolute: top 0 left 0
+    color: $font-yellow-2
+    text-decoration: underline
+    opacity: 0; visibility: hidden
+    will-change: opacity, visibility
+    transition: all 0.5s;
+    cursor: pointer
+
+    &:hover
+      text-decoration: none
+
+    &[data-active='true']
+      opacity: 1; visibility: visible
+
+  &__hois
+    margin: 15px 56px 0
+
+  &__name
+    font-family: $ptsans-bold
+    fsh(17px, 1.2)
+    text-transform: uppercase
+
+  &__profession
+    font-family: $ptsans-italic
+    fsh(14px, 1.2)
+
+// CLIENTS REVIEWS
+.clients-reviews
+  display: none
+  padding-top: 80px
+
+  +bp('1024')
+    display: block
+
+  &__title
+    @extend .georgia-title
+    text-align: center
+    color: $font-black-1
+
+  &__list
+    margin: 75px auto 0; padding: 0; list-style-type: none
+    max-width: 980px
+    js-display: flex; display: flex
+    flex-wrap: wrap
+    justify-content: space-between
+
+  &__item
+    margin-bottom: 80px
+    width: 48%
+
+.review-item
+  js-display: flex; display: flex
+  justify-content: space-between
+  align-items: flex-start
+
+  &__img
+    size: 100px
+    border-radius: 50%
+    background: $bg-green-2 center center / cover no-repeat
+
+  &__main
+    width: 350px
+
+  &__name
+    font-family: $ptsans-bold
+    fsh(20px, 1.15)
+    color: $font-black-1
+
+  &__comment
+    margin-top: 10px
+    font-family: $ptsans-regular
+    fsh(14px, 1.25)
+    color: $font-black-1
+
+  &__date
+    margin-top: 20px
+    font-family: $ptsans-regular
+    fsh(14px, 1)
+    color: $font-green-2
+
+
+
+// ALL NEWS AND ARTICLES BLOCK
+.all-news-articles
+  display: none
+  align-content: center
+  text-align: center
+  color: $font-yellow-2
+
+  +bp('1024')
+    js-display: flex; display: flex
+
+  &__item
+    padding: 78px 0 58px
+    width: 50%
+    background: $bg-green-2 center center / cover no-repeat
+
+    &[data-order='1']
+      background-image: url('../images/all-news-bg.jpg')
+
+    &[data-order='2']
+      background-image: url('../images/all-articles-bg.jpg')
+
+  &__title
+      margin: 0
+      font-family: $ptsans-bold
+      fsh(20px, 1)
+
+  &__desc
+    margin: 10px auto 0
+    width: 400px
+    font-family: $ptsans-regular
+    fsh(14px, 1.2)
+
+  &__link
+    display: inline-block
+    margin: 35px 0 0
+
+// SUBSCRIBE
+
+.main-subscribe
+  padding: (35px * (310 / 720)) 0 (60px * (310 / 720))
+  text-align: center
+
+  +bp('480')
+    padding: (35px * (470 / 720)) 0 (60px * (470 / 720))
+
+  +bp('768')
+    padding: 60px 0 35px
+
+  +bp('1024')
+    padding: 60px 0
+
+  &__title
+    @extend .georgia-title
+    color: $font-black-1
+
+  &__desc
+    margin: 20px * (310 / 720) auto 0
+    width: 640px * (310 / 720)
+    fsh(24px * (310 / 720), 1.15)
+
+    +bp('480')
+      margin: 20px * (470 / 720) auto 0
+      width: 640px * (470 / 720)
+      fs(24px * (470 / 720))
+
+    +bp('768')
+      margin: 20px auto 0
+      width: 640px
+      fs(24px)
+
+    +bp('1024')
+      width: auto
+      fsh(14px, 1)
+
+  &__form
+    margin-top: 25px * (310 / 720)
+
+    +bp('480')
+      margin-top: 25px * (470 / 720)
+
+    +bp('768')
+      margin-top: 25px
+
+    +bp('1024')
+      margin-top: 34px
+
+
+/* ----- end PAGE 1 ----- */
+

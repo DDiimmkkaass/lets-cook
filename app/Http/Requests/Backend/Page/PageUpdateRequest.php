@@ -9,7 +9,6 @@
 namespace App\Http\Requests\Backend\Page;
 
 use App\Http\Requests\FormRequest;
-use Config;
 
 /**
  * Class PageUpdateRequest
@@ -17,7 +16,7 @@ use Config;
  */
 class PageUpdateRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,24 +25,27 @@ class PageUpdateRequest extends FormRequest
     public function rules()
     {
         $id = $this->route()->parameter('page');
-
+        
+        $templates = get_templates(base_path('resources/themes/'.config('app.theme').'/views/page/templates'), true);
+        
         $rules = [
             'status'   => 'required|boolean',
             'slug'     => 'unique:pages,slug,'.$id.',id',
             'position' => 'required|integer',
+            'template' => 'required|in:'.implode(',', $templates),
             'image'    => ['regex:'.$this->image_regex],
         ];
-
+        
         $languageRules = [
             'name' => 'required',
         ];
-
+        
         foreach (config('app.locales') as $locale) {
             foreach ($languageRules as $name => $rule) {
                 $rules[$locale.'.'.$name] = $rule;
             }
         }
-
+        
         return $rules;
     }
 }

@@ -18,35 +18,32 @@ $router->group(
             ['as' => 'pages.show', 'uses' => 'Frontend\PageController@getPage']
         );
 
-        // news
-        $router->get('news', ['as' => 'news.index', 'uses' => 'Frontend\NewsController@index']);
-        $router->get('news/{slug}', ['as' => 'news.show', 'uses' => 'Frontend\NewsController@show']);
-
-        // comments
-        $router->group(
-            [
-                'prefix'     => 'comments',
-                'middleware' => 'ajax',
-            ],
-            function () use ($router) {
-                $router->get('/', ['as' => 'comments.index', 'uses' => 'Frontend\CommentController@index']);
-
-                $router->post('/', ['as' => 'comments.store', 'uses' => 'Frontend\CommentController@store']);
-            }
-        );
-
-        // likes
-        $router->post(
-            '/likes',
-            ['middleware' => ['auth', 'ajax'], 'as' => 'likes.index', 'uses' => 'Frontend\LikeController@store']
-        );
-
+        // blog
+        $router->get('blog', ['as' => 'blog.index', 'uses' => 'Frontend\NewsController@index']);
+        $router->get('blog/{slug}', ['as' => 'blog.show', 'uses' => 'Frontend\NewsController@show']);
+    
+        // articles
+        $router->get('articles', ['as' => 'articles.index', 'uses' => 'Frontend\ArticleController@index']);
+        $router->get('articles/{slug}', ['as' => 'articles.show', 'uses' => 'Frontend\ArticleController@show']);
+    
+        // articles
+        $router->get('articles', ['as' => 'articles.index', 'uses' => 'Frontend\ArticleController@index']);
+        $router->get('articles/{slug}', ['as' => 'articles.show', 'uses' => 'Frontend\ArticleController@show']);
+    
+        // baskets
+        $router->get('baskets', ['as' => 'baskets.index', 'uses' => 'Frontend\BasketController@index']);
+        $router->get('baskets/{id}', ['as' => 'baskets.show', 'uses' => 'Frontend\BasketController@show'])
+            ->where('id', '[0-9]+');
+        
         // search
         $router->get('search', ['as' => 'search.index', 'uses' => 'Frontend\SearchController@index']);
 
         // faq
         $router->get('faq', ['as' => 'questions.index', 'uses' => 'Frontend\QuestionController@index']);
-
+    
+        // contacts
+        $router->get('contacts', ['as' => 'contacts', 'uses' => 'Frontend\PageController@contacts']);
+        
         // feedback
         $router->group(
             [
@@ -77,11 +74,6 @@ $router->group(
                 $router->get(
                     '/index',
                     ['as' => 'profiles.index', 'uses' => 'Frontend\ProfileController@index']
-                );
-
-                $router->get(
-                    '{id}/show',
-                    ['as' => 'profiles.show', 'uses' => 'Frontend\ProfileController@show']
                 );
 
                 $router->get(

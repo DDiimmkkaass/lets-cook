@@ -12,7 +12,6 @@ use App\Events\Backend\NewsDelete;
 use App\Http\Requests\Backend\News\NewsCreateRequest;
 use App\Http\Requests\Backend\News\NewsUpdateRequest;
 use App\Models\News;
-use App\Models\User;
 use App\Services\NewsService;
 use App\Traits\Controllers\AjaxFieldsChangerTrait;
 use App\Traits\Controllers\ProcessTagsTrait;
@@ -25,8 +24,6 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Meta;
-use Redirect;
-use Response;
 
 /**
  * Class NewsController
@@ -34,15 +31,15 @@ use Response;
  */
 class NewsController extends BackendController
 {
-
+    
     use AjaxFieldsChangerTrait;
     use ProcessTagsTrait;
-
+    
     /**
      * @var string
      */
     public $module = "news";
-
+    
     /**
      * @var array
      */
@@ -56,12 +53,12 @@ class NewsController extends BackendController
         'destroy'         => 'news.delete',
         'ajaxFieldChange' => 'news.write',
     ];
-
+    
     /**
      * @var NewsService
      */
     private $newsService;
-
+    
     /**
      * @param \Illuminate\Contracts\Routing\ResponseFactory $response
      * @param \App\Services\NewsService                     $newsService
@@ -69,23 +66,23 @@ class NewsController extends BackendController
     public function __construct(ResponseFactory $response, NewsService $newsService)
     {
         parent::__construct($response);
-
+        
         $this->newsService = $newsService;
-
-        Meta::title(trans('labels.news'));
-
-        $this->breadcrumbs(trans('labels.news'), route('admin.'.$this->module.'.index'));
-
+        
+        Meta::title(trans('labels.blog'));
+        
+        $this->breadcrumbs(trans('labels.blog'), route('admin.'.$this->module.'.index'));
+        
         $this->middleware('slug.set', ['only' => ['store', 'update']]);
     }
-
+    
     /**
      * Display a listing of the resource.
      * GET /news
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Response
+     * @return array|\Bllim\Datatables\json|\Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
@@ -97,7 +94,7 @@ class NewsController extends BackendController
                 'position',
                 'slug'
             );
-
+            
             return $dataTables = Datatables::of($list)
                 ->filterColumn('id', 'where', 'news.id', '=', '$1')
                 ->filterColumn('news_translations.name', 'where', 'news_translations.name', 'LIKE', '%$1%')
@@ -139,108 +136,109 @@ class NewsController extends BackendController
                 ->removeColumn('slug')
                 ->make();
         }
-
+        
         $this->_fillAdditionTemplateData();
-
-        $this->data('page_title', trans('labels.news'));
+        
+        $this->data('page_title', trans('labels.blog'));
         $this->breadcrumbs(trans('labels.news_list'));
-
+        
         return $this->render('views.'.$this->module.'.index');
     }
-
+    
+    
     /**
      * Show the form for creating a new resource.
      * GET /news/create
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
         $this->data('model', new News);
-
-        $this->data('page_title', trans('labels.news_create'));
-
-        $this->breadcrumbs(trans('labels.news_create'));
-
+        
+        $this->data('page_title', trans('labels.news_creating'));
+        
+        $this->breadcrumbs(trans('labels.news_creating'));
+        
         $this->_fillAdditionTemplateData();
-
+        
         return $this->render('views.'.$this->module.'.create');
     }
-
+    
     /**
      * Store a newly created resource in storage.
      * POST /news
      *
      * @param NewsCreateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(NewsCreateRequest $request)
     {
         DB::beginTransaction();
-
+        
         try {
             $model = new News($request->all());
             $model->save();
-
+            
             $this->newsService->setExternalUrl($model);
-
+            
             $this->processTags($model);
-
+            
             DB::commit();
-
+            
             FlashMessages::add('success', trans('messages.save_ok'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
-
+            
             FlashMessages::add('error', trans('messages.save_failed'));
-
+            
             return redirect()->back()->withInput();
         }
     }
-
+    
     /**
      * Display the specified resource.
      * GET /news/{id}
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function show($id)
     {
         return $this->edit($id);
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      * GET /news/{id}/edit
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit($id)
     {
         try {
             $model = News::with('translations', 'tags')->whereId($id)->firstOrFail();
-
+            
             $this->data('page_title', '"'.$model->name.'"');
-
+            
             $this->breadcrumbs(trans('labels.news_editing'));
-
+            
             $this->_fillAdditionTemplateData($model);
-
+            
             return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         }
     }
-
+    
     /**
      * Update the specified resource in storage.
      * PUT /news/{id}
@@ -248,54 +246,54 @@ class NewsController extends BackendController
      * @param  int              $id
      * @param NewsUpdateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update($id, NewsUpdateRequest $request)
     {
         try {
             $model = News::findOrFail($id);
-
+            
             DB::beginTransaction();
-
+            
             $model->fill($request->all());
             $model->update();
-
+            
             $this->processTags($model);
-
+            
             DB::commit();
-
+            
             FlashMessages::add('success', trans('messages.save_ok'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
             DB::rollBack();
-
+            
             FlashMessages::add("error", trans('messages.update_error'));
         }
-
+        
         return redirect()->back()->withInput();
     }
-
+    
     /**
      * Remove the specified resource from storage.
      * DELETE /news/{id}
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
         try {
             $model = News::findOrFail($id);
-
+            
             if (!$model->delete()) {
                 FlashMessages::add("error", trans("messages.destroy_error"));
             } else {
                 Event::fire(new NewsDelete($id));
-
+                
                 FlashMessages::add('success', trans("messages.destroy_ok"));
             }
         } catch (ModelNotFoundException $e) {
@@ -303,10 +301,10 @@ class NewsController extends BackendController
         } catch (Exception $e) {
             FlashMessages::add("error", trans('messages.delete_error'));
         }
-
+        
         return redirect()->route('admin.'.$this->module.'.index');
     }
-
+    
     /**
      * set to template addition variables for add\update news
      *
@@ -315,7 +313,7 @@ class NewsController extends BackendController
     private function _fillAdditionTemplateData($model = null)
     {
         $this->data('tags', $this->getTagsList());
-
+        
         $this->data('selected_tags', $this->getSelectedTagsList($model));
     }
 }

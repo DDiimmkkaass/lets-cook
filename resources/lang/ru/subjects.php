@@ -7,5 +7,6 @@ return array (
   'new_user' => 'Новый пользователь на сайте',
   'new_user_feedback' => 'Новое сообщение',
   'profile activation' => 'Активация профиля',
-  'tmpl_order_successfully_paid' => 'Оплата заказа'
+  'tmpl_order_successfully_paid' => 'Оплата заказа',
+  'tmpl_order_payment_error' => 'Ошибка оплаты заказа',
 );

@@ -12,62 +12,55 @@ class VariablesSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Faker\Factory::create();
-        $_fakers = make_locales_fakers();
-
         $variables = [
             'stop_ordering_date' => [
-                'type'         => 'weekday',
-                'name'         => 'День закрытие приема заказов',
-                'description'  => 'День недели, когда прекращается прием заявок на текущую неделю',
-                'multilingual' => false,
-                'status'       => true,
+                'type'        => 'weekday',
+                'name'        => 'День закрытие приема заказов',
+                'description' => 'День недели, когда прекращается прием заявок на текущую неделю',
+                'status'      => true,
             ],
             'stop_ordering_time' => [
-                'type'         => 'time',
-                'name'         => 'Время закрытие приема заказов',
-                'description'  => 'Время, когда прекращается прием заявок на текущую неделю',
-                'multilingual' => false,
-                'status'       => true,
+                'type'        => 'time',
+                'name'        => 'Время закрытие приема заказов',
+                'description' => 'Время, когда прекращается прием заявок на текущую неделю',
+                'status'      => true,
             ],
-
+            
             'finalising_reports_date' => [
-                'type'         => 'weekday',
-                'name'         => 'День финализации отчетов',
-                'description'  => 'День недели, когда происходит финализация отчетов',
-                'multilingual' => false,
-                'status'       => true,
+                'type'        => 'weekday',
+                'name'        => 'День финализации отчетов',
+                'description' => 'День недели, когда происходит финализация отчетов',
+                'status'      => true,
             ],
             'finalising_reports_time' => [
-                'type'         => 'time',
-                'name'         => 'Время финализации отчетов',
-                'description'  => 'Время, когда происходит финализация отчетов',
-                'multilingual' => false,
-                'status'       => true,
+                'type'        => 'time',
+                'name'        => 'Время финализации отчетов',
+                'description' => 'Время, когда происходит финализация отчетов',
+                'status'      => true,
+            ],
+            
+            'full_company_name' => [
+                'type'   => 'text',
+                'name'   => 'Полное название компании',
+                'status' => true,
+                'value'  => 'ООО «Доставка Здорового Питания»',
+            ],
+
+            'moscow_phone' => [
+                'type'   => 'text',
+                'name'   => 'Телефон в Москве',
+                'status' => true,
+                'value'  => '8 (499) 390–98–98',
             ],
         ];
-
+        
         foreach ($variables as $key => $variable) {
             if (!Variable::whereKey($key)->first()) {
                 $variable['key'] = $key;
-
-                if ($variable['multilingual'] == true) {
-                    unset($variable['value']);
-
-                    foreach (config('app.locales') as $locale) {
-                        $variable[$locale] = [
-                            'text' => config('app.env') == 'production' ?
-                                '' :
-                                $_fakers[$locale]->{isset($variable['faker']) ? $variable['faker'] : 'realText'}(),
-                        ];
-                    }
-
-                    unset($variable['faker']);
-                }
-
+                
                 $model = new Variable($variable);
                 $model->type = Variable::getTypeKeyByName($variable['type']);
-
+                
                 $model->save();
             }
         }

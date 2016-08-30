@@ -105,20 +105,25 @@ return array (
     'tag.write',
     'tag.delete',
 
-//    'news.create',
-//    'news.read',
-//    'news.write',
-//    'news.delete',
+    'news.create',
+    'news.read',
+    'news.write',
+    'news.delete',
+    
+    'article.create',
+    'article.read',
+    'article.write',
+    'article.delete',
 
 //    'question.create',
 //    'question.read',
 //    'question.write',
 //    'question.delete',
 
-//    'menu.create',
-//    'menu.read',
-//    'menu.write',
-//    'menu.delete',
+    'menu.create',
+    'menu.read',
+    'menu.write',
+    'menu.delete',
 
 //    'banner.create',
 //    'banner.read',

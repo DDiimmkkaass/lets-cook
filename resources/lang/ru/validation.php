@@ -9,7 +9,7 @@ return array (
   'alpha_num' => 'Поле :attribute может содержать только буквы и цифры.',
   'array' => 'Поле :attribute должно быть массивом.',
   'before' => 'В поле :attribute должна быть дата до :date.',
-  'between' =>
+  'between' => 
   array (
     'numeric' => 'Поле :attribute должно быть между :min и :max.',
     'file' => 'Размер файла в поле :attribute должен быть между :min и :max Килобайт(а).',
@@ -29,7 +29,7 @@ return array (
   'in' => 'Выбранное значение для :attribute ошибочно.',
   'integer' => 'Поле :attribute должно быть целым числом.',
   'ip' => 'Поле :attribute должно быть действительным IP-адресом.',
-  'max' =>
+  'max' => 
   array (
     'numeric' => 'Поле :attribute не может быть более :max.',
     'file' => 'Размер файла в поле :attribute не может быть более :max Килобайт(а).',
@@ -37,7 +37,7 @@ return array (
     'array' => 'Количество элементов в поле :attribute не может превышать :max.',
   ),
   'mimes' => 'Поле :attribute должно быть файлом одного из следующих типов: :values.',
-  'min' =>
+  'min' => 
   array (
     'numeric' => 'Поле :attribute должно быть не менее :min.',
     'file' => 'Размер файла в поле :attribute должен быть не менее :min Килобайт(а).',
@@ -54,7 +54,7 @@ return array (
   'required_without' => 'Поле :attribute обязательно для заполнения, когда :values не указано.',
   'required_without_all' => 'Поле :attribute обязательно для заполнения, когда ни одно из :values не указано.',
   'same' => 'Значение :attribute должно совпадать с :other.',
-  'size' =>
+  'size' => 
   array (
     'numeric' => 'Поле :attribute должно быть равным :size.',
     'file' => 'Размер файла в поле :attribute должен быть равен :size Килобайт(а).',
@@ -65,21 +65,21 @@ return array (
   'unique' => 'Такое значение поля :attribute уже существует.',
   'url' => 'Поле :attribute имеет ошибочный формат.',
   'captcha' => 'Неверно введена капча',
-  'custom' =>
+  'custom' => 
   array (
-    'attribute-name' =>
+    'attribute-name' => 
     array (
       'rule-name' => 'custom-message',
     ),
-    'crop_options' =>
+    'crop_options' => 
     array (
-      'x' =>
+      'x' => 
       array (
         'required_with' => 'Вы должны выбрать область на изображении',
       ),
     ),
   ),
-  'attributes' =>
+  'attributes' => 
   array (
     'status' => 'статус',
     'status_id' => 'статус',
@@ -87,7 +87,7 @@ return array (
     'password' => 'пароль',
     'captcha' => 'каптча',
     'groups' => 'группа',
-    'ru' =>
+    'ru' => 
     array (
       'name' => 'название',
     ),
@@ -107,7 +107,6 @@ return array (
     'category_id' => 'категория',
     'category_name' => 'категория',
     'slug' => 'чпу',
-    'src' => 'файл',
     'target' => 'цель',
     'user_id' => 'пользователь',
     'comment' => 'комментарий',
@@ -146,7 +145,6 @@ return array (
     'started_at' => 'начало недели',
     'ended_at' => 'окончание недели',
     'city_id' => 'город',
-    'cooking_time' => 'время приготовления',
     'delivery_date' => 'дата доставки',
     'delivery_time' => 'время доставки',
     'city' => 'город',
@@ -156,6 +154,8 @@ return array (
     'verify_call' => 'позвоните мне',
     'sale_price' => 'цена на продажу',
     'ingredients_home' => 'ингредиенты дома',
+    'cooking_time' => 'время приготовления',
+    'src' => 'файл',
     'payment_method' => 'способ оплаты',
     'additional_parameter' => 'дополнительный параметр',
     'repacking' => 'переупаковка',
@@ -167,8 +167,11 @@ return array (
     'expired_at' => 'дата завершения',
     'users_count' => 'количество пользователей',
     'code' => 'код',
-    'prices.2' => 'цена',
-    'prices.4' => 'цена',
+    'prices' => 
+    array (
+      2 => 'цена',
+      4 => 'цена',
+    ),
   ),
   'recipe steps' => 'Вы должны добавить хотя бы один шаг',
   'recipe ingredients' => 'Вы должны выбрать хотя бы один ингредиент',

@@ -172,22 +172,28 @@ if (!function_exists('domain_get_url')) {
 if (!function_exists('get_templates')) {
     /**
      * @param string $parent_folder
+     * @param bool   $from_files
      *
      * @return string
      */
-    function get_templates($parent_folder = '')
+    function get_templates($parent_folder = '', $from_files = false)
     {
         $templates = [];
         
         if ($parent_folder !== '' && File::exists($parent_folder)) {
-            $folders = File::directories($parent_folder);
+            $items = $from_files ? File::files($parent_folder) : File::directories($parent_folder);
             
-            if (count($folders)) {
-                foreach ($folders as $folder) {
-                    $folder = explode('/', $folder);
-                    $folder = array_pop($folder);
+            if (count($items)) {
+                foreach ($items as $template) {
+                    $template = explode('/', $template);
+                    $template = array_last($template);
                     
-                    $templates[$folder] = $folder;
+                    if ($from_files) {
+                        $template = explode('.', $template);
+                        $template = array_first($template);
+                    }
+                    
+                    $templates[$template] = $template;
                 }
             }
         }
@@ -774,5 +780,15 @@ if (!function_exists('get_excel_sheet_name')) {
         $name = str_replace(['\\', '/'], '_', $name);
         
         return str_limit($name, 31, '');
+    }
+}
+
+if (!function_exists('carbon')) {
+    /**
+     * @return Carbon
+     */
+    function carbon()
+    {
+        return new Carbon();
     }
 }

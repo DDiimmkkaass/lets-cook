@@ -82,7 +82,7 @@ class PageController extends BackendController
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
@@ -149,7 +149,7 @@ class PageController extends BackendController
      * Show the form for creating a new resource.
      * GET /page/create
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -170,7 +170,7 @@ class PageController extends BackendController
      *
      * @param PageCreateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(PageCreateRequest $request)
     {
@@ -206,7 +206,7 @@ class PageController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function show($id)
     {
@@ -219,7 +219,7 @@ class PageController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function edit($id)
     {
@@ -247,7 +247,7 @@ class PageController extends BackendController
      * @param  int              $id
      * @param PageUpdateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update($id, PageUpdateRequest $request)
     {
@@ -289,7 +289,7 @@ class PageController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
@@ -333,5 +333,10 @@ class PageController extends BackendController
             $parents[$item->id] = $item->name;
         }
         $this->data('parents', $parents);
+    
+        $this->data(
+            'templates',
+            get_templates(base_path('resources/themes/'.config('app.theme').'/views/'.$this->module.'/templates'), true)
+        );
     }
 }

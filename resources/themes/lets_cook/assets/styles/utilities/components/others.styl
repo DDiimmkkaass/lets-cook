@@ -1,0 +1,138 @@
+
+// TITLES
+
+.georgia-title
+  margin: 0
+  font-family: $georgia
+  fsh(50px * (310 / 720), 1)
+  font-weight: 700
+  font-style: italic
+  text-transform: lowercase
+
+  +bp('480')
+    fs(50px * (470 / 720))
+
+  +bp('768')
+    fs(50px)
+
+.ptsans-narrow-regular-tittle
+  display: inline-block
+  margin: 0
+  width: 100%
+  text-align: center
+  font-family: $ptsans-narrow-regular
+  fsh(40px * (310 / 720), 3)
+  color: $font-white-1
+  text-decoration: underline
+  text-transform: uppercase
+
+  +bp('480')
+    fs(40px * (470 / 720))
+
+  +bp('768')
+    fs(40px)
+
+  +bp('1024')
+    display: none
+
+
+.static-georgia-title
+  margin: 0
+  text-align: center
+  padding: (135px * (310 / 720)) (20px * (310 / 720)) (65px * (310 / 720))
+  background-color: $bg-black-1
+  font-family: $georgia
+  fsh(50px * (310 / 720), 1)
+  color: $font-yellow-1
+  font-weight: 700
+  font-style: italic
+
+  +bp('480')
+    padding: (135px * (470 / 720)) (20px * (470 / 720)) (65px * (470 / 720))
+    fs(50px * (470 / 720))
+
+  +bp('768')
+    padding: 135px 20px 65px
+    fs(50px)
+
+  +bp('1024')
+    js-display: flex; display: flex
+    justify-content: center
+    align-items: center
+    height: 258px
+    padding: 0
+    fsh(50px, 1.25)
+
+  span
+    display: block
+    margin: 0 auto
+    max-width: 1100px
+
+
+// LOADERS
+
+.green-loader
+
+  &__wrapper
+    absolute: top 70px left 50%
+    transform: translateX(-25%)
+    size: 117px 10px
+
+    +bp('1024')
+      top: 170px
+
+  &__dot
+    float: left
+    size: 10px
+    border-radius: 50%
+    background-color: rgb(0,0,0)
+    background-image: -webkit-linear-gradient(rgba(255,255,255,0.3), transparent), radial-gradient(rgb(101,177,69), rgb(101,177,69))
+    background-position: top center
+    margin: 0 2.5px
+    animation: cssload-bounce 0.52s infinite ease alternate
+    -o-animation: cssload-bounce 0.52s infinite ease alternate
+    -ms-animation: cssload-bounce 0.52s infinite ease alternate
+    -webkit-animation: cssload-bounce 0.52s infinite ease alternate
+    -moz-animation: cssload-bounce 0.52s infinite ease alternate
+
+    &:nth-child(1)
+      animation-delay: -0.09s
+      -o-animation-delay: -0.09s
+      -ms-animation-delay: -0.09s
+      -webkit-animation-delay: -0.09s
+      -moz-animation-delay: -0.09s
+
+    &:nth-child(2)
+      animation-delay: -0.17s
+      -o-animation-delay: -0.17s
+      -ms-animation-delay: -0.17s
+      -webkit-animation-delay: -0.17s
+      -moz-animation-delay: -0.17s
+
+    &:nth-child(3)
+      animation-delay: -0.26s
+      -o-animation-delay: -0.26s
+      -ms-animation-delay: -0.26s
+      -webkit-animation-delay: -0.26s
+      -moz-animation-delay: -0.26s
+
+    &:nth-child(4)
+      animation-delay: -0.35s
+      -o-animation-delay: -0.35s
+      -ms-animation-delay: -0.35s
+      -webkit-animation-delay: -0.35s
+      -moz-animation-delay: -0.35s
+
+    &:nth-child(5)
+      animation-delay: -0.43s
+      -o-animation-delay: -0.43s
+      -ms-animation-delay: -0.43s
+      -webkit-animation-delay: -0.43s
+      -moz-animation-delay: -0.43s
+
+    &:nth-child(6)
+      animation-delay: -0.52s
+      -o-animation-delay: -0.52s
+      -ms-animation-delay: -0.52s
+      -webkit-animation-delay: -0.52s
+      -moz-animation-delay: -0.52s

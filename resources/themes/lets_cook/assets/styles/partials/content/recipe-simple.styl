@@ -1,0 +1,150 @@
+
+/* ----- RECIPE SIMPLE ----- */
+
+.recipe-simple
+  margin-top: 90px
+
+.recipe-simple-basket
+  js-display: flex; display: flex
+  flex-direction: column
+
+  +bp('1024')
+    flex-direction: row
+
+  &__left
+    order: 1
+    width: 100%
+    padding: (45px * (310 / 720)) 2% (55px * (310 / 720)) 3%
+    background-color: $bg-white-1
+
+    +bp('480')
+      padding: (45px * (470 / 720)) 2% (55px * (470 / 720)) 3%
+
+    +bp('768')
+      padding: 45px 2% 55px 3%
+
+    +bp('1024')
+      order: 0
+      width: 50%
+
+
+  &__title
+    text-transform: none
+
+  &__info
+    margin-top: 35px * (310 / 720)
+    js-display: flex; display: flex
+    flex-direction: column
+
+    +bp('480')
+      margin-top: 35px * (470 / 720)
+      flex-direction: row
+      justify-content: space-between
+
+    +bp('768')
+      margin-top: 35px
+
+
+  &__details
+    width: 100%
+
+    +bp('480')
+      width: (290 / 510) * 100%
+
+  &__rating
+    fs(0px)
+
+  &__rating-title, &__count-title, &__time-title
+    margin-right: 18px
+    display: inline-block
+    vertical-align: middle
+    font-family: $georgia
+    fsh(14px, 26px)
+    font-style: italic
+    color: $font-black-1
+
+  &__rating-stars
+    display: inline-block
+    vertical-align: middle
+    fs(0px)
+
+    span
+      display: inline-block
+      vertical-align: top
+      size: 26px 25px
+      background: url('../images/stars-icons.png') -27px 0px no-repeat
+
+      &:not(:last-child)
+        margin-right: 2px
+
+      &[data-active]
+        background-position: 0px 0px
+
+  &__count
+    margin: 22px 0 18px
+    fs(0px)
+
+  &__count-value
+    display: inline-block
+    vertical-align: middle
+    fsh(14px, 34px)
+    font-family: $ptsans-regular
+
+    span
+      display: inline-block
+      margin-right: 12px
+      size: 34px
+      background-color: $bg-red-2
+      border-radius: 50%
+      font-family: $ptsans-narrow-regular
+      fsh(20px, 34px)
+      text-align: center
+      color: $font-yellow-2
+
+  &__time
+    fs(0px)
+
+  &__time-value
+    position: relative
+    display: inline-block
+    vertical-align: middle
+    padding-left: 30px
+    fsh(14px, 34px)
+    font-family: $ptsans-regular
+
+    &::before
+      absolute: top 50% left 0
+      transform: translateY(-50%)
+      content: ''
+      display: inline-block
+      size: 18px
+      background: url('../images/recipe-clock-icon.png') center center / cover no-repeat
+
+  &__tags
+    margin: 30px 0 0; padding: 0; list-style-type: none
+    width: 100%
+    fs(0px)
+
+    +bp('1024')
+      margin: 0
+      width: 50%
+
+    li
+      @extend .transparent-green-regular-button
+      margin: 0 16px 15px 0
+      background-color: $base-bg-color
+
+  &__right
+    order: 0
+    size: 100% auto
+    padding-bottom: (377 / 615) * 100%
+    background: $bg-green-1 center center / cover no-repeat
+
+    +bp('1024')
+      order: 1
+      width: 50%
+      padding: 0
+
+
+
+/* ----- RECIPE SIMPLE ----- */

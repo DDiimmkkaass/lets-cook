@@ -27,6 +27,12 @@
     "bootstrap-validator": "~0.9",
     "jquery.inputmask": "3.2.5",
     "components-font-awesome": "~4.5.0",
-    "moment": "2.14.1"
+    "moment": "2.14.1",
+    "flexibility": "^1.0.6",
+    "pikaday": "^1.4.0"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "mocha": "^2.5.3"
   }
 }

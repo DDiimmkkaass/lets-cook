@@ -21,6 +21,8 @@ class EventServiceProvider extends ServiceProvider
         
         'App\Events\Backend\NewsDelete' => [],
 
+        'App\Events\Backend\ArticleDelete' => [],
+
         'App\Events\Backend\TmplOrderSuccessfullyPaid' => [
             'App\Listeners\Events\Backend\SendUserEmailAboutSuccessfullyPaymentOnTmplOrder',
         ],

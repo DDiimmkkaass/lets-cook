@@ -53,7 +53,7 @@ $router->group(
                 );
                 $router->resource('tag', 'Backend\TagController');
                 
-                // news
+                // blog
                 $router->post(
                     'news/{id}/ajax_field',
                     [
@@ -63,6 +63,17 @@ $router->group(
                     ]
                 );
                 $router->resource('news', 'Backend\NewsController');
+    
+                // articles
+                $router->post(
+                    'article/{id}/ajax_field',
+                    [
+                        'middleware' => ['ajax'],
+                        'as'         => 'admin.article.ajax_field',
+                        'uses'       => 'Backend\ArticleController@ajaxFieldChange',
+                    ]
+                );
+                $router->resource('article', 'Backend\ArticleController');
                 
                 // comments
                 $router->post(

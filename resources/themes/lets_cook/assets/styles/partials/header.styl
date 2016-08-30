@@ -1,0 +1,249 @@
+
+/* ----- HEADER STYLES ----- */
+
+.header
+
+  &__top
+    display: none
+
+    +bp('1024')
+      display: block
+
+  &__main
+    position: relative
+    margin: 0 auto
+
+
+.header-top
+  position: relative
+  background: linear-gradient(left, rgba(29,81,55,1), rgba(101,177,69,1))
+  text-align: center
+  max-height: 34px
+  transition: max-height 0.3s
+
+  &[data-active='false']
+    max-height: 0px
+
+  &__link
+    font-family: $ptsans-narrow-regular
+    fsh(15px, 34px)
+    color: $font-white-1
+    text-transform: uppercase
+    text-decoration: underline
+
+    &:hover
+      text-decoration none
+
+    span
+      font-family: $ptsans-narrow-bold
+
+  &__close
+    absolute: top 0 right 20px
+    font-family: $ptsans-regular
+    fsh(12px, 34px)
+    color: $font-white-1
+    text-decoration: underline
+
+    &:hover
+      text-decoration none
+
+    &::before
+      absolute: top 50% left -24px
+      transform: translateY(-50%)
+      content: ''
+      size: 16px
+      border: 1px solid $font-white-1
+
+    &::after
+      absolute: top 50% left -21px
+      transform: translateY(-50%)
+      content: '\00d7'
+      fs(20px)
+      text-decoration: none
+
+.header-main
+  max-width: 1162px
+  fs(0px)
+
+  +bp('1024')
+    padding: 0 20px
+
+  &__logo
+    absolute: top (15px * (310 / 720)) left (20px * (310 / 720))
+    size: 220px * (310 / 720) auto
+
+    +bp('480')
+      top: 15px * (470 / 720)
+      left: 20px * (470 / 720)
+
+    +bp('768')
+      top: 15px
+      left: 20px
+
+    &[data-page='main']
+
+      +bp('480')
+        width: 220px * (470 / 720)
+
+      +bp('768')
+        width: 220px
+
+    &[data-page='others']
+      +bp('480')
+        width: 220px * (470 / 720)
+
+      +bp('768')
+        width: 220px
+
+      +bp('1024')
+        width: 140px
+
+    img
+      size: 100% auto
+
+
+  &__wrapper
+    js-display: flex
+    display: flex
+    justify-content: space-between
+
+  &__nav
+    display: none
+    vertical-align: top
+
+    &[data-page='main']
+      margin-left: 254px
+
+    &[data-page='others']
+      margin-left: 160px
+
+    +bp('1024')
+      display: block
+
+  &__menu
+    margin-left: auto
+
+
+.header-nav
+
+  &__list
+    margin: 0; padding: 0
+    list-style-type: none
+    fs(0px)
+
+  &__item
+    display: inline-block
+    fsh(13px, 83px)
+
+    &:not(:last-of-type)
+      margin-right: 14px
+
+      +bp('1280')
+        margin-right: 16px
+
+    a
+      display: inline-block
+      text-decoration: none
+      text-transform: uppercase
+      line-height: 35px
+      color: $font-green-1
+
+      &:hover
+        text-decoration: underline
+
+.header-menu
+
+  &__mobile
+    display: block
+
+    +bp('1024')
+      display: none
+
+  &__desktop
+    display: none
+
+    +bp('1024')
+      display: block
+
+
+.menu-mobile
+  list-style-type: none
+  margin: 0
+  padding: 0
+  height: 120px * (310 / 720)
+  fs(0px)
+  text-align: right
+
+  +bp('480')
+    height: 120px * (470 / 720)
+
+  +bp('768')
+    height: 120px
+
+  &__item
+    position: relative
+    display: inline-block
+    size: 120px * (310 / 720)
+    font-family: $fontello
+    color: rgba(white, 0.6)
+    background-color: $bg-green-1
+    border-left: 1px solid rgba(white, 0.6)
+    fsh(60px * (310 / 720), 120px * (310 / 720))
+    text-align: center
+
+    &:hover, &[data-active]
+      background-color: $bg-orange-1
+
+    +bp('480')
+      size: 120px * (470 / 720)
+      fsh(60px * (470 / 720), 120px * (470 / 720))
+
+    +bp('768')
+      size: 120px
+      fsh(60px, 120px)
+
+    &[data-item="basket"]::before
+      content: $icon-basket
+
+    &[data-item="phone"]::before
+      content: $icon-phone
+
+    &[data-item="profile"]::before
+      content: $icon-user-male
+
+    a
+      display: inline-block
+      absolute: top 0 left 0
+      size: 100%
+
+
+.menu-desktop
+  list-style-type: none
+  margin: 0
+  padding: 0
+  height: 83px
+  text-align: right
+  fs(0px)
+
+  &__item
+    display: inline-block
+    fsh(13px, 83px)
+    white-space: nowrap
+    vertical-align: middle
+
+    &:last-of-type
+      padding-left: 14px
+
+      +bp('1280')
+        padding-left: 40px
+
+    a
+      display: inline-block
+      text-decoration: none
+      line-height: 35px
+      color: $font-green-1
+
+      &:hover
+        text-decoration: underline
+
+/* ----- end HEADER STYLES ----- */

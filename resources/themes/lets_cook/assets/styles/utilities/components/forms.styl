@@ -1,0 +1,819 @@
+
+/* ----- FORMS ----- */
+
+// INPUTS
+
+.input-text-large
+  margin: 0 auto
+  size: auto (80px * (310 / 720))
+  padding: 0 10px
+  border: 1px solid $font-black-1
+  outline: none
+  text-align: center
+  color: $font-black-1
+  font-family: $ptsans-caption-regular
+  fsh(40px * (310 / 720), 80px * (310 / 720))
+
+  &::-webkit-input-placeholder
+    color: $font-gray-1
+
+  &::-moz-placeholder
+    color: $font-gray-1
+
+  &:-ms-input-placeholder
+    color: $font-gray-1
+
+  &:-moz-placeholder
+    color: $font-gray-1
+
+  &::placeholder
+    color: $font-gray-1
+
+  +bp('480')
+    padding: 0 15px
+    size: auto (80px * (470 / 720))
+    fsh(40px * (470 / 720), 80px * (470 / 720))
+
+  +bp('768')
+    size: auto 80px
+    padding: 0 20px
+    fsh(40px, 80px)
+
+  +bp('1024')
+    padding: 0 15px
+    text-align: left
+    size: auto 48px
+    fsh(14px, 48px)
+
+  &[data-error]
+    border-color: $bg-red-2
+    box-shadow: 0px 0px 10px 0px $bg-red-2
+
+
+
+.input-text-small
+  margin: 0 auto
+  size: auto (60px * (310 / 720))
+  padding: 0 14px
+  border: 1px solid $font-black-1
+  outline: none
+  text-align: center
+  color: $font-black-1
+  font-family: $ptsans-caption-regular
+  fsh(25px * (310 / 720), 60px * (310 / 720))
+
+  &::-webkit-input-placeholder
+    color: $font-gray-1
+
+  &::-moz-placeholder
+    color: $font-gray-1
+
+  &:-ms-input-placeholder
+    color: $font-gray-1
+
+  &:-moz-placeholder
+    color: $font-gray-1
+
+  &::placeholder
+    color: $font-gray-1
+
+  +bp('480')
+    size: auto (80px * (470 / 720))
+    fsh(25px * (470 / 720), 60px * (470 / 720))
+
+  +bp('768')
+    size: auto 60px
+    fsh(25px, 60px)
+
+  +bp('1024')
+    text-align: left
+    size: auto 40px
+    fsh(14px, 40px)
+
+  &[data-error]
+    border-color: $bg-red-2
+    box-shadow: 0px 0px 10px 0px $bg-red-2
+
+
+
+.input-yellow-small
+  display: inline-block
+  size: 400px 52px
+  padding: 0 20px
+  background-color: $base-bg-color
+  border: 2px solid $bg-orange-5
+  text-align: center
+  font-family: $ptsans-regular
+  fsh(24px, 52px)
+  outline: none
+
+
+.input-order-edit
+  display: inline-block
+  size: 100% auto
+  padding: 0 20px
+  background-color: $base-bg-color
+  border-width: 2px
+  -webkit-appearance: none
+  -moz-appearance: none
+  appearance: none
+  border: 2px solid $bg-orange-7
+  outline: none
+  overflow: hidden
+  fsh(16px, 52px)
+  color: $font-black-2
+  text-transform: uppercase
+
+  &::-webkit-input-placeholder
+    color: $font-gray-3
+    text-transform: none
+
+  &::-moz-placeholder
+    color: $font-gray-3
+    text-transform: none
+
+  &:-ms-input-placeholder
+    color: $font-gray-3
+    text-transform: none
+
+  &:-moz-placeholder
+    color: $font-gray-3
+    text-transform: none
+
+  &::placeholder
+    color: $font-gray-3
+    text-transform: none
+
+
+.textarea-order-edit
+  display: block
+  size: 100% auto
+  padding: 14px 20px
+  background-color: $base-bg-color
+  border-width: 2px
+  -webkit-appearance: none
+  -moz-appearance: none
+  appearance: none
+  border: 2px solid $bg-orange-7
+  outline: none
+  resize: none
+  overflow: hidden
+  fsh(16px, 1.25)
+  color: $font-black-2
+
+  &::-webkit-input-placeholder
+    color: $font-gray-3
+
+  &::-moz-placeholder
+    color: $font-gray-3
+
+  &:-ms-input-placeholder
+    color: $font-gray-3
+
+  &:-moz-placeholder
+    color: $font-gray-3
+
+  &::placeholder
+    color: $font-gray-3
+
+// CHECKBOX
+.square-checkbox
+  js-display: flex; display: flex
+  justify-content: flex-start
+  align-items: flex-start
+
+  &__wrapper
+
+    input[name='addr-date__terms']
+      display: none
+
+      &:checked + label::before
+        content: ''
+
+
+    label
+      position: relative
+      display: inline-block
+      size: 18px
+      border: 1px solid $font-black-1
+      background-color: $base-bg-color
+      cursor: pointer
+
+      +bp('480')
+        size: 22px
+
+      +bp('768')
+        size: 26px
+
+      +bp('1024')
+        size: 18px
+
+      &::before
+        absolute: top 50% left 50%
+        transform: translate(-50%, -50%)
+        size: 10px
+        background-color: $bg-green-1
+
+        +bp('480')
+          size: 12px
+
+        +bp('768')
+          size: 15px
+
+        +bp('1024')
+          size: 10px
+
+  &__text
+    margin-left: 20px * (310 / 720)
+    font-family: $ptsans-regular
+    fsh(27px * (310 / 720), 1.3)
+    cursor: pointer
+
+    +bp('480')
+      margin-left: 20px * (470 / 720)
+      fs(27px * (470 / 720))
+
+    +bp('768')
+      margin-left: 20px
+      fs(20px)
+
+    +bp('1024')
+      margin-left: 10px
+      fs(14px)
+
+
+
+.square-red-checkbox
+  display: inline-block
+  size: auto 22px
+
+  input[type='checkbox'], input[type='radio']
+    display: none
+
+    &:checked + label::after
+      content: ''
+
+  label
+    display: inline-block
+    size: auto 22px
+    position: relative
+    padding-left: 35px
+    font-family: $ptsans-regular
+    fsh(19px, 25px)
+    color: $font-black-2
+    cursor: pointer
+
+    &::before
+      content: ''
+      absolute: top 0 left 0
+      size: 22px
+      background-color: $bg-white-1
+      border: 2px solid $bg-orange-7
+
+
+    &::after
+      absolute: top 5px left 5px
+      size: 12px
+      background-color: $bg-red-3
+
+
+
+.table-checkbox
+  text-align: center
+
+  input[type='checkbox']
+    display: none
+
+    &:checked + label::before
+      content: 'X'
+
+  label
+    display: inline-block
+    size: 43px
+    background-color: $base-bg-color
+    border: 2px solid $bg-orange-7
+    cursor: pointer
+
+    &::before
+      font-family: $fontello
+      fsh(34px, 43px)
+      color: $font-red-2
+
+// SELECT
+.main-select
+  position: relative
+  width: 100%
+  margin-top: 10px
+  background: url('../images/yellow-bg.png') top left repeat
+
+  +bp('1024')
+    background: $base-bg-color url('../images/arrow-down.png') center right no-repeat
+
+  &__wrapper
+    display: inline-block
+    position: relative
+    size: 100% (80px * (310 / 720))
+    padding: 0 10px
+    border: 1px solid $font-black-1
+    outline: none
+    text-align: center
+    background-color: transparent
+    color: $font-gray-1
+    font-family: $ptsans-caption-regular
+    fsh(40px * (310 / 720), 80px * (310 / 720))
+    appearance: none
+    cursor: pointer
+
+    +bp('480')
+      padding: 0 15px
+      height: 80px * (470 / 720)
+      fsh(40px * (470 / 720), 80px * (470 / 720))
+
+    +bp('768')
+      padding: 0 20px
+      height: 80px
+      fsh(40px, 80px)
+
+    +bp('1024')
+      padding: 0 35px 0 14px
+      text-align: left
+      height: 40px
+      fsh(14px, 40px)
+
+
+
+
+.order-select
+  position: relative
+  background: $base-bg-color
+  size: 100% 52px
+  border 2px solid $bg-orange-7
+  overflow: hidden
+
+  &::after
+    content: ''
+    absolute: top 50% right 17px
+    z-index: 1
+    transform: translateY(-50%)
+    size: 0
+    border-style: solid
+    border-width: 18px 13px 0 13px
+    border-color: #a0152c transparent transparent transparent
+
+  select
+    absolute: top 0 left 0
+    z-index: 2
+    size: 100%
+    padding: 0 60px 0 15px
+    background: transparent
+    border: 0
+    border-radius: 0
+    font-family: $ptsans-bold
+    fsh(16px, 52px)
+    color: $font-black-2
+    -webkit-appearance: none
+    -moz-appearance: none
+    appearance: none
+    cursor: pointer
+
+    &::-ms-expand
+      display: none
+
+    +bp('768')
+      padding: 0 60px 0 30px
+      fs(19px)
+
+
+
+// RADIO BUTTONS
+.order-delivery-radio
+
+  input[type='radio']
+    display: none
+
+    &:checked + label
+      background-color: $bg-red-3
+      color: $font-yellow-4
+      text-decoration: none
+      cursor: default
+
+  label
+    display: inline-block
+    size: 100% auto
+    text-align: center
+    font-family: $ptsans-regular
+    fsh(19px, 50px)
+    background-color: $bg-orange-8
+    color: $font-black-2
+    text-decoration: underline
+    cursor: pointer
+
+    &:hover
+      text-decoration: none
+
+
+
+// SUBSCRIBE FORM
+.subscribe-form
+  js-display: inline-flex; display: inline-flex
+  flex-direction: column
+  align-items: center
+  font-family: $ptsans-caption-regular
+  fs(0px)
+
+  +bp('1024')
+    flex-direction: row
+    justify-content: center
+    align-items: flex-start
+
+  input[name='subscribe-mail']
+    width: 640px * (310 / 720)
+
+    +bp('480')
+      width: 640px * (470 / 720)
+
+    +bp('768')
+      width: 640px
+
+    +bp('1024')
+      width: 348px
+
+  input[name='subscribe-submit']
+    margin-top: 40px * (310 / 720)
+    size: (480px * (310 / 720)) (100px * (310 / 720))
+    background-color: $bg-black-1
+    border: none; outline: none
+    border-top-right-radius: 7px
+    border-bottom-right-radius: 7px
+    font-family: $ptsans-caption-regular
+    fsh(40px * (310 / 720), 100px * (310 / 720))
+    color: $font-yellow-2
+    text-transform: uppercase
+    text-decoration: underline
+    cursor: pointer
+
+    +bp('480')
+      margin-top: 40px * (470 / 720)
+      size: (480px * (470 / 720)) (100px * (470 / 720))
+      fsh(40px * (470 / 720), 100px * (470 / 720))
+
+    +bp('768')
+      margin-top: 40px
+      size: 480px 100px
+      fsh(40px, 100px)
+
+    +bp('1024')
+      margin-top: 0
+      size: 162px 48px
+      fsh(13px, 48px)
+      text-decoration: none
+
+
+
+// search-form
+.search-form
+  fs(0px)
+
+  input[name='search-text']
+    vertical-align: top
+    margin: 0 auto
+    size: (348px * (310 / 720)) (48px * (310 / 720))
+    padding: 0 (22px * (310 / 720))
+    border: 1px solid $font-black-1
+    outline: none
+    color: $font-gray-1
+    font-family: $ptsans-caption-regular
+    fsh(15px * (310 / 720), 48px * (310 / 720))
+
+    &::-webkit-input-placeholder
+      color: $font-gray-1
+
+    &::-moz-placeholder
+      color: $font-gray-1
+
+    &:-ms-input-placeholder
+      color: $font-gray-1
+
+    &:-moz-placeholder
+      color: $font-gray-1
+
+    &::placeholder
+      color: $font-gray-1
+
+    +bp('480')
+      padding: 0 (22px * (470 / 720))
+      size: (348px * (470 / 720)) (48px * (470 / 720))
+      fsh(15px * (470 / 720), 48px * (470 / 720))
+
+    +bp('768')
+      padding: 0 22px
+      size: 348px 48px
+      fsh(15px, 48px)
+
+
+  input[name='search-submit']
+    vertical-align: top
+    size: (164px * (310 / 720)) (48px * (310 / 720))
+    background-color: $bg-black-2
+    border: none; outline: none
+    border-top-right-radius: 7px * (310 / 720)
+    border-bottom-right-radius: 7px * (310 / 720)
+    font-family: $ptsans-caption-regular
+    fsh(13px * (310 / 720), 48px * (310 / 720))
+    color: $font-yellow-4
+    text-transform: uppercase
+    text-decoration: none
+    cursor: pointer
+
+    +bp('480')
+      size: (164px * (470 / 720)) (48px * (470 / 720))
+      border-top-right-radius: 7px * (470 / 720)
+      border-bottom-right-radius: 7px * (470 / 720)
+      fsh(13px * (470 / 720), 48px * (470 / 720))
+
+    +bp('768')
+      border-top-right-radius: 7px
+      border-bottom-right-radius: 7px
+      size: 164px 48px
+      fsh(13px, 48px)
+
+    &:hover
+      text-decoration: underline
+
+
+// POPUP BLOCK
+.pop-up
+  fixed: top 0 left 0
+  z-index: 9999
+  size: 100%
+  opacity: 0; visibility: hidden
+  will-change: opacity, visibility
+  transition: all 0.5s
+
+  &[data-active]
+    opacity: 1; visibility: visible
+
+  &__close-layout
+    absolute: top 0 left 0
+    size: 100%
+    z-index: -1
+
+  &__wrapper
+    absolute: top 50% left 50%
+    transform: translate(-50%, -50%)
+    size: 85% auto
+    max-width: 465px
+    max-height: 80%
+    padding: 15px 25px 20px
+    background-color: $bg-yellow-1
+    box-shadow: 0px 0px 30px 0px rgba(0,0,0,0.4)
+    overflow: auto
+
+    +bp('1024')
+      padding: 35px 55px 45px
+
+  &__title
+    font-family: $ptsans-bold
+    padding-right: 15px
+    fsh(16px, 1)
+    color: $font-black-1
+
+    +bp('480')
+      fs(18px)
+
+    +bp('768')
+      fs(20px)
+
+  &__content
+    margin-top: 20px
+    fsh(14px, 1.25)
+    color: $font-black-1
+
+    +bp('1024')
+      margin-top: 35px
+
+  &__close
+    absolute: top 0 right 0
+    size: 37px
+    cursor: pointer
+
+    &::before, &::after
+      content: ''
+      absolute: top 50% left 50%
+      size: 27px 4px
+      background-color: $bg-black-1
+      border-radius: 3px
+
+    &::before
+      transform: translate(-50%, -50%) rotate(-45deg);
+
+    &::after
+      transform: translate(-50%, -47%) rotate(45deg);
+
+
+.sign-in
+  @extend .pop-up
+
+  &__form
+    js-display: flex; display: flex
+    flex-direction: column
+
+  input[name='sign-in__mail']
+    width: 100%
+
+  input[name='sign-in__pass']
+    margin-top: 15px
+    width: 100%
+
+  input[name='sign-in__submit']
+    margin-top: 15px
+    width: 100%
+
+  &__reg-button
+    display: inline-block
+    margin-top: 25px
+    width: 100%
+
+    +bp('480')
+      margin-top: 35px
+
+    +bp('768')
+      margin-top: 45px
+
+    span
+      display: none
+
+      +bp('1024')
+        display: inline
+
+
+.sign-out
+  @extend .pop-up
+
+  &__wrapper
+    size: 85% auto
+    max-width: 1070px
+    padding: (55px * (310 / 1070)) (35px * (310 / 1070)) (50px * (310 / 1070))
+
+    +bp('480')
+      padding: (55px * (470 / 1070)) (35px * (470 / 1070)) (50px * (470 / 1070))
+
+    +bp('768')
+      padding: (55px * (760 / 1070)) (35px * (760 / 1070)) (50px * (760 / 1070))
+
+    +bp('1024')
+      padding: 55px 35px 50px
+
+  &__title
+    text-align: center
+    font-family: $georgia
+    fsh(50px * (310 / 720), 1)
+    font-weight: 700
+    font-style: italic
+    text-transform: lowercase
+
+    +bp('480')
+      fs(50px * (470 / 720))
+
+    +bp('768')
+      fs(50px)
+
+    +bp('1024')
+      fs(50px)
+
+  &__form
+    js-display: flex; display: flex
+    flex-direction: column
+
+    +bp('1024')
+      flex-direction: row
+
+
+  &__side
+    width: 100%
+    js-display: flex; display: flex
+    flex-direction: column
+    justify-content: space-between
+
+    +bp('1024')
+      width: 50%
+
+    &[data-reg='left']
+      background: url('../images/yellow-bg.png') top left
+      padding: 15px
+
+      +bp('480')
+        padding: 30px
+
+      & > input
+        margin-bottom: 15px
+        width: 100%
+
+        +bp('480')
+          margin-bottom: 25px
+
+        +bp('768')
+          margin-bottom: 35px
+
+        &:last-child
+          margin-bottom: 0
+
+    &[data-reg='right']
+      padding: 20px 10px 0
+
+      +bp('768')
+        padding: 30px 30px 0
+
+      +bp('1024')
+        padding: 8px 50px 0
+
+      input[name='sign-out__birthday']
+        margin-top: 10px
+        width: 100%
+
+      input[name='sign-out__submit']
+        width: 100%
+
+
+  &__form-title
+    margin-bottom: 15px
+    font-family: $ptsans-narrow-bold
+    fsh(20px, 1)
+    color: $font-black-1
+
+    +bp('480')
+      margin-bottom: 25px
+
+  &__form-desc
+    fsh(14px, 1.25)
+    margin-bottom: 20px
+
+    +bp('768')
+      margin-bottom: 30px
+
+    +bp('1024')
+      margin-bottom: 0
+
+  &__radio-wrapper
+    margin-bottom: 20px
+
+    +bp('768')
+      margin-bottom: 30px
+
+    +bp('1024')
+      margin-bottom: 0
+
+  &__radio
+    fsh(14px, 17px)
+
+    td:nth-child(2)
+      padding: 0 15px
+      text-align: center
+
+      input[name='sign-out__radio']
+        display: none
+
+        &:checked + label::before
+          content: ''
+
+
+      label
+        position: relative
+        display: inline-block
+        size: 17px
+        border: 2px solid $font-black-1
+        border-radius: 50%
+        background-color: $base-bg-color
+        cursor: pointer
+
+        &::before
+          absolute: top 3px left 3px
+          size: 7px
+          background-color: $bg-green-1
+          border-radius: 50%
+
+  &__birthday
+    margin-bottom: 20px
+
+    +bp('768')
+      margin-bottom: 30px
+
+    +bp('1024')
+      margin-bottom: 0
+
+    label
+      fsh(14px, 1.25)
+
+  &__about
+    margin-bottom: 20px
+
+    +bp('768')
+      margin-bottom: 30px
+
+    +bp('1024')
+      margin-bottom: 0
+
+    label
+      fsh(14px, 1.25)
+
+/* ----- end FORMS ----- */

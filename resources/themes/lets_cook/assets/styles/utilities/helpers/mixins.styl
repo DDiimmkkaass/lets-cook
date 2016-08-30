@@ -1,0 +1,41 @@
+
+// Rem with pixel fallback
+fsh($size, $height)
+	font-size: $size
+	font-size: unit(($size / $base-font-size), 'rem')
+	line-height: $height
+
+fs($size)
+	font-size: $size
+	font-size: unit(($size / $base-font-size), 'rem')
+
+
+// transition FIX
+transitionFix()
+	backface-visibility: hidden
+	transform: translate3d(0, 0, 0)
+
+
+// Query Breakpoints
+$media_queries = {
+	'320'	: 'only screen and (min-width: 310px)',
+	'480'	: 'only screen and (min-width: 470px)',
+	'768'	: 'only screen and (min-width: 760px)',
+	'980'	: 'only screen and (min-width: 970px)',
+	'1024' 	: 'only screen and (min-width: 1020px)',
+	'1280' 	: 'only screen and (min-width: 1270px)',
+	'1366'	: 'only screen and (min-width: 1360px)',
+	'1600'	: 'only screen and (min-width: 1590px)',
+	'1920'	: 'only screen and (min-width: 1910px)'
+}
+
+bp($breakpoints)
+	$conditions = ()
+
+	for $breakpoint in $breakpoints
+		push($conditions, $media_queries[$breakpoint])
+
+	$conditions = join(", ", $conditions)
+
+	@media $conditions
+		{block}

@@ -1,0 +1,344 @@
+
+/* ----- BUTTONS ----- */
+
+.green-long-button
+  display: inline-block
+  size: 248px 35px
+  background-color: $bg-green-2
+  border-radius: 7px
+  text-align: center
+  text-transform: uppercase
+  text-decoration: none
+  fsh(13px, 35px)
+  color: $font-white-1
+  cursor: pointer
+  border: none; outline: none
+  font-family: $ptsans-caption-regular
+
+  +bp('480')
+    height: 50px
+    fsh(16px, 50px)
+
+  +bp('768')
+    height: 55px
+    fsh(18px, 55px)
+
+  +bp('1024')
+    height: 48px
+    fsh(13px, 48px)
+
+.green-large-button
+  display: inline-block
+  size: 100% (120px * (310 / 720))
+  padding: 0
+  background-color: $bg-green-1
+  text-align: center
+  text-transform: uppercase
+  text-decoration: underline
+  fsh(60px * (310 / 720), 120px * (310 / 720))
+  color: $font-white-1
+  cursor: pointer
+  border: none; outline: none
+  font-family: $ptsans-narrow-bold
+
+  +bp('480')
+    size: 100% (120px * (470 / 720))
+    fsh(60px * (470 / 720), 120px * (470 / 720))
+
+  +bp('768')
+    size: 100% 120px
+    fsh(60px, 120px)
+
+
+.yellow-small-button
+  display: inline-block
+  position: relative
+  size: 158px 48px
+  border: 2px solid $font-yellow-2
+  border-radius: 7px
+  text-align: center
+  fsh(13px, 48px)
+  text-transform: uppercase
+  text-decoration: none
+  color: $font-yellow-2
+  overflow: hidden
+  cursor: pointer
+  font-family: $ptsans-caption-regular
+
+  &:hover::before
+    left: 150%
+    transition: all 0.75s cubic-bezier(.19,1,.22,1)
+
+  &::before
+    background: #fff
+    content: ""
+    height: 155px
+    left: -80%
+    opacity: .35
+    position: absolute
+    top: -65px
+    transform: rotate(35deg)
+    transition: all .55s cubic-bezier(.19,1,.22,1)
+    width: 50px
+    z-index: -1
+
+.yellow-long-button
+  display: inline-block
+  position: relative
+  size: 248px 48px
+  border: 2px solid $font-yellow-2
+  border-radius: 7px
+  text-align: center
+  font-family: $ptsans-caption-bold
+  fsh(13px, 48px)
+  text-transform: uppercase
+  text-decoration: none
+  color: $font-yellow-2
+  overflow: hidden
+  cursor: pointer
+  font-family: $ptsans-caption-regular
+
+  &:hover::before
+    left: 150%
+    transition: all 0.75s cubic-bezier(.19,1,.22,1)
+
+  &::before
+    background: #fff
+    content: ""
+    height: 155px
+    left: -80%
+    opacity: .35
+    position: absolute
+    top: -65px
+    transform: rotate(35deg)
+    transition: all .55s cubic-bezier(.19,1,.22,1)
+    width: 50px
+
+.black-tiny-button
+  display: inline-block
+  size: 102px 32px
+  background-color: $bg-black-1
+  border-radius: 4px
+  text-align: center
+  fsh(13px, 32px)
+  text-transform: uppercase
+  text-decoration: none
+  color: $font-yellow-2
+  cursor: pointer
+  border: none; outline: none
+  font-family: $ptsans-caption-regular
+
+  +bp('480')
+    size: 140px 50px
+    fsh(16px, 50px)
+
+  +bp('768')
+    size: 140px 50px
+    fsh(16px, 50px)
+
+  +bp('1024')
+    size: 102px 32px
+    fsh(13px, 32px)
+
+.black-short-button
+  display: inline-block
+  size 193px 48px
+  background-color: $bg-black-1
+  border-radius: 7px
+  text-align: center
+  fsh(13px, 48px)
+  text-transform: uppercase
+  text-decoration: none
+  color: $font-yellow-2
+  cursor: pointer
+  border: none; outline: none
+  font-family: $ptsans-caption-regular
+
+  +bp('480')
+    height: 50px
+    fsh(16px, 50px)
+
+  +bp('768')
+    height: 55px
+    fsh(18px, 55px)
+
+  +bp('1024')
+    height: 48px
+    fsh(13px, 48px)
+
+.black-long-button
+  display: inline-block
+  size 248px 35px
+  background-color: $bg-black-1
+  border-radius: 7px
+  text-align: center
+  fsh(12px, 35px)
+  text-transform: uppercase
+  text-decoration: none
+  color: $font-yellow-2
+  cursor: pointer
+  border: none; outline: none
+  font-family: $ptsans-caption-regular
+
+  +bp('480')
+    height: 50px
+    fsh(16px, 50px)
+
+  +bp('768')
+    height: 55px
+    fsh(18px, 55px)
+
+  +bp('1024')
+    height: 48px
+    fsh(13px, 48px)
+
+.black-high-button
+  size: auto (80px * (310 / 720))
+  background: $bg-black-1
+  outline: none
+  appearance: none
+  border: none
+  cursor: pointer
+  font-family: $ptsans-narrow-regular
+  color: $font-white-1
+  fsh(32px * (310 / 720), 80px * (310 / 720))
+
+  &:hover
+    text-decoration: underline
+
+  +bp('480')
+    size: auto (80px * (470 / 720))
+    fsh(32px * (470 / 720), 80px * (470 / 720))
+
+  +bp('768')
+    size: auto 80px
+    fsh(32px, 80px)
+
+.transparent-large-button
+  display: inline-block
+  size: auto (100px * (310 / 720))
+  padding: 0 15px
+  background-color: transparent
+  border: 2px solid $bg-yellow-1
+  text-align: center
+  text-transform: uppercase
+  text-decoration: underline
+  font-family: $ptsans-narrow-regular
+  fsh(38px * (310 / 720), 100px * (310 / 720))
+
+  +bp('480')
+    height: 100px * (470 / 720)
+    fsh(38px * (470 / 720), 100px * (470 / 720))
+
+  +bp('768')
+    height: 100px
+    fsh(38px, 100px)
+
+  +bp('1024')
+    height: 75px
+    font-family: $ptsans-regular
+    fsh(13px, 75px)
+
+    +bp('1024')
+      text-decoration: none
+
+
+.checkbox-button
+
+  input[type='checkbox']
+    display: none
+
+    &:checked + label
+      background-color: $bg-red-2
+
+  label
+    display: inline-block
+    size: 102px 32px
+    background-color: $bg-black-1
+    border-radius: 4px
+    text-align: center
+    fsh(13px, 32px)
+    text-transform: uppercase
+    text-decoration: none
+    color: $font-yellow-2
+    cursor: pointer
+    border: none; outline: none
+    font-family: $ptsans-caption-regular
+
+    +bp('480')
+      size: 140px 50px
+      fsh(16px, 50px)
+
+    +bp('768')
+      size: 140px 50px
+      fsh(16px, 50px)
+
+    +bp('1024')
+      size: 102px 32px
+      fsh(13px, 32px)
+
+
+
+
+.white-small-button
+  display: inline-block
+  size: auto 33px
+  min-width: 75px
+  padding: 0 13px
+  background-color: $base-bg-color
+  border: 1px solid $bg-black-1
+  border-radius: 4px
+  text-align: center
+  font-family: $ptsans-caption-regular
+  fsh(13px, 33px)
+  text-transform: uppercase
+  cursor: pointer
+
+  &:hover, &[data-active]
+    background-color: $bg-green-1
+    border-color: $bg-green-1
+    color: $font-white-1
+
+  &[data-active]
+    cursor: default
+
+
+.wide-orange-button
+  display: inline-block
+  size: 240px 52px
+  background-color: $bg-orange-6
+  text-align: center
+  font-family: $ptsans-regular
+  fsh(21px, 52px)
+  color: $font-black-1
+  text-decoration: underline
+  border: none; outline: none
+  cursor: pointer
+
+  &:hover
+    text-decoration: none
+
+
+.transparent-green-regular-button
+  display: inline-block
+  size: auto 32px
+  min-width: 85px
+  padding: 0 15px
+  border: 1px solid $bg-green-1
+  border-radius: 4px
+  text-align: center
+  font-family: $ptsans-regular
+  color: $font-green-2
+  fsh(13px, 32px)
+  text-transform: uppercase
+  cursor: pointer
+
+  &:hover, &[data-active]
+    background-color: $bg-green-1
+    color: $font-white-1
+
+  &[data-active]
+    cursor: default
+
+
+/* ----- end BUTTONS ----- */

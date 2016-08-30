@@ -1,0 +1,163 @@
+
+/* ----- HOW IT WORKS ----- */
+
+.how-works
+
+  &__title
+    background-color: $bg-black-1
+    color: $font-yellow-3
+
+    +bp('1024')
+      color: $font-white-1
+
+.how-works-content
+
+  &__list
+    margin: 0; padding: 0; list-style-type: none
+
+  &__item
+    position: relative
+
+    &:nth-of-type(1)
+      background-color: $bg-orange-3
+      z-index: 5
+
+      &::after
+        content: ''
+        border-color: $bg-orange-3 transparent transparent transparent
+
+    &:nth-of-type(2)
+      background-color: $bg-white-1
+      z-index: 4
+
+      &::after
+        content: ''
+        border-color: $bg-white-1 transparent transparent transparent
+
+    &:nth-of-type(3)
+      background-color: $bg-green-1
+      z-index: 3
+
+      &::after
+        content: ''
+        border-color: $bg-green-1 transparent transparent transparent
+
+    &:nth-of-type(4)
+      background: $bg-green-6-gradient
+      z-index: 2
+
+      &::after
+        content: ''
+        border-color: $bg-green-6 transparent transparent transparent
+
+      .how-works-content__right
+        color: $font-white-1
+
+    &:nth-of-type(5)
+      background: $bg-green-5
+      z-index: 1
+
+      .how-works-content__right
+        color: $font-white-1
+
+    &::after
+      absolute: bottom (-19px * (310 / 720)) left 50%
+      z-index: 2
+      transform: translateX(-50%) rotate(360deg)
+      size: 0
+      border-style: solid
+      border-width: (21px * (310 / 720)) (20px * (310 / 720)) 0 (20px * (310 / 720))
+
+      +bp('480')
+        bottom: -18px * (470 / 720)
+        border-width: (21px * (470 / 720)) (20px * (470 / 720)) 0 (20px * (470 / 720))
+
+      +bp('768')
+        bottom: -20px
+        border-width: 21px 20px 0 20px
+
+  &__wrapper
+    margin: 0 auto
+    padding: (40px * (310 / 720)) (20px * (310 / 720)) (55px * (310 / 720))
+
+    +bp('480')
+      padding: (40px * (470 / 720)) (20px * (470 / 720)) (55px * (470 / 720))
+
+    +bp('768')
+      padding: 40px 0 55px
+      width: 700px
+
+  &__number
+    margin: 0 auto
+    size: 69px * (310 / 720)
+    background-color: $bg-black-1
+    border-radius: 50%
+    text-align: center
+    font-family: $georgia
+    font-style: italic
+    font-weight: bold
+    fsh(40px * (310 / 720), 75px * (310 / 720))
+    color: $font-yellow-4
+
+    +bp('480')
+      size: 69px * (470 / 720)
+      fsh(40px * (470 / 720), 75px * (470 / 720))
+
+    +bp('768')
+      size: 69px
+      fsh(50px, 62px)
+
+  &__main
+    margin-top: 30px * (310 / 720)
+    js-display: flex; display: flex
+    justify-content: space-between
+    align-items: center
+
+    +bp('480')
+      margin-top: 30px * (470 / 720)
+
+    +bp('768')
+      margin-top: 30px
+
+  &__img
+    width: (176 / 700) * 100%
+    padding-bottom: (176 / 700) * 100%
+    background: $bg-green-1 center center / cover no-repeat
+    border-radius: 50%
+
+  &__right
+    width: ((700 - 176 - (60 * (310 / 720))) / 700) * 100%
+    color: $font-black-1
+
+    +bp('480')
+      width: ((700 - 176 - (60 * (470 / 720))) / 700) * 100%
+
+    +bp('768')
+      width: ((700 - 176 - 60) / 700) * 100%
+
+  &__title
+    margin: 0
+    font-family: $ptsans-narrow-bold
+    fsh(39px * (310 / 720), 1.15)
+
+    +bp('480')
+      fs(39px * (470 / 720))
+
+    +bp('768')
+      fs(39px)
+
+  &__desc
+    margin-top: 30px * (310 / 720)
+    font-family: $ptsans-regular
+    fsh(16px * (310 / 720), 1.25)
+
+    +bp('480')
+      margin-top: 30px * (470 / 720)
+      fs(16px * (470 / 720))
+
+    +bp('768')
+      margin-top: 30px
+      fs(16px)
+
+
+/* ----- end HOW IT WORKS ----- */

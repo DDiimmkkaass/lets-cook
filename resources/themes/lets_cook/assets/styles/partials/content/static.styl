@@ -1,0 +1,62 @@
+
+/* ----- STATIC STYLES ----- */
+
+.static
+
+  &__title
+    background-color: $bg-orange-3
+    color: $font-black-1
+
+.static-content
+  padding: (80px * (310 / 720)) 0 (100px * (310 / 720))
+
+  +bp('480')
+    padding: (80px * (470 / 720)) 0 (100px * (470 / 720))
+
+  +bp('768')
+    padding: 80px 0 100px
+
+  &__wrapper
+    margin: auto (20px * (310 / 720))
+
+    +bp('480')
+      margin: auto (20px * (470 / 720))
+
+    +bp('768')
+      margin: auto 20px
+
+    +bp('1024')
+      margin: 0 auto
+      max-width: 980px
+
+    h2
+      margin: 0
+      font-family: $ptsans-caption-bold
+      font-weight: normal
+      fsh(18px, 1)
+
+    h3
+      margin: (55px * (310 / 720)) 0 0
+      font-weight: normal
+      font-family: $georgia
+      font-style: italic
+      fsh(20px, 1)
+
+      +bp('480')
+        margin: (55px * (470 / 720)) 0 0
+
+      +bp('768')
+        margin: 55px 0 0
+
+    p
+      margin: (20px * (310 / 720)) 0
+      font-family: $ptsans-regular
+      fsh(14px, 1.25)
+
+      +bp('480')
+        margin: (20px * (470 / 720)) 0
+
+      +bp('768')
+        margin: 20px 0
+
+/* ----- end STATIC STYLES ----- */

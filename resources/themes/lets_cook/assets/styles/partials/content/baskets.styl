@@ -1,0 +1,373 @@
+
+/* ----- BASKET ----- */
+
+// BASKETS TOP
+.baskets-top
+
+  &__title
+    padding: (140px * (310 / 720)) 0 (50px * (310 / 720))
+    background-color: $bg-red-1
+    color: $font-yellow-3
+    text-align: center
+    text-transform: none
+
+    +bp('480')
+      padding: (140px * (470 / 720)) 0 (50px * (470 / 720))
+
+    +bp('768')
+      padding: 140px 0 50px
+
+    +bp('1024')
+      padding: 50px 0 30px
+      background-color: transparent
+      color: $font-black-1
+      text-transform: lowercase
+
+  &__filter
+    display: none
+
+    +bp('1024')
+      display: block
+
+.baskets-filter
+
+  &__desc
+    max-width: 980px
+    margin: 0 auto 10px
+    fsh(14px, 1.3)
+
+  &__panel
+    padding: 18px 0
+    background: url('../images/transparent-bg.png') top left repeat
+
+  &__panel-list
+    margin: 0 auto; padding: 0; list-style-type: none
+    max-width: 980px
+    js-display: flex; display: flex
+    justify-content: space-between
+    fs(0px)
+
+  &__panel-title
+    margin: 0 7px 0 0
+    display: inline-block
+    fsh(14px, 33px)
+    font-weight: normal
+
+  &__panel-subList
+    display: inline-block
+    margin: 0; padding: 0; list-style-type: none
+    fs(0px)
+
+  &__panel-subItem
+    @extend .white-small-button
+
+    &:not(:last-of-type)
+      margin-right: 2px
+
+
+.baskets-main
+  padding-bottom: 120px * (310 / 720)
+
+  +bp('480')
+    padding-bottom: 120px * (470 / 720)
+
+  +bp('768')
+    padding-bottom: 120px
+
+  +bp('1024')
+    padding: 50px 0 65px
+
+  &__list
+    margin: 0 auto; padding: 0px; list-style-type: none
+    js-display: flex; display: flex
+    flex-wrap: wrap
+    width: 100%
+    color: $font-black-1
+
+    +bp('1024')
+      max-width: 980px
+
+  &__item
+    width: 50%
+    height: auto
+    overflow: hidden
+
+    +bp('1024')
+      width: 100%
+
+      &:not(:last-of-type)
+        margin-bottom: 50px
+
+    &[data-hidden]
+      height: 0px
+      margin-bottom: 0
+
+.baskets-main-item
+  js-display: flex; display: flex
+  flex-direction: column
+
+  &__top
+    order: 1
+    js-display: flex; display: flex
+    flex-direction: column
+    padding: (20px * (310 / 720)) 0 (15px * (310 / 720))
+    background-color: transparent
+
+    +bp('480')
+      padding: (20px * (470 / 720)) 0 (15px * (470 / 720))
+
+    +bp('768')
+      padding: 20px 0 15px
+
+    +bp('1024')
+      order: 0
+      flex-direction: row
+      justify-content: space-between
+      align-items: flex-start
+      padding: 0
+      background-color: $base-bg-color !important
+
+  &__title
+    margin: 0
+    text-align: center
+
+    +bp('1024')
+      margin: 22px 0 16px
+      text-align: left
+
+    span[data-device='mobile']
+      display: inline-block
+      font-family: $ptsans-narrow-bold
+      fsh(42px * (310 / 720), 1)
+      color: $font-yellow-2
+      text-transform: uppercase
+      text-decoration: underline
+
+      +bp('480')
+        fs(42px * (470 / 720))
+
+      +bp('768')
+        fs(42px)
+
+      +bp('1024')
+        display: none
+
+    span[data-device='desktop']
+      display: none
+      text-align: left
+      font-family: $ptsans-narrow-bold
+      color: $font-black-1
+      font-style: normal
+      fs(48px)
+
+      +bp('1024')
+        display: inline-block
+
+
+
+  &__count-list
+    margin: 0
+    padding: (10px * (310 / 720)) 0
+    list-style-type: none
+    text-align: center
+    fs(0px)
+
+    +bp('480')
+      padding: (10px * (470 / 720)) 0
+
+    +bp('768')
+      padding: 10px 0
+
+    +bp('1024')
+      padding: 0
+      text-align: left
+
+  &__count-item
+    display: inline-block
+
+    &:not(:last-of-type)
+      margin-right: 60px * (310 / 720)
+
+      +bp('480')
+        margin-right: 60px * (470 / 720)
+
+      +bp('768')
+        margin-right: 60px
+
+      +bp('1024')
+        margin-right: 50px * (310 / 720)
+
+    span:nth-child(1)
+      display: block
+      margin: 0 auto
+      size: 60px * (310 / 720)
+      border-radius: 50%
+      background-color: $bg-red-1
+      text-align: center
+      color: $font-white-1
+      fsh(38px * (310 / 720), 60px * (310 / 720))
+      font-family: $georgia
+      font-style: italic
+      font-weight: bold
+
+      +bp('480')
+        size: 60px * (470 / 720)
+        fsh(38px * (470 / 720), 60px * (470 / 720))
+
+      +bp('768')
+        size: 60px
+        fsh(38px, 60px)
+
+      +bp('1024')
+        margin: 0
+        vertical-align: middle
+        display: inline-block
+        size: 50px
+        font-family: $ptsans-narrow-regular
+        font-style: normal
+        font-weight: normal
+        fsh(30px, 50px)
+        color: $font-yellow-2
+
+    span:nth-child(2)
+      display: block
+      text-align: center
+      fsh(14px * (310 / 720), 1.3)
+      color: $font-yellow-1
+
+      +bp('480')
+        fs(14px * (470 / 720))
+
+      +bp('768')
+        fs(14px)
+
+      +bp('1024')
+        margin-left: 12px
+        vertical-align: middle
+        display: inline-block
+        fsh(14px, 50px)
+        color: $font-black-1
+
+  &__price
+    text-align: center
+    font-family: $ptsans-narrow-bold
+    color: $font-yellow-1
+    fsh(46px * (310 / 720), 1)
+
+    +bp('480')
+      fs(46px * (470 / 720))
+
+    +bp('768')
+      fs(46px)
+
+    +bp('1024')
+      fs(60px)
+      color: $font-black-1
+
+    &[data-device='mobile']
+      +bp('1024')
+        display: none
+
+    &[data-device='desktop']
+      display: none
+
+      +bp('1024')
+        display: block
+
+    span
+      margin-left: 5px
+
+      +bp('480')
+        margin-left: 8px
+
+      +bp('768')
+        margin-left: 12px
+
+      +bp('1024')
+        margin-left: 10px
+        fs(30px)
+        font-family: $ptsans-narrow-regular
+
+  &__main
+      order: 0
+
+      +bp('1024')
+        order: 1
+        margin-top: 23px
+
+
+  &__right
+    text-align: center
+
+  &__list
+    display: none
+    margin: 0; padding: 0; list-style-type: none
+
+    +bp('1024')
+      js-display: flex; display: flex
+      flex-wrap: wrap
+
+  &__item
+    width: (976px / 5)
+
+    &:not(:last-of-type)
+      margin-right: 1px
+
+  &__img
+    size: 100% 134px
+    background: $bg-green-1 center center / cover no-repeat
+
+  &__main-title
+    display: none
+    margin: 0
+    font-family: $ptsans-regular
+    fsh(14px, 1.3)
+    color: $font-yellow-2
+
+    +bp('1024')
+      display: block
+      padding: 15px 28px
+
+  &__link
+    display: block
+    text-decoration: none
+
+  &__item-title
+    margin: 0
+    padding: 9px 12px
+    background-color: $bg-green-2 // default -- need to set own in HTML
+    color: $font-yellow-2 // default -- need to SET in HTML
+    font-family: $ptsans-narrow-bold
+    fsh(14px, 1.25)
+
+  &__make-order
+    margin-top: 15px * (310 / 720)
+    display: inline-block
+    size: (300px * (310 / 720)) (60px * (310 / 720))
+    background-color: $bg-green-1
+    font-family: $ptsans-narrow-regular
+    fsh(30px * (310 / 720), 2)
+    color: $font-white-1
+    text-transform: uppercase
+
+    +bp('480')
+      margin-top: 15px * (470 / 720)
+      size: (300px * (470 / 720)) (60px * (470 / 720))
+      fs(30px * (470 / 720))
+
+    +bp('768')
+      margin-top: 15px
+      size: 300px 60px
+      fs(30px)
+
+    +bp('1024')
+      margin-top: 20px
+      size 193px 48px
+      background-color: $bg-black-1
+      border-radius: 7px
+      text-decoration: none
+      font-family: $ptsans-caption-regular
+      fsh(13px, 48px)
+      color: $font-yellow-2
+
+/* ---- end BASKET ----- */

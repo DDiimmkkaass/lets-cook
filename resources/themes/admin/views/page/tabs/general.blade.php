@@ -30,13 +30,23 @@
     </div>
 </div>
 
-<div class="form-group @if ($errors->has('position')) has-error @endif">
+<div class="form-group required @if ($errors->has('position')) has-error @endif">
     {!! Form::label('position', trans('labels.position'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-        {!! Form::text('position', $model->position ?: 0, ['placeholder' => trans('labels.position'), 'class' => 'form-control input-sm']) !!}
+        {!! Form::text('position', $model->position ?: 0, ['placeholder' => trans('labels.position'), 'class' => 'form-control input-sm', 'required' => true]) !!}
 
         {!! $errors->first('position', '<p class="help-block error">:message</p>') !!}
+    </div>
+</div>
+
+<div class="form-group required @if ($errors->has('template')) has-error @endif">
+    {!! Form::label('template', trans('labels.template'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
+
+    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+        {!! Form::select('template', $templates, null, ['class' => 'form-control select2 input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+
+        {!! $errors->first('template', '<p class="help-block error">:message</p>') !!}
     </div>
 </div>
 

@@ -37,7 +37,7 @@ class MenuWidget extends Widget
             ->visible()
             ->positionSorted()
             ->get();
-
+        
         if (count($list)) {
             foreach ($list as $model) {
                 if (view()->exists('widgets.menu.templates.'.$model->template.'.index')) {

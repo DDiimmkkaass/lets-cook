@@ -1,0 +1,375 @@
+
+
+/* ----- PAGE: RECIPES LIST ----- */
+
+.articles-list
+
+  &__title
+    background-color: $bg-yellow-4
+    color: $font-black-1
+
+  &__search
+    margin-bottom: 30px
+    padding: (16px * (310 / 720)) 0
+    background-color: $bg-green-1
+
+    +bp('480')
+      padding: (16px * (470 / 720)) 0
+
+    +bp('768')
+      padding: 16px 0
+
+// I'm not proud of it ;-)
+
+.main.recipes-list.articles-list
+  .article-item__content
+    size: 455px auto
+
+  .article-item__description span
+    display: inline
+
+// end of shame
+
+.articles-list-search
+  text-align: center
+
+.articles-list-filter
+
+  &__desc
+    margin: 0 auto 10px
+    max-width: 980px
+    padding: 0 (20px * (310 / 720))
+    font-family: $ptsans-caption-regular
+    fsh(14px, 1.25)
+
+    +bp('480')
+      padding: 0 (20px * (470 / 720))
+
+    +bp('768')
+      padding: 0 20px
+
+    +bp('1024')
+      padding: 0
+
+  &__panel
+    padding: 18px (20px * (310 / 720)) 10px
+    background: url('../images/transparent-bg.png') top left repeat
+
+    +bp('480')
+      padding: 18px (20px * (470 / 720)) 10px
+
+    +bp('768')
+      padding: 18px 20px 10px
+
+    +bp('1024')
+      padding: 18px 0 10px
+
+  &__panel-wrapper
+    margin: 0 auto
+    max-width: 980px
+
+  &__list
+    margin: 0; padding: 0; list-style-type: none
+    js-display: flex; display: flex
+    flex-direction: column
+
+    +bp('1024')
+      flex-direction: row
+
+  &__item
+    js-display: flex; display: flex
+    flex-direction: column
+    justify-content: center
+
+    +bp('1024')
+      justify-content: flex-start
+      flex-direction: row
+
+    &:not(:first-of-type)
+
+      +bp('1024')
+        margin-left: 55px
+
+  &__subTitle
+    display: inline-block
+    margin-right: 12px
+    fsh(13px, 33px)
+
+  &__subList
+    display: inline-block
+    margin: 0; padding: 0; list-style-type: none
+    fs(0)
+
+  &__subItem
+    display: inline-block
+    margin: 0 2px 8px 0
+    size: auto 33px
+    min-width: 72px
+    padding: 0 14px
+    background-color: $base-bg-color
+    border: 1px solid $bg-black-1
+    border-radius: 5px
+    text-align: center
+    fsh(13px, 33px)
+    text-transform: uppercase
+    cursor: pointer
+
+    &[data-active], &:hover
+      background: $bg-green-1
+      color: $font-white-1
+      border-color: $bg-green-1
+
+    &[data-active]
+      cursor: default
+
+
+
+.articles-list-main
+  position: relative
+  padding: 20px (20px * (310 / 720))
+
+  +bp('480')
+    padding: 20px (20px * (470 / 720))
+
+  +bp('768')
+    padding: 20px
+
+  +bp('1024')
+    padding: 20px 0
+
+  &__list
+    margin: 0 auto; padding: 0; list-style-type: none
+    max-width: 980px
+
+  &__item
+    padding: 20px 0
+
+    &:not(:last-of-type)
+      border-bottom: 1px solid $bg-gray-2
+
+  &__loader
+    absolute: top 0 left 0
+    size: 100%
+    background-color: rgb(255,255,255)
+    visibility: hidden; opacity: 0
+    will-change: visibility, opacity
+    transition: all 0.3s
+
+    &[data-active]
+      visibility: visible; opacity: 0.95
+
+
+.article-item
+  js-display: flex; display: flex
+  flex-direction: column
+
+  +bp('1024')
+    flex-direction: row
+    justify-content: space-between
+
+  &__main
+    js-display: flex; display: flex
+    flex-direction: column
+
+    +bp('480')
+      flex-direction: row
+      justify-content: space-between
+
+  &__img
+    background: $bg-green-1 center center / cover no-repeat
+    cursor: pointer
+    size: 100% auto
+    padding-bottom: 60%
+
+    +bp('480')
+      display: inline-block
+      size: 150px 82px
+      padding: 0
+      min-width: 150px
+
+    +bp('768')
+      size: 220px 120px
+      min-width: 220px
+
+  &__content
+    margin: 10px 0 0 0
+
+    +bp('480')
+      margin: 0 0 0 20px
+
+    +bp('768')
+      margin: 0 0 0 40px
+
+    +bp('1024')
+      margin: 0 40px
+
+  &__title
+    font-family: $ptsans-bold
+    fsh(20px, 1.25)
+    color: $font-black-1
+    text-decoration: none
+    cursor: pointer
+
+    &:hover
+      text-decoration: underline
+
+  &__tag-list
+    margin: 8px 0 10px; padding: 0; list-style-type: none
+    fs(0px)
+
+  &__tag-item
+    @extend .transparent-green-regular-button
+    margin-right: 15px
+
+  &__description
+    font-family: $ptsans-regular
+    fsh(14px, 1.25)
+    color: $font-black-1
+
+    span
+      display: none
+      font-family: $ptsans-bold
+      fs(16px)
+
+  &__additional
+    margin-top: 8px
+    display: table
+    border-collapse: collapse
+
+    +bp('768')
+      margin-top: 12px
+
+    +bp('1024')
+      margin-top: 0
+      align-self: center
+      width: 230px
+
+  &__rating, &__time
+    display: table-row
+    margin-right: 42px
+
+    +bp('480')
+      display: inline-block
+
+    +bp('1024')
+      display: table-row
+      margin-right: 0
+
+  &__rating-title, &__time-title
+    display: table-cell
+    vertical-align: middle
+    padding-right: 20px
+    text-align: left
+    font-family: $georgia
+    fsh(14px, 40px)
+    font-style: italic
+    color: $font-black-1
+
+    +bp('768')
+      text-align: right
+      line-height: 52px
+
+  &__rating-stars
+    display: table-cell
+    vertical-align: middle
+    fs(0px)
+
+    span
+      display: inline-block
+      vertical-align: top
+      size: 26px 25px
+      background: url('../images/stars-icons.png') -27px 0px no-repeat
+
+      &:not(:last-child)
+        margin-right: 2px
+
+      &[data-active]
+        background-position: 0px 0px
+
+  &__time-value
+    display: table-cell
+    vertical-align: middle
+    fsh(14px, 32px)
+    color: $font-black-1
+
+    &::before
+      margin-right: 12px
+      display: inline-block
+      vertical-align: middle
+      content: ''
+      size: 29px 32px
+      background: url('../images/recipe-clock-icon.png') center center no-repeat
+
+
+.articles-list-pag
+  position: relative
+  size: 100% 68px
+  background: url('../images/transparent-bg.png') top left repeat
+  text-align: center
+
+  &__all
+    absolute: top 50% left 50%
+    transform: translate(-50%, -50%)
+    display: none
+    size: auto 32px
+    padding: 0 25px
+    background-color: $bg-green-1
+    border-radius: 5px
+    text-align: center
+    color: $font-white-1
+    fsh(13px, 32px)
+    text-transform: uppercase
+    cursor: pointer
+    z-index: 2
+    
+    &[data-active]
+      display: inline-block
+
+  &__list
+    absolute: top 50% left 50%
+    transform: translate(-50%, -50%)
+    margin: 0; padding: 0; list-style-type: none
+    size: 96% 32px
+    max-width: 980px
+    z-index: 1
+
+    +bp('1024')
+      width: 100%
+
+  &__item
+    display: none
+    absolute: top 0
+    size: auto 32px
+    padding: 0 17px
+    border-radius: 5px
+    fsh(13px, 32px)
+    background-color: $bg-black-1
+    color: $font-yellow-2
+    text-transform: uppercase
+    cursor: pointer
+
+    &:nth-of-type(1)
+      left: 0
+
+    &:nth-of-type(2)
+      right: 0
+
+    &[data-active]
+      display: inline-block
+
+    span
+      &[data-device='mobile']
+        display: inline-block
+
+        +bp('768')
+          display: none
+
+      &[data-device='desktop']
+        display: none
+
+        +bp('768')
+          display: inline-block
+
+
+
+/* ----- end PAGE: RECIPES LIST ----- */

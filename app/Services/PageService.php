@@ -28,17 +28,4 @@ class PageService
 
         $model->save();
     }
-
-    /**
-     * @param \App\Models\Page $model
-     *
-     * @return string
-     */
-    public function getPageTemplate(Page $model)
-    {
-        $template = str_replace('-', '_', $model->slug);
-
-        return $this->module.'.'.
-            (view()->exists($this->module.'.'.$template) ? $template : 'index');
-    }
 }

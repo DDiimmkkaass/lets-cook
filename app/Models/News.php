@@ -118,7 +118,7 @@ class News extends Eloquent implements FrontLink, SearchableContract, MetaGettab
      */
     public function getUrl()
     {
-        return localize_url(route('news.show', $this->slug));
+        return localize_url(route('blog.show', $this->slug));
     }
 
     /**

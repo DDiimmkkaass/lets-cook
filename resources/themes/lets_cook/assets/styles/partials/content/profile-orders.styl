@@ -1,0 +1,963 @@
+
+/* ----- PROFILE ORDERS ---- */
+
+.profile-orders
+
+  &__title
+    background-color: $font-black-1
+    color: $bg-yellow-3
+
+    +bp('1024')
+      color: $font-white-1
+
+
+.profile-orders-user
+  background: url('../images/yellow-bg.png') top left repeat
+
+  +bp('1024')
+    background-image: url('../images/transparent-bg.png')
+
+  &__wrapper
+    margin: 0 auto
+    max-width: 1162px
+
+    +bp('1024')
+      padding: 0 20px
+
+  &__mobile
+    padding: (16px * (310 / 720)) 0
+    text-align: center
+    color: $font-black-2
+    cursor: pointer
+
+    +bp('480')
+      padding: (16px * (470 / 720)) 0
+
+    +bp('768')
+      padding: 16px 0
+
+    +bp('1024')
+      display: none
+
+  &__mobile-name
+    font-family: $ptsans-narrow-bold
+    fsh(48px * (310 / 720), 1)
+    text-decoration: underline
+
+    +bp('480')
+      fs(48px * (470 / 720))
+
+    +bp('768')
+      fs(48px)
+
+  &__mobile-details
+    font-family: $ptsans-narrow-regular
+    fsh(32px * (310 / 720), 1.5)
+
+    +bp('480')
+      fs(32px * (470 / 720))
+
+    +bp('768')
+      fs(32px)
+
+  &__mobile-details
+    font-family: $ptsans-narrow-regular
+
+  &__desktop
+    margin: 0; padding: 0; list-style-type: none
+    js-display: flex; display: flex
+    flex-direction: column
+    align-items: center
+    max-height: 0px
+    overflow: hidden
+    will-change: max-height, padding
+    transition: all 0.3s
+
+
+    +bp('1024')
+      flex-direction: row
+      justify-content: space-between
+      max-height: none
+
+    &[data-active]
+      max-height: 250px
+      padding: (30px * (310 / 720)) 0
+
+      +bp('480')
+        padding: (30px * (470 / 720)) 0
+
+      +bp('768')
+        padding: 30px 0
+
+      +bp('1024')
+        padding: 0
+
+  &__item
+    display: inline-block
+    font-family: $ptsans-narrow-regular
+    fsh(32px * (310 / 720), 1.5)
+
+    +bp('480')
+      fs(32px * (470 / 720))
+
+    +bp('768')
+      fs(32px)
+
+    +bp('1024')
+      fsh(16px, 62px)
+
+    &[data-item='name']
+      display: none
+      vertical-align: top
+
+      +bp('1024')
+        display: inline-block
+
+      &::before
+        display: inline-block
+        vertical-align: top
+        margin-right: 10px
+        content: 'X'
+        font-family: $fontello
+        fs(22px)
+
+    &[data-item='orders']
+      display: none
+      font-family: $ptsans-regular
+
+      +bp('1024')
+        display: inline-block
+
+      span
+        font-family: $ptsans-bold
+        color: $font-red-2
+
+    &[data-item='card']
+      display: none
+      font-family: $ptsans-bold
+      color: $font-red-2
+      vertical-align: top
+
+      +bp('1024')
+        display: inline-block
+
+      &::before
+        vertical-align: middle
+        display: inline-block
+        margin: -5px 15px 0 0
+        content: ''
+        size: 23px 15px
+        background-color: #a0152c
+        border-radius: 3px
+
+    &[data-card='silver']
+      &::before
+        background-image: linear-gradient(to left, #a1a1a1 0%, #e0e3dc 100%)
+
+    &[data-card='gold']
+      &::before
+        background-image: linear-gradient(to right, rgba(255,251,212,1) 0%, rgba(254,182,69,1) 100%)
+
+
+    &[data-item='orders-to-gold']
+      font-family: $ptsans-regular
+
+      span
+        font-family: $ptsans-bold
+        color: $font-red-2
+
+    &[data-item='feedback']
+
+      &::before
+        display: inline-block
+        vertical-align: top
+        margin-right: 10px
+        content: none
+        font-family: $fontello
+        fs(22px)
+
+        +bp('1024')
+          content: 'X'
+
+  &__link
+    display: inline-block
+    font-family: $ptsans-bold
+    color: $font-black-1
+
+    +bp('1024')
+      line-height: 62px
+
+    &:hover
+      text-decoration: none
+
+
+.profile-orders-content
+
+  &__prev-orders
+    display: none
+
+    +bp('1024')
+      display: block
+
+    &[data-active='false']
+      display: none
+
+  &__tabs-list
+    position: relative
+    margin: 0; padding: 0; list-style-type: none
+    js-display: flex; display: flex
+    flex-direction: column
+
+    +bp('1024')
+      flex-direction: row
+
+  &__tabs-item
+    position: relative
+    width: 100%
+
+    +bp('1024')
+      position: static
+      width: (100 / 3) * 1%
+
+      &[data-tab='prev-orders']
+        display: none
+
+      &[data-active]
+        .profile-orders-content__tabs-title
+          background-color: $bg-red-3
+          color: $font-white-3
+
+    &[data-active]
+      .profile-orders-content__main
+        display: block
+
+    &[data-tab='prev-orders']
+      position: relative
+
+    .profile-orders-content__main
+      display: none
+
+
+    &:first-of-type
+      .profile-orders-content__tabs-title
+        border-left-width: 0px
+
+    &:not(:first-of-type)
+      .profile-orders-content__tabs-title
+        border-right-width: 0px
+
+  &__tabs-title
+    @extend .georgia-title
+    text-align: center
+    line-height: 52px
+    text-transform: none
+
+    &[data-tab='my-orders'], &[data-tab='my-orders-edit']
+      background-color: $bg-orange-1
+      color: $font-white-1
+
+    &[data-tab='prev-orders']
+      background-color: $bg-black-2
+      color: $font-white-1
+
+      &:hover
+        cursor: default
+        text-decoration: none
+
+    &[data-tab='subscribe']
+      background-color: $bg-green-5
+      color: $font-yellow-3
+
+    &[data-tab='history']
+      background-color: $bg-red-3
+      color: $font-yellow-3
+
+    +bp('480')
+      line-height: 78px
+
+    +bp('768')
+      line-height: 120px
+
+    +bp('1024')
+      background-color: $bg-orange-3
+      border: 1px solid $bg-red-3
+      font-family: $ptsans-bold
+      fsh(20px, 62px)
+      color: $font-black-2
+      font-style: normal
+      text-transform: none
+      cursor: pointer
+
+      &[data-tab='my-orders']
+        background-color: $bg-orange-3
+        color: $font-black-2
+
+      &[data-tab='prev-orders']
+        font-family: $ptsans-regular
+        background-color: $bg-yellow-4
+        color: $font-black-1
+        border: none
+
+
+      &[data-tab='subscribe']
+        background-color: $bg-orange-3
+        color: $font-black-2
+
+      &[data-tab='history']
+        background-color: $bg-orange-3
+        color: $font-black-2
+
+    &:hover
+      cursor: pointer
+      text-decoration: underline
+
+  &__main
+    display: none
+    absolute: top 52px left 0
+    size: 100% auto
+
+    +bp('480')
+      top: 78px
+
+    +bp('768')
+      top: 120px
+
+    +bp('1024')
+      top: 64px
+
+    &[data-tab='prev-orders']
+
+      +bp('1024')
+        display: block
+        position: static
+
+
+.profile-orders-own
+  background: url('../images/transparent-bg.png') top left repeat
+
+  +bp('1024')
+    background-image: url('../images/yellow-bg.png');
+
+  &__list
+    margin: 0; padding: 0; list-style-type: none
+    js-display: flex; display: flex
+    flex-wrap: wrap
+
+  &__item
+    width: 50%
+    border-left: 1px solid transparent
+    border-bottom: 2px solid transparent
+
+    &[data-order='even']
+      .own-order__info
+        background-color: $bg-black-2
+
+      .own-order__count-item span:nth-child(1)
+        background-color: $bg-red-3
+
+    &[data-order='odd']
+      .own-order__info
+        background-color: $bg-red-3
+
+      .own-order__count-item span:nth-child(1)
+        background-color: $bg-black-2
+
+    &:nth-of-type(2n+1)
+      border-left-width: 0px
+
+      +bp('1024')
+        border-left-width: 1px
+
+
+    &:nth-of-type(3n+1)
+
+      +bp('1024')
+        border-left-width: 0px
+
+      +bp('1280')
+        border-left-width: 1px
+
+    &:nth-of-type(4n+1)
+
+      +bp('1280')
+        border-left-width: 0px
+
+      +bp('1600')
+        border-left-width: 1px
+
+    &:nth-of-type(5n+1)
+
+      +bp('1600')
+        border-left-width: 0px
+
+
+    +bp('1024')
+      width: (100 / 3) * 1%
+      border-left: 1px solid $bg-white-1
+
+    +bp('1280')
+      width: 25%
+
+    +bp('1600')
+      width: 20%
+
+
+.own-order
+
+  &__change-link
+    display: block
+    width: 100%
+    color: $font-white-3
+    text-decoration: none
+
+    &:hover
+      .own-order__change-button
+        text-decoration: none
+
+  &__image
+    position: relative
+    width: 100%
+    padding-bottom: (184 / 300) * 100%
+    background: $bg-green-1 center center / cover no-repeat
+
+  &__retry
+    absolute: top 50% left 50%
+    transform: translate(-50%, -50%)
+    text-align: center
+    color: $font-white-1
+
+    span
+      font-family: $ptsans-narrow-regular
+      fsh(40px * (310 / 720), 1.5)
+      text-decoration: underline
+
+      +bp('480')
+        fs(40px * (310 / 720))
+
+      +bp('768')
+        fs(40px)
+
+      +bp('1024')
+        fs(30px)
+
+    &::before
+      display: block
+      content: 'X'
+      font-family: $fontello
+      fsh(160px * (310 / 720), 1)
+      text-decoration: none
+
+      +bp('480')
+        fs(160px * (470 / 720))
+
+      +bp('768')
+        fs(160px)
+
+      +bp('1024')
+        fs(120px)
+
+  &__info
+    js-display: flex; display: flex
+    flex-direction: column
+    align-items: center
+    padding: (22px * (310 / 720)) (15px * (310 / 720)) (20px * (310 / 720))
+    background-color: #0a232a
+
+    +bp('480')
+      padding: (22px * (310 / 720)) (15px * (310 / 720)) (20px * (310 / 720))
+
+    +bp('768')
+      padding: 22px 15px 20px
+
+    +bp('1024')
+      padding: 18px 15px 12px
+
+  &__title
+    font-family: $ptsans-narrow-bold
+    fsh(42px * (310 / 720), 1)
+    text-decoration: underline
+    text-transform: uppercase
+
+    +bp('480')
+      fs(42px * (470 / 720))
+
+    +bp('768')
+      fs(42px)
+
+    +bp('1024')
+      font-family: $ptsans-bold
+      fsh(20px, 1)
+      text-decoration: none
+      text-transform: none
+
+  &__count-list
+    margin: (15px * (310 / 720)) 0 0; padding: 0
+    fs(0px)
+
+    +bp('480')
+      margin-top: 15px * (470 / 720)
+
+    +bp('768')
+      margin-top: 15px
+
+  &__count-item
+    margin: 0 (25px * (310 / 720))
+    display: inline-block
+    vertical-align: top
+    text-align: center
+
+    +bp('480')
+      margin: 0 (25px * (470 / 720))
+
+    +bp('768')
+      margin: 0 25px
+
+    span:nth-child(1)
+      display: block
+      size: 59px * (310 / 720)
+      background-color: $bg-red-3
+      border-radius: 50%
+      font-family: $georgia
+      font-style: italic
+      font-weight: bold
+      fsh(31px * (310 / 720), 59px * (310 / 720))
+      color: $font-white-1
+
+      +bp('480')
+        size: 59px * (470 / 720)
+        fsh(31px * (470 / 720), 59px * (470 / 720))
+
+      +bp('768')
+        size: 59px
+        fsh(31px, 59px)
+
+      +bp('1024')
+        font-family: $ptsans-narrow-regular
+        font-style: normal
+        font-weight: normal
+        color: $font-yellow-1
+
+
+    span:nth-child(2)
+      display: block
+      font-family: $ptsans-regular
+      fsh(14px * (310 / 720), 1.7)
+
+      +bp('480')
+        fs(14px * (470 / 720))
+
+      +bp('768')
+        fs(14px)
+
+
+  &__when
+    margin-top: 10px
+    text-align: center
+    font-family: $ptsans-regular
+    fsh(14px, 1)
+
+  &__price
+    margin-top: 5px
+    font-family: $ptsans-bold
+    fsh(17px, 1)
+
+  &__change-button
+    display: none
+    margin-top: 10px
+    font-family: $ptsans-bold
+    fsh(20px, 1)
+    text-decoration: underline
+
+    +bp('1024')
+      display: block
+
+  &__more-baskets-list
+    margin: 0; padding: 0; list-style-type: none
+
+  &__more-baskets-item
+    js-display: flex; display: flex
+    justify-content: space-between
+    align-items: center
+    size: 100% 45px
+    background-color: $bg-red-3
+    border-top: 1px solid $bg-white-1
+
+    +bp('480')
+      size: 100% 52px
+
+    +bp('768')
+      size: 100% 60px
+
+  &__more-baskets-img
+    size: ((90 / 300) * 100%) 100%
+    background: $bg-green-1 center center / cover no-repeat
+
+  &__more-baskets-title
+    size: ((210 / 300) * 100%) auto
+    padding: 0 (20px * (310 / 720))
+    font-family: $ptsans-narrow-regular
+    fsh(12px, 1.1)
+
+    +bp('480')
+      fs(14px)
+      padding: 0 (20px * (470 / 720))
+
+    +bp('768')
+      padding: 0 20px
+
+    +bp('1024')
+      font-family: $ptsans-regular
+      fsh(16px, 1.25)
+
+    &::before
+      content: '+'
+      margin-right: 5px
+
+
+.new-order
+
+  &__link
+    js-display: flex; display: flex;
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    height: 100%
+    background-color: $bg-green-5
+    text-decoration: none
+    color: $font-yellow-3
+
+    +bp('1024')
+      background-color: $bg-orange-3
+      color: $font-black-1
+
+
+  &__icon
+    font-family: $ptsans-regular
+    fsh(120px * (310 / 720), 1)
+
+    +bp('480')
+      fs(120px * (470 / 720))
+
+    +bp('768')
+      fs(120px)
+
+    +bp('1024')
+      fs(77px)
+
+  &__title
+    font-family: $ptsans-narrow-regular
+    fsh(42px * (310 / 720), 1)
+    text-decoration: underline
+    text-transform: uppercase
+
+    +bp('480')
+      fs(42px * (470 / 720))
+
+    +bp('768')
+      fs(42px)
+
+    +bp('1024')
+      font-family: $ptsans-bold
+      fs(16px)
+      text-transform: none
+
+    &:hover
+      text-decoration: none
+
+
+.profile-subscribe
+
+  &__header
+    js-display: flex; display: flex;
+    justify-content: space-around
+    flex-direction: column
+    padding: 20px 10px 24px
+    background-color: $bg-yellow-5
+
+    +bp('768')
+      padding: 20px 20px 24px
+
+    +bp('1024')
+      flex-direction: row
+      justify-content: space-around
+      padding: 20px 0 24px
+
+  &__drop
+    width: 100%
+
+    +bp('1024')
+      width: (476 / 1200) * 100%
+
+
+  &__select-wrapper
+    js-display: flex; display: flex
+    flex-direction: column
+
+    +bp('1024')
+      flex-direction: row
+      height: 52px
+
+    &:not(:first-of-type)
+      margin-top: 20px
+
+  &__select
+    width: 100%
+
+    +bp('1024')
+      width: 85%
+
+  &__add
+    position: relative
+    z-index: 9999
+    margin-top: 20px
+    size: 100%
+
+    +bp('1024')
+      margin-top: 0
+      relative: left -2px
+      width: 15%
+
+    &[data-active]
+      .profile-subscribe__add-button
+        background-color: $bg-red-3
+        color: $font-yellow-1
+
+        span
+          text-decoration: none
+
+      .profile-subscribe__add-wrapper
+        display: block
+
+  &__add-button
+    z-index: 2
+    size: 100%
+    background-color: $bg-orange-3
+    text-align: center
+    font-family: $ptsans-bold
+    fsh(16px, 52px)
+    color: $font-black-2
+    cursor: pointer
+
+    +bp('1024')
+      absolute: left 0 top 0
+
+    span
+      text-decoration: underline
+
+      &[data-icon]
+        text-decoration: none
+        display: none
+
+        +bp('1024')
+          display: inline
+
+      &[data-device='mobile']
+        display: inline
+
+        +bp('1024')
+          display: none
+
+      &[data-device='desktop']
+        display: none
+
+        +bp('1024')
+          display: inline
+
+  &__add-wrapper
+    display: none
+    absolute: top 100% left 0
+    z-index: 1
+    width: 100%
+    padding: 20px
+    border: 2px solid $bg-red-3
+    background: $base-bg-color url('../images/transparent-bg.png') top left repeat
+
+    +bp('1024')
+      absolute: left 0 top 0
+      width: 350%
+      padding: 70px 20px 20px
+
+  &__add-list
+    margin: 0; padding: 0; list-style-type: none
+
+  &__add-close
+    display: none
+    absolute: right 5px top 5px
+    size: 45px
+    text-align: center
+    color: $font-red-2
+    cursor: pointer
+
+    +bp('1024')
+      display: block
+
+    &::before
+      content: 'X'
+      fsh(40px, 45px)
+
+
+  &__add-item
+    margin-right: 20px
+
+    +bp('1024')
+      margin-right: 0
+
+    &:not(:first-of-type)
+      margin-top: 20px
+
+    label
+      fs(14px)
+      text-decoration: underline
+
+      &::before
+        background-color: $base-bg-color
+
+  &__delivery
+      margin-top: 40px
+      width: 100%
+
+      +bp('1024')
+        margin-top: 0
+        width: (400 / 1200) * 100%
+
+  &__subscribe
+    margin-top: 30px
+    width: 100%
+    js-display: flex; display: flex;
+    justify-content: space-around
+    flex-direction: column
+
+    +bp('480')
+      flex-direction: row
+
+    +bp('1024')
+      display: block
+      margin-top: 0
+      width: 18.5%
+
+  &__subscribe-checkbox
+    margin: 10px 0
+
+    +bp('480')
+      margin: 15px 0
+
+    +bp('1024')
+      margin: 20px 0
+
+
+  &__submit
+    margin: 20px 0 40px
+    text-align: center
+
+    +bp('1024')
+      text-align: right
+
+  &__submit-wrapper
+    display: inline-block
+    size: 200px 60px
+    background-color: $bg-orange-3
+    text-align: center
+    font-family: $ptsans-regular
+    fsh(18px, 60px)
+    color: $font-black-2
+    text-transform: uppercase
+    text-decoration: underline
+    cursor: pointer
+
+    &:hover
+      text-decoration: none
+
+    +bp('1024')
+      margin-right: (50 / 1200) * 100%
+
+
+
+.subscribe-table
+  margin: 0; padding: 0; list-style-type: none
+
+  &__row
+    js-display: flex; display: flex
+    flex-direction: column
+    padding: 15px 0
+
+    +bp('1024')
+      flex-direction: row
+      align-items: center
+
+    &:nth-of-type(2n+1)
+      background-color: $bg-white-1
+
+    &:nth-of-type(2n)
+      background-color: $bg-yellow-5
+
+  &__basket
+    width: 100%
+    padding: 0 ((40 / 1200) * 100%)
+
+    +bp('1024')
+      width: (450 / 1200) * 100%
+
+    span
+      display: block
+
+      &:nth-child(1)
+        font-family: $ptsans-bold
+        font-color: $font-black-2
+        fsh(19px, 1.5)
+
+      &:nth-child(2)
+        font-family: $ptsans-regular
+        fsh(19px, 1.25)
+        text-decoration: underline
+
+  &__when
+    margin: 20px 0
+    width: 100%
+    padding: 0 ((40 / 1200) * 100%)
+    font-family: $georgia
+    font-style: italic
+    font-weight: bold
+    fsh(20px, 1.25)
+    color: $font-red-2
+
+    +bp('1024')
+      margin: 0
+      width: (470 / 1200) * 100%
+
+  &__functional
+    width: 100%
+    padding: 0 ((40 / 1200) * 100%)
+    fs(0px)
+
+    +bp('1024')
+      width: (280 / 1200) * 100%
+
+  &__change
+    display: inline-block
+    vertical-align: middle
+    font-family: $ptsans-regular
+    fsh(16px, 1.25)
+    text-decoration: underline
+
+    &:hover
+      cursor: pointer
+
+  &__check
+    margin: 0 15px
+    display: inline-block
+    vertical-align: middle
+
+  &__delete
+    display: inline-block
+    vertical-align: middle
+    text-align: center
+    cursor: pointer
+
+    &::before
+      content: 'X'
+      font-family: $fontello
+      fsh(30px, 43px)
+      color: $font-red-2
+
+
+/* ----- PROFILE ORDERS ----- */
