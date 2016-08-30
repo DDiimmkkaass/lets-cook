@@ -324,6 +324,8 @@ return array (
   'variable_type_image' => 'Изображение',
   'variable_type_text' => 'Строка',
   'variable_type_textarea' => 'Текст',
+  'variable_type_weekday' => 'День недели',
+  'variable_type_time' => 'Время',
   'variables' => 'Переменные',
   'variables_list' => 'Список переменных',
   'view' => 'Просмотр',

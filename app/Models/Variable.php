@@ -53,6 +53,8 @@ class Variable extends Eloquent
         1 => 'text',
         2 => 'textarea',
         3 => 'image',
+        4 => 'weekday',
+        5 => 'time',
     ];
 
     /**

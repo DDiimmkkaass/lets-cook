@@ -19,5 +19,9 @@ window.initInputMask = () ->
       numericInput: true
       rightAlign: false
 
+  $(".inputmask-timepicker").each () ->
+    $(this).inputmask
+      mask: '99:99'
+
 $(document).on "ready", () ->
   initInputMask()

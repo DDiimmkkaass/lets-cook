@@ -17,9 +17,14 @@
                             <input type="hidden" name="type" value="{!! $item->type !!}">
                             <input type="hidden" name="multilingual" value="{!! $item->multilingual !!}">
 
-                            <label class="control-label col-xs-4 col-sm-3 col-md-2 text-right variable-value-label">
-                                {!! $item->name !!}
-                            </label>
+                            <div class="col-xs-4 col-sm-3 col-md-2">
+                                <label class="control-label pull-right variable-value-label">{!! $item->name !!}</label>
+
+                                @if ($item->description)
+                                    <div class="clearfix"></div>
+                                    <p class="help-block">{!! $item->description !!}</p>
+                                @endif
+                            </div>
 
                             <div class="col-xs-12 col-sm-9 col-md-10">
                                 @include('variable.types.'.$item->getStringType())

@@ -34,6 +34,8 @@
 
         <link rel="stylesheet" href="{!! asset('assets/themes/admin/vendor/adminlte/plugins/daterangepicker/daterangepicker-bs3.css') !!}"/>
 
+        <link rel="stylesheet" href="{!! asset('assets/themes/admin/vendor/adminlte/plugins/timepicker/bootstrap-timepicker.min.css') !!}"/>
+
         <link rel="stylesheet" href="{!! asset('assets/components/jquery-ui/themes/smoothness/jquery-ui.min.css') !!}"/>
 
         <link rel="stylesheet" href="{!! asset('packages/barryvdh/elfinder/css/elfinder.min.css') !!}"/>
@@ -86,6 +88,8 @@
 
             <script src="{!! asset('assets/themes/admin/vendor/adminlte/plugins/datepicker/bootstrap-datepicker.js') !!}"></script>
             <script src="{!! asset('assets/themes/admin/vendor/adminlte/plugins/datepicker/locales/bootstrap-datepicker.ru.js') !!}"></script>
+
+            <script src="{!! asset('assets/themes/admin/vendor/adminlte/plugins/timepicker/bootstrap-timepicker.min.js') !!}"></script>
 
             <script src="{!! asset('assets/themes/admin/vendor/adminlte/plugins/chartjs/Chart.min.js') !!}"></script>
 

@@ -26,6 +26,8 @@ window.fixCustomInputs = ($area) ->
 
   initDateTimePickers()
 
+  initTimePickers()
+
   $area.find('span.select2').remove()
   $area.find("select.select2").each () ->
     $(this).select2(select2Options)
@@ -59,6 +61,8 @@ $(document).ready ->
   initColorPickers();
 
   initCheckboxes()
+
+  initTimePickers()
 
   #select
   $('select.select2').each () ->
