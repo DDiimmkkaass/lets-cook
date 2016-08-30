@@ -33,27 +33,27 @@ class PopulateMenusTable extends Migration
         
         $items = [
             [
-                'link'     => url('pages/pervyj-raz'),
+                'link'     => '/pages/pervyj-raz',
                 'name'     => 'Первый раз',
                 'position' => 0,
             ],
             [
-                'link'     => route('baskets.index'),
+                'link'     => '/baskets',
                 'name'     => 'Корзины',
                 'position' => 1,
             ],
             [
-                'link'     => route('articles.index'),
+                'link'     => '/articles',
                 'name'     => 'Статьи',
                 'position' => 2,
             ],
             [
-                'link'     => route('blog.index'),
+                'link'     => '/blog',
                 'name'     => 'Блог',
                 'position' => 3,
             ],
             [
-                'link'     => route('questions.index'),
+                'link'     => '/questions',
                 'name'     => 'Вопросы и ответы',
                 'position' => 4,
             ],
@@ -91,22 +91,22 @@ class PopulateMenusTable extends Migration
         
         $items = [
             [
-                'link'     => url('pages/dostavka-i-oplata'),
+                'link'     => '/pages/dostavka-i-oplata',
                 'name'     => 'Доставка и оплата',
                 'position' => 0,
             ],
             [
-                'link'     => url('pages/polzovatelskoe-soglashenie'),
+                'link'     => '/pages/polzovatelskoe-soglashenie',
                 'name'     => 'Пользовательское соглашение',
                 'position' => 1,
             ],
             [
-                'link'     => url('pages/politika-obrabotki-personalnyh-dannyh'),
+                'link'     => '/pages/politika-obrabotki-personalnyh-dannyh',
                 'name'     => 'Политика обработки персональных данных',
                 'position' => 2,
             ],
             [
-                'link'     => route('contacts'),
+                'link'     => '/contacts',
                 'name'     => 'Контакты',
                 'position' => 3,
             ],
