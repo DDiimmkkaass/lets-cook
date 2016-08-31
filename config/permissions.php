@@ -125,10 +125,10 @@ return array (
     'menu.write',
     'menu.delete',
 
-//    'banner.create',
-//    'banner.read',
-//    'banner.write',
-//    'banner.delete',
+    'banner.create',
+    'banner.read',
+    'banner.write',
+    'banner.delete',
 
 //    'textwidget.create',
 //    'textwidget.read',
@@ -150,10 +150,10 @@ return array (
     'variable.write',
     'variable.delete',
     
-//    'comment.create',
-//    'comment.read',
-//    'comment.write',
-//    'comment.delete',
+    'comment.create',
+    'comment.read',
+    'comment.write',
+    'comment.delete',
 
 //    'translation.read',
 //    'translation.write',

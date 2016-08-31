@@ -309,6 +309,22 @@
                 </li>
             @endif
 
+            @if ($user->hasAccess('comment.read'))
+                <li class="{!! active_class('admin.comment*') !!}">
+                    <a href="{!! route('admin.comment.index') !!}">
+                        <i class="fa fa-comments-o"></i>
+                        <span>@lang('labels.comments')</span>
+
+                        @if ($user->hasAccess('comment.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_comment')"
+                                   data-href="{!! route('admin.comment.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
             @if ($user->hasAccess('city.read'))
                 <li class="{!! active_class('admin.city*') !!}">
                     <a href="{!! route('admin.city.index') !!}">

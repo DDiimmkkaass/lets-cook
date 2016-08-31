@@ -66,6 +66,7 @@ return array (
   'close_window' => 'Закрыть окно',
   'comment' => 'Комментарий',
   'comment_as_action' => 'Комментировать',
+  'comment_creating' => 'Создание комментария',
   'comment_editing' => 'Редактирование комментария',
   'commentable_item' => 'Комментируемый елемент',
   'comments' => 'Комментарии',

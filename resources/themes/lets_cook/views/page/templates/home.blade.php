@@ -4,7 +4,7 @@
     <main class="main">
         <section class="let-cook">
             <h3 class="let-cook__supTitle">Сервис доставки качественных продуктов на дом</h3>
-            <h1 class="let-cook__title">{!! variable('service_name') !!}</h1>
+            <h1 class="let-cook__title">{!! config('app.name') !!}</h1>
             <h2 class="let-cook__subTitle">просто и вкусно</h2>
 
             <div class="make-order--desktop">
@@ -231,59 +231,7 @@
             </div>
         </section>
 
-        <section class="clients-reviews">
-            <h2 class="clients-reviews__title">отзывы клиентов</h2>
-
-            <ul class="clients-reviews__list">
-                <li class="clients-reviews__item review-item">
-                    <div class="review-item__img" style="background-image: url('images/reviews/reviews-1.jpg');">
-                    </div>
-                    <div class="review-item__main">
-                        <div class="review-item__name">Петшик Ольга Николаевна</div>
-                        <div class="review-item__comment">Спасибо «Давай готовить»! Вы решили моюглавную проблему —
-                            нафантазировать новыйужин! А с вами проблема решена! Порции огромные! Всё очень вкусно,
-                            сбалансированно, нравится даже маленьким привередам. Спасибо за ваш труд!
-                        </div>
-                        <div class="review-item__date">13.02.2015</div>
-                    </div>
-                </li>
-                <li class="clients-reviews__item review-item">
-                    <div class="review-item__img" style="background-image: url('images/reviews/reviews-2.jpg');">
-                    </div>
-                    <div class="review-item__main">
-                        <div class="review-item__name">Петшик Ольга Николаевна</div>
-                        <div class="review-item__comment">Спасибо «Давай готовить»! Вы решили моюглавную проблему —
-                            нафантазировать новыйужин! А с вами проблема решена! Порции огромные! Всё очень вкусно,
-                            сбалансированно, нравится даже маленьким привередам. Спасибо за ваш труд!
-                        </div>
-                        <div class="review-item__date">13.02.2015</div>
-                    </div>
-                </li>
-                <li class="clients-reviews__item review-item">
-                    <div class="review-item__img" style="background-image: url('images/reviews/reviews-3.jpg');">
-                    </div>
-                    <div class="review-item__main">
-                        <div class="review-item__name">Петшик Ольга Николаевна</div>
-                        <div class="review-item__comment">Спасибо «Давай готовить»! Вы решили моюглавную проблему —
-                            нафантазировать новыйужин! А с вами проблема решена! Порции огромные! Всё очень вкусно,
-                            сбалансированно, нравится даже маленьким привередам. Спасибо за ваш труд!
-                        </div>
-                        <div class="review-item__date">13.02.2015</div>
-                    </div>
-                </li>
-                <li class="clients-reviews__item review-item">
-                    <div class="review-item__img" style="background-image: url('images/reviews/reviews-4.jpg');"></div>
-                    <div class="review-item__main">
-                        <div class="review-item__name">Петшик Ольга Николаевна</div>
-                        <div class="review-item__comment">Спасибо «Давай готовить»! Вы решили моюглавную проблему —
-                            нафантазировать новыйужин! А с вами проблема решена! Порции огромные! Всё очень вкусно,
-                            сбалансированно, нравится даже маленьким привередам. Спасибо за ваш труд!
-                        </div>
-                        <div class="review-item__date">13.02.2015</div>
-                    </div>
-                </li>
-            </ul>
-        </section>
+        @widget__random_comments(4)
 
         <section class="all-news-articles">
             @widget__last_news('one_item', 1)

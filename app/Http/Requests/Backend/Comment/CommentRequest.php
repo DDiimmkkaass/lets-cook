@@ -11,12 +11,12 @@ namespace App\Http\Requests\Backend\Comment;
 use App\Http\Requests\FormRequest;
 
 /**
- * Class CommentUpdateRequest
+ * Class CommentRequest
  * @package App\Http\Requests\Backend\Comment
  */
-class CommentUpdateRequest extends FormRequest
+class CommentRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,10 +25,12 @@ class CommentUpdateRequest extends FormRequest
     public function rules()
     {
         $rules = [
+            'name'    => 'required',
+            'image'   => ['regex:'.$this->image_regex],
             'comment' => 'required',
             'status'  => 'required|boolean',
         ];
-
+        
         return $rules;
     }
 }

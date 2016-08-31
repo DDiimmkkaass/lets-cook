@@ -84,11 +84,7 @@ $router->group(
                         'uses'       => 'Backend\CommentController@ajaxFieldChange',
                     ]
                 );
-                $router->resource(
-                    'comment',
-                    'Backend\CommentController',
-                    ['only' => ['index', 'edit', 'update', 'destroy']]
-                );
+                $router->resource('comment', 'Backend\CommentController');
                 
                 // questions
                 $router->post(

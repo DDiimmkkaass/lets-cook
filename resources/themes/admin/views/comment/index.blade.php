@@ -11,15 +11,14 @@
                             TablesBuilder::create(['id' => "datatable1", 'class' => "table table-bordered table-striped table-hover"], ['bStateSave' => true])
                             ->addHead([
                                 ['text' => trans('labels.id')],
-                                ['text' => trans('labels.user')],
-                                ['text' => trans('labels.commentable_item')],
+                                ['text' => trans('labels.first_name')],
                                 ['text' => trans('labels.comment')],
                                 ['text' => trans('labels.date')],
                                 ['text' => trans('labels.status')],
                                 ['text' => trans('labels.actions')]
                             ])
                             ->addFoot([
-                                ['attr' => ['colspan' => 6]]
+                                ['attr' => ['colspan' => 5]]
                             ])
                              ->make()
                         !!}

@@ -12,6 +12,7 @@ use App\Contracts\Likable;
 use App\Contracts\SearchableContract;
 use App\Traits\Models\LikableTrait;
 use App\Traits\Models\SearchableTrait;
+use Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -30,7 +31,9 @@ class Comment extends Model implements SearchableContract, Likable
     protected $fillable = [
         'parent_id',
         'name',
+        'image',
         'comment',
+        'date',
     ];
 
     /**
@@ -82,6 +85,25 @@ class Comment extends Model implements SearchableContract, Likable
     }
     
     /**
+     * @param string $value
+     */
+    public function setDateAttribute($value)
+    {
+        $this->attributes['date'] = Carbon::createFromFormat('d-m-Y', $value)
+            ->startOfDay()->format('Y-m-d H:i:s');
+    }
+    
+    /**
+     * @param $value
+     *
+     * @return string
+     */
+    public function getDateAttribute($value)
+    {
+        return empty($value) ? '' : Carbon::createFromFormat('Y-m-d H:i:s', $value)->startOfDay()->format('d-m-Y');
+    }
+    
+    /**
      * @return string
      */
     public function getCommentableItemLink()
@@ -102,9 +124,17 @@ class Comment extends Model implements SearchableContract, Likable
      */
     public function getCommentableItemImage()
     {
-        return $this->getParent()->getImage();
+        return empty($this->image) ? $this->getParent()->getImage() : $this->image;
     }
-
+    
+    /**
+     * @return string
+     */
+    public function getDate()
+    {
+        return empty($this->date) ? '' : str_replace('-', '.', $this->date);
+    }
+    
     /**
      * @return Model
      */
@@ -198,8 +228,13 @@ class Comment extends Model implements SearchableContract, Likable
      */
     public function getUserImage()
     {
-        return empty($this->user_id) ? config('user.no_image') :
-            ($this->user->avatar ? $this->user->avatar : config('user.no_image'));
+        return empty($this->image) ?
+            (
+                empty($this->user_id) ?
+                config('user.no_image') :
+                ($this->user->avatar ? $this->user->avatar : config('user.no_image'))
+            ) :
+            $this->image;
     }
 
     /**

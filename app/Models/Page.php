@@ -11,6 +11,7 @@ namespace App\Models;
 use App\Contracts\FrontLink;
 use App\Contracts\MetaGettable;
 use App\Contracts\SearchableContract;
+use App\Traits\Models\CommentableTrait;
 use App\Traits\Models\SearchableTrait;
 use App\Traits\Models\WithTranslationsTrait;
 use Dimsav\Translatable\Translatable;
@@ -22,11 +23,12 @@ use Eloquent;
  */
 class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettable
 {
-
+    
     use Translatable;
     use WithTranslationsTrait;
     use SearchableTrait;
-
+    use CommentableTrait;
+    
     /**
      * @var array
      */
@@ -38,7 +40,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
         'meta_title',
         'meta_description',
     ];
-
+    
     /**
      * @var array
      */
@@ -56,12 +58,12 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
         'meta_title',
         'meta_description',
     ];
-
+    
     /**
      * @var array
      */
     protected $guarded = [];
-
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -69,7 +71,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return $this->belongsTo(Page::class, 'parent_id')->with('translations')->with('parent');
     }
-
+    
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -77,7 +79,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return $this->hasMany(Page::class, 'parent_id')->with('translations');
     }
-
+    
     /**
      * @param $value
      */
@@ -86,10 +88,10 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
         if (empty($value)) {
             $value = $this->attributes['name'];
         }
-
+        
         $this->attributes['slug'] = str_slug($value);
     }
-
+    
     /**
      * @param $value
      */
@@ -101,7 +103,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
             $this->attributes['parent_id'] = $value;
         }
     }
-
+    
     /**
      * @param $query
      *
@@ -111,7 +113,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return $query->where('status', true);
     }
-
+    
     /**
      * @param $query
      *
@@ -121,28 +123,28 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return $query->where('id', '<>', 1)->where('slug', '<>', 'home');
     }
-
+    
     /**
      * @return string
      */
     public function getUrl()
     {
         $url[] = $this->slug;
-
+        
         if ($this->slug == 'home') {
             return localize_url('/');
         }
-
+        
         $page = $this;
-
+        
         while ($page->parent) {
             $page = $page->parent;
             $url[] = $page->slug;
         }
-
+        
         return localize_url(route('pages.show', array_reverse($url)));
     }
-
+    
     /**
      * @return string
      */
@@ -150,25 +152,25 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return $this->name;
     }
-
+    
     /**
      * @return array
      */
     public function getParents()
     {
         $result = [];
-
+        
         $obj = $this->parent();
-
+        
         while ($obj->count()) {
             $result[] = $obj->first();
-
+            
             $obj = $obj->first()->parent();
         }
-
+        
         return array_reverse($result);
     }
-
+    
     /**
      * @param int|bool $limit
      *
@@ -177,12 +179,12 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     public function getShortContent($limit = false)
     {
         $limit = $limit === true ? config('page.default_short_content_length') : $limit;
-
+        
         $content = empty($this->short_content) ? $this->content : $this->short_content;
-
+        
         return $limit ? str_limit(strip_tags($content), $limit) : $content;
     }
-
+    
     /**
      * @return string
      */
@@ -190,7 +192,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return empty($this->content) ? $this->short_content : $this->content;
     }
-
+    
     /**
      * @return string
      */
@@ -198,7 +200,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return $this->image;
     }
-
+    
     /**
      * @param null|string $locale
      *
@@ -208,7 +210,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return $locale ? $this->translate($locale)->name : $this->name;
     }
-
+    
     /**
      * @param null|string $locale
      *
@@ -220,7 +222,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
             $this->translate($locale)->short_content.' '.$this->translate($locale)->content :
             $this->short_content.' '.$this->content;
     }
-
+    
     /**
      * @param null|string $locale
      *
@@ -230,7 +232,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return $locale ? $this->translate($locale)->meta_title : $this->meta_title;
     }
-
+    
     /**
      * @param null|string $locale
      *
@@ -240,7 +242,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return $locale ? $this->translate($locale)->meta_description : $this->meta_description;
     }
-
+    
     /**
      * @param null|string $locale
      *
@@ -250,7 +252,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return $locale ? $this->translate($locale)->meta_keywords : $this->meta_keywords;
     }
-
+    
     /**
      * @return array
      */
@@ -258,7 +260,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         // TODO: Implement getBreadcrumbs() method.
     }
-
+    
     /**
      * @return string
      */
@@ -266,7 +268,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return empty($this->meta_title) ? $this->name : $this->meta_title;
     }
-
+    
     /**
      * @return string
      */
@@ -277,7 +279,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
             config('seo.share.meta_description_length')
         );
     }
-
+    
     /**
      * @return string
      */
@@ -285,7 +287,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     {
         return $this->meta_keywords;
     }
-
+    
     /**
      * @return string
      */
@@ -295,7 +297,7 @@ class Page extends Eloquent implements FrontLink, SearchableContract, MetaGettab
         $img = empty($img) ?
             (empty($this->image) ? config('seo.share.default_image') : $this->image) :
             $img;
-
+        
         return $img ? url($img) : $img;
     }
 }
