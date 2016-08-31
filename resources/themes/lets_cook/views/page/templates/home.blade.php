@@ -4,7 +4,7 @@
     <main class="main">
         <section class="let-cook">
             <h3 class="let-cook__supTitle">Сервис доставки качественных продуктов на дом</h3>
-            <h1 class="let-cook__title">&laquo; Давай готовить! &raquo;</h1>
+            <h1 class="let-cook__title">{!! variable('service_name') !!}</h1>
             <h2 class="let-cook__subTitle">просто и вкусно</h2>
 
             <div class="make-order--desktop">
@@ -286,22 +286,9 @@
         </section>
 
         <section class="all-news-articles">
-            <div class="all-news-articles__item" data-order="1">
-                <h3 class="all-news-articles__title">Запуск вегетарианского меню</h3>
-                <div class="all-news-articles__desc">У нас появилось вегетарианское меню, и теперь вы можете заказывать
-                    вегетарианские корзины!
-                </div>
-                <a href="#" class="all-news-articles__link yellow-long-button">Посмотреть все новости</a>
-            </div>
+            @widget__last_news('one_item', 1)
 
-            <div class="all-news-articles__item" data-order="2">
-                <h3 class="all-news-articles__title">Польза вегетарианской диеты</h3>
-                <div class="all-news-articles__desc">Нужно не просто заменить мясо эквивалентным количеством
-                    растительной
-                    пищи, а пересмотреть всю свою диету
-                </div>
-                <a href="#" class="all-news-articles__link yellow-long-button">Посмотреть все статьи</a>
-            </div>
+            @widget__last_articles('one_item', 1)
         </section>
 
         <section class="main-subscribe">

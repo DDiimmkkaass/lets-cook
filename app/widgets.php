@@ -21,3 +21,5 @@ Widget::register('widget__random_news', 'App\Widgets\RandomNews\RandomNewsWidget
 Widget::register('widget__banner', 'App\Widgets\Banner\BannerWidget@index');
 
 Widget::register('widget__last_news', 'App\Widgets\LastNews\LastNewsWidget@index');
+
+Widget::register('widget__last_articles', 'App\Widgets\LastArticles\LastArticlesWidget@index');
