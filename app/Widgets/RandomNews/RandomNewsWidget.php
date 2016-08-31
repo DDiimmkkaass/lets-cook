@@ -40,7 +40,7 @@ class RandomNewsWidget extends Widget
 
             $list = News::with('translations')->whereIn('id', $ids)->get();
         } else {
-            $list = News::with('translations')->get();
+            $list = News::with('translations')->visible()->get();
         }
 
         if (view()->exists('widgets.random_news.templates.'.$template.'.index')) {

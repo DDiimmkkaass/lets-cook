@@ -34,7 +34,7 @@ class RandomCommentsWidget extends Widget
             
             $list = Comment::with('user', 'user.info')->whereIn('id', $ids)->get();
         } else {
-            $list = Comment::with('user', 'user.info')->get();
+            $list = Comment::with('user', 'user.info')->visible()->get();
         }
         
         return view('widgets.random_comments.index')->with(compact('list'))->render();
