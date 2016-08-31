@@ -4,7 +4,7 @@
     <main class="main">
         <section class="let-cook">
             <h3 class="let-cook__supTitle">Сервис доставки качественных продуктов на дом</h3>
-            <h1 class="let-cook__title">{!! config('app.name') !!}</h1>
+            <h1 class="let-cook__title">&laquo; {!! config('app.name') !!} &raquo;</h1>
             <h2 class="let-cook__subTitle">просто и вкусно</h2>
 
             <div class="make-order--desktop">
