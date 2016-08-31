@@ -39,7 +39,15 @@ class Banner extends Model
     {
         return $this->hasMany(BannerItem::class, 'banner_id')->with('translations')->positionSorted();
     }
-
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function visible_items()
+    {
+        return $this->items()->visible();
+    }
+    
     /**
      * @param $query
      *

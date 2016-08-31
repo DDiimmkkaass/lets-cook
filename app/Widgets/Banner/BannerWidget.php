@@ -32,7 +32,7 @@ class BannerWidget extends Widget
     {
         $banners = [];
 
-        $list = Banner::with(['translations', 'items', 'items.translations'])
+        $list = Banner::with(['translations', 'visible_items', 'visible_items.translations'])
             ->whereLayoutPosition($position)
             ->visible()
             ->get();

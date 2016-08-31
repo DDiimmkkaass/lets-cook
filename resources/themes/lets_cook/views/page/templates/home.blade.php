@@ -20,30 +20,7 @@
             <a href="#" class="demo-dinner">Заказать пробный ужин</a>
         </section>
 
-        <section class="about-food">
-            <ul class="about-food__list">
-                <li class="about-food__item">
-                    <div class="about-food__img"
-                         style="background-image: url('../images/about-food/about-food.jpeg')"></div>
-                    <div class="about-food__title">Экономия времени</div>
-                </li>
-                <li class="about-food__item">
-                    <div class="about-food__img"
-                         style="background-image: url('../images/about-food/about-food.jpeg')"></div>
-                    <div class="about-food__title">Качественные и свежие продукты</div>
-                </li>
-                <li class="about-food__item">
-                    <div class="about-food__img"
-                         style="background-image: url('../images/about-food/about-food.jpeg')"></div>
-                    <div class="about-food__title">Оригинальные рецепты</div>
-                </li>
-                <li class="about-food__item">
-                    <div class="about-food__img"
-                         style="background-image: url('../images/about-food/about-food.jpeg')"></div>
-                    <div class="about-food__title">Новое меню каждую неделю</div>
-                </li>
-            </ul>
-        </section>
+        @widget__banner('what_we_offer')
 
         <section class="about-service">
             <div class="about-service__title">
@@ -202,42 +179,7 @@
             </div>
         </section>
 
-        <section class="our-diff">
-            <h2 class="our-diff__heading">чем мы отличаемся от других</h2>
-
-            <ul class="our-diff__list">
-                <li class="our-diff__item">
-                    <img src="images/our-diff/our-diff-1.jpg" alt="Differences" class="our-diff__img">
-                    <h3 class="our-diff__title">Рецепты от диетологов</h3>
-                    <div class="our-diff__desc">Повара совместно с диетологами разрабатывают вкусные и полезные рецепты
-                        для
-                        здорового питания
-                    </div>
-                </li>
-                <li class="our-diff__item">
-                    <img src="images/our-diff/our-diff-2.jpg" alt="Differences" class="our-diff__img">
-                    <h3 class="our-diff__title">Продукты от фермеров</h3>
-                    <div class="our-diff__desc">Поставляются только свежие, сезонные и экологически чистые продукты от
-                        наших
-                        поставщиков
-                    </div>
-                </li>
-                <li class="our-diff__item">
-                    <img src="images/our-diff/our-diff-3.jpg" alt="Differences" class="our-diff__img">
-                    <h3 class="our-diff__title">Машины-холодильники</h3>
-                    <div class="our-diff__desc">Принцип постоянного холодильного цикла гарантирует свежие и качественные
-                        продукты
-                    </div>
-                </li>
-                <li class="our-diff__item">
-                    <img src="images/our-diff/our-diff-4.jpg" alt="Differences" class="our-diff__img">
-                    <h3 class="our-diff__title">Минилаботатория</h3>
-                    <div class="our-diff__desc">Дополнительный контроль качества чтобы обеспечить пищевую безопасность
-                        каждой партии
-                    </div>
-                </li>
-            </ul>
-        </section>
+        @widget__banner('what_makes_us_different')
 
         <section class="free-delivery">
             <h2 class="free-delivery__title">доставка бесплатно</h2>
