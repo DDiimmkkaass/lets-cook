@@ -100,7 +100,6 @@ class Recipe extends Model
         return $this->media()->of('file');
     }
     
-    
     /**
      * @param $query
      *

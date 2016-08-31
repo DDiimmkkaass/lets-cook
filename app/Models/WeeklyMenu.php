@@ -48,6 +48,14 @@ class WeeklyMenu extends Model
     }
     
     /**
+     * @return string
+     */
+    public function getName()
+    {
+        return trans('labels.w_label').$this->week.', '.$this->year;
+    }
+    
+    /**
      * @return bool
      */
     public function isCurrentWeekMenu()

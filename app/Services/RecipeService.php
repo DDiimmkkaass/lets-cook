@@ -36,6 +36,8 @@ class RecipeService
      */
     public function table(Request $request)
     {
+        $last_uses_filter = $this->_getLastUsesFilter($request);
+        
         $list = Recipe::with('baskets', 'tags')
             ->joinBaskets()
             ->select(
@@ -45,16 +47,25 @@ class RecipeService
                 DB::raw('1 as baskets_list'),
                 'recipes.portions',
                 DB::raw('2 as recipe_tags'),
-                DB::raw('(SELECT SUM(_i.price * _ri.count) / 100
-                            FROM recipe_ingredients _ri
+                DB::raw(
+                    '(SELECT SUM(_i.price * _ri.count) / 100
+                        FROM recipe_ingredients _ri
                             LEFT JOIN ingredients _i ON (_ri.ingredient_id = _i.id)
-                            WHERE _ri.recipe_id = recipes.id 
-                            AND _ri.type = '.RecipeIngredient::getTypeIdByName('normal').') as recipe_price'
+                        WHERE _ri.recipe_id = recipes.id 
+                            AND _ri.type = '.RecipeIngredient::getTypeIdByName('normal').'
+                    ) as recipe_price'
                 ),
                 DB::raw(
-                    '(SELECT MAX(_or.created_at) FROM order_recipes _or
-                        LEFT JOIN basket_recipes _br ON (_or.basket_recipe_id = _br.id)
-                        WHERE _br.recipe_id = recipes.id AND _or.created_at <= NOW()) as last_order'
+                    '(SELECT _wm.id
+                        FROM basket_recipes _br
+                          INNER JOIN weekly_menu_baskets _wmb ON (_wmb.id = _br.weekly_menu_basket_id)
+                          INNER JOIN weekly_menus _wm ON (_wm.id = _wmb.weekly_menu_id)
+                        WHERE _br.weekly_menu_basket_id IS NOT NULL AND
+                              _br.recipe_id = recipes.id '.
+                    $last_uses_filter['filter_from'].$last_uses_filter['filter_to'].
+                    ' ORDER BY _wm.year DESC ,_wm.week DESC 
+                         LIMIT 1 
+                     ) as last_uses'
                 ),
                 'recipes.status',
                 'recipes.draft'
@@ -100,7 +111,7 @@ class RecipeService
                     $tags = '';
                     
                     foreach ($model->tags as $tag) {
-                        $tags .= $tag->tag->name . ', ';
+                        $tags .= $tag->tag->name.', ';
                     }
                     
                     return trim($tags, ', ');
@@ -113,14 +124,12 @@ class RecipeService
                 }
             )
             ->editColumn(
-                'last_order',
+                'last_uses',
                 function ($model) {
-                    if (!empty($model->last_order)) {
-                        $dt = Carbon::createFromFormat('Y-m-d H:i:s', $model->last_order);
+                    if (!empty($model->last_uses)) {
+                        $menu = WeeklyMenu::whereId($model->last_uses)->first();
                         
-                        return '<div class="text-center">'.
-                                trans('labels.w_label').$dt->weekOfYear.', '.$dt->year.
-                            '</div>';
+                        return link_to_route('admin.weekly_menu.show', $menu->getName(), $model->last_uses)->toHtml();
                     }
                     
                     return '';
@@ -157,6 +166,8 @@ class RecipeService
      */
     public function tableFind(Request $request)
     {
+        $last_uses_filter = $this->_getLastUsesFilter($request);
+        
         $list = Recipe::with('tags')
             ->joinBaskets()
             ->select(
@@ -164,16 +175,24 @@ class RecipeService
                 'recipes.name',
                 'recipes.image',
                 DB::raw('2 as recipe_tags'),
-                DB::raw('(SELECT SUM(_i.price * _ri.count) / 100
+                DB::raw(
+                    '(SELECT SUM(_i.price * _ri.count) / 100
                             FROM recipe_ingredients _ri
                             LEFT JOIN ingredients _i ON (_ri.ingredient_id = _i.id)
                             WHERE _ri.recipe_id = recipes.id 
                             AND _ri.type = '.RecipeIngredient::getTypeIdByName('normal').') as recipe_price'
                 ),
                 DB::raw(
-                    '(SELECT MAX(_or.created_at) as last_order FROM order_recipes _or
-                        LEFT JOIN basket_recipes _br ON (_or.basket_recipe_id = _br.id)
-                        WHERE _br.recipe_id = recipes.id AND _or.created_at <= NOW()) as last_order'
+                    '(SELECT _wm.id
+                        FROM basket_recipes _br
+                          INNER JOIN weekly_menu_baskets _wmb ON (_wmb.id = _br.weekly_menu_basket_id)
+                          INNER JOIN weekly_menus _wm ON (_wm.id = _wmb.weekly_menu_id)
+                        WHERE _br.weekly_menu_basket_id IS NOT NULL AND
+                              _br.recipe_id = recipes.id '.
+                    $last_uses_filter['filter_from'].$last_uses_filter['filter_to'].
+                    ' ORDER BY _wm.year DESC ,_wm.week DESC 
+                         LIMIT 1 
+                     ) as last_uses'
                 ),
                 'recipes.status',
                 'recipes.draft'
@@ -214,7 +233,7 @@ class RecipeService
                     $tags = '';
                     
                     foreach ($model->tags as $tag) {
-                        $tags .= $tag->tag->name . ', ';
+                        $tags .= $tag->tag->name.', ';
                     }
                     
                     return trim($tags, ', ');
@@ -227,14 +246,12 @@ class RecipeService
                 }
             )
             ->editColumn(
-                'last_order',
+                'last_uses',
                 function ($model) {
-                    if (!empty($model->last_order)) {
-                        $dt = Carbon::createFromFormat('Y-m-d H:i:s', $model->last_order);
+                    if (!empty($model->last_uses)) {
+                        $menu = WeeklyMenu::whereId($model->last_uses)->first();
                         
-                        return '<div class="text-center">'.
-                                trans('labels.w_label').$dt->weekOfYear.', '.$dt->year.
-                            '</div>';
+                        return link_to_route('admin.weekly_menu.show', $menu->getName(), $model->last_uses)->toHtml();
                     }
                     
                     return '';
@@ -361,57 +378,6 @@ class RecipeService
     }
     
     /**
-     * @param Builder $list
-     * @param Request $request
-     */
-    private function _implodeFilters(&$list, $request)
-    {
-        $filters = $request->get('datatable_filters');
-        
-        if (count($filters)) {
-            foreach ($filters as $filter => $value) {
-                if ($value !== '' && $value !== 'null') {
-                    switch ($filter) {
-                        case 'name':
-                            $list->where('recipes.name', 'LIKE', '%'.$value.'%');
-                            break;
-                        case 'basket':
-                            $list->where('basket_recipe.basket_id', $value);
-                            break;
-                        case 'portions':
-                            $list->where('recipes.portions', $value);
-                            break;
-                        case 'price_from':
-                            $list->having('recipe_price', '>=', $value);
-                            break;
-                        case 'price_to':
-                            $list->having('recipe_price', '<=', $value);
-                            break;
-                        case 'last_order_from':
-                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
-                                $value = Carbon::createFromFormat('d-m-Y', $value)->startOfDay()->format('Y-m-d H:i:s');
-                                $list->having('last_order', '>=', $value);
-                            }
-                            break;
-                        case 'last_order_to':
-                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
-                                $value = Carbon::createFromFormat('d-m-Y', $value)->endOfDay()->format('Y-m-d H:i:s');
-                                $list->having('last_order', '<=', $value);
-                            }
-                            break;
-                        case 'tags':
-                            $list->joinTags()->whereIn('tags.id', explode(',', $value));
-                            break;
-                        case 'status':
-                            $list->where('recipes.status', $value);
-                            break;
-                    }
-                }
-            }
-        }
-    }
-    
-    /**
      * @param int   $recipe_id
      * @param array $select
      *
@@ -448,10 +414,10 @@ class RecipeService
             if (!isset($statistic[$week])) {
                 $statistic[$week] = 0;
             }
-    
+            
             $statistic[$week] += 1;
         }
-    
+        
         $additional_baskets = BasketRecipe::whereRecipeId($recipe->id)->whereNotNull('basket_id')
             ->groupBy('basket_id')
             ->get(['basket_id'])
@@ -465,11 +431,11 @@ class RecipeService
         
         foreach ($orders as $order) {
             $week = trans('labels.w_label').$order->created_at->weekOfYear.', '.$order->created_at->year;
-        
+            
             if (!isset($statistic[$week])) {
                 $statistic[$week] = 0;
             }
-    
+            
             $statistic[$week] += 1;
         }
         
@@ -497,5 +463,85 @@ class RecipeService
         $recipe = Recipe::visible()->findOrFail($recipe_id);
         
         return $recipe;
+    }
+    
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    private function _getLastUsesFilter(Request $request)
+    {
+        $filters = $request->get('datatable_filters', []);
+        
+        $filter_from = isset($filters['last_uses_from']) ? $filters['last_uses_from'] : '';
+        if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $filter_from)) {
+            $value = Carbon::createFromFormat('d-m-Y', $filter_from);
+            
+            $filter_from = ' AND _wm.week >= \''.$value->weekOfYear.'\' '.
+                ' AND _wm.year >= \''.$value->year.'\' ';
+        }
+        
+        $filter_to = isset($filters['last_uses_to']) ? $filters['last_uses_to'] : '';
+        if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $filter_to)) {
+            $value = Carbon::createFromFormat('d-m-Y', $filter_to);
+            
+            $filter_to = ' AND _wm.week <= \''.$value->weekOfYear.'\' '.
+                ' AND _wm.year <= \''.$value->year.'\' ';
+        }
+        
+        return [
+            'filter_from' => $filter_from,
+            'filter_to'   => $filter_to,
+        ];
+    }
+    
+    /**
+     * @param Builder $list
+     * @param Request $request
+     */
+    private function _implodeFilters(&$list, $request)
+    {
+        $filters = $request->get('datatable_filters');
+        
+        if (count($filters)) {
+            foreach ($filters as $filter => $value) {
+                if ($value !== '' && $value !== 'null') {
+                    switch ($filter) {
+                        case 'name':
+                            $list->where('recipes.name', 'LIKE', '%'.$value.'%');
+                            break;
+                        case 'basket':
+                            $list->where('basket_recipe.basket_id', $value);
+                            break;
+                        case 'portions':
+                            $list->where('recipes.portions', $value);
+                            break;
+                        case 'price_from':
+                            $list->having('recipe_price', '>=', $value);
+                            break;
+                        case 'price_to':
+                            $list->having('recipe_price', '<=', $value);
+                            break;
+                        case 'last_uses_from':
+                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
+                                $list->havingRaw('last_uses IS NOT NULL');
+                            }
+                            break;
+                        case 'last_uses_to':
+                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
+                                $list->havingRaw('last_uses IS NOT NULL');
+                            }
+                            break;
+                        case 'tags':
+                            $list->joinTags()->whereIn('tags.id', explode(',', $value));
+                            break;
+                        case 'status':
+                            $list->where('recipes.status', $value);
+                            break;
+                    }
+                }
+            }
+        }
     }
 }

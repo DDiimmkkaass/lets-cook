@@ -494,6 +494,7 @@ return array (
   'basket_price' => 'Цена корзины',
   'internal_price' => 'Внутренняя цена',
   'last_order' => 'Последний заказ',
+  'last_uses' => 'Последние использование',
   'tab_statistic_of_orders' => 'Статистика заказов',
   'count_of_orders' => 'Количество заказов',
   'quick_ingredient_create_title' => 'Быстрое добавления ингредиента',

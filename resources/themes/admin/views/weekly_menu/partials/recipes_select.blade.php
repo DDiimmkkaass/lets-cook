@@ -17,7 +17,7 @@
                         ['text' => trans('labels.name')],
                         ['text' => trans('labels.tags')],
                         ['text' => trans('labels.price')],
-                        ['text' => trans('labels.last_order')],
+                        ['text' => trans('labels.last_uses')],
                         ['text' => trans('labels.actions')]
                     ])
                     ->addFoot([
@@ -28,7 +28,7 @@
                         ['text' => Form::text('datatable_filters[name]', '', ['class' => 'form-control input-sm datatable-filter'])],
                         ['text' => Form::select('datatable_filters[tags]', $tags, null, ['class' => 'form-control select2 input-sm datatable-filter', 'multiple' => 'multiple'])],
                         ['text' => Form::text('datatable_filters[price_from]', '', ['class' => 'form-control input-sm datatable-filter', 'placeholder' => trans('labels.from')]).' - '.Form::text('datatable_filters[price_to]', '', ['class' => 'form-control input-sm datatable-filter', 'placeholder' => trans('labels.to')])],
-                        ['text' => Form::text('datatable_filters[last_order_from]', '', ['class' => 'form-control input-sm datatable-filter datatable-date-filter inputmask-birthday datepicker-birthday', 'placeholder' => trans('labels.from')]).' - '.Form::text('datatable_filters[last_order_to]', '', ['class' => 'form-control input-sm datatable-filter datatable-date-filter inputmask-birthday datepicker-birthday', 'placeholder' => trans('labels.to')])],
+                        ['text' => Form::text('datatable_filters[last_uses_from]', '', ['class' => 'form-control input-sm datatable-filter datatable-date-filter inputmask-birthday datepicker-birthday', 'placeholder' => trans('labels.from')]).' - '.Form::text('datatable_filters[last_uses_to]', '', ['class' => 'form-control input-sm datatable-filter datatable-date-filter inputmask-birthday datepicker-birthday', 'placeholder' => trans('labels.to')])],
                         ['attr' => ['colspan' => 1]],
                     ])
                      ->make()
