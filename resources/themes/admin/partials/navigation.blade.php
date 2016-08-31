@@ -4,7 +4,7 @@
             <span class="logo-mini upper-case">{!! str_limit(config('app.name'), 3, '') !!}</span>
 
             <span class="logo-lg upper-case">
-                {!! config('app.name') !!}
+                {!! str_limit(config('app.name'), 12) !!}
             </span>
         </a>
 
