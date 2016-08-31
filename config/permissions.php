@@ -115,10 +115,10 @@ return array (
     'article.write',
     'article.delete',
 
-//    'question.create',
-//    'question.read',
-//    'question.write',
-//    'question.delete',
+    'question.create',
+    'question.read',
+    'question.write',
+    'question.delete',
 
     'menu.create',
     'menu.read',

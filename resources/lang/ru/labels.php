@@ -32,7 +32,7 @@ return array (
   'all_menus' => 'Все меню',
   'all_news' => 'Все новости',
   'all_pages' => 'Все страницы',
-  'all_questions' => 'FAQ',
+  'all_questions' => 'Вопрос-ответ',
   'all_tags' => 'Все теги',
   'all_users' => 'Все пользователи',
   'allow' => 'Разрешить',
@@ -604,4 +604,5 @@ return array (
   'articles_list' => 'Список статей',
   'article_creating' => 'Создание статьи',
   'article_editing' => 'Редактирование статьи',
+  'question_&_answer' => 'Вопрос-ответ',
 );
