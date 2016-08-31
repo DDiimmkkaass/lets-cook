@@ -55,12 +55,14 @@ class PopulateVariablesTable extends Migration
         ];
         
         foreach ($variables as $key => $variable) {
-            $variable['key'] = $key;
-            
-            $model = new Variable($variable);
-            $model->type = Variable::getTypeKeyByName($variable['type']);
-            
-            $model->save();
+            if (!Variable::whereKey($key)->first()) {
+                $variable['key'] = $key;
+                
+                $model = new Variable($variable);
+                $model->type = Variable::getTypeKeyByName($variable['type']);
+                
+                $model->save();
+            }
         }
     }
     

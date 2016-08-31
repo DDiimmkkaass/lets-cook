@@ -13,7 +13,7 @@ class PopulatePagesTable2 extends Migration
      */
     public function up()
     {
-    
+        
         $pageService = new PageService();
         
         $input = [
@@ -34,9 +34,11 @@ class PopulatePagesTable2 extends Migration
             ];
         }
         
-        $model = new Page($input);
-        $model->save();
-        $pageService->setExternalUrl($model);
+        if (!Page::whereSlug($input['slug'])->first()) {
+            $model = new Page($input);
+            $model->save();
+            $pageService->setExternalUrl($model);
+        }
         
         $input = [
             'slug'     => 'dostavka-i-oplata',
@@ -56,9 +58,11 @@ class PopulatePagesTable2 extends Migration
             ];
         }
         
-        $model = new Page($input);
-        $model->save();
-        $pageService->setExternalUrl($model);
+        if (!Page::whereSlug($input['slug'])->first()) {
+            $model = new Page($input);
+            $model->save();
+            $pageService->setExternalUrl($model);
+        }
         
         $input = [
             'slug'     => 'polzovatelskoe-soglashenie',
@@ -78,9 +82,11 @@ class PopulatePagesTable2 extends Migration
             ];
         }
         
-        $model = new Page($input);
-        $model->save();
-        $pageService->setExternalUrl($model);
+        if (!Page::whereSlug($input['slug'])->first()) {
+            $model = new Page($input);
+            $model->save();
+            $pageService->setExternalUrl($model);
+        }
         
         $input = [
             'slug'     => 'politika-obrabotki-personalnyh-dannyh',
@@ -100,9 +106,11 @@ class PopulatePagesTable2 extends Migration
             ];
         }
         
-        $model = new Page($input);
-        $model->save();
-        $pageService->setExternalUrl($model);
+        if (!Page::whereSlug($input['slug'])->first()) {
+            $model = new Page($input);
+            $model->save();
+            $pageService->setExternalUrl($model);
+        }
     }
     
     /**
