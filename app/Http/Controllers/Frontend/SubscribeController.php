@@ -24,10 +24,10 @@ class SubscribeController extends FrontendController
     {
         try {
             Subscribe::firstOrCreate(['email' => $request->get('email')]);
-
-            return ['status' => 'success', 'message' => trans('messages.thanks for your subscribe')];
+            
+            return ['status' => 'success', 'message' => trans('front_messages.thanks for your subscribe')];
         } catch (Exception $e) {
-            return ['status' => 'error', 'message' => trans('messages.an error has occurred, try_later')];
+            return ['status' => 'error', 'message' => trans('front_messages.an error has occurred, try_later')];
         }
     }
 }

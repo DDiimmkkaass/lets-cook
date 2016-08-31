@@ -23,3 +23,5 @@ Widget::register('widget__banner', 'App\Widgets\Banner\BannerWidget@index');
 Widget::register('widget__last_news', 'App\Widgets\LastNews\LastNewsWidget@index');
 
 Widget::register('widget__last_articles', 'App\Widgets\LastArticles\LastArticlesWidget@index');
+
+Widget::register('widget__subscribe', 'App\Widgets\Subscribe\SubscribeWidget@index');

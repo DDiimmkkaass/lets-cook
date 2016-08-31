@@ -19,7 +19,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as BaseVerifier;
  */
 class VerifyCsrfToken extends BaseVerifier
 {
-
+    
     /**
      * @var array
      */
@@ -29,16 +29,16 @@ class VerifyCsrfToken extends BaseVerifier
         'admin/elfinder/ckeditor4',
         'admin/variable/value/update',
         'admin/order/comment',
+        'likes',
     ];
-
+    
     /**
      * @var array
      */
     protected $translatable_except = [
         'likes',
-        'subscribe'
     ];
-
+    
     /**
      * VerifyCsrfToken constructor.
      *
@@ -48,14 +48,14 @@ class VerifyCsrfToken extends BaseVerifier
     public function __construct(Application $app, Encrypter $encrypter)
     {
         parent::__construct($app, $encrypter);
-
+        
         foreach (config('app.locales') as $locale) {
             foreach ($this->translatable_except as $link) {
-                $this->except[] = '/' . $locale . '/' . $link;
+                $this->except[] = '/'.$locale.'/'.$link;
             }
         }
     }
-
+    
     /**
      * Handle an incoming request.
      *

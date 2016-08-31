@@ -319,17 +319,13 @@ function subscribeNews() {
 
         if (validateEmail($text.val())) {
             $.ajax({
-                type: 'GET',
-                // type: 'POST",
-                url: '/subscribe',
+                type: 'POST',
+                url: $form.attr('action'),
                 dataType: 'json',
                 data: {
-                    'email': $text.val()
+                    'email': $text.val(),
+                    '_token': $form.find('[name=\'_token\']').val()
                 },
-                xhrFields: {
-                    withCredentials: true
-                },
-                crossDomain: true,
 
                 success: function(data) {
                     let clearInput = function() {
@@ -350,8 +346,6 @@ function subscribeNews() {
 
                             break;
                     }
-
-
 
                     console.log('subscribe ajax success');
                 },
