@@ -28,7 +28,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Meta;
-use Response;
 
 /**
  * Class OrderController
@@ -77,6 +76,8 @@ class OrderController extends BackendController
         Meta::title(trans('labels.orders'));
         
         $this->breadcrumbs(trans('labels.orders'), route('admin.'.$this->module.'.index'));
+        
+        $this->middleware('admin.order.editable', ['only' => 'update']);
     }
     
     /**
@@ -105,7 +106,7 @@ class OrderController extends BackendController
      * Show the form for creating a new resource.
      * GET /recipe/create
      *
-     * @return \Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -128,7 +129,7 @@ class OrderController extends BackendController
      *
      * @param \App\Http\Requests\Backend\Order\OrderRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(OrderRequest $request)
     {
@@ -172,7 +173,7 @@ class OrderController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function show($id)
     {
@@ -185,7 +186,7 @@ class OrderController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit($id)
     {
@@ -197,7 +198,15 @@ class OrderController extends BackendController
                 'comments'
             )->findOrFail($id);
             
-            $this->data('page_title', trans('labels.order').': #'.$model->id);
+            $this->data(
+                'page_title',
+                trans('labels.order').': #'.$model->id.
+                (
+                    !$model->editable() ?
+                    '<span class="label label-warning">'.trans('labels.un_editable_order').'</span>' :
+                    ''
+                )
+            );
             
             $this->breadcrumbs(trans('labels.order_editing'));
             
@@ -218,7 +227,7 @@ class OrderController extends BackendController
      * @param  int         $id
      * @param OrderRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update($id, OrderRequest $request)
     {
@@ -267,11 +276,13 @@ class OrderController extends BackendController
         try {
             $order = Order::findOrFail($request->get('order_id'));
             
-            $comment = new OrderComment([
-                'user_id' => $this->user->id,
-                'comment' => $request->get('order_comment')
-            ]);
-    
+            $comment = new OrderComment(
+                [
+                    'user_id' => $this->user->id,
+                    'comment' => $request->get('order_comment'),
+                ]
+            );
+            
             $order->comments()->save($comment);
             
             return [

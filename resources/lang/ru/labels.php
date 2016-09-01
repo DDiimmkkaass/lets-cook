@@ -609,4 +609,5 @@ return array (
   'article_creating' => 'Создание статьи',
   'article_editing' => 'Редактирование статьи',
   'question_&_answer' => 'Вопрос-ответ',
+  'un_editable_order' => 'Заказ не редактируется',
 );

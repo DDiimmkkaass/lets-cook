@@ -69,11 +69,20 @@ class Order extends Model
     /**
      * @var array
      */
-    protected static $editable_statuses = [
+    protected static $editable_statuses_admin = [
+        'changed',
+        'paid',
+        'processed',
+        'tmpl',
+    ];
+    
+    /**
+     * @var array
+     */
+    protected static $editable_statuses_user = [
         'changed',
         'paid',
         'tmpl',
-        'archived',
     ];
     
     /**
@@ -443,11 +452,17 @@ class Order extends Model
     }
     
     /**
+     * @param string $permissions
+     *
      * @return bool
      */
-    public function editable()
+    public function editable($permissions = 'user')
     {
-        return in_array($this->getStringStatus(), self::$editable_statuses);
+        if ($permissions == 'user') {
+            return in_array($this->getStringStatus(), self::$editable_statuses_user);
+        }
+    
+        return in_array($this->getStringStatus(), self::$editable_statuses_admin);
     }
     
     /**
