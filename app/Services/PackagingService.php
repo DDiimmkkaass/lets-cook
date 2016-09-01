@@ -148,7 +148,7 @@ class PackagingService
                 $users[$order->user_id]['ingredients'][] = [
                     'name'      => $ingredient->name,
                     'count'     => $ingredient->count,
-                    'unit'      => $ingredient->ingredient->unit->name,
+                    'unit'      => $ingredient->ingredient->sale_unit->name,
                     'repacking' => $ingredient->ingredient->repacking,
                     'recipe'    => $ingredient->recipe->getName(),
                 ];
@@ -318,14 +318,19 @@ class PackagingService
      */
     private function _getRepackagingIngredients($year, $week)
     {
-        $ingredients = Purchase::with('ingredient', 'ingredient.category')
+        $ingredients = Purchase::with('ingredient', 'ingredient.category', 'ingredient.sale_unit')
             ->JoinIngredient()
             ->JoinIngredientCategory()
             ->forWeek($year, $week)
             ->where('ingredients.repacking', true)
             ->orderBy('categories.position')
             ->orderBy('ingredients.name')
-            ->get();
+            ->get()
+            ->keyBy(
+                function ($item) {
+                    return $item->ingredient_id.'_'.$item->type;
+                }
+            );
         
         return $ingredients;
     }
@@ -438,7 +443,7 @@ class PackagingService
     private function _addOrderedIngredients($orders, &$recipes)
     {
         $ingredients = OrderIngredient::with('ingredient')->joinBasketRecipe()
-            ->joinIngredient()->joinIngredientCategory()->joinIngredientUnit()->joinIngredientParameters()
+            ->joinIngredient()->joinIngredientCategory()->joinIngredientSaleUnit()->joinIngredientParameters()
             ->whereIn('order_id', $orders)
             ->orderBy('parameters.package')
             ->orderBy('parameters.position')
@@ -485,7 +490,7 @@ class PackagingService
     {
         $categories = [];
         
-        foreach ($ingredients as $ingredient) {
+        foreach ($ingredients as $key => $ingredient) {
             if (!isset($categories[$ingredient->ingredient->category_id])) {
                 $categories[$ingredient->ingredient->category_id] = [
                     'name'        => $ingredient->ingredient->category->name,
@@ -493,16 +498,14 @@ class PackagingService
                     'ingredients' => [],
                 ];
             }
-            
-            if (!isset($categories[$ingredient->ingredient->category_id]['ingredients'][$ingredient->ingredient_id])) {
-                $categories[$ingredient->category_id]['ingredients'][$ingredient->ingredient_id] = [
-                    'name'  => $ingredient->ingredient->name,
-                    'unit'  => $ingredient->ingredient->unit->name,
-                    'count' => 0,
-                ];
-            }
-            
-            $categories[$ingredient->ingredient->category_id]['ingredients'][$ingredient->ingredient_id]['count'] = $ingredient->count;
+    
+            $categories[$ingredient->category_id]['ingredients'][$key] = [
+                'name'  => $ingredient->ingredient->name,
+                'unit'  => $ingredient->isType('order') ?
+                    $ingredient->ingredient->sale_unit->name :
+                    $ingredient->ingredient->unit->name,
+                'count' => $ingredient->count,
+            ];
         }
         
         return $categories;

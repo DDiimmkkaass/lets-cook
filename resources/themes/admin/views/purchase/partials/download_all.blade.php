@@ -19,13 +19,13 @@
 
         @foreach($list as $ingredient)
             <tr>
-                <td>{!! $ingredient['ingredient'] !!}</td>
-                <td style="text-align: center">@if ($ingredient['in_stock']) @lang('labels.yes') @endif</td>
-                <td style="background-color: #dddddd;">{!! $ingredient['category'] !!}</td>
-                <td style="background-color: #dddddd;">{!! $ingredient['supplier'] !!}</td>
-                <td style="background-color: #dddddd;">{!! $ingredient['price'] !!}</td>
-                <td>{!! $ingredient['count'] !!}</td>
-                <td style="background-color: #dddddd;">{!! $ingredient['unit'] !!}</td>
+                <td>{!! $ingredient->ingredient->name !!}</td>
+                <td style="text-align: center">@if ($ingredient->in_stock) @lang('labels.yes') @endif</td>
+                <td style="background-color: #dddddd;">{!! $ingredient->ingredient->category->name !!}</td>
+                <td style="background-color: #dddddd;">{!! $ingredient->ingredient->supplier->name !!}</td>
+                <td style="text-align: right;">{!! $ingredient->price !!}</td>
+                <td style="text-align: right;">{!! $ingredient->count !!}</td>
+                <td style="background-color: #dddddd; text-align: left;">{!! $ingredient->getUnitName() !!}</td>
             </tr>
         @endforeach
 

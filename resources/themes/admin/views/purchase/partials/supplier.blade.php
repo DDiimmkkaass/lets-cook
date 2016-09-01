@@ -32,7 +32,7 @@
                     @foreach($category['ingredients'] as $ingredient)
                         <tr id="ingredient_{!! $ingredient->ingredient_id !!}" data-supplier_id="{!! $supplier_id !!}" data-category_id="{!! $category_id !!}" data-ingredient_id="{!! $ingredient->ingredient_id !!}" class="ingredient-block">
                             <td>{!! link_to_route('admin.ingredient.edit', $ingredient->ingredient->name, [$ingredient->ingredient_id], ['target' => '_blank']) !!}</td>
-                            <td class="text-center">{!! $ingredient->ingredient->unit->name !!}</td>
+                            <td class="text-center">{!! $ingredient->getUnitName() !!}</td>
                             <td class="text-center">@include('purchase.partials.text_input', ['model' => $ingredient->ingredient, 'field' => 'price', 'url' => route('admin.purchase.set_ingredient_price', $ingredient->id), 'type' => 'purchase'])</td>
                             <td class="text-center">
                                 <div class="col-sm-6 col-sm-push-3">

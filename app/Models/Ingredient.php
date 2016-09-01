@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -33,6 +34,7 @@ class Ingredient extends Model
         'supplier_id',
         'category_id',
         'unit_id',
+        'sale_unit_id',
     ];
     
     /**
@@ -62,6 +64,14 @@ class Ingredient extends Model
     public function unit()
     {
         return $this->belongsTo(Unit::class, 'unit_id');
+    }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function sale_unit()
+    {
+        return $this->belongsTo(Unit::class, 'sale_unit_id');
     }
     
     /**
@@ -110,6 +120,14 @@ class Ingredient extends Model
     public function setUnitIdAttribute($value)
     {
         $this->attributes['unit_id'] = empty($value) ? null : (int) $value;
+    }
+    
+    /**
+     * @param $value
+     */
+    public function setSaleUnitIdAttribute($value)
+    {
+        $this->attributes['sale_unit_id'] = empty($value) ? null : (int) $value;
     }
     
     /**
@@ -192,6 +210,16 @@ class Ingredient extends Model
     public function scopeJoinUnit($query)
     {
         return $query->leftJoin('units', 'units.id', '=', 'ingredients.unit_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinSaleUnit($query, $table_name = 'units')
+    {
+        return $query->leftJoin(DB::raw('units as '.$table_name), $table_name.'.id', '=', 'ingredients.sale_unit_id');
     }
     
     /**

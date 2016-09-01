@@ -57,7 +57,7 @@ class PurchaseService
             'categories' => [],
         ];
         
-        $purchases = Purchase::with('ingredient', 'ingredient.category', 'ingredient.supplier')
+        $purchases = Purchase::with('ingredient', 'ingredient.category', 'ingredient.supplier', 'ingredient.sale_unit')
             ->joinIngredient()
             ->joinIngredientSupplier()
             ->joinIngredientCategory()
@@ -67,9 +67,13 @@ class PurchaseService
             ->orderBy('categories.position')
             ->orderBy('ingredients.name')
             ->get(['purchases.*'])
-            ->keyBy('ingredient_id');
+            ->keyBy(
+                function ($item) {
+                    return $item->ingredient_id.'_'.$item->type;
+                }
+            );
         
-        foreach ($purchases as $ingredient) {
+        foreach ($purchases as $key => $ingredient) {
             $_ingredient = $ingredient->ingredient;
             
             if (!isset($list['suppliers'][$_ingredient->supplier_id])) {
@@ -89,7 +93,7 @@ class PurchaseService
                     ];
                 }
                 
-                $list['categories'][$_ingredient->category_id]['ingredients'][$ingredient->ingredient_id] = $ingredient;
+                $list['categories'][$_ingredient->category_id]['ingredients'][$key] = $ingredient;
             } else {
                 if (!isset($list['suppliers'][$_ingredient->supplier_id]['categories'][$_ingredient->category_id])) {
                     $list['suppliers'][$_ingredient->supplier_id]['categories'][$_ingredient->category_id] = [
@@ -99,7 +103,7 @@ class PurchaseService
                     ];
                 }
                 
-                $list['suppliers'][$_ingredient->supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$ingredient->ingredient_id] = $ingredient;
+                $list['suppliers'][$_ingredient->supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$key] = $ingredient;
             }
         }
         
@@ -214,15 +218,19 @@ class PurchaseService
      * @param Collection $ingredients
      * @param array      $recipes
      * @param array|null $suppliers
+     * @param bool       $order_ingredients
      *
      * @return array
      */
-    private function _buildSuppliersTable($ingredients, $recipes, $suppliers = null)
+    private function _buildSuppliersTable($ingredients, $recipes, $suppliers = null, $order_ingredients = false)
     {
         $suppliers = $suppliers ? $suppliers : [];
         
         foreach ($ingredients as $ingredient) {
             $_ingredient = $ingredient->ingredient;
+            
+            $type = $order_ingredients ? Purchase::getTypeIdByName('order') : Purchase::getTypeIdByName('recipe');
+            $_ingredient_id = $_ingredient->id.'_'.$type;
             
             if (!isset($suppliers[$_ingredient->supplier_id])) {
                 $suppliers[$_ingredient->supplier_id] = [
@@ -242,19 +250,19 @@ class PurchaseService
             
             $count = empty($recipes) ? $ingredient->count : $ingredient->count * $recipes[$ingredient->recipe_id]['recipes_count'];
             
-            if (!isset($suppliers[$_ingredient->supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$ingredient->ingredient_id])) {
+            if (!isset($suppliers[$_ingredient->supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$_ingredient_id])) {
                 $data = [
                     'ingredient_id' => $ingredient->ingredient_id,
                     'supplier_id'   => $_ingredient->supplier_id,
+                    'type'          => $type,
                     'name'          => $_ingredient->name,
                     'price'         => $_ingredient->price,
-                    'unit'          => $_ingredient->unit->name,
                     'count'         => $count,
                 ];
                 
-                $suppliers[$_ingredient->supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$ingredient->ingredient_id] = $data;
+                $suppliers[$_ingredient->supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$_ingredient_id] = $data;
             } else {
-                $suppliers[$_ingredient->supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$ingredient->ingredient_id]['count'] += $count;
+                $suppliers[$_ingredient->supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$_ingredient_id]['count'] += $count;
             }
         }
         
@@ -267,7 +275,11 @@ class PurchaseService
      */
     private function _addOrderIngredients(&$suppliers, $orders)
     {
-        $ingredients = OrderIngredient::with('ingredient', 'ingredient.category', 'ingredient.supplier')
+        $ingredients = OrderIngredient::with(
+            'ingredient',
+            'ingredient.category',
+            'ingredient.supplier'
+        )
             ->joinIngredient()
             ->joinIngredientSupplier()
             ->joinIngredientCategory()
@@ -277,7 +289,7 @@ class PurchaseService
             ->orderBy('ingredients.name')
             ->get();
         
-        $suppliers = $this->_buildSuppliersTable($ingredients, [], $suppliers);
+        $suppliers = $this->_buildSuppliersTable($ingredients, [], $suppliers, true);
     }
     
     /**
@@ -293,12 +305,16 @@ class PurchaseService
             ->where('year', $list['year'])
             ->where('week', $list['week'])
             ->get()
-            ->keyBy('ingredient_id');
+            ->keyBy(
+                function ($item) {
+                    return $item->ingredient_id.'_'.$item->type;
+                }
+            );
         
         foreach ($list['suppliers'] as $supplier_id => $supplier) {
             foreach ($supplier['categories'] as $category_id => $category) {
-                foreach ($category['ingredients'] as $ingredient_id => $ingredient) {
-                    if (!$exists_purchases->has($ingredient_id)) {
+                foreach ($category['ingredients'] as $key => $ingredient) {
+                    if (!$exists_purchases->has($key)) {
                         $purchase = new Purchase(
                             array_merge(
                                 $ingredient,
@@ -311,7 +327,7 @@ class PurchaseService
                         
                         $purchase->save();
                     } else {
-                        $purchase = $exists_purchases->get($ingredient_id);
+                        $purchase = $exists_purchases->get($key);
                         
                         $purchase->fill($ingredient);
                         
@@ -320,14 +336,21 @@ class PurchaseService
                         }
                     }
                     
-                    $ingredients[] = $ingredient_id;
+                    if (!isset($ingredients[$ingredient['type']])) {
+                        $ingredients[$ingredient['type']] = [];
+                    }
+                    
+                    $ingredients[$ingredient['type']][] = $ingredient['ingredient_id'];
                 }
             }
         }
         
-        Purchase::where('week', $list['week'])->where('year', $list['year'])
-            ->whereNotIn('ingredient_id', $ingredients)
-            ->delete();
+        foreach ($ingredients as $type => $_ingredients) {
+            Purchase::where('week', $list['week'])->where('year', $list['year'])
+                ->whereType($type)
+                ->whereNotIn('ingredient_id', $_ingredients)
+                ->delete();
+        }
     }
     
     /**
@@ -392,7 +415,8 @@ class PurchaseService
      */
     private function _getPurchaseFor($year, $week, $supplier_id = false)
     {
-        $list = Purchase::joinIngredient()
+        $list = Purchase::with('ingredient.unit', 'ingredient.sale_unit')
+            ->joinIngredient()
             ->joinIngredientUnit()
             ->joinIngredientCategory()
             ->joinIngredientSupplier()
@@ -405,21 +429,10 @@ class PurchaseService
             $list = $list->where('purchases.purchase_manager', true);
         }
         
-        $list = $list->select(
-            DB::raw('ingredients.name as ingredient'),
-            'purchases.in_stock',
-            'categories.name as category',
-            'suppliers.name as supplier',
-            'purchases.price',
-            'purchases.count',
-            DB::raw('units.name as unit')
-        )
+        return $list
             ->orderBy('suppliers.priority')
             ->orderBy('categories.position')
             ->orderBy('ingredients.name')
-            ->get()
-            ->toArray();
-        
-        return $list;
+            ->get();
     }
 }

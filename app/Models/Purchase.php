@@ -24,12 +24,20 @@ class Purchase extends Model
     protected $fillable = [
         'ingredient_id',
         'supplier_id',
+        'type',
         'year',
         'week',
         'price',
         'count',
         'in_stock',
-        '',
+    ];
+    
+    /**
+     * @var array
+     */
+    public static $types = [
+        'recipe',
+        'order',
     ];
     
     /**
@@ -74,7 +82,7 @@ class Purchase extends Model
     }
     
     /**
-     * @param $query
+     * @param     $query
      * @param int $year
      * @param int $week
      *
@@ -153,10 +161,58 @@ class Purchase extends Model
     }
     
     /**
+     * @return string
+     */
+    public function getUnitName()
+    {
+        return $this->getStringType() == 'order' ? $this->ingredient->sale_unit->name : $this->ingredient->unit->name;
+    }
+    
+    /**
      * @return array
      */
     public static function getChangeableFields()
     {
         return self::$changeable_fields;
+    }
+    
+    /**
+     * @param string $type
+     *
+     * @return int|string
+     */
+    public static function getTypeIdByName($type)
+    {
+        foreach (self::$types as $id => $_type) {
+            if ($_type == $type) {
+                return $id;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getStringType()
+    {
+        foreach (self::$types as $id => $type) {
+            if ($id == $this->type) {
+                return $type;
+            }
+        }
+        
+        return '';
+    }
+    
+    /**
+     * @param string $type
+     *
+     * @return bool
+     */
+    public function isType($type)
+    {
+        return $this->type == self::getTypeIdByName($type);
     }
 }

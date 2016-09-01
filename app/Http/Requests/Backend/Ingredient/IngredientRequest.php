@@ -24,19 +24,24 @@ class IngredientRequest extends FormRequest
      */
     public function rules()
     {
-        return [
-            'name'        => 'required',
-            'price'       => 'required|numeric|min:0',
-            'sale_price'  => 'numeric|min:0',
-            'image'       => ['regex:'.$this->image_regex],
-            'category_id' => 'required|exists:categories,id',
-            'supplier_id' => 'required|exists:suppliers,id',
-            'unit_id'     => 'required|exists:units,id',
+        $sale_price = $this->request->get('sale_price', 0);
+        
+        $rules = [
+            'name'         => 'required',
+            'price'        => 'required|numeric|min:0',
+            'sale_price'   => 'numeric|min:0',
+            'image'        => ['regex:'.$this->image_regex],
+            'category_id'  => 'required|exists:categories,id',
+            'supplier_id'  => 'required|exists:suppliers,id',
+            'unit_id'      => 'required|exists:units,id',
+            'sale_unit_id' => ($sale_price > 0 ? 'required_with:sale_price|' : '').'exists:units,id',
             
             'additional_parameter' => 'exists:parameters,id',
             
             'nutritional_values.*.id'    => 'exists:nutritional_values,id',
             'nutritional_values.*.value' => 'numeric',
         ];
+        
+        return $rules;
     }
 }

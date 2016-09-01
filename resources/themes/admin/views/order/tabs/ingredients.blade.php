@@ -22,6 +22,7 @@
             <th class="col-sm-1 text-center">{!! trans('labels.id') !!}</th>
             <th>{!! trans('labels.name') !!}</th>
             <th class="col-sm-1 text-center">{!! trans('labels.count') !!} <span class="required">*</span></th>
+            <th class="col-sm-2">{!! trans('labels.units') !!}</th>
             <th class="col-sm-1 text-center">{!! trans('labels.delete') !!}</th>
         </tr>
 
@@ -33,6 +34,7 @@
                             {!! Form::text('ingredients[old][' .$ingredient->id. '][ingredient_id]', $ingredient->ingredient_id, ['id' => 'ingredients.old.' .$ingredient->id. '.ingredient_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
 
                             {!! Form::hidden('ingredients[old][' .$ingredient->id. '][name]', $ingredient->getName()) !!}
+                            {!! Form::hidden('ingredients[old][' .$ingredient->id. '][unit]', $ingredient->ingredient->sale_unit->name) !!}
                         </div>
                     </td>
                     <td>
@@ -46,6 +48,11 @@
                     <td>
                         <div class="form-group required @if ($errors->has('ingredients.old.' .$ingredient->id. '.count')) has-error @endif">
                             {!! Form::text('ingredients[old][' .$ingredient->id. '][count]', $ingredient->count ?: 1, ['id' => 'ingredients.old.' .$ingredient->id. '.count', 'class' => 'form-control input-sm', 'required' => true]) !!}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group">
+                            {!! $ingredient->ingredient->sale_unit->name !!}
                         </div>
                     </td>
                     <td class="text-center coll-actions">
@@ -74,7 +81,7 @@
 
                                 {!! Form::hidden('ingredients[new][' .$ingredient_key. '][image]', $ingredient['image']) !!}
                                 {!! Form::hidden('ingredients[new][' .$ingredient_key. '][name]', $ingredient['name']) !!}
-                                {!! Form::hidden('ingredients[new][' .$ingredient_key. '][name]', $ingredient['name']) !!}
+                                {!! Form::hidden('ingredients[new][' .$ingredient_key. '][unit]', $ingredient['unit']) !!}
                                 {!! Form::hidden('ingredients[new][' .$ingredient_key. '][basket_recipe_id]', $ingredient['basket_recipe_id']) !!}
                                 {!! Form::hidden('ingredients[new][' .$ingredient_key. '][recipe_name]', $ingredient['recipe_name']) !!}
                             </div>
@@ -82,6 +89,11 @@
                         <td>
                             <div class="form-group required @if ($errors->has('ingredients.new.' .$ingredient_key. '.count')) has-error @endif">
                                 {!! Form::text('ingredients[new][' .$ingredient_key. '][count]', $ingredient['count'], ['id' => 'ingredients.new.' .$ingredient_key. '.count', 'class' => 'form-control input-sm', 'required' => true]) !!}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                {!! $ingredient['unit'] !!}
                             </div>
                         </td>
                         <td class="text-center coll-actions">

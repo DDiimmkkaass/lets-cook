@@ -23,6 +23,7 @@
                                 ['text' => trans('labels.name')],
                                 ['text' => trans('labels.category')],
                                 ['text' => trans('labels.unit')],
+                                ['text' => trans('labels.sale_units')],
                                 ['text' => trans('labels.supplier')],
                             ])
                             ->addFoot([

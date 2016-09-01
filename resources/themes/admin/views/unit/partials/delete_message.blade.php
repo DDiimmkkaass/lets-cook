@@ -5,6 +5,6 @@
 <a class="popup-delete-button"
    title="@lang('labels.go_to_ingredients_list')"
    target="_blank"
-   href="{!! route('admin.ingredient.incomplete', ['unit' => $unit_id]) !!}">
+   href="{!! route('admin.ingredient.incomplete', ['unit' => $unit_id, 'sale_unit' => $unit_id]) !!}">
     @lang('labels.view_ingredients_list')
 </a>

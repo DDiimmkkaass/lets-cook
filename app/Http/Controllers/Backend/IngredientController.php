@@ -58,7 +58,7 @@ class IngredientController extends BackendController
     /**
      * @var array
      */
-    public $filter_types = ['category', 'supplier', 'unit'];
+    public $filter_types = ['category', 'supplier', 'unit', 'sale_unit'];
     
     /**
      * @var Ingredient
@@ -116,7 +116,7 @@ class IngredientController extends BackendController
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Response
+     * @return array|\Bllim\Datatables\json|\Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
@@ -133,7 +133,7 @@ class IngredientController extends BackendController
     /**
      * @param \Illuminate\Http\Request $request
      *
-     * @return $this|array|\Bllim\Datatables\json
+     * @return array|\Bllim\Datatables\json|\Illuminate\Contracts\View\View
      */
     public function indexIncomplete(Request $request)
     {
@@ -158,7 +158,7 @@ class IngredientController extends BackendController
      * Show the form for creating a new resource.
      * GET /ingredient/create
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -215,7 +215,7 @@ class IngredientController extends BackendController
      *
      * @param IngredientRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(IngredientRequest $request)
     {
@@ -286,7 +286,7 @@ class IngredientController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function show($id)
     {
@@ -299,7 +299,7 @@ class IngredientController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit($id)
     {
@@ -327,7 +327,7 @@ class IngredientController extends BackendController
      * @param  int              $id
      * @param IngredientRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update($id, IngredientRequest $request)
     {

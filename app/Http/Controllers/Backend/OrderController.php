@@ -432,7 +432,7 @@ class OrderController extends BackendController
         try {
             $basket_recipe = BasketRecipe::with('recipe')->findOrFail($basket_recipe_id);
             
-            $model = Ingredient::joinRecipeIngredients()
+            $model = Ingredient::joinRecipeIngredients()->joinSaleUnit()
                 ->inSales()
                 ->where('ingredients.id', $ingredient_id)
                 ->where('recipe_ingredients.recipe_id', $basket_recipe->recipe_id)
@@ -441,6 +441,7 @@ class OrderController extends BackendController
                     'ingredients.id',
                     'ingredients.name',
                     'ingredients.image',
+                    DB::raw('units.name as unit_name'),
                     'recipe_ingredients.count'
                 )
                 ->firstOrFail();

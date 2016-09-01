@@ -10,8 +10,8 @@ namespace App\Services;
 
 use App\Models\Ingredient;
 use Datatables;
-use Illuminate\Database\Query\Builder;
 use DB;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
 /**
@@ -71,7 +71,7 @@ class IngredientService
                 'price',
                 'sale_price'
             );
-    
+        
         $this->_implodeFilters($list);
         
         return $dataTables = Datatables::of($list)
@@ -131,16 +131,19 @@ class IngredientService
      */
     public function tableIncomplete(Request $request)
     {
-        $list = Ingredient::joinCategory()->joinSupplier()->joinUnit()
+        $list = Ingredient::joinCategory()->joinSupplier()->joinUnit()->joinSaleUnit('sale_unit')
             ->select(
                 'ingredients.id',
                 'ingredients.name',
                 'ingredients.image',
                 DB::raw('categories.name as category'),
-                DB::raw('units.name as unit'),
+                DB::raw('(SELECT units.name FROM units WHERE ingredients.unit_id = units.id) as unit'),
+                DB::raw('(SELECT units.name FROM units WHERE ingredients.sale_unit_id = units.id) as sale_unit'),
                 DB::raw('suppliers.name as supplier'),
                 'category_id',
                 'unit_id',
+                'sale_unit_id',
+                'sale_price',
                 'supplier_id'
             );
         
@@ -151,6 +154,7 @@ class IngredientService
             ->filterColumn('name', 'where', 'ingredients.name', 'LIKE', '%$1%')
             ->filterColumn('category', 'where', 'categories.name', 'LIKE', '%$1%')
             ->filterColumn('unit', 'where', 'units.name', 'LIKE', '%$1%')
+            ->filterColumn('sale_unit', 'where', 'units.name', 'LIKE', '%$1%')
             ->filterColumn('supplier', 'where', 'suppliers.name', 'LIKE', '%$1%')
             ->editColumn(
                 'name',
@@ -216,6 +220,26 @@ class IngredientService
                 }
             )
             ->editColumn(
+                'sale_unit',
+                function ($model) use ($request) {
+                    if (!$model->sale_unit_id || $request->get('sale_unit', false)) {
+                        $html = view(
+                            'partials.datatables.select',
+                            [
+                                'list'  => $this->units,
+                                'field' => 'sale_unit_id',
+                                'model' => $model,
+                                'type'  => $this->module,
+                            ]
+                        )->render();
+                    } else {
+                        $html = $model->sale_unit;
+                    }
+                    
+                    return $html;
+                }
+            )
+            ->editColumn(
                 'supplier',
                 function ($model) use ($request) {
                     if (!$model->supplier_id || $request->get('supplier', false)) {
@@ -248,6 +272,8 @@ class IngredientService
             ->removeColumn('image')
             ->removeColumn('category_id')
             ->removeColumn('unit_id')
+            ->removeColumn('sale_unit_id')
+            ->removeColumn('sale_price')
             ->removeColumn('supplier_id')
             ->make();
     }
@@ -298,12 +324,25 @@ class IngredientService
         $filter = request()->get('filter', false);
         if ($filter && in_array($filter, $this->filter_types)) {
             $list->whereNull('ingredients.'.$filter.'_id');
+            
+            if ($filter == 'sale_unit') {
+                $list->where('ingredients.sale_price', '>', 0);
+            }
         }
         
         $types_values = request()->only($this->filter_types, []);
         foreach ($types_values as $type => $value) {
             if (!is_null($value)) {
-                $list->where('ingredients.'.$type.'_id', $value);
+                if ($filter == 'sale_unit') {
+                    $list->orWhere(
+                        function ($query) use ($type, $value) {
+                            $query->where('ingredients.sale_price', '>', 0)
+                                ->where('ingredients.'.$type.'_id', $value);
+                        }
+                    );
+                } else {
+                    $list->where('ingredients.'.$type.'_id', $value);
+                }
                 
                 $filter = true;
             }
@@ -311,7 +350,16 @@ class IngredientService
         
         if (!$filter) {
             foreach ($this->filter_types as $type) {
-                $list->orWhereNull('ingredients.'.$type.'_id');
+                if ($type == 'sale_unit') {
+                    $list->orWhere(
+                        function ($query) use ($type) {
+                            $query->where('ingredients.sale_price', '>', 0)
+                                ->whereNull('ingredients.'.$type.'_id');
+                        }
+                    );
+                } else {
+                    $list->orWhereNull('ingredients.'.$type.'_id');
+                }
             }
         }
     }

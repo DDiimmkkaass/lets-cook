@@ -41,7 +41,7 @@ class OrderIngredient extends Model
      */
     public function ingredient()
     {
-        return $this->belongsTo(Ingredient::class)->with('unit')->withTrashed();
+        return $this->belongsTo(Ingredient::class)->with('sale_unit')->withTrashed();
     }
     
     /**
@@ -100,6 +100,16 @@ class OrderIngredient extends Model
     public function scopeJoinIngredientUnit($query)
     {
         return $query->leftJoin('units', 'units.id', '=', 'ingredients.unit_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinIngredientSaleUnit($query)
+    {
+        return $query->leftJoin('units', 'units.id', '=', 'ingredients.sale_unit_id');
     }
     
     /**

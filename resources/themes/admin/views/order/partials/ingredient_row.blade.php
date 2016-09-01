@@ -13,15 +13,22 @@
 
             {!! Form::hidden('ingredients[new][' .$basket_recipe->id.'_'.$model->id. '][image]', $model->image) !!}
             {!! Form::hidden('ingredients[new][' .$basket_recipe->id.'_'.$model->id. '][name]', $model->name) !!}
+            {!! Form::hidden('ingredients[new][' .$basket_recipe->id.'_'.$model->id. '][unit]', $model->unit_name) !!}
             {!! Form::hidden('ingredients[new][' .$basket_recipe->id.'_'.$model->id. '][basket_recipe_id]', $basket_recipe->id) !!}
             {!! Form::hidden('ingredients[new][' .$basket_recipe->id.'_'.$model->id. '][recipe_name]', $basket_recipe->recipe->name) !!}
         </div>
     </td>
     <td>
         <div class="form-group">
-            <input type="text" class="form-control input-sm" name="ingredients[new][{!! $basket_recipe->id.'_'.$model->id !!}][count]"
+            <input type="text" class="form-control input-sm"
+                   name="ingredients[new][{!! $basket_recipe->id.'_'.$model->id !!}][count]"
                    required="required"
                    value="{!! $model->count !!}">
+        </div>
+    </td>
+    <td>
+        <div class="form-group">
+            {!! $model->unit_name !!}
         </div>
     </td>
     <td class="text-center coll-actions">

@@ -68,7 +68,7 @@ class UnitController extends BackendController
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
@@ -108,7 +108,7 @@ class UnitController extends BackendController
      * Show the form for creating a new resource.
      * GET /unit/create
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -127,7 +127,7 @@ class UnitController extends BackendController
      *
      * @param UnitCreateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(UnitCreateRequest $request)
     {
@@ -152,7 +152,7 @@ class UnitController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function show($id)
     {
@@ -165,7 +165,7 @@ class UnitController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit($id)
     {
@@ -191,7 +191,7 @@ class UnitController extends BackendController
      * @param  int              $id
      * @param UnitUpdateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update($id, UnitUpdateRequest $request)
     {

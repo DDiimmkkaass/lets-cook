@@ -43,6 +43,16 @@
 </div>
 
 <div class="form-group margin-bottom-10">
+    {!! Form::label('sale_unit_id', trans('labels.sale_units'), ['class' => 'control-label col-xs-12 padding-left-0 padding-right-0']) !!}
+
+    <div class="col-xs-12 padding-left-0 padding-right-0">
+        {!! Form::select('sale_unit_id', $units, null, ['class' => 'form-control select2 input-sm', 'aria-hidden' => 'true']) !!}
+    </div>
+
+    <div class="clearfix"></div>
+</div>
+
+<div class="form-group margin-bottom-10">
     {!! Form::label('image', trans('labels.image'), ['class' => 'control-label col-xs-12 padding-left-0 padding-right-0']) !!}
 
     <div class="col-xs-12 padding-left-0 padding-right-0">
