@@ -505,6 +505,8 @@ class RecipeController extends BackendController
             }
             
             $this->data('orders', $this->recipeService->getStatisticOfOrder($model));
+    
+            $this->data('uses', $this->recipeService->getStatisticOfUses($model));
         }
         
         $this->data('selected_baskets', $selected_baskets);

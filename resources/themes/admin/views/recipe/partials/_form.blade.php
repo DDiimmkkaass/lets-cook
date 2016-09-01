@@ -31,8 +31,8 @@
 
                 @if ($model->exists && !isset($copy))
                     <li>
-                        <a aria-expanded="false" href="#statistic_of_orders" data-toggle="tab">
-                            @lang('labels.tab_statistic_of_orders')
+                        <a aria-expanded="false" href="#statistic_of_orders_uses" data-toggle="tab">
+                            @lang('labels.tab_statistic_of_orders_uses')
                         </a>
                     </li>
                 @endif
@@ -64,8 +64,8 @@
                 </div>
 
                 @if ($model->exists && !isset($copy))
-                    <div class="tab-pane" id="statistic_of_orders">
-                        @include('recipe.tabs.statistic_of_orders')
+                    <div class="tab-pane" id="statistic_of_orders_uses">
+                        @include('recipe.tabs.statistic')
                     </div>
                 @endif
             </div>

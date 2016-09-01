@@ -443,6 +443,30 @@ class RecipeService
     }
     
     /**
+     * @param \App\Models\Recipe $recipe
+     *
+     * @return array
+     */
+    public function getStatisticOfUses(Recipe $recipe)
+    {
+        $statistic = [];
+    
+        $menus = WeeklyMenu::joinWeeklyMenuBaskets()
+            ->joinBasketRecipes()
+            ->whereNotNull('basket_recipes.weekly_menu_basket_id')
+            ->where('basket_recipes.recipe_id', $recipe->id)
+            ->groupBy('weekly_menus.id')
+            ->orderBy('weekly_menus.year', 'DESC')->orderBy('weekly_menus.week', 'DESC')
+            ->get(empty($select) ? ['weekly_menus.*'] : $select);
+        
+        foreach ($menus as $menu) {
+            $statistic[$menu->id] = $menu->getName();
+        }
+        
+        return $statistic;
+    }
+    
+    /**
      * @param int  $recipe_id
      * @param bool $copy
      * @param int  $portions

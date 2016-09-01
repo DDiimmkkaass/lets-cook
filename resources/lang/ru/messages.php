@@ -127,6 +127,7 @@ return array (
   'sale price helper message' => '0 - ингредиент не продается',
   'copy error, parent recipe not found' => 'Ошибка копирования, исходный рецепт не найден',
   'this recipe has not ordered any time' => 'Этот рецепт еще не заказывали',
+  'this recipe has not uses in any week menu' => 'Этот рецепт еще не использовался в меню на неделю',
   'ingredient successfully added' => 'Ингредиент успешно добавлен',
   'delete confirm question' => 'Вы действительно хотите удалить этот элемент?',
   'this recipe with the same number of portions is already exists' => 'Этот рецепт с таким количеством порций уже существует',
