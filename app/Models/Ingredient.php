@@ -213,7 +213,8 @@ class Ingredient extends Model
     }
     
     /**
-     * @param $query
+     * @param        $query
+     * @param string $table_name
      *
      * @return mixed
      */
@@ -250,7 +251,18 @@ class Ingredient extends Model
      */
     public function scopeCompleted($query)
     {
-        return $query->whereNotNull('category_id')->whereNotNull('supplier_id')->whereNotNull('unit_id');
+        return $query->whereNotNull('category_id')->whereNotNull('supplier_id')->whereNotNull('unit_id')
+            ->where(
+                function ($query) {
+                    $query->where('sale_price', '=', 0)
+                        ->orWhere(
+                            function ($query) {
+                                $query->where('sale_price', '>', 0)
+                                    ->whereNotNull('sale_unit_id');
+                            }
+                        );
+                }
+            );
     }
     
     /**
