@@ -323,6 +323,28 @@ class Order extends Model
     }
     
     /**
+     * @param string|null $status
+     *
+     * @return bool|string
+     */
+    public function isOriginalStatus($status = null)
+    {
+        $__status = null;
+        
+        foreach (self::$statuses as $id => $_status) {
+            if ($id == $this->original['status']) {
+                $__status = $status;
+            }
+        }
+        
+        if (!$status) {
+            return $__status;
+        }
+        
+        return $__status == $status;
+    }
+    
+    /**
      * @return float
      */
     public function getTotal()

@@ -15,13 +15,13 @@ class PopulateVariablesTable extends Migration
         $variables = [
             'stop_ordering_date' => [
                 'type'        => 'weekday',
-                'name'        => 'День закрытие приема заказов',
+                'name'        => 'День закрытия приема заказов',
                 'description' => 'День недели, когда прекращается прием заявок на текущую неделю',
                 'status'      => true,
             ],
             'stop_ordering_time' => [
                 'type'        => 'time',
-                'name'        => 'Время закрытие приема заказов',
+                'name'        => 'Время закрытия приема заказов',
                 'description' => 'Время, когда прекращается прием заявок на текущую неделю',
                 'status'      => true,
             ],

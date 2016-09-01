@@ -4,27 +4,26 @@ namespace App\Console\Commands;
 
 use App\Models\Order;
 use App\Services\OrderService;
-use Carbon\Carbon;
 
 /**
- * Class ArchiveCompletedOrders
+ * Class RemoveUnsuccessfulOrdersForCurrentWeek
  * @package App\Console\Commands
  */
-class ArchiveCompletedOrders extends Command
+class RemoveUnsuccessfulOrdersForCurrentWeek extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'orders:archive-completed-orders';
+    protected $signature = 'orders:remove-unsuccessful-orders-for-current-week';
     
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Archive completed on current week orders';
+    protected $description = 'Remove all unsuccessful(changed) orders for current week';
     
     /**
      * @var \App\Services\OrderService
@@ -39,6 +38,7 @@ class ArchiveCompletedOrders extends Command
     public function __construct(OrderService $orderService)
     {
         parent::__construct();
+        
         $this->orderService = $orderService;
     }
     
@@ -50,23 +50,18 @@ class ArchiveCompletedOrders extends Command
     public function handle()
     {
         $this->log('Start '.$this->description);
-    
-        $delivery_date = Carbon::now()->subDay()->startOfDay();
         
-        foreach (Order::ofStatus('processed')->whereDeliveryDate($delivery_date)->get() as $order) {
-            $order->status = Order::getStatusIdByName('archived');
+        foreach (Order::ofStatus('changed')->forCurrentWeek()->get() as $order) {
+            $order->status = Order::getStatusIdByName('deleted');
             $order->save();
             
             $this->orderService->addSystemOrderComment(
                 $order,
-                trans('messages.archive completed order'),
-                'archived'
+                trans('messages.deleted, because payment was not made on time'),
+                'deleted'
             );
-    
-            $this->log(
-                'competed order #'.$order->id.' with delivery date = '.$order->delivery_date.', successfully archived, order status changed to "archived"',
-                'info'
-            );
+            
+            $this->log('unpaid order #'.$order->id.' successfully deleted, order status changed to "deleted"', 'info');
         }
         
         $this->log('End '.$this->description);

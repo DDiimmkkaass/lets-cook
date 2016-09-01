@@ -46,14 +46,26 @@ class AppValidator extends Validator
      */
     public function validateDeliveryDateDate($attribute, $value, $parameters)
     {
-        $delivery_date = Carbon::createFromFormat('d-m-Y', $value)->startOfDay();
-        $day_of_week = Carbon::now()->startOfDay()->dayOfWeek;
+        $stop_day = variable('stop_ordering_date');
+        $stop_time = variable('stop_ordering_time');
+    
+        $now = Carbon::now();
         
-        if (in_array($day_of_week, [1, 2, 3, 4])) {
+        $delivery_date = Carbon::createFromFormat('d-m-Y', $value)->startOfDay();
+        
+        if ($now->dayOfWeek >= 1 && $now->dayOfWeek < $stop_day) {
             return $delivery_date > Carbon::now()->startOfDay();
         }
     
-        if (in_array($day_of_week, [5, 6, 0])) {
+        if ($now->dayOfWeek == $stop_day) {
+            $now_time = $now->hour.$now->second;
+            
+            if ($now_time < str_replace(':', '', $stop_time)) {
+                return $delivery_date > Carbon::now()->startOfDay();
+            }
+        }
+    
+        if ($now->dayOfWeek >= $stop_day || $now->dayOfWeek == 0) {
             return $delivery_date >= Carbon::now()->startOfDay()->addWeek();
         };
         

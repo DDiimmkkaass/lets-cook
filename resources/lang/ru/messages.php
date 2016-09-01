@@ -150,4 +150,5 @@ return array (
   'order auto paid failed' => 'Автоматическая оплата заказа завершилась ошибкой',
   'discount count helper message' => '0 - без ограничений',
   'coupon dates helper message' => 'пусто - без ограничений',
+  'deleted, because payment was not made on time' => 'Отменен, так как вовремя не было проведено оплату',
 );
