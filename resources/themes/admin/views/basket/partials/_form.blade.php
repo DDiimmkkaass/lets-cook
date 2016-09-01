@@ -19,6 +19,10 @@
                     <li>
                         <a aria-expanded="false" href="#recipes" data-toggle="tab">@lang('labels.tab_recipes')</a>
                     </li>
+
+                    <li>
+                        <a aria-expanded="false" href="#tags" data-toggle="tab">@lang('labels.tab_tags')</a>
+                    </li>
                 @endif
 
             </ul>
@@ -37,6 +41,10 @@
                 @if ($type == 'additional')
                     <div class="tab-pane" id="recipes">
                         @include('basket.tabs.recipes')
+                    </div>
+
+                    <div class="tab-pane" id="tags">
+                        @include('basket.tabs.tags')
                     </div>
                 @endif
             </div>

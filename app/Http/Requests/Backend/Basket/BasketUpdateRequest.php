@@ -34,6 +34,7 @@ class BasketUpdateRequest extends FormRequest
 
             'recipes.new' => 'array',
             'recipes.old' => 'array',
+            'tags' => 'array',
             
             'recipes.old.*.recipe_id' => 'required_with:recipes.old|exists:recipes,id',
             'recipes.old.*.main'      => 'boolean',
@@ -42,6 +43,8 @@ class BasketUpdateRequest extends FormRequest
             'recipes.new.*.recipe_id' => 'required_with:recipes.new|exists:recipes,id',
             'recipes.new.*.main'      => 'boolean',
             'recipes.new.*.position'  => 'required_with:recipes.new|numeric|min:0',
+
+            'tags.*' => 'exists:tags,id',
         ];
     
         if ($type == 'basic') {

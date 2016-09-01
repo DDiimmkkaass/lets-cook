@@ -9,6 +9,7 @@
 namespace App\Models;
 
 use App\Traits\Models\PositionSortedTrait;
+use App\Traits\Models\TaggableTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -19,6 +20,7 @@ class Basket extends Model
 {
     
     use PositionSortedTrait;
+    use TaggableTrait;
     
     /**
      * @var array

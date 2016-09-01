@@ -14,6 +14,7 @@ use App\Http\Requests\Backend\Basket\BasketUpdateRequest;
 use App\Models\Basket;
 use App\Models\Recipe;
 use App\Services\BasketService;
+use App\Traits\Controllers\ProcessTagsTrait;
 use Datatables;
 use DB;
 use Exception;
@@ -30,6 +31,8 @@ use Response;
  */
 class BasketController extends BackendController
 {
+    
+    use ProcessTagsTrait;
     
     /**
      * @var string
@@ -94,7 +97,7 @@ class BasketController extends BackendController
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Response
+     * @return \Illuminate\Contracts\View\View|array|\Bllim\Datatables\json
      */
     public function index(Request $request)
     {
@@ -147,7 +150,7 @@ class BasketController extends BackendController
      * Show the form for creating a new resource.
      * GET /basket/create
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -170,7 +173,7 @@ class BasketController extends BackendController
      *
      * @param BasketCreateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(BasketCreateRequest $request)
     {
@@ -204,7 +207,7 @@ class BasketController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function show($id)
     {
@@ -217,7 +220,7 @@ class BasketController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit($id)
     {
@@ -245,7 +248,7 @@ class BasketController extends BackendController
      * @param  int                $id
      * @param BasketUpdateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update($id, BasketUpdateRequest $request)
     {
@@ -363,6 +366,10 @@ class BasketController extends BackendController
                 }
             }
             $this->data('recipes', $recipes);
+            
+            $this->data('tags', $this->getTagsList());
+    
+            $this->data('selected_tags', $this->getSelectedTagsList($model));
         }
     }
     
@@ -373,5 +380,7 @@ class BasketController extends BackendController
     private function _saveRelationships(Basket $model, Request $request)
     {
         $this->basketService->processRecipes($model, $request->get('recipes', []));
+        
+        $this->processTags($model);
     }
 }

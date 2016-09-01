@@ -31,22 +31,26 @@ class BasketCreateRequest extends FormRequest
             'name'     => 'required|unique:baskets,name',
             'position' => 'integer',
             'type'     => 'required|in:'.implode(',', Basket::$types),
-
+            
             'recipes.new.*.recipe_id' => 'required_with:recipes.new|exists:recipes,id',
             'recipes.new.*.main'      => 'boolean',
             'recipes.new.*.position'  => 'required_with:recipes.new|numeric|min:0',
+            
+            'tags' => 'array',
+
+            'tags.*' => 'exists:tags,id',
         ];
-    
+        
         if (Basket::getTypeIdByName($type) == 'basic') {
             $rules['prices'] = 'array';
-    
+            
             foreach (config('recipe.available_portions') as $portion) {
                 foreach (range(1, config('weekly_menu.menu_days')) as $day) {
                     $rules['prices.'.$portion.'.'.$day] = 'required|numeric|min:0';
                 }
             }
         }
-    
+        
         if (Basket::getTypeIdByName($type) == 'additional') {
             $rules['price'] = 'required|numeric|min:0';
         }
