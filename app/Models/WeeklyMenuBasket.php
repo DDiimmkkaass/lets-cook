@@ -95,6 +95,17 @@ class WeeklyMenuBasket extends Model
     }
     
     /**
+     * @param int $portions
+     * @param int $days
+     *
+     * @return int
+     */
+    public function getPlaces($portions = 0, $days = 0)
+    {
+        return $this->basket->getPlaces(empty($portions) ? $this->portions : $portions, $days);
+    }
+    
+    /**
      * @return float
      */
     public function getWeekPrice()

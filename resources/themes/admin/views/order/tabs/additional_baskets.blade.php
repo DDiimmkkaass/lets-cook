@@ -1,7 +1,7 @@
 <div class="padding-15 order-additional-baskets">
     @foreach($additional_baskets as $basket)
         <div class="form-group @if ($errors->has('baskets['.$basket->id.']')) has-error @endif">
-            <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
+            <div class="col-xs-12 col-sm-6">
                 <label for="baskets_{!! $basket->id !!}" class="checkbox-label">
                     {!! Form::checkbox('baskets['.$basket->id.']', $basket->id, isset($selected_baskets[$basket->id]) ? true : false, ['id' => 'baskets_'.$basket->id, 'class' => 'square']) !!}
                 </label>

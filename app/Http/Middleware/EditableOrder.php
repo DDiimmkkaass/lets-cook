@@ -43,14 +43,15 @@ class EditableOrder
      *
      * @param  \Illuminate\Http\Request $request
      * @param  \Closure                 $next
+     * @param string                    $permissions
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $permissions = 'user')
     {
         $order = Order::find($request->route('order', 0));
         
-        if ($order && $order->editable()) {
+        if ($order && $order->editable($permissions)) {
             return $next($request);
         }
         

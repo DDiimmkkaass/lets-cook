@@ -32,7 +32,7 @@
                     <th>
                         @lang('labels.baskets')
                     </th>
-                    <th>
+                    <th style="text-align: center">
                         @lang('labels.places')
                     </th>
                     <th style="text-align: center">
@@ -74,8 +74,8 @@
                                 @endforeach
                             @endif
                         </td>
-                        <td style="{!! $background !!}">
-
+                        <td style="text-align: center; {!! $background !!}">
+                            {!! $order->getPlacesCount() !!}
                         </td>
                         <td style="text-align: center; color: #ff0000; {!! $background !!}">
                             @if ($order->paymentMethod('cash'))
@@ -88,7 +88,6 @@
                     </tr>
                 @endforeach
 
-                <tr><td colspan="10"></td></tr>
                 <tr><td colspan="10"></td></tr>
             @endforeach
 

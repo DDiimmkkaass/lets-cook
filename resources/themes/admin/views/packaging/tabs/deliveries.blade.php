@@ -15,7 +15,7 @@
 
             @foreach($list as $day => $orders)
                 <tr class="day-title">
-                    <th colspan="8">{!! $day !!} ({!! day_of_week($day, 'd-m-Y') !!})</th>
+                    <th colspan="9">{!! $day !!} ({!! day_of_week($day, 'd-m-Y') !!})</th>
                 </tr>
                 <tr class="title">
                     <th class="text-center">
@@ -36,8 +36,11 @@
                     <th class="col-sm-2">
                         @lang('labels.comment')
                     </th>
-                    <th class="col-sm-3">
+                    <th class="col-sm-2">
                         @lang('labels.baskets')
+                    </th>
+                    <th class="col-sm-1">
+                        @lang('labels.places')
                     </th>
                     <th class="col-sm-1 text-center">
                         @lang('labels.payment')
@@ -76,6 +79,9 @@
                             @endif
                         </td>
                         <td class="text-center">
+                            {!! $order->getPlacesCount() !!}
+                        </td>
+                        <td class="text-center">
                             @if ($order->paymentMethod('cash'))
                                 {!! $order->total !!} {!! $currency !!}
                             @endif
@@ -83,7 +89,7 @@
                     </tr>
                 @endforeach
 
-                <tr><td colspan="8"></td></tr>
+                <tr><td colspan="9"></td></tr>
             @endforeach
 
             </tbody>

@@ -394,6 +394,27 @@ class Order extends Model
     }
     
     /**
+     * @return int
+     */
+    public function getPlacesCount()
+    {
+        $places = 0;
+        
+        $basket = $this->getMainBasket();
+        if ($basket) {
+            $days = count($this->recipes);
+            
+            $places += $basket->getPlaces(null, $days);
+        }
+    
+        $places += $this->baskets()->get()->sum(function ($item) {
+            return $item->places;
+        });
+        
+        return $places;
+    }
+    
+    /**
      * @param bool $with_portions
      *
      * @return string
@@ -406,7 +427,7 @@ class Order extends Model
             return '';
         }
         
-        return $basket->getName().($with_portions ? $basket->portions : '');
+        return $basket->getName().' '.($with_portions ? $basket->portions : '');
     }
     
     /**
@@ -461,7 +482,7 @@ class Order extends Model
         if ($permissions == 'user') {
             return in_array($this->getStringStatus(), self::$editable_statuses_user);
         }
-    
+        
         return in_array($this->getStringStatus(), self::$editable_statuses_admin);
     }
     
