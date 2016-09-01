@@ -49,10 +49,20 @@ class BasketCreateRequest extends FormRequest
                     $rules['prices.'.$portion.'.'.$day] = 'required|numeric|min:0';
                 }
             }
+    
+            $rules['places'] = 'array';
+    
+            foreach (config('recipe.available_portions') as $portion) {
+                foreach (range(1, config('weekly_menu.menu_days')) as $day) {
+                    $rules['places.'.$portion.'.'.$day] = 'required|integer|min:1|max:3';
+                }
+            }
         }
         
         if (Basket::getTypeIdByName($type) == 'additional') {
             $rules['price'] = 'required|numeric|min:0';
+    
+            $rules['places'] = 'required|integer|min:1|max:3';
         }
         
         return $rules;

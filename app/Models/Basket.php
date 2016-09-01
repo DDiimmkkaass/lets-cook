@@ -30,6 +30,7 @@ class Basket extends Model
         'description',
         'price',
         'prices',
+        'places',
         'position',
     ];
     
@@ -80,6 +81,14 @@ class Basket extends Model
     }
     
     /**
+     * @param int|array $value
+     */
+    public function setPlacesAttribute($value)
+    {
+        $this->attributes['places'] = json_encode($value);
+    }
+    
+    /**
      * @param int $value
      *
      * @return float
@@ -105,6 +114,30 @@ class Basket extends Model
                 foreach ((array) $days as $day => $price) {
                     $values[$portion][$day] = $price / 100;
                 }
+            }
+        }
+        
+        return $values;
+    }
+    
+    /**
+     * @param string $value
+     *
+     * @return array|int
+     */
+    public function getPlacesAttribute($value)
+    {
+        $value = (array) json_decode($value);
+        
+        if ($this->isType('additional')) {
+            return isset($value[0]) ? $value[0] : 0;
+        }
+    
+        $values = [];
+    
+        foreach ($value as $portion => $days) {
+            foreach ((array) $days as $day => $places) {
+                $values[$portion][$day] = $places;
             }
         }
         
@@ -195,6 +228,29 @@ class Basket extends Model
         }
         
         return isset($this->prices[$portions][$days]) ? $this->prices[$portions][$days] : 0;
+    }
+    
+    /**
+     * @param int $portions
+     * @param int $days
+     *
+     * @return array|int
+     */
+    public function getPlaces($portions = 0, $days = 0)
+    {
+        if ($this->isType('additional')) {
+            return $this->places;
+        }
+    
+        if ($portions == 0 && $days == 0) {
+            return $this->places;
+        }
+    
+        if ($portions > 0 && $days == 0) {
+            return isset($this->places[$portions]) ? $this->places[$portions] : [];
+        }
+    
+        return isset($this->places[$portions][$days]) ? $this->places[$portions][$days] : 0;
     }
     
     /**

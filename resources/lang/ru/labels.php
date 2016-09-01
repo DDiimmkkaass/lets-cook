@@ -278,6 +278,7 @@ return array (
   'tab_medias' => 'Медиа',
   'tab_name' => 'Название',
   'tab_permissions' => 'Разрешения',
+  'tab_places' => 'Места',
   'tab_ru' => 'Контент',
   'tab_spendings' => 'Отчет',
   'tab_tags' => 'Теги',
@@ -610,4 +611,5 @@ return array (
   'article_editing' => 'Редактирование статьи',
   'question_&_answer' => 'Вопрос-ответ',
   'un_editable_order' => 'Заказ не редактируется',
+  'places_count_choice' => '{0} мест|{1} место|[2,4] места|[5,Inf] мест',
 );

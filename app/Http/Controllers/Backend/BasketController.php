@@ -102,7 +102,7 @@ class BasketController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = Basket::ofType($this->type)->select('id', 'name', 'position', 'price', 'type');
+            $list = Basket::ofType($this->type)->select('id', 'name', 'position', 'price', 'places', 'type');
             
             $dataTables = Datatables::of($list)
                 ->filterColumn('id', 'where', 'baskets.id', '=', '$1')
@@ -132,9 +132,10 @@ class BasketController extends BackendController
             )
                 ->setIndexColumn('id')
                 ->removeColumn('type');
-    
+            
             if ($this->type == 'basic') {
-                $dataTables = $dataTables->removeColumn('price');
+                $dataTables = $dataTables->removeColumn('price')
+                    ->removeColumn('places');
             }
             
             return $dataTables->make();
@@ -368,9 +369,16 @@ class BasketController extends BackendController
             $this->data('recipes', $recipes);
             
             $this->data('tags', $this->getTagsList());
-    
+            
             $this->data('selected_tags', $this->getSelectedTagsList($model));
         }
+        
+        $places = [];
+        foreach (range(1, 3) as $place) {
+            $places[$place] = $place.' '.trans_choice('labels.places_count_choice', $place);
+        }
+        
+        $this->data('places', $places);
     }
     
     /**

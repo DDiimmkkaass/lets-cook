@@ -18,6 +18,16 @@
             {!! $errors->first('price', '<p class="help-block error">:message</p>') !!}
         </div>
     </div>
+
+    <div class="form-group required @if ($errors->has('places')) has-error @endif">
+        {!! Form::label('places', trans('labels.places'), ['class' => 'control-label col-xs-12 col-sm-3 col-md-2']) !!}
+
+        <div class="col-xs-12 col-sm-3 col-md-2">
+            {!! Form::select('places', $places, null, ['class' => 'form-control select2 input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+
+            {!! $errors->first('places', '<p class="help-block error">:message</p>') !!}
+        </div>
+    </div>
 @endif
 
 <div class="form-group required @if ($errors->has('position')) has-error @endif">

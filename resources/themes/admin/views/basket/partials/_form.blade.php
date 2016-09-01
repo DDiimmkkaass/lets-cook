@@ -13,6 +13,9 @@
                     <li>
                         <a aria-expanded="false" href="#prices" data-toggle="tab">@lang('labels.tab_prices')</a>
                     </li>
+                    <li>
+                        <a aria-expanded="false" href="#places" data-toggle="tab">@lang('labels.tab_places')</a>
+                    </li>
                 @endif
 
                 @if ($type == 'additional')
@@ -35,6 +38,9 @@
                 @if ($type == 'basic')
                     <div class="tab-pane" id="prices">
                         @include('basket.tabs.prices')
+                    </div>
+                    <div class="tab-pane" id="places">
+                        @include('basket.tabs.places')
                     </div>
                 @endif
 

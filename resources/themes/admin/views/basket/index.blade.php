@@ -29,10 +29,11 @@
                                     ['text' => trans('labels.name')],
                                     ['text' => trans('labels.position')],
                                     ['text' => trans('labels.price')],
+                                    ['text' => trans('labels.places')],
                                     ['text' => trans('labels.actions')]
                                 ])
                                 ->addFoot([
-                                    ['attr' => ['colspan' => 5]]
+                                    ['attr' => ['colspan' => 6]]
                                 ])
                                  ->make()
                             !!}
