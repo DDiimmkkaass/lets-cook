@@ -614,4 +614,9 @@ return array (
   'question_&_answer' => 'Вопрос-ответ',
   'un_editable_order' => 'Заказ не редактируется',
   'places_count_choice' => '{0} мест|{1} место|[2,4] места|[5,Inf] мест',
+  'purchase_for_week' => 'Закупка на неделю',
+  'this_is_not_final_version' => 'Это не финальная версия отчёта',
+  'not_final_version' => 'НЕ ФИНАЛЬНАЯ ВЕРСИЯ ОТЧЁТА',
+  'generate_report' => 'Сгенерировать отчёт c заказов',
+  'back_ro_list' => 'Вернуться к листу',
 );

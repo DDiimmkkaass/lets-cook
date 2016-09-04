@@ -18,7 +18,7 @@ use Illuminate\Queue\InteractsWithQueue;
  */
 class CommentsDelete implements ShouldQueue
 {
-
+    
     use InteractsWithQueue;
 
     /**

@@ -44,16 +44,17 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
-        'auth'                  => \App\Http\Middleware\Authenticate::class,
-        'admin.auth'            => \App\Http\Middleware\AdminAuthenticate::class,
-        'auth.basic'            => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'guest'                 => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'throttle'              => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'ajax'                  => \App\Http\Middleware\AjaxMiddleware::class,
-        'prepare.phone'         => \App\Http\Middleware\PreparePhone::class,
-        'slug.set'              => \App\Http\Middleware\SetSlug::class,
-        'localizationRedirect'  => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
-        'localeSessionRedirect' => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
-        'admin.order.editable'  => \App\Http\Middleware\EditableOrder::class,
+        'auth'                           => \App\Http\Middleware\Authenticate::class,
+        'admin.auth'                     => \App\Http\Middleware\AdminAuthenticate::class,
+        'auth.basic'                     => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'guest'                          => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'throttle'                       => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'ajax'                           => \App\Http\Middleware\AjaxMiddleware::class,
+        'prepare.phone'                  => \App\Http\Middleware\PreparePhone::class,
+        'slug.set'                       => \App\Http\Middleware\SetSlug::class,
+        'localizationRedirect'           => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
+        'localeSessionRedirect'          => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
+        'admin.order.editable'           => \App\Http\Middleware\EditableOrder::class,
+        'admin.before_finalisation_date' => \App\Http\Middleware\BeforeFinalisationDate::class,
     ];
 }

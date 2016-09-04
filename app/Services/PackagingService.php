@@ -17,7 +17,7 @@ use App\Models\Purchase;
 use App\Models\RecipeIngredient;
 use DB;
 use Excel;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class PackagingService
@@ -49,7 +49,7 @@ class PackagingService
      */
     public function recipesForWeek($year, $week)
     {
-        $orders = Order::ofStatus('processed')->forWeek($year, $week)->get(['id'])->pluck('id');
+        $orders = $this->_getOrders($year, $week)->pluck('id');
         
         $recipes = $this->_getOrderedRecipes($orders);
         $this->_addIngredients($recipes);
@@ -73,7 +73,7 @@ class PackagingService
      */
     public function stickersForWeek($year, $week)
     {
-        $orders = Order::ofStatus('processed')->forWeek($year, $week)->get(['id'])->pluck('id');
+        $orders = $this->_getOrders($year, $week)->pluck('id');
         
         $recipes = $this->_getOrderedRecipes($orders);
         $this->_addOrderedIngredients($orders, $recipes);
@@ -120,10 +120,11 @@ class PackagingService
     {
         $users = [];
         
-        $orders = Order::with('user', 'city', 'recipes', 'ingredients', 'ingredients.recipe', 'baskets')
-            ->ofStatus('processed')
-            ->forWeek($year, $week)
-            ->get();
+        $orders = $this->_getOrders(
+            $year,
+            $week,
+            ['user', 'city', 'recipes', 'ingredients', 'ingredients.recipe', 'baskets']
+        );
         
         foreach ($orders as $order) {
             if (!isset($users[$order->user_id])) {
@@ -174,11 +175,8 @@ class PackagingService
     {
         $days = [];
         
-        $orders = Order::with('user', 'user.orders', 'city', 'recipes', 'baskets')
-            ->ofStatus('processed')
-            ->forWeek($year, $week)
-            ->orderBy('delivery_date')
-            ->get();
+        $orders = $this->_getOrders($year, $week, ['user', 'user.orders', 'city', 'recipes', 'baskets'])
+            ->sortBy('delivery_date');
         
         foreach ($orders as $order) {
             if (!isset($days[$order->delivery_date])) {
@@ -498,7 +496,7 @@ class PackagingService
                     'ingredients' => [],
                 ];
             }
-    
+            
             $categories[$ingredient->category_id]['ingredients'][$key] = [
                 'name'  => $ingredient->ingredient->name,
                 'unit'  => $ingredient->isType('order') ?
@@ -509,5 +507,20 @@ class PackagingService
         }
         
         return $categories;
+    }
+    
+    /**
+     * @param int        $year
+     * @param int        $week
+     * @param array|null $with
+     *
+     * @return array|Collection
+     */
+    private function _getOrders($year, $week, $with = [])
+    {
+        return Order::ofStatus(past_week($year, $week) ? 'archived' : 'processed')
+            ->with($with)
+            ->forWeek($year, $week)
+            ->get();
     }
 }

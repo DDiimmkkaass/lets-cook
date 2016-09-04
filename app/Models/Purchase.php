@@ -105,6 +105,20 @@ class Purchase extends Model
     
     /**
      * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeForFuture($query)
+    {
+        return $query->where('year', '>', Carbon::now()->year)->orWhere(
+            function ($query) {
+                $query->where('year', '=', Carbon::now()->year)->where('week', '>=', Carbon::now()->weekOfYear);
+            }
+        );
+    }
+    
+    /**
+     * @param $query
      */
     public function scopeJoinIngredient($query)
     {
@@ -145,6 +159,16 @@ class Purchase extends Model
     public function scopeJoinIngredientCategory($query)
     {
         return $query->leftJoin('categories', 'categories.id', '=', 'ingredients.category_id');
+    }
+    
+    /**
+     * @return bool
+     */
+    public function isCurrentWeek()
+    {
+        $now = Carbon::now();
+        
+        return $this->year = $now->year && $this->week == $now->weekOfYear;
     }
     
     /**

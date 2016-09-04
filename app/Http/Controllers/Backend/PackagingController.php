@@ -88,7 +88,8 @@ class PackagingController extends BackendController
                 ->editColumn(
                     'week',
                     function ($model) {
-                        return trans('labels.w_label').$model->week;
+                        return trans('labels.w_label').$model->week.
+                        ($model->isCurrentWeek() ? view('partials.datatables.current_week_label')->render() : '');
                     }
                 )
                 ->addColumn(
@@ -145,7 +146,7 @@ class PackagingController extends BackendController
     {
         $week = Carbon::now()->weekOfYear;
         $year = Carbon::now()->year;
-    
+        
         $this->data('year', $year);
         $this->data('week', $week);
         

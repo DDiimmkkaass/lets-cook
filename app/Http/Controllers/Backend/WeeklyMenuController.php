@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Events\Backend\WeeklyMenuSaved;
 use App\Http\Requests\Backend\WeeklyMenu\WeeklyMenuCreateRequest;
 use App\Http\Requests\Backend\WeeklyMenu\WeeklyMenuUpdateRequest;
 use App\Models\Basket;
@@ -18,13 +19,13 @@ use App\Services\WeeklyMenuService;
 use App\Traits\Controllers\ProcessTagsTrait;
 use Carbon;
 use DB;
+use Event;
 use Exception;
 use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Meta;
-use Response;
 
 /**
  * Class WeeklyMenuController
@@ -32,7 +33,7 @@ use Response;
  */
 class WeeklyMenuController extends BackendController
 {
-
+    
     use ProcessTagsTrait;
     
     /**
@@ -102,7 +103,7 @@ class WeeklyMenuController extends BackendController
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
@@ -119,7 +120,7 @@ class WeeklyMenuController extends BackendController
     /**
      * Display menu of current week.
      *
-     * @return \Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function current()
     {
@@ -150,7 +151,7 @@ class WeeklyMenuController extends BackendController
      * Show the form for creating a new resource.
      * GET /weekly_menu/create
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -180,7 +181,7 @@ class WeeklyMenuController extends BackendController
      *
      * @param WeeklyMenuCreateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(WeeklyMenuCreateRequest $request)
     {
@@ -194,6 +195,8 @@ class WeeklyMenuController extends BackendController
             $this->_saveRelationships($model, $request);
             
             DB::commit();
+            
+            Event::fire(new WeeklyMenuSaved($model));
             
             FlashMessages::add('success', trans('messages.save_ok'));
             
@@ -213,7 +216,7 @@ class WeeklyMenuController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function show($id)
     {
@@ -221,21 +224,21 @@ class WeeklyMenuController extends BackendController
             $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.recipes.recipe.ingredients')
                 ->whereId($id)
                 ->firstOrFail();
-    
+            
             $this->data(
                 'page_title',
                 trans('labels.weekly_menu').': '.
                 trans('labels.w_label').$model->week.', '.$model->year.' ('.$model->getWeekDates().')'
             );
-        
+            
             $this->breadcrumbs(trans('labels.weekly_menu_show'));
-        
+            
             $this->_fillAdditionalTemplateData($model);
-        
+            
             return $this->render('views.'.$this->module.'.show', compact('model'));
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
-        
+            
             return redirect()->route('admin.'.$this->module.'.index');
         }
     }
@@ -246,7 +249,7 @@ class WeeklyMenuController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit($id)
     {
@@ -254,7 +257,7 @@ class WeeklyMenuController extends BackendController
             $model = WeeklyMenu::with('baskets', 'baskets.recipes', 'baskets.recipes.recipe.ingredients')
                 ->whereId($id)
                 ->firstOrFail();
-    
+            
             if ($model->old()) {
                 FlashMessages::add('error', trans('messages.you cannot edit old weekly menu'));
                 
@@ -290,7 +293,7 @@ class WeeklyMenuController extends BackendController
      * @param  int                    $id
      * @param WeeklyMenuUpdateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update($id, WeeklyMenuUpdateRequest $request)
     {
@@ -298,10 +301,10 @@ class WeeklyMenuController extends BackendController
         
         try {
             $model = WeeklyMenu::findOrFail($id);
-    
+            
             if ($model->old()) {
                 FlashMessages::add('error', trans('messages.you cannot edit old weekly menu'));
-        
+                
                 return redirect()->route('admin.'.$this->module.'.index');
             }
             
@@ -317,6 +320,8 @@ class WeeklyMenuController extends BackendController
             $this->_saveRelationships($model, $request);
             
             DB::commit();
+            
+            Event::fire(new WeeklyMenuSaved($model));
             
             FlashMessages::add('success', trans('messages.save_ok'));
             
@@ -373,7 +378,7 @@ class WeeklyMenuController extends BackendController
             $portions = $request->get('portions', config('weekly_menu.default_portions_count'));
             
             $basket = Basket::whereId($request->get('basket_id'))->firstOrFail();
-    
+            
             $tags = $this->getTagsList();
             
             return [

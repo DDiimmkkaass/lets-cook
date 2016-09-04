@@ -439,15 +439,20 @@ $router->group(
                             'index',
                             ['as' => 'admin.purchase.index', 'uses' => 'Backend\PurchaseController@index']
                         );
-                        
-                        $router->get(
-                            'edit',
-                            ['as' => 'admin.purchase.edit', 'uses' => 'Backend\PurchaseController@edit']
-                        );
-                        
+    
                         $router->get(
                             'show/{year}/{week}',
                             ['as' => 'admin.purchase.show', 'uses' => 'Backend\PurchaseController@show']
+                        );
+                        
+                        $router->get(
+                            'edit/{year}/{week}',
+                            ['as' => 'admin.purchase.edit', 'uses' => 'Backend\PurchaseController@edit']
+                        );
+    
+                        $router->get(
+                            'generate/{year}/{week}',
+                            ['as' => 'admin.purchase.generate', 'uses' => 'Backend\PurchaseController@generate']
                         );
                         
                         $router->get(
@@ -458,6 +463,11 @@ $router->group(
                         $router->get(
                             '{year}/{week}/download/{supplier_id?}',
                             ['as' => 'admin.purchase.download', 'uses' => 'Backend\PurchaseController@download']
+                        );
+    
+                        $router->get(
+                            '{year}/{week}/download-pre-report/{supplier_id?}',
+                            ['as' => 'admin.purchase.download_pre_report', 'uses' => 'Backend\PurchaseController@downloadPreReport']
                         );
                     }
                 );

@@ -4,13 +4,15 @@
     <table class="table table-bordered stickers-packaging">
         <tbody>
         <tr>
-            <td style="text-align: center;" colspan="4">
-                <b>{!! $title !!}</b>
+            <td colspan="5">
+                <div style="text-align: center;">
+                    <b @if ($pre_report) style="color: #ff0000" @endif>{!! $title !!}</b>
+                </div>
             </td>
         </tr>
 
         <tr>
-            <td colspan="4"></td>
+            <td colspan="5"></td>
         </tr>
 
         <tr>
@@ -22,7 +24,7 @@
         </tr>
 
         <tr>
-            <td colspan="4"></td>
+            <td colspan="5"></td>
         </tr>
 
         @foreach($list as $ingredient)

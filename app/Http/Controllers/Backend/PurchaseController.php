@@ -60,6 +60,8 @@ class PurchaseController extends BackendController
         Meta::title(trans('labels.purchase'));
         
         $this->breadcrumbs(trans('labels.purchase'), route('admin.'.$this->module.'.index'));
+        
+        $this->middleware('admin.before_finalisation_date', ['only' => ['generate', 'downloadPreReport']]);
     }
     
     /**
@@ -77,12 +79,19 @@ class PurchaseController extends BackendController
             return $dataTables = Datatables::of($list)
                 ->filterColumn('week', 'where', 'purchase.week', '=', '$1')
                 ->filterColumn('year', 'where', 'purchase.year', '=', '$1')
-                ->editColumn('week', function ($model) {
-                    return trans('labels.w_label').$model->week;
-                })
-                ->addColumn('dates', function ($model) {
-                    return $model->getWeekDates();
-                })
+                ->editColumn(
+                    'week',
+                    function ($model) {
+                        return trans('labels.w_label').$model->week.
+                        ($model->isCurrentWeek() ? view('partials.datatables.current_week_label')->render() : '');
+                    }
+                )
+                ->addColumn(
+                    'dates',
+                    function ($model) {
+                        return $model->getWeekDates();
+                    }
+                )
                 ->editColumn(
                     'actions',
                     function ($model) {
@@ -96,7 +105,7 @@ class PurchaseController extends BackendController
         }
         
         $this->data('page_title', trans('labels.history_of_purchasing'));
-    
+        
         $this->breadcrumbs(trans('labels.history_of_purchasing'));
         
         return $this->render('views.'.$this->module.'.index');
@@ -110,8 +119,8 @@ class PurchaseController extends BackendController
      */
     public function show($year, $week)
     {
-        if ($year == Carbon::now()->year && $week == Carbon::now()->weekOfYear) {
-            return redirect()->route('admin.'.$this->module.'.edit');
+        if ($year > Carbon::now()->year || ($year == Carbon::now()->year && $week >= Carbon::now()->weekOfYear)) {
+            return redirect()->route('admin.'.$this->module.'.edit', [$year, $week]);
         }
         
         $list = $this->purchaseService->getForWeek($year, $week);
@@ -126,22 +135,65 @@ class PurchaseController extends BackendController
     }
     
     /**
+     * @param int $year
+     * @param int $week
+     *
      * @return \Illuminate\Contracts\View\View
      */
-    public function edit()
+    public function edit($year, $week)
     {
-        $year = Carbon::now()->year;
-        $week = Carbon::now()->weekOfYear;
+        $now = Carbon::now();
+        
+        if ($year < $now->year || ($year == $now->year && $week < $now->weekOfYear)) {
+            return redirect()->route('admin.'.$this->module.'.show', [$year, $week]);
+        }
         
         $list = $this->purchaseService->getForWeek($year, $week);
         
         $this->data('list', $list);
         
-        $this->data('page_title', trans('labels.for_current_week'));
+        if ($now->year == $year && $now->weekOfYear == $week) {
+            $this->data('page_title', trans('labels.for_current_week'));
+        } else {
+            $this->data(
+                'page_title',
+                trans('labels.purchase_for_week').': '.trans('labels.w_label').$week.', '.$year
+            );
+        }
+        
+        $this->breadcrumbs(trans('labels.purchase_for_week'));
+        
+        return $this->render('views.'.$this->module.'.edit');
+    }
+    
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function generate($year, $week)
+    {
+        $now = Carbon::now();
+        
+        $list = $this->purchaseService->preGenerate($year, $week);
+        
+        $this->data('list', $list);
+        
+        if ($now->year == $year && $now->weekOfYear == $week) {
+            $page_title = trans('labels.for_current_week');
+        } else {
+            $page_title = trans('labels.purchase_for_week').': '.trans('labels.w_label').$week.', '.$year;
+        }
+        
+        $this->data(
+            'page_title',
+            $page_title.'<span class="label label-danger">'.trans('labels.this_is_not_final_version').'</span>'
+        );
         
         $this->breadcrumbs(trans('labels.for_current_week'));
         
-        return $this->render('views.'.$this->module.'.edit');
+        return $this->render('views.'.$this->module.'.generate');
     }
     
     /**
@@ -155,6 +207,16 @@ class PurchaseController extends BackendController
     }
     
     /**
+     * @param int      $year
+     * @param int      $week
+     * @param int|bool $supplier_id
+     */
+    public function downloadPreReport($year, $week, $supplier_id = false)
+    {
+        return $this->purchaseService->download($year, $week, $supplier_id, true);
+    }
+    
+    /**
      * @param int $purchase_id
      *
      * @return array
@@ -162,7 +224,7 @@ class PurchaseController extends BackendController
     public function ajaxFieldChange($purchase_id)
     {
         try {
-            $model = Purchase::forCurrentWeek()->whereId($purchase_id)->first();
+            $model = Purchase::forFuture()->whereId($purchase_id)->first();
             
             if ($model) {
                 $field = request('field', null);

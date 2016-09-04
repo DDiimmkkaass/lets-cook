@@ -792,3 +792,86 @@ if (!function_exists('carbon')) {
         return new Carbon();
     }
 }
+
+if (!function_exists('before_finalisation')) {
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return bool
+     */
+    function before_finalisation($year, $week)
+    {
+        $now = Carbon::now();
+        
+        if (
+            ($year > $now->year)
+            ||
+            ($year == $now->year && $week > $now->weekOfYear)
+            ||
+            (
+                ($year == $now->year && $week == $now->weekOfYear)
+                &&
+                (
+                    (
+                        variable('finalising_reports_date') > 0 &&
+                        (
+                            $now->dayOfWeek < variable('finalising_reports_date') &&
+                            $now->dayOfWeek > 0
+                        )
+                    )
+                    ||
+                    (
+                        variable('finalising_reports_date') == 0 &&
+                        $now->dayOfWeek > 0
+                    )
+                    ||
+                    (
+                        $now->dayOfWeek == variable('finalising_reports_date') &&
+                        $now->format('H:i') < variable('finalising_reports_time')
+                    )
+                )
+            )
+        ) {
+            return true;
+        }
+        
+        return false;
+    }
+}
+
+if (!function_exists('after_finalisation')) {
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return bool
+     */
+    function after_finalisation($year, $week)
+    {
+        return !before_finalisation($year, $week);
+    }
+}
+
+if (!function_exists('past_week')) {
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return bool
+     */
+    function past_week($year, $week)
+    {
+        $now = Carbon::now();
+        
+        if ($year < $now->year) {
+            return true;
+        }
+        
+        if ($year == $now->year && $week < $now->weekOfYear) {
+            return true;
+        }
+        
+        return false;
+    }
+}

@@ -3,6 +3,14 @@
 <div class="box-body table-responsive no-padding">
     <table class="table table-bordered stickers-packaging">
         <tbody>
+        @if ($pre_report)
+            <tr>
+                <td colspan="7">
+                    <div style="color: #ff0000; text-align: center"><b>{!! $title !!}</b></div>
+                </td>
+            </tr>
+        @endif
+
         <tr>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.ingredient')</th>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.in_stock')</th>
@@ -14,7 +22,7 @@
         </tr>
 
         <tr>
-            <td colspan="4"></td>
+            <td colspan="7"></td>
         </tr>
 
         @foreach($list as $ingredient)

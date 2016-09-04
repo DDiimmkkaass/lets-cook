@@ -58,9 +58,9 @@ class AppValidator extends Validator
         }
     
         if ($now->dayOfWeek == $stop_day) {
-            $now_time = $now->hour.$now->second;
+            $now_time = $now->format('H:i');
             
-            if ($now_time < str_replace(':', '', $stop_time)) {
+            if ($now_time < $stop_time) {
                 return $delivery_date > Carbon::now()->startOfDay();
             }
         }

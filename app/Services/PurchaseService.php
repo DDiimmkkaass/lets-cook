@@ -9,6 +9,7 @@
 namespace App\Services;
 
 use App\Models\Basket;
+use App\Models\BasketRecipe;
 use App\Models\Order;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
@@ -28,7 +29,7 @@ class PurchaseService
 {
     
     /**
-     * @return array
+     * @return void
      */
     public function generate()
     {
@@ -40,6 +41,53 @@ class PurchaseService
         $list['suppliers'] = $this->_getSuppliers();
         
         $this->_processIngredients($list);
+    }
+    
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return void
+     */
+    public function generateFromMenu($year, $week)
+    {
+        $list = [
+            'year' => $year,
+            'week' => $week,
+        ];
+        
+        $recipes = $this->_getRecipesFromWeeklyMenu($list);
+        
+        $ingredients = $this->_getIngredients($recipes);
+        
+        $ingredients->map(
+            function ($item, $index) {
+                return $item->count = 0;
+            }
+        );
+        
+        $list['suppliers'] = $this->_buildSuppliersTable($ingredients, null);
+        
+        $this->_processIngredients($list);
+    }
+    
+    /**
+     * @param int|null $year
+     * @param int|null $week
+     *
+     * @return array
+     */
+    public function preGenerate($year, $week)
+    {
+        $list = [
+            'year'       => $year,
+            'week'       => $week,
+            'categories' => [],
+        ];
+        
+        $list['suppliers'] = $this->_getSuppliers($list);
+        
+        return $this->_processPreGenerationIngredients($list);
     }
     
     /**
@@ -114,23 +162,26 @@ class PurchaseService
      * @param int      $year
      * @param int      $week
      * @param int|bool $supplier_id
+     * @param bool     $pre_report
+     *
+     * @return
      */
-    public function download($year, $week, $supplier_id = false)
+    public function download($year, $week, $supplier_id = false, $pre_report = false)
     {
-        $file_name = $this->_getDownloadFileName($year, $week, $supplier_id);
-        $sheet_name = $this->_getSheetTabName($supplier_id);
+        $file_name = $this->_getDownloadFileName($year, $week, $supplier_id, $pre_report);
+        $sheet_name = $this->_getSheetTabName($supplier_id, $pre_report);
         $view = $this->_getViewName($supplier_id);
         
         $list = $this->_getPurchaseFor($year, $week, $supplier_id);
         
         return Excel::create(
             $file_name,
-            function ($excel) use ($list, $view, $sheet_name) {
+            function ($excel) use ($list, $view, $sheet_name, $pre_report) {
                 $excel->sheet(
                     get_excel_sheet_name($sheet_name),
-                    function ($sheet) use ($list, $view, $sheet_name) {
+                    function ($sheet) use ($list, $view, $sheet_name, $pre_report) {
                         $sheet->loadView('views.purchase.partials.'.$view)
-                            ->with(['list' => $list, 'title' => $sheet_name]);
+                            ->with(['list' => $list, 'title' => $sheet_name, 'pre_report' => $pre_report]);
                     }
                 );
             }
@@ -138,11 +189,18 @@ class PurchaseService
     }
     
     /**
+     * @param bool $pre_generation
+     *
      * @return array
      */
-    private function _getSuppliers()
+    private function _getSuppliers($pre_generation = false)
     {
-        $orders = Order::ofStatus('processed')->forCurrentWeek()->get(['id'])->pluck('id');
+        if ($pre_generation) {
+            $orders = Order::notOfStatus(['archived', 'deleted']);
+        } else {
+            $orders = Order::ofStatus('processed');
+        }
+        $orders = $orders->forCurrentWeek()->get(['id'])->pluck('id');
         
         $recipes = $this->_getRecipes($orders);
         
@@ -194,6 +252,25 @@ class PurchaseService
     }
     
     /**
+     * @param array $week
+     *
+     * @return array
+     */
+    private function _getRecipesFromWeeklyMenu($week)
+    {
+        $recipes = BasketRecipe::joinWeeklyMenuBasket()->joinWeeklyMenu()
+            ->where('weekly_menus.year', $week['year'])
+            ->where('weekly_menus.week', $week['week'])
+            ->select('recipe_id', DB::raw('count(recipe_id) as recipes_count'))
+            ->groupBy('recipe_id')
+            ->get()
+            ->keyBy('recipe_id')
+            ->toArray();
+        
+        return $recipes;
+    }
+    
+    /**
      * @param array $recipes
      *
      * @return Collection
@@ -212,6 +289,29 @@ class PurchaseService
             ->get();
         
         return $ingredients;
+    }
+    
+    /**
+     * @param array $suppliers
+     * @param array $orders
+     */
+    private function _addOrderIngredients(&$suppliers, $orders)
+    {
+        $ingredients = OrderIngredient::with(
+            'ingredient',
+            'ingredient.category',
+            'ingredient.supplier'
+        )
+            ->joinIngredient()
+            ->joinIngredientSupplier()
+            ->joinIngredientCategory()
+            ->whereIn('order_id', $orders)
+            ->orderBy('suppliers.priority')
+            ->orderBy('categories.position')
+            ->orderBy('ingredients.name')
+            ->get();
+        
+        $suppliers = $this->_buildSuppliersTable($ingredients, [], $suppliers, true);
     }
     
     /**
@@ -257,6 +357,7 @@ class PurchaseService
                     'type'          => $type,
                     'name'          => $_ingredient->name,
                     'price'         => $_ingredient->price,
+                    'unit'          => $order_ingredients ? $_ingredient->sale_unit->name : $_ingredient->unit->name,
                     'count'         => $count,
                 ];
                 
@@ -270,32 +371,7 @@ class PurchaseService
     }
     
     /**
-     * @param array $suppliers
-     * @param array $orders
-     */
-    private function _addOrderIngredients(&$suppliers, $orders)
-    {
-        $ingredients = OrderIngredient::with(
-            'ingredient',
-            'ingredient.category',
-            'ingredient.supplier'
-        )
-            ->joinIngredient()
-            ->joinIngredientSupplier()
-            ->joinIngredientCategory()
-            ->whereIn('order_id', $orders)
-            ->orderBy('suppliers.priority')
-            ->orderBy('categories.position')
-            ->orderBy('ingredients.name')
-            ->get();
-        
-        $suppliers = $this->_buildSuppliersTable($ingredients, [], $suppliers, true);
-    }
-    
-    /**
      * @param array $list
-     *
-     * @return array
      */
     private function _processIngredients($list)
     {
@@ -354,13 +430,67 @@ class PurchaseService
     }
     
     /**
+     * @param array $list
+     *
+     * @return array
+     */
+    private function _processPreGenerationIngredients($list)
+    {
+        $exists_purchases = Purchase::with('ingredient')
+            ->where('year', $list['year'])
+            ->where('week', $list['week'])
+            ->get()
+            ->keyBy(
+                function ($item) {
+                    return $item->ingredient_id.'_'.$item->type;
+                }
+            );
+        
+        foreach ($list['suppliers'] as $supplier_id => $supplier) {
+            foreach ($supplier['categories'] as $category_id => $category) {
+                foreach ($category['ingredients'] as $key => $ingredient) {
+                    $purchase = $exists_purchases->get($key);
+    
+                    if ($purchase) {
+                        $in_stock = $purchase->in_stock;
+                        $purchase_manager = $purchase->purchase_manager;
+                    } else {
+                        $in_stock = false;
+                        $purchase_manager = false;
+                    }
+    
+                    $list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'][$key]['in_stock'] = $in_stock;
+                    $list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'][$key]['purchase_manager'] = $purchase_manager;
+                    
+                    if ($purchase_manager) {
+                        if (!isset($list['categories'][$category_id])) {
+                            $list['categories'][$category_id] = [
+                                'name'        => $category['name'],
+                                'position'    => $category['position'],
+                                'ingredients' => [],
+                            ];
+                        }
+                        
+                        $list['categories'][$category_id]['ingredients'][$key] = $list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'][$key];
+                        
+                        unset($list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'][$key]);
+                    }
+                }
+            }
+        }
+        
+        return $list;
+    }
+    
+    /**
      * @param int      $year
      * @param int      $week
      * @param int|bool $supplier_id
+     * @param bool     $pre_report
      *
      * @return string
      */
-    private function _getDownloadFileName($year, $week, $supplier_id = false)
+    private function _getDownloadFileName($year, $week, $supplier_id = false, $pre_report = false)
     {
         $supplier = false;
         
@@ -370,16 +500,18 @@ class PurchaseService
             $supplier = trans('labels.purchase_manager_excel_title');
         }
         
-        return str_replace(' ', '_', trans('labels.list_of_purchase')).
-        '_'.trans('labels.w_label').$week.'_'.$year.($supplier ? '_'.str_replace(' ', '_', $supplier) : '');
+        return ($pre_report ? trans('labels.not_final_version').' ' : '').
+            str_replace(' ', '_', trans('labels.list_of_purchase')).
+            '_'.trans('labels.w_label').$week.'_'.$year.($supplier ? '_'.str_replace(' ', '_', $supplier) : '');
     }
     
     /**
      * @param int|bool $supplier_id
+     * @param bool     $pre_report
      *
      * @return string
      */
-    private function _getSheetTabName($supplier_id = false)
+    private function _getSheetTabName($supplier_id = false, $pre_report = false)
     {
         $name = trans('labels.purchase');
         
@@ -389,7 +521,7 @@ class PurchaseService
             $name .= ' - '.trans('labels.purchase_manager_excel_title');
         }
         
-        return $name;
+        return ($pre_report ? trans('labels.not_final_version').' ' : '').$name;
     }
     
     /**

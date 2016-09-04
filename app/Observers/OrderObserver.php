@@ -39,7 +39,9 @@ class OrderObserver
     public function saved(Order $model)
     {
         if ($model->forCurrentWeek() && ($model->isStatus('processed') || $model->isOriginalStatus('processed'))) {
-            $this->purchaseService->generate();
+            if (after_finalisation()) {
+                $this->purchaseService->generate();
+            }
         }
     }
 }

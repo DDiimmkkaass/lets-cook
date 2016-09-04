@@ -1,1 +1,0 @@
-<span class='label label-success margin-left-10'>@lang('labels.current_week_menu')</span>

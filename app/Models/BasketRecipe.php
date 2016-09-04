@@ -82,6 +82,31 @@ class BasketRecipe extends Model
     }
     
     /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinWeeklyMenuBasket($query)
+    {
+        return $query->leftJoin(
+            'weekly_menu_baskets',
+            'weekly_menu_baskets.id',
+            '=',
+            'basket_recipes.weekly_menu_basket_id'
+        );
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinWeeklyMenu($query)
+    {
+        return $query->leftJoin('weekly_menus', 'weekly_menus.id', '=', 'weekly_menu_baskets.weekly_menu_id');
+    }
+    
+    /**
      * @return string
      */
     public function getName()

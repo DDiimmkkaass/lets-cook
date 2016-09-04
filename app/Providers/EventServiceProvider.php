@@ -23,6 +23,10 @@ class EventServiceProvider extends ServiceProvider
 
         'App\Events\Backend\ArticleDelete' => [],
 
+        'App\Events\Backend\WeeklyMenuSaved' => [
+            'App\Listeners\Events\Backend\UpdatePurchase',
+        ],
+
         'App\Events\Backend\TmplOrderSuccessfullyPaid' => [
             'App\Listeners\Events\Backend\SendUserEmailAboutSuccessfullyPaymentOnTmplOrder',
         ],
