@@ -110,9 +110,9 @@ class PackagingController extends BackendController
                 ->make();
         }
         
-        $this->data('page_title', trans('labels.history_of_purchasing'));
+        $this->data('page_title', trans('labels.history_of_packaging'));
         
-        $this->breadcrumbs(trans('labels.history_of_purchasing'));
+        $this->breadcrumbs(trans('labels.history_of_packaging'));
         
         return $this->render('views.'.$this->module.'.index');
     }

@@ -168,7 +168,7 @@ class Purchase extends Model
     {
         $now = Carbon::now();
         
-        return $this->year = $now->year && $this->week == $now->weekOfYear;
+        return $this->year == $now->year && $this->week == $now->weekOfYear;
     }
     
     /**
