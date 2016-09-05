@@ -16,7 +16,7 @@ use Illuminate\Support\ServiceProvider;
  */
 class ViewComposerServiceProvider extends ServiceProvider
 {
-
+    
     /**
      * Register the service provider.
      *
@@ -24,9 +24,12 @@ class ViewComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer('news/partials/filters', '\App\Http\ViewComposers\NewsComposer');
+        view()->composer(
+            ['news/partials/filters', 'article/partials/filters'],
+            '\App\Http\ViewComposers\NewsComposer'
+        );
     }
-
+    
     /**
      * Register the service provider.
      *

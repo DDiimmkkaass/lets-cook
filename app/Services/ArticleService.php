@@ -9,8 +9,7 @@
 namespace App\Services;
 
 use App\Models\Article;
-use App\Models\Tagged;
-use Cache;
+use App\Transformers\ArticleTransformer;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -22,29 +21,40 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class ArticleService
 {
-
+    
     /**
      * @param \App\Models\Article $model
      */
     public function setExternalUrl(Article $model)
     {
         $model->external_url = get_hashed_url($model, 'article');
-
+        
         $model->save();
     }
-
+    
     /**
      * @return LengthAwarePaginator
      */
     public function getList()
     {
-        $list = Article::withTranslations()->visible()->publishAtSorted()->positionSorted();
-
+        $list = Article::with(['translations', 'tags', 'tags.tag.translations'])
+            ->visible()
+            ->publishAtSorted()
+            ->positionSorted();
+        
         $list = $this->_implodeFilters($list);
-
-        return $list->paginate(config('articles.per_page'));
+        
+        if (request('page', 1) == 0) {
+            $list = $list->get();
+        } else {
+            $list = $list->paginate(config('articles.per_page'));
+        }
+        
+        $list = $this->_prepareData($list);
+        
+        return $list;
     }
-
+    
     /**
      * @param Builder $list
      *
@@ -52,64 +62,68 @@ class ArticleService
      */
     private function _implodeFilters(Builder $list)
     {
-        if (request('tag')) {
+        $category_id = request()->route('category_id', 0);
+        $tag_id = request()->route('tag_id', 0);
+        
+        if ($category_id > 0) {
             $list->whereExists(
-                function ($query) {
-                    $query
-                        ->leftJoin('tags', 'tags.id', '=', 'tagged.tag_id')
+                function ($query) use ($category_id, $tag_id) {
+                    $query->leftJoin('tags', 'tags.id', '=', 'tagged.tag_id')
                         ->select(DB::raw('1'))
                         ->from('tagged')
                         ->whereRaw(
-                            '
-                            articles.id = tagged.taggable_id AND
+                            'articles.id = tagged.taggable_id AND
                             tagged.taggable_type = \''.str_replace('\\', '\\\\', Article::class).'\' AND
-                            tags.slug = \''.request('tag').'\''
+                            tags.category_id = '.$category_id.
+                            ($tag_id > 0 ? ' AND tagged.tag_id = '.$tag_id : '')
                         );
                 }
             );
         }
-
-        return $list;
-    }
-
-    /**
-     * @param \App\Models\Article $model
-     * @param int              $count
-     *
-     * @return Collection
-     */
-    public function getRelatedArticlesForArticle(Article $model, $count = 4)
-    {
-        $model->related_articles = unserialize(Cache::get('related_articles_for_article_'.$model->id, false));
-
-        if ($model->related_articles === false) {
-            if (count($model->tags)) {
-                $tagged = Tagged::whereIn('tag_id', array_pluck($model->tags->toArray(), 'tag_id'))
-                    ->where('taggable_id', '<>', $model->id)
-                    ->whereRaw('taggable_type = \''.str_replace('\\', '\\\\', Article::class).'\'')
-                    ->get();
-
-                if (count($tagged) > $count) {
-                    $tagged = $tagged->random($count);
-
-                    if (count($tagged) == 1) {
-                        $tagged = Collection::make([$tagged]);
-                    }
+        
+        if (!$category_id && $tag_id > 0) {
+            $list->whereExists(
+                function ($query) use ($tag_id) {
+                    $query->select(DB::raw('1'))
+                        ->from('tagged')
+                        ->whereRaw(
+                            'articles.id = tagged.taggable_id AND
+                            tagged.taggable_type = \''.str_replace('\\', '\\\\', Article::class).'\' AND
+                            tagged.tag_id = '.$tag_id
+                        );
                 }
-
-                $model->related_articles = Article::with('translations')
-                    ->whereIn('id', array_pluck($tagged->toArray(), 'taggable_id'))
-                    ->get();
-            } else {
-                $model->related_articles = [];
-            }
-
-            Cache::add('related_articles_for_article_'.$model->id,
-                serialize($model->related_articles),
-                config('articles.related_articles_cache_time')
             );
         }
-
-        return $model->related_articles;
+        
+        return $list;
+    }
+    
+    /**
+     * @param $list
+     *
+     * @return array
+     */
+    private function _prepareData($list)
+    {
+        $data = ['articles' => []];
+        
+        foreach ($list as $item) {
+            $data['articles'][] = ArticleTransformer::transform($item);
+        }
+        
+        if ($list instanceof Collection) {
+            $data['next_count'] = 0;
+        } else {
+            if ($list->lastPage() == $list->currentPage()) {
+                $data['next_count'] = 0;
+            } else {
+                $data['next_count'] = $list->total() - $list->currentPage() * $list->perPage();
+                $data['next_count'] = $data['next_count'] > $list->perPage() ? $list->perPage() : $data['next_count'];
+                
+                $data['next_count'] = $data['next_count'] >= 0 ? $data['next_count'] : 0;
+            }
+        }
+        
+        return $data;
     }
 }

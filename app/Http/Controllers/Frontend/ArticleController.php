@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\Article;
 use App\Services\ArticleService;
+use Illuminate\Http\Request;
 
 /**
  * Class ArticleController
@@ -39,17 +40,26 @@ class ArticleController extends FrontendController
 
         $this->articleService = $articleService;
     }
-
+    
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|\Illuminate\Contracts\View\View|\Illuminate\Pagination\LengthAwarePaginator
      */
-    public function index()
+    public function index(Request $request)
     {
-        $this->data('list', $this->articleService->getList());
-
+        $list = $this->articleService->getList();
+        
+        if ($request->ajax()) {
+            return $list;
+        }
+        
+        $this->data('list', $list['articles']);
+        $this->data('next_count', $list['next_count']);
+        
         return $this->render($this->module.'.index');
     }
-
+    
     /**
      * @param string $slug
      *
@@ -60,13 +70,11 @@ class ArticleController extends FrontendController
         $model = Article::with(['translations', 'tags', 'tags.tag.translations'])->visible()->whereSlug($slug)->first();
         
         abort_if(!$model, 404);
-
-        $this->articleService->getRelatedArticlesForArticle($model);
-
+        
         $this->data('model', $model);
-
+        
         $this->fillMeta($model, $this->module);
-
+        
         return $this->render($this->module.'.show');
     }
 }
