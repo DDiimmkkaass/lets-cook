@@ -10,13 +10,12 @@ namespace App\Models;
 
 use App\Contracts\FrontLink;
 use App\Contracts\MetaGettable;
-use App\Contracts\SearchableContract;
-use App\Traits\Models\SearchableTrait;
 use App\Traits\Models\TaggableTrait;
 use App\Traits\Models\WithTranslationsTrait;
 use Carbon;
 use Dimsav\Translatable\Translatable;
 use Eloquent;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 /**
  * Class News
@@ -24,12 +23,12 @@ use Eloquent;
  */
 class News extends Eloquent implements FrontLink, MetaGettable
 {
-
+    
     use Translatable;
     use WithTranslationsTrait;
     use TaggableTrait;
     use SearchableTrait;
-
+    
     /**
      * @var array
      */
@@ -41,7 +40,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
         'meta_title',
         'meta_description',
     ];
-
+    
     /**
      * @var array
      */
@@ -66,15 +65,17 @@ class News extends Eloquent implements FrontLink, MetaGettable
      */
     protected $searchable = [
         'columns' => [
-            'news.title'            => 100,
-            'news.description'      => 50,
-            'news.meta_keywords'    => 10,
-            'news.meta_title'       => 8,
-            'news.meta_description' => 6,
+            'news_translations.name'             => 100,
+            'news_translations.content'          => 50,
+            'news_translations.short_content'    => 50,
+            'news_translations.meta_keywords'    => 10,
+            'news_translations.meta_title'       => 8,
+            'news_translations.meta_description' => 6,
         ],
         'joins'   => [
-            'news' => [
-                'news.id', 'news_translations.search_index_id'
+            'news_translations' => [
+                'news.id',
+                'news_translations.news_id',
             ],
         ],
     ];
@@ -88,10 +89,10 @@ class News extends Eloquent implements FrontLink, MetaGettable
     {
         parent::__construct($attributes);
         
-        $this->searchable['joins']['search_index_translations'][] = 'search_index_translations.locale';
-        $this->searchable['joins']['search_index_translations'][] = app()->getLocale();
+        $this->searchable['joins']['news_translations'][] = 'news_translations.locale';
+        $this->searchable['joins']['news_translations'][] = app()->getLocale();
     }
-
+    
     /**
      * @return mixed
      */
@@ -99,7 +100,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
     {
         return array_merge(parent::getDates(), ['publish_at']);
     }
-
+    
     /**
      * @param $value
      */
@@ -108,10 +109,10 @@ class News extends Eloquent implements FrontLink, MetaGettable
         if (empty($value)) {
             $value = $this->attributes['name'];
         }
-
+        
         $this->attributes['slug'] = str_slug($value);
     }
-
+    
     /**
      * @param string $value
      *
@@ -126,7 +127,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
                 ->format('Y-m-d H:i:s');
         }
     }
-
+    
     /**
      * @param string $value
      *
@@ -140,7 +141,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
             return Carbon::createFromFormat('Y-m-d H:i:s', $value)->format('d-m-Y');
         }
     }
-
+    
     /**
      * @return string
      */
@@ -148,7 +149,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
     {
         return localize_url(route('blog.show', $this->slug));
     }
-
+    
     /**
      * @param $query
      *
@@ -158,7 +159,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
     {
         return $query->where('status', true)->whereRaw('publish_at <= NOW()');
     }
-
+    
     /**
      * @param        $query
      * @param string $order
@@ -169,7 +170,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
     {
         return $query->orderBy('publish_at', $order);
     }
-
+    
     /**
      * @param        $query
      * @param string $order
@@ -180,7 +181,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
     {
         return $query->orderBy('position', $order);
     }
-
+    
     /**
      * @param        $query
      * @param string $order
@@ -191,7 +192,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
     {
         return $query->orderBy('created_at', $order);
     }
-
+    
     /**
      * @return string
      */
@@ -206,7 +207,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
             config('news.default_short_content_length')
         );
     }
-
+    
     /**
      * @return string
      */
@@ -214,7 +215,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
     {
         return empty($this->content) ? $this->short_content : $this->content;
     }
-
+    
     /**
      * @return string
      */
@@ -222,7 +223,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
     {
         return empty($this->meta_title) ? $this->name : $this->meta_title;
     }
-
+    
     /**
      * @return string
      */
@@ -233,7 +234,7 @@ class News extends Eloquent implements FrontLink, MetaGettable
             config('seo.share.meta_description_length')
         );
     }
-
+    
     /**
      * @return string
      */
@@ -241,14 +242,14 @@ class News extends Eloquent implements FrontLink, MetaGettable
     {
         return $this->meta_keywords;
     }
-
+    
     /**
      * @return string
      */
     public function getMetaImage()
     {
         $img = empty($this->image) ? config('seo.share.default_image') : $this->image;
-
+        
         return $img ? url($img) : $img;
     }
 }
