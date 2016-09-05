@@ -54,6 +54,7 @@ class DataSeeder extends Seeder
             $this->call(_TagCategoriesSeeder::class);
             $this->call(_TagsSeeder::class);
             $this->call(_CouponsSeeder::class);
+            $this->call(_NewsSeeder::class);
             
             Model::reguard();
         }

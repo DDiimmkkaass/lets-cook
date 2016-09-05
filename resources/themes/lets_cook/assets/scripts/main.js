@@ -305,8 +305,7 @@ function specReview() {
 }
 
 function subscribeNews() {
-    let $subscribe = $('.main-subscribe'),
-        $form = $subscribe.find('.main-subscribe__form'),
+    let $form = $('.subscribe-form'),
         $text = $form.find('input[name="subscribe-mail"]');
 
     // RETURN DEFAULT VALUE FOR DESCRIPTION
@@ -668,8 +667,7 @@ function articlesList($rootElement, loadedPage) {
 
         return $.ajax({
             type: 'GET',
-            // url: ajaxUrl,
-            url: 'recipes.php',
+            url: ajaxUrl,
             dataType: 'json',
             xhrFields: {
                 withCredentials: true
@@ -702,9 +700,9 @@ function articlesList($rootElement, loadedPage) {
         $.each(articlesObj[page], function(index, item) {
             let currentArticle = '<li class="articles-list-main__item article-item">'
                 + '<div class="article-item__main">'
-                + '<a href="#" class="article-item__img" style="background-image: url(' + '\'' + item.image + '\'' + ');"></a>'
+                + '<a href="' + item.href + '" class="article-item__img" style="background-image: url(' + '\'' + item.image + '\'' + ');"></a>'
                 + '<div class="article-item__content">'
-                + '<a href="#" class="article-item__title">' + item.name + '</a>'
+                + '<a href="' + item.href + '" class="article-item__title">' + item.name + '</a>'
                 + '<ul class="article-item__tag-list">';
 
             $.each(item.tags, function(index, item) {
@@ -1240,6 +1238,10 @@ $(function() {
         articlesList($recipes, loadedPage);
     }
 
+    if ($('main[class="main recipe-simple"]').length) {
+        orderIngridients();
+        subscribeNews();
+    }
 
     if ($('main[class="main profile-orders"]').length) {
         profileOrders();

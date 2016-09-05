@@ -6,9 +6,8 @@
  * Time: 15:19
  */
 
-namespace App\Http\Middleware;
+namespace App\Providers;
 
-use Closure;
 use Illuminate\Support\ServiceProvider;
 
 /**
@@ -25,7 +24,7 @@ class ViewComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        view()->composer('news/partials/filters', '\App\Http\ViewComposers\NewsComposer');
     }
 
     /**

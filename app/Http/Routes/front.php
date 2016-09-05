@@ -13,12 +13,9 @@ $router->get(
 );
 
 // blog
-$router->get('blog', ['as' => 'blog.index', 'uses' => 'Frontend\NewsController@index']);
+$router->get('blog/{category_id?}/{tag_id?}', ['as' => 'blog.index', 'uses' => 'Frontend\NewsController@index'])
+    ->where(['category_id' => '[0-9]+', 'tag_id' => '[0-9]+']);
 $router->get('blog/{slug}', ['as' => 'blog.show', 'uses' => 'Frontend\NewsController@show']);
-
-// articles
-$router->get('articles', ['as' => 'articles.index', 'uses' => 'Frontend\ArticleController@index']);
-$router->get('articles/{slug}', ['as' => 'articles.show', 'uses' => 'Frontend\ArticleController@show']);
 
 // articles
 $router->get('articles', ['as' => 'articles.index', 'uses' => 'Frontend\ArticleController@index']);

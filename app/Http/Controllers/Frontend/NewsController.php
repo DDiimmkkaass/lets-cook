@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\News;
 use App\Services\NewsService;
+use Illuminate\Http\Request;
 
 /**
  * Class NewsController
@@ -39,13 +40,22 @@ class NewsController extends FrontendController
 
         $this->newsService = $newsService;
     }
-
+    
     /**
-     * @return \Illuminate\Contracts\View\View
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|\Illuminate\Contracts\View\View|\Illuminate\Pagination\LengthAwarePaginator
      */
-    public function index()
+    public function index(Request $request)
     {
-        $this->data('list', $this->newsService->getList());
+        $list = $this->newsService->getList();
+        
+        if ($request->ajax()) {
+            return $list;
+        }
+    
+        $this->data('list', $list['blog']);
+        $this->data('next_count', $list['next_count']);
 
         return $this->render($this->module.'.index');
     }
@@ -60,8 +70,6 @@ class NewsController extends FrontendController
         $model = News::with(['translations', 'tags', 'tags.tag.translations'])->visible()->whereSlug($slug)->first();
 
         abort_if(!$model, 404);
-
-        $this->newsService->getRelatedNewsForNews($model);
 
         $this->data('model', $model);
 

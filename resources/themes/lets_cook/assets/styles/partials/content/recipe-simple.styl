@@ -4,6 +4,10 @@
 .recipe-simple
   margin-top: 90px
 
+  &__ingredients
+    .order-ing__list-wrapper::before
+      border-color: $bg-green-1 transparent transparent transparent
+
 .recipe-simple-basket
   js-display: flex; display: flex
   flex-direction: column
@@ -30,6 +34,12 @@
 
   &__title
     text-transform: none
+    text-align: center
+    margin-bottom: 30px
+
+    +bp('1024')
+      text-align: left
+      margin-bottom: 0
 
   &__info
     margin-top: 35px * (310 / 720)
@@ -144,6 +154,453 @@
       order: 1
       width: 50%
       padding: 0
+
+
+.all-baskets
+  margin: 0 auto
+  js-display: flex; display: flex
+  flex-direction: column
+  width: 100%
+  padding: (65px * (310 / 720)) (20px * (310 / 720))
+  fs(0px)
+
+  +bp('480')
+    padding: (65px * (470 / 720)) (20px * (470 / 720))
+
+  +bp('768')
+    padding: 65px 20px
+
+  +bp('1024')
+    flex-direction: row
+    justify-content: space-between
+    width: 95%
+    padding: 65px 0px
+
+  &__title
+    display: inline-block
+    vertical-align: top
+    text-transform: none
+    margin: 0 0 30px * (310 / 720) 0
+    text-align: center
+    width: 100%
+
+    +bp('480')
+      margin-bottom: 30px * (470 / 720)
+
+    +bp('768')
+      margin-bottom: 30px
+
+    +bp('1024')
+      width: (390 / 980) * 100%
+      text-align: left
+      margin-bottom: 0
+
+  &__list
+    margin: 0; padding: 0; list-style-type: none
+    display: inline-block
+    vertical-align: top
+    text-align: center
+    width: 100%
+
+    +bp('1024')
+      width: (590 / 980) * 100%
+      text-align: left
+
+    li
+      display: inline-block
+      margin-right: 40px * (310 / 720)
+
+      +bp('480')
+        margin-right: 40px * (470 / 720)
+
+      +bp('768')
+        margin-right: 40px
+
+    li a
+      font-family: $ptsans-narrow-regular
+      fsh(28px * (310 / 720), 1.42857143)
+      color: $font-black-2
+      text-decoration: underline
+      cursor: pointer
+
+      &:hover
+        text-decoration: none
+
+      +bp('480')
+        fs(28px * (470 / 720))
+
+      +bp('768')
+        fs(28px)
+
+
+.cook-with-us
+  padding: (35px * (310 / 720)) (55px * (310 / 720))
+  background-color: $bg-green-1
+
+  +bp('480')
+    padding: (35px * (470 / 720)) (55px * (470 / 720))
+
+  +bp('768')
+    padding: 35px 55px
+
+  &__title
+    margin: 0
+    width: 100%
+    text-align: center
+    color: $font-white-1
+    text-transform: none
+
+  &__desk
+    margin: 25px * (310 / 720) auto 0
+    text-align: center
+    font-family: $ptsans-bold
+    fsh(25px * (310 / 720), 1.25)
+    color: $font-white-1
+
+    +bp('480')
+      margin-top: 25px * (470 / 720)
+      fs(25px * (470 / 720))
+
+    +bp('768')
+      margin-top: 25px
+      fs(25px)
+
+    +bp('1024')
+      width: 670px
+
+
+  &__list
+    position: relative
+    margin: (85px * (310 / 720)) auto 0; padding: 0; list-style-type: none
+    js-display: flex; display: flex;
+    flex-direction: column
+    align-items: center
+    max-width: 870px
+    color: $font-white-1
+
+
+    +bp('480')
+      margin-top: 85px * (470 / 720)
+
+    +bp('768')
+      margin-top: 85px
+
+    +bp('1024')
+      flex-direction: row
+      justify-content: space-between
+      align-items: flex-start
+
+      &::before
+        content: ''
+        absolute: top 23px left 50%
+        transform: translateX(-50%)
+        z-index: 1
+        size: 80% 1px
+        background-color: rgba(255,255,255,0.5)
+
+  &__item
+    position: relative
+    z-index: 2
+    width: 200px
+    text-align: center
+
+    &:not(:last-of-type)
+      margin-bottom: 20px
+
+    +bp('1024')
+      &:not(:last-of-type)
+        margin-bottom: 0
+
+    &::after
+      content: ''
+      absolute: top 0px left 50%
+      z-index: -1
+      transform: translateX(-50%)
+      size: 70% 100%
+      background-color: $bg-green-1
+
+  &__item-icon
+
+    &::before
+      font-family: $fontello
+      fsh(45px, 1)
+      color: $font-white-1
+
+    &[data-icon='1']
+      &::before
+        content: 'X'
+
+    &[data-icon='2']
+      &::before
+        content: 'X'
+
+    &[data-icon='3']
+      &::before
+        content: 'X'
+
+    &[data-icon='4']
+      &::before
+        content: 'X'
+
+
+
+  &__item-desk
+    margin-top: 15px
+    font-family: $ptsans-regular
+    fsh(14px, 1.25)
+
+  &__know-more
+    margin: (55px * (310 / 720)) auto 0
+
+    +bp('480')
+      margin-top: 55px * (470 / 720)
+
+    +bp('768')
+      margin-top: 55px
+
+
+.cooking-steps
+  padding-top: 70px * (310 / 720)
+
+  +bp('480')
+    padding-top: 70px * (470 / 720)
+
+  +bp('768')
+    padding-top: 70px
+
+  &__title
+    margin: 0 auto
+    max-width: 980px
+    padding: 0 (20px * (310 / 720))
+    text-align: center
+    text-transform: none
+
+    +bp('480')
+      padding: 0 (20px * (470 / 720))
+
+    +bp('768')
+      padding: 0 20px
+
+    +bp('1024')
+      padding: 0
+      text-align: left
+
+  &__list
+    margin: (60px * (310 / 720)) 0 0; padding: 0; list-style-type: none
+
+    +bp('480')
+      margin-top: (60px * (470 / 720))
+
+    +bp('768')
+      margin-top: 60px
+
+    +bp('1024')
+      margin-top: 50px
+
+
+  &__item
+    &:not(:last-of-type)
+      margin-bottom: 70px * (310 / 720)
+
+      +bp('480')
+        margin-bottom: 70px * (470 / 720)
+
+      +bp('768')
+        margin-bottom: 70px
+
+      +bp('1024')
+        margin-bottom: 0px
+
+    +bp('1024')
+
+      &:nth-of-type(even)
+        background-color: $bg-gray-4
+
+      &:nth-of-type(odd)
+        background-color: $base-bg-color
+
+.cook-step
+  js-display: flex; display: flex
+  flex-direction: column
+  padding: 0 (20px * (310 / 720))
+
+  +bp('480')
+    padding: 0 (20px * (470 / 720))
+
+  +bp('768')
+    padding: 0 20px
+
+  +bp('1024')
+    flex-direction: row
+    justify-content: center
+    padding: 22px 0
+
+  &__left
+    position: relative
+
+    +bp('1024')
+      js-display: flex; display: flex
+      justify-content: flex-end
+      align-items: center
+
+
+  &__number
+    absolute: top (20px * (310 / 720)) left (20px * (310 / 720))
+    size: 43px
+    border: 1px solid $bg-black-2
+    border-radius: 50%
+    text-align: center
+    font-family: $georgia
+    fsh(30px, 43px)
+    color: $font-black-2
+    font-style: italic
+    font-weight: bold
+
+    +bp('480')
+      top: 20px * (470 / 720)
+      left: 20px * (470 / 720)
+
+    +bp('768')
+      top: 20px; left: 20px
+
+    +bp('1024')
+      position: static
+      line-height: 38px
+
+  &__image
+    size: 100% auto
+    padding-bottom: (146 / 261) * 100%
+    background: $bg-green-1 center center / cover no-repeat
+
+    +bp('1024')
+      margin-left: 25px
+      size: 261px 146px
+
+
+  &__right
+    margin: (30px * (310 / 720)) 0 0
+    width: 100%
+    color: $font-black-2
+
+    +bp('480')
+      margin: (30px * (470 / 720)) 0 0
+
+    +bp('768')
+      margin: 30px 0 0
+
+    +bp('1024')
+      width: (620 / 1200) * 100%
+      margin: 0 0 0 40px
+
+  &__title
+    margin: 0
+    font-family: $ptsans-bold
+    fsh(20px, 1.25)
+
+  &__desk
+    margin-top: 25px * (310 / 720)
+    font-family: $ptsans-regular
+    fsh(14px, 1.25)
+
+    +bp('480')
+      margin-top: 25px * (470 / 720)
+
+    +bp('768')
+      margin-top: 38px
+
+
+
+.recipe-simple-subscribe
+  padding: (35px * (310 / 720)) (20px * (310 / 720))
+  background-color: $bg-green-1
+  text-align: center
+
+  +bp('480')
+    padding: (35px * (470 / 720)) (20px * (470 / 720))
+
+  +bp('768')
+    padding: 35px 20px
+
+  +bp('1024')
+    padding: 36px 0
+
+  &__title
+    margin: 0
+    text-transform: none
+    color: $font-white-1
+
+  &__desc
+    margin: (35px * (310 / 720)) auto 0
+    width: 100%
+    max-width: 500px
+    text-align: center
+    font-family: $ptsans-regular
+    fsh(14px, 1.25)
+    color: $font-white-1
+
+    +bp('480')
+      margin-top: 35px * (470 / 720)
+      fs(16px)
+
+    +bp('768')
+      margin-top: 35px
+      fs(20px)
+
+  &__form
+    margin: (55px * (310 / 720)) auto 0
+
+    +bp('480')
+      margin-top: 55px * (470 / 720)
+
+    +bp('768')
+      margin-top: 55px
+
+
+.useful-advices
+  margin: 0 auto
+  max-width: 980px
+  padding: (80px * (310 / 720)) (20px * (310 / 720))
+
+  +bp('480')
+    padding: (80px * (470 / 720)) (20px * (470 / 720))
+
+  +bp('768')
+    padding: 80px 20px
+
+  +bp('1024')
+    padding: 80px 0
+
+  &__title
+    margin: 0
+    text-transform: none
+
+  &__content
+    margin-top: 55px * (310 / 720)
+    color: $font-black-2
+
+    +bp('480')
+      margin-top: 55px * (470 / 720)
+
+    +bp('768')
+      margin-top: 55px
+
+  &__subTitle
+    font-family: $ptsans-bold
+    fsh(20px, 1.25)
+
+  &__desc
+    margin-top: 35px * (310 / 720)
+    font-family: $ptsans-regular
+    fsh(14px, 1.25)
+
+    +bp('480')
+      margin-top: 35px * (310 / 720)
+
+    +bp('768')
+      margin-top: 35px
+
+    p
+      margin: 20px 0
 
 
 

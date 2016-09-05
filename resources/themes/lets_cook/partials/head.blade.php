@@ -15,3 +15,5 @@
 @include('partials.vars')
 
 <script type="text/javascript" src="{!! asset('assets/components/jquery/dist/jquery.js') !!}"></script>
+
+<script src="https://yastatic.net/share2/share.js" async="async"></script>

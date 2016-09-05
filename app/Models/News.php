@@ -22,7 +22,7 @@ use Eloquent;
  * Class News
  * @package App\Models
  */
-class News extends Eloquent implements FrontLink, SearchableContract, MetaGettable
+class News extends Eloquent implements FrontLink, MetaGettable
 {
 
     use Translatable;
@@ -58,11 +58,39 @@ class News extends Eloquent implements FrontLink, SearchableContract, MetaGettab
         'meta_description',
         'publish_at',
     ];
-
+    
     /**
+     * Searchable rules.
+     *
      * @var array
      */
-    protected $guarded = [];
+    protected $searchable = [
+        'columns' => [
+            'news.title'            => 100,
+            'news.description'      => 50,
+            'news.meta_keywords'    => 10,
+            'news.meta_title'       => 8,
+            'news.meta_description' => 6,
+        ],
+        'joins'   => [
+            'news' => [
+                'news.id', 'news_translations.search_index_id'
+            ],
+        ],
+    ];
+    
+    /**
+     * News constructor.
+     *
+     * @param array $attributes
+     */
+    public function __construct(array $attributes = [])
+    {
+        parent::__construct($attributes);
+        
+        $this->searchable['joins']['search_index_translations'][] = 'search_index_translations.locale';
+        $this->searchable['joins']['search_index_translations'][] = app()->getLocale();
+    }
 
     /**
      * @return mixed
@@ -185,74 +213,6 @@ class News extends Eloquent implements FrontLink, SearchableContract, MetaGettab
     public function getContent()
     {
         return empty($this->content) ? $this->short_content : $this->content;
-    }
-
-    /**
-     * @return string
-     */
-    public function getImageForSearchIndex()
-    {
-        return $this->image;
-    }
-
-    /**
-     * @param null|string $locale
-     *
-     * @return string
-     */
-    public function getTitleForSearchIndex($locale = null)
-    {
-        return $locale ? $this->translate($locale)->name : $this->name;
-    }
-
-    /**
-     * @param null|string $locale
-     *
-     * @return string
-     */
-    public function getDescriptionForSearchIndex($locale = null)
-    {
-        return $locale ?
-            $this->translate($locale)->short_content.' '.$this->translate($locale)->content :
-            $this->short_content.' '.$this->content;
-    }
-
-    /**
-     * @param null|string $locale
-     *
-     * @return string
-     */
-    public function getMetaTitleForSearchIndex($locale = null)
-    {
-        return $locale ? $this->translate($locale)->meta_title : $this->meta_title;
-    }
-
-    /**
-     * @param null|string $locale
-     *
-     * @return string
-     */
-    public function getMetaDescriptionForSearchIndex($locale = null)
-    {
-        return $locale ? $this->translate($locale)->meta_description : $this->meta_description;
-    }
-
-    /**
-     * @param null|string $locale
-     *
-     * @return string
-     */
-    public function getMetaKeywordsForSearchIndex($locale = null)
-    {
-        return $locale ? $this->translate($locale)->meta_keywords : $this->meta_keywords;
-    }
-
-    /**
-     * @return array
-     */
-    public function getBreadcrumbs()
-    {
-        // TODO: Implement getBreadcrumbs() method.
     }
 
     /**

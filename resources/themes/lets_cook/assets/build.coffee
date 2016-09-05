@@ -64,8 +64,9 @@ gulp.task theme.concat("::css"), ->
 gulp.task theme.concat('::css:dev'), ->
   gulp.src(dev_path.stylus.concat('*.styl'))
   .pipe(plumber())
-  .pipe(stylus({ style: 'expanded' }))
-  .pipe(prefix())
+  .pipe(stylus
+    use: [nib()]
+  )
   .pipe(concat('styles.css'))
   .pipe(gulp.dest(prod_path.css))
   .on('error', plumber)
@@ -78,7 +79,7 @@ gulp.task theme.concat('::css:watch'), ->
 gulp.task theme.concat('::coffee'), ->
   gulp.src(dev_path.coffee)
   .pipe(plumber())
-  .pipe concat 'main.js'
+  .pipe concat 'app.js'
   .pipe(coffee({bare: true}))
   .pipe(uglify({outSourceMap: true}))
   .pipe(gulp.dest(prod_path.js))
@@ -87,7 +88,7 @@ gulp.task theme.concat('::coffee'), ->
 gulp.task theme.concat('::coffee:dev'), ->
   gulp.src(dev_path.coffee)
   .pipe(plumber())
-  .pipe concat 'main.js'
+  .pipe concat 'app.js'
   .pipe(coffee({bare: true}))
   .pipe(gulp.dest(prod_path.js))
   .on('error', plumber)

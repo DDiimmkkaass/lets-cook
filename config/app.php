@@ -205,8 +205,8 @@ return [
         Collective\Bus\BusServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         
-        App\Providers\SearchServiceProvider::class,
         App\Providers\VariableServiceProvider::class,
+        App\Providers\ViewComposerServiceProvider::class,
     ],
     
     /*

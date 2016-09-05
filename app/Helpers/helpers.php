@@ -405,7 +405,7 @@ if (!function_exists('thumb')) {
      * @return string
      *
      */
-    function thumb($path = '', $width, $height = null)
+    function thumb($path = '', $width = null, $height = null)
     {
         $thumb = null;
         
@@ -417,14 +417,18 @@ if (!function_exists('thumb')) {
         $path = File::exists(public_path($path)) ? $path : false;
         
         if ($path) {
-            $img_info = getimagesize(public_path($path));
-            
-            if (!empty($img_info)) {
-                $width = $width <= $img_info[0] ? $width : $img_info[0];
-                $height = $height <= $img_info[1] ? $height : $img_info[1];
+            if ($width && $height) {
+                $img_info = getimagesize(public_path($path));
+    
+                if (!empty($img_info)) {
+                    $width = $width <= $img_info[0] ? $width : $img_info[0];
+                    $height = $height <= $img_info[1] ? $height : $img_info[1];
+                }
+    
+                $thumb = url(Thumb::thumb($path, $width, $height)->link());
+            } else {
+                $thumb = url($path);
             }
-            
-            $thumb = url(Thumb::thumb($path, $width, $height)->link());
         }
         
         return $thumb ? : 'http://www.placehold.it/'.$width.'x'.$height.'/EFEFEF/AAAAAA&text=no+image';

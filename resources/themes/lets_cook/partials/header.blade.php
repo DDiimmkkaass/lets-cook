@@ -7,7 +7,9 @@
     </div>
 
     <div class="header__main header-main">
-        <a href="{!! route('home') !!}" class="header-main__logo" data-page="main">
+        <a href="{!! route('home') !!}"
+           class="header-main__logo"
+           data-page="@if (route_is('home')){!! 'main' !!}@else{!! 'others' !!}@endif">
             <img src="{!! theme_asset('images/main-logo.png') !!}" alt="{!! config('app.name') !!}">
         </a>
 
