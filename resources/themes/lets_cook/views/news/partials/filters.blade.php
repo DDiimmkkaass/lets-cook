@@ -9,7 +9,7 @@
                 </li>
 
                 <li class="articles-list-filter__item">
-                    <div class="articles-list-filter__subTitle">Рецепты</div>
+                    <div class="articles-list-filter__subTitle">Категории</div>
 
                     @if (count($tags_categories))
                         <ul class="articles-list-filter__subList">
