@@ -31,17 +31,13 @@ class WeeklyMenuWidget extends Widget
     public function index($template = '')
     {
         $menu = WeeklyMenu::with('baskets', 'baskets.main_recipes')->current()->first();
-        if ($menu->baskets->count()) {
+        if ($menu && $menu->baskets->count()) {
             $menu = $menu->baskets->random();
-        } else {
-            $menu = null;
         }
-    
+
         $next_menu = WeeklyMenu::with('baskets', 'baskets.main_recipes')->next()->first();
-        if ($next_menu->baskets->count()) {
+        if ($next_menu && $next_menu->baskets->count()) {
             $next_menu = $next_menu->baskets->random();
-        } else {
-            $next_menu = null;
         }
         
         if (view()->exists('widgets.weekly_menu.templates.'.$template.'.index')) {
