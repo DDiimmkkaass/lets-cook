@@ -49,7 +49,7 @@ class PopulatePagesTable2 extends Migration
         
         foreach (config('app.locales') as $locale) {
             $input[$locale] = [
-                'name'             => 'Доставка и оплата',
+                'name'             => 'Доставка товара и оплата',
                 'short_content'    => 'Доставка и оплата',
                 'content'          => 'Доставка и оплата',
                 'meta_keywords'    => 'Доставка и оплата',
