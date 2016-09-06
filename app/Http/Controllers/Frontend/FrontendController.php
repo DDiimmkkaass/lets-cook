@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Frontend;
 
 use Agent;
 use App\Http\Controllers\BaseController;
+use App\Models\Page;
 use App\Models\User;
 use Config;
 use JavaScript;
@@ -43,7 +44,12 @@ class FrontendController extends BaseController
      * @var int
      */
     public $per_page = 20;
-
+    
+    /**
+     * @var null|Page
+     */
+    public $home_page = null;
+    
     /**
      * constructor
      */
@@ -65,6 +71,10 @@ class FrontendController extends BaseController
 
         $this->breadcrumbs(Config::get('app.name', ''), route('home'));
 
+        if (!request()->ajax()) {
+            $this->home_page = Page::with('translations')->whereSlug('home')->first();
+        }
+        
         $this->fillThemeData();
     }
 
@@ -137,6 +147,8 @@ class FrontendController extends BaseController
         View::share("is_mobile", Agent::isMobile());
 
         View::share("google_analytics_id", Config::get('google.analytics.id', null));
+    
+        View::share("home_page", $this->home_page);
     }
 
     /**

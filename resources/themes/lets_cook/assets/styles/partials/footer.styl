@@ -53,6 +53,84 @@
     text-align: center
     fs(0px)
 
+    // YANDEX SHARE
+
+    .ya-share2__container_size_m .ya-share2__item
+      margin-right: 30px !important
+
+    .ya-share2__badge
+      border-radius: 0 !important
+      background-color: transparent !important
+
+    .ya-share2__container_size_m .ya-share2__icon
+      background: none !important
+      width: 90px !important
+      height: 30px !important
+
+    .ya-share2__container_size_m .ya-share2__counter
+      position: relative !important
+      display: inline-block !important
+      min-width: 30px
+      margin-left: 10px !important
+      padding: 0 5px !important
+      background-color: $bg-gray-1 !important
+      font-family: $arial !important
+      fsh(10px, 30px) !important
+      color: $font-gray-2 !important
+      user-select: none !important
+
+      &::before
+        margin: 0 !important
+        content: '' !important
+        position: absolute
+        top: 50% !important; left: -6px !important
+        transform: translateY(-50%) rotate(360deg) !important
+        width: 0 !important
+        height: 0 !important
+        border-style: solid !important
+        border-width: 6px 7px 6px 0 !important
+        border-color: transparent $bg-gray-1 transparent transparent !important
+        background: none !important
+
+
+    .ya-share2__container_size_m .ya-share2__item_service_facebook .ya-share2__icon,
+    .ya-share2__container_size_m .ya-share2__item_service_vkontakte .ya-share2__icon,
+    .ya-share2__container_size_m .ya-share2__item_service_gplus .ya-share2__icon,
+    .ya-share2__container_size_m .ya-share2__item_service_lj .ya-share2__icon
+      &::before
+        display: inline-block
+        font-family: $arial
+        fsh(10px, 30px)
+        font-weight: 400
+        text-transform: uppercase
+
+
+  .ya-share2__container_size_m .ya-share2__item_service_facebook .ya-share2__icon
+    background-color: #3b5998 !important
+
+    &::before
+      content: 'facebook'
+
+  .ya-share2__container_size_m .ya-share2__item_service_vkontakte .ya-share2__icon
+    background-color: #48729e !important
+
+    &::before
+      content: 'вконтакте'
+
+  .ya-share2__container_size_m .ya-share2__item_service_gplus .ya-share2__icon
+    background-color: #dc4e41 !important
+
+    &::before
+      content: 'google +'
+
+  .ya-share2__container_size_m .ya-share2__item_service_lj .ya-share2__icon
+    background-color: #0d425a !important
+
+    &::before
+      content: 'livejournal'
+
+    // end YANDEX SHARE
+
   &__item
     display: inline-block
     margin: 0 15px

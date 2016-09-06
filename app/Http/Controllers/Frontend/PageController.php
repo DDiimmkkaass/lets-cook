@@ -47,15 +47,13 @@ class PageController extends FrontendController
      */
     public function getHome()
     {
-        $model = Page::withTranslations()->whereSlug('home')->first();
+        abort_if(!$this->home_page, 404);
 
-        abort_if(!$model, 404);
+        $this->data('model', $this->home_page);
 
-        $this->data('model', $model);
+        $this->fillMeta($this->home_page, $this->module);
 
-        $this->fillMeta($model, $this->module);
-
-        return $this->render($this->module.'.templates.'.$model->template);
+        return $this->render($this->module.'.templates.'.$this->home_page->template);
     }
     
     /**
@@ -67,7 +65,7 @@ class PageController extends FrontendController
         $slug = array_pop($slug);
 
         if ($slug == 'home') {
-            return redirect(route('home'), 301);
+            return redirect(localize_route('home'), 301);
         }
 
         $model = Page::with(['translations', 'parent', 'parent.translations'])->visible()->whereSlug($slug)->first();

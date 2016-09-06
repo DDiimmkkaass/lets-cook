@@ -124,7 +124,9 @@ class ArticleService
             }
         }
     
-        $data['next_count_label'] = trans_choice('labels.count_of_articles', $data['next_count']);
+        $data['next_count_label'] = trans('front_labels.pagination_next').' '.
+            $data['next_count'].' '.
+            trans_choice('front_labels.count_of_articles', $data['next_count']);
         
         return $data;
     }

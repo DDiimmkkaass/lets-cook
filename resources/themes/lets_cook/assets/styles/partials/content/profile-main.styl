@@ -11,17 +11,30 @@
 .profile-contacts
   background-color: $bg-yellow-3
   text-align: center
+  padding: 0 (20px * (310 / 720))
+  background: url('../images/yellow-bg.png') top left repeat
+
+  +bp('480')
+    padding: 0 (20px * (470 / 720))
+
+  +bp('768')
+    padding: 0 20px
 
   +bp('1024')
-    padding-top: 32px
+    padding: 32px 0 0
 
   &__list
     margin: 0; padding: 10px 0 15px; list-style-type: none
-    background: url('../images/yellow-bg.png') top left repeat
 
     li
       &:not(:last-child)
-        margin-bottom: 24px
+        margin-bottom: 24px * (310 / 720)
+
+        +bp('480')
+          margin-bottom: 24px * (470 / 720)
+
+        +bp('768')
+          margin-bottom: 24px
 
       &[data-contacts='name']
         font-family: $ptsans-bold
@@ -55,18 +68,28 @@
 
 
 .profile-badges
+  position: relative
+  padding: 0 (20px * (310 / 720))
+  background-color: $bg-yellow-2
+
+  +bp('480')
+    padding: 0 (20px * (470 / 720))
+
+  +bp('768')
+    padding: 0 20px
+
+  +bp('1024')
+    padding: 32px 0 0
+
+  &::before
+    content: ''
+    absolute: bottom 0 left 0
+    size: 100% 65px
+    background: url('../images/yellow-bg.png') top left repeat
 
   &__list
-    position: relative
     margin: 0; padding: 15px 0 85px; list-style-type: none
-    background-color: $bg-yellow-2
     font-family: $ptsans-bold
-
-    &::before
-      content: ''
-      absolute: bottom 0 left 0
-      size: 100% 65px
-      background: url('../images/yellow-bg.png') top left repeat
 
     li
       color: $font-black-2
@@ -74,7 +97,13 @@
       fsh(24px, 1.25)
 
       &:not(:last-child)
-        margin-bottom: 34px
+        margin-bottom: 34px * (310 / 720)
+
+        +bp('480')
+          margin-bottom: 34px * (470 / 720)
+
+        +bp('768')
+          margin-bottom: 34px
 
       span
         color: $font-red-1
@@ -96,27 +125,59 @@
       background-color: $bg-red-1
       text-align: left
       font-family: $ptsans-bold
-      fsh(24px, 1.15)
       color: $font-white-2
+      fsh(10px, 1.25)
+
+      +bp('480')
+        fs(12px)
+
+      +bp('768')
+        fs(14px)
+
+      +bp('1024')
+        fs(24px)
 
     tbody
       font-family: $ptsans-regular
       color: $font-black-2
-      fsh(24px, 1.25)
+      fsh(10px, 1.25)
+
+      +bp('480')
+        fs(12px)
+
+      +bp('768')
+        fs(14px)
+
+      +bp('1024')
+        fs(24px)
 
       tr
         &:nth-child(even)
           background-color: $bg-orange-4
 
     th, td
-      padding: 15px 18px
+      padding: 3px 5px
+
+      +bp('768')
+        padding: 8px 10px
+
+      +bp('1024')
+        padding: 15px 18px
 
       &:nth-child(1)
         width: (360 / 1200) * 100%
-        padding-left: 40px
+
+        +bp('1024')
+          padding-left: 40px
+
 
       &:nth-child(2)
+        display: none
         width: (140 / 1200) * 100%
+
+        +bp('1024')
+          display: table-cell
+
 
       &:nth-child(3)
         width: (170 / 1200) * 100%
@@ -129,23 +190,47 @@
 
       &:nth-child(6)
         width: (190 / 1200) * 100%
-        padding-right: 40px
         text-decoration: underline
 
         &[data-chosen]
           font-family: $ptsans-bold
 
+        +bp('1024')
+          padding-right: 40px
+
 
   &__add-new
-    margin: 25px 0 0 40px
+    margin: 15px auto 0
+    padding: 0 (20px * (310 / 720))
     fs(0px)
 
+    +bp('480')
+      padding: 0 (20px * (470 / 720))
+
+    +bp('768')
+      padding: 0 20px
+
+    +bp('1024')
+      margin: 25px 0 0 40px
+      padding: 0
+      text-align: left
+
     input[name='add-coupons-text']
-      vertical-align: top
+      margin: 0 auto
+      display: block
+
+      +bp('1024')
+        display: inline-block
+        vertical-align: top
 
     input[name='add-coupons-submit']
-      margin-left: 20px
-      vertical-align: top
+      margin: 10px auto 0
+      display: block
+
+      +bp('1024')
+        display: inline-block
+        vertical-align: top
+        margin: 0 0 0 20px
 
 
 

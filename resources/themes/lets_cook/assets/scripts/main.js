@@ -624,7 +624,7 @@ function basketsImagesSize() {
         });
 
         $basketsMainTitle.each(function() {
-           let $that = $(this);
+            let $that = $(this);
 
             $that.css('height', 'auto');
 
@@ -788,6 +788,8 @@ function articlesList($rootElement, loadedPage) {
 
             $articlesList.append($(currentArticle));
         });
+
+        $paginationNext.text(articlesObj.next_count_label);
     }
 
     $filterList.on('click', '.articles-list-filter__subItem', function() {
@@ -795,13 +797,12 @@ function articlesList($rootElement, loadedPage) {
 
         currCat = $that.attr('data-cat');
 
-        $.when(articlesAjax(currCat, currTag, 1, ''))
+        $.when(articlesAjax(currCat, currTag = 0, currPage = 1, textSearch = ''))
             .done(function(ra) {
                 articlesObj = $.extend(true, {}, ra);
 
                 articlesOutput();
 
-                currPage = 1; textSearch = '';
                 $searchForm.find('input[name="search-text"]').val('');
 
                 $filterList.find('.articles-list-filter__subItem').removeAttr('data-active');
@@ -829,7 +830,7 @@ function articlesList($rootElement, loadedPage) {
     });
 
     $paginationAll.on('click', function() {
-        $.when(articlesAjax(currCat, currTag, 0, textSearch))
+        $.when(articlesAjax(currCat, currTag, currPage = 0, textSearch = ''))
             .done(function(ra) {
                 articlesObj = $.extend(true, {}, ra);
 
@@ -839,7 +840,7 @@ function articlesList($rootElement, loadedPage) {
 
                 articlesOutput();
 
-                currPage = 0; textSearch = '';
+                $articlesList.find('.article-item__tag-item[data-tag="' + currTag + '"]').attr('data-active', '');
 
                 $paginationAll.removeAttr('data-active');
                 $paginationPrev.removeAttr('data-active');
@@ -853,7 +854,7 @@ function articlesList($rootElement, loadedPage) {
     });
 
     $paginationPrev.on('click', function() {
-        $.when(articlesAjax(currCat, currTag, currPage - 1, textSearch))
+        $.when(articlesAjax(currCat, currTag, currPage -= 1, textSearch = ''))
             .done(function(ra) {
                 articlesObj = $.extend(true, {}, ra);
 
@@ -863,7 +864,7 @@ function articlesList($rootElement, loadedPage) {
 
                 articlesOutput();
 
-                currPage -= 1;
+                $articlesList.find('.article-item__tag-item[data-tag="' + currTag + '"]').attr('data-active', '');
 
                 if ((currPage - 1) < 1) {
                     $paginationPrev.removeAttr('data-active');
@@ -885,7 +886,7 @@ function articlesList($rootElement, loadedPage) {
     });
 
     $paginationNext.on('click', function() {
-        $.when(articlesAjax(currCat, 0, currPage + 1, textSearch))
+        $.when(articlesAjax(currCat, currTag, currPage += 1, textSearch = ''))
             .done(function(ra) {
                 articlesObj = $.extend(true, {}, ra);
 
@@ -895,7 +896,7 @@ function articlesList($rootElement, loadedPage) {
 
                 articlesOutput();
 
-                currPage += 1;
+                $articlesList.find('.article-item__tag-item[data-tag="' + currTag + '"]').attr('data-active', '');
 
                 if ((currPage - 1) < 1) {
                     $paginationPrev.removeAttr('data-active');
@@ -921,7 +922,7 @@ function articlesList($rootElement, loadedPage) {
 
         currTag = $that.attr('data-tag');
 
-        $.when(articlesAjax(currCat, currTag, 1, textSearch))
+        $.when(articlesAjax(currCat, currTag, currPage = 1, textSearch = ''))
             .done(function(ra) {
                 articlesObj = $.extend(true, {}, ra);
 
@@ -963,13 +964,12 @@ function articlesList($rootElement, loadedPage) {
         let $input = $(this).find('input[name="search-text"]');
 
         if ($input.val()) {
-            $.when(articlesAjax(0, 0, 1, $input.val()))
+            $.when(articlesAjax(currCat = 0, currTag = 0, currPage = 1, textSearch = $input.val()))
                 .done(function(ra) {
                     articlesObj = $.extend(true, {}, ra);
 
                     articlesOutput();
 
-                    currCat = 0; currTag = 0; currPage = 1; textSearch = $input.val();
                     $filterList.find('.articles-list-filter__subItem').removeAttr('data-active');
                     $filterList.find('.articles-list-filter__subItem[data-cat="0"]').attr('data-active', '');
 
@@ -1029,7 +1029,7 @@ function profileTabs() {
             $prevOrders.attr('data-active', 'false');
 
         } else {
-            
+
             $parent.outerHeight($that.outerHeight() + $main.outerHeight());
 
             $prevOrders.attr('data-active', 'false');
@@ -1189,6 +1189,18 @@ function orderEdit() {
     }).resize();
 }
 
+function contactsSimple() {
+    let $map = $('#js-contacts-map');
+
+    $(window).on('resize', function () {
+        if ($(window).width() > 760) {
+            $map.outerHeight($map.outerWidth() * (406 / 1200));
+        } else {
+            $map.outerHeight(280);
+        }
+    }).resize();
+}
+
 /* ----- end FUNCTION DECLARATION ----- */
 
 
@@ -1238,6 +1250,7 @@ $(function() {
         articlesList($recipes, loadedPage);
     }
 
+
     if ($('main[class="main recipe-simple"]').length) {
         orderIngridients();
         subscribeNews();
@@ -1258,6 +1271,10 @@ $(function() {
         profileTabs();
         orderEdit();
         profileSubscribe();
+    }
+
+    if ($('main[class="main contacts-simple"]').length) {
+        contactsSimple();
     }
 
     /* ----- end INIT PAGE ----- */

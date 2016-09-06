@@ -12,10 +12,10 @@
                         <td>
                         <span>
                             {!! $basket->main_recipes->count() !!}
-                        </span> @choice('labels.count_of_dinners', $basket->main_recipes->count())
+                        </span> @choice('front_labels.count_of_dinners', $basket->main_recipes->count())
                         </td>
                         <td>
-                            <span>{!! $basket->portions !!}</span> @choice('labels.count_of_portions', $basket->portions)
+                            <span>{!! $basket->portions !!}</span> @choice('front_labels.count_of_portions', $basket->portions)
                         </td>
                     </tr>
                 @endforeach
@@ -26,7 +26,7 @@
 
         <div class="baskets-menu__desc">
             Оформите сегодня, и вы <span>получите заказ {!! implode(' или ', $menu->getDeliveryDates()) !!}</span>.<br/>
-            Заказы на это меню принимаются до <span>{!! variable('stop_ordering_time') !!} {!! trans_choice('labels.day_of_week_to_string_when', variable('stop_ordering_date')) !!}</span>.<br/>
+            Заказы на это меню принимаются до <span>{!! variable('stop_ordering_time') !!} {!! trans_choice('front_labels.day_of_week_to_string_when', variable('stop_ordering_date')) !!}</span>.<br/>
             Заказав после, вы получите продукты меню следующей недели.
         </div>
 

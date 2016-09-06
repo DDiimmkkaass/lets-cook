@@ -9,7 +9,9 @@
         <ul class="cook-with-us__list">
             @foreach($banner->visible_items as $key => $item)
                 <li class="cook-with-us__item">
-                    <div class="cook-with-us__item-icon" data-icon="{!! $key + 1 !!}"></div>
+                    <div class="cook-with-us__item-icon">
+                        <img src="{!! thumb($item->image) !!}" alt="Cook with us 1">
+                    </div>
                     <div class="cook-with-us__item-desk">{!! $item->text !!}</div>
                 </li>
             @endforeach

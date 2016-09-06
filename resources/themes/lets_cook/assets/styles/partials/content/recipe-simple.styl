@@ -292,7 +292,7 @@
 
       &::before
         content: ''
-        absolute: top 23px left 50%
+        absolute: top 25px left 50%
         transform: translateX(-50%)
         z-index: 1
         size: 80% 1px
@@ -320,29 +320,12 @@
       background-color: $bg-green-1
 
   &__item-icon
+    position: relative
+    height: 50px
 
-    &::before
-      font-family: $fontello
-      fsh(45px, 1)
-      color: $font-white-1
-
-    &[data-icon='1']
-      &::before
-        content: 'X'
-
-    &[data-icon='2']
-      &::before
-        content: 'X'
-
-    &[data-icon='3']
-      &::before
-        content: 'X'
-
-    &[data-icon='4']
-      &::before
-        content: 'X'
-
-
+    img
+      absolute: top 50% left 50%
+      transform: translate(-50%, -50%)
 
   &__item-desk
     margin-top: 15px
@@ -399,17 +382,16 @@
 
 
   &__item
-    &:not(:last-of-type)
-      margin-bottom: 70px * (310 / 720)
+    margin-bottom: 70px * (310 / 720)
 
-      +bp('480')
-        margin-bottom: 70px * (470 / 720)
+    +bp('480')
+      margin-bottom: 70px * (470 / 720)
 
-      +bp('768')
-        margin-bottom: 70px
+    +bp('768')
+      margin-bottom: 70px
 
-      +bp('1024')
-        margin-bottom: 0px
+    +bp('1024')
+      margin-bottom: 0px
 
     +bp('1024')
 

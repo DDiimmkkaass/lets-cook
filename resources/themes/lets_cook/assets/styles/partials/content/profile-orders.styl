@@ -117,9 +117,9 @@
         display: inline-block
         vertical-align: top
         margin-right: 10px
-        content: 'X'
+        content: $icon-user-1
         font-family: $fontello
-        fs(22px)
+        fs(21px)
 
     &[data-item='orders']
       display: none
@@ -174,10 +174,10 @@
         margin-right: 10px
         content: none
         font-family: $fontello
-        fs(22px)
+        fs(17px)
 
         +bp('1024')
-          content: 'X'
+          content: $icon-feedback
 
   &__link
     display: inline-block
@@ -442,19 +442,19 @@
 
     &::before
       display: block
-      content: 'X'
+      content: $icon-reload
       font-family: $fontello
-      fsh(160px * (310 / 720), 1)
+      fsh(105px * (310 / 720), 1)
       text-decoration: none
 
       +bp('480')
-        fs(160px * (470 / 720))
+        fs(105px * (470 / 720))
 
       +bp('768')
-        fs(160px)
+        fs(105px)
 
       +bp('1024')
-        fs(120px)
+        fs(105px)
 
   &__info
     js-display: flex; display: flex
@@ -928,6 +928,7 @@
     width: 100%
     padding: 0 ((40 / 1200) * 100%)
     fs(0px)
+    text-align: center
 
     +bp('1024')
       width: (280 / 1200) * 100%
@@ -938,9 +939,10 @@
     font-family: $ptsans-regular
     fsh(16px, 1.25)
     text-decoration: underline
+    cursor: pointer
 
     &:hover
-      cursor: pointer
+      text-decoration: none
 
   &__check
     margin: 0 15px
@@ -953,8 +955,11 @@
     text-align: center
     cursor: pointer
 
+    &:hover::before
+      color: $font-orange-1
+
     &::before
-      content: 'X'
+      content: $icon-delete
       font-family: $fontello
       fsh(30px, 43px)
       color: $font-red-2

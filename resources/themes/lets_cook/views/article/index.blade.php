@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <main class="main blog-list articles-list">
+    <main class="main articles-list">
         <h1 class="articles-list__title static-georgia-title" data-page="articles"><span>Статьи</span></h1>
 
         @include('article.partials.filters')

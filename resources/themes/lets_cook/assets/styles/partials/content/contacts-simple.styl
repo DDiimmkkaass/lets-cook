@@ -1,0 +1,133 @@
+
+/* ----- CONTACTS ----- */
+
+.contacts-simple
+
+  &__title
+    background-color: $bg-white-1
+    color: $font-black-2
+
+  &__info
+    text-align: center
+
+    +bp('1024')
+      text-align: left
+
+  &__info-wrapper
+    js-display: inline-flex; display: inline-flex;
+    flex-direction: column
+    max-width: 980px
+    margin: 0 auto; list-style-type: none
+    padding: (100px * (310 / 720)) (20px * (310 / 720)) (80px * (310 / 720))
+    text-align: left
+    font-family: $ptsans-regular
+    fsh(16px, 1.25)
+    color: $font-black-2
+
+    +bp('480')
+      padding: (100px * (470 / 720)) (20px * (470 / 720)) (80px * (470 / 720))
+
+    +bp('768')
+      padding: 100px 20px 80px
+
+    +bp('1024')
+      js-display: flex; display: flex;
+      flex-direction: row
+      justify-content: space-between
+      padding: 100px 0 80px
+
+
+  &__info-col
+    width: auto
+
+    +bp('1024')
+      &:nth-of-type(1)
+        width: 40%
+
+      &:nth-of-type(2)
+        width: 30%
+
+      &:nth-of-type(3)
+        width: 30%
+
+  &__info-row
+    position: relative
+    vertical-align: middle
+    margin-bottom: 20px
+    padding-left: 55px
+    min-height: 32px
+
+    &::before
+      display: inline-block
+      absolute: top 50% left 0
+      transform: translateY(-50%)
+      size: 41px auto
+      vertical-align: middle
+      text-align: center
+      font-family: $fontello
+      color: $font-yellow-5
+
+
+    +bp('1024')
+      margin-bottom: 0
+
+      &:not(:last-of-type)
+        margin-bottom: 30px
+
+    &[data-contacts='address']
+      js-display: flex; display: flex;
+      align-items: center
+
+      &::before
+        content: $icon-map
+        fsh(33px, 1)
+
+    &[data-contacts='clock']
+      &::before
+        content: $icon-clock
+        fsh(31px, 1)
+
+    &[data-contacts='phone']
+      line-height: 30px
+
+      &::before
+        top: 0; transform: none
+        content: $icon-phone-1
+        fsh(30px, 1)
+
+    &[data-contacts='mail']
+      line-height: 26px
+
+      &::before
+        content: $icon-mail
+        fsh(26px, 1)
+
+    &[data-contacts='skype']
+      line-height: 30px
+
+      &::before
+        content: $icon-skype
+        fsh(30px, 1)
+
+
+  &__info-span
+    display: block
+    color: $font-black-2
+
+  &__info-link
+    display: block
+    color: $font-black-2
+    text-decoration: none
+
+    &:not(:last-of-type)
+      margin-bottom: 12px
+
+    &:hover
+      text-decoration: underline
+
+
+  &__map
+    background-color: $bg-green-1
+    size: 100% 400px
+
+/* ----- end CONTACTS ----- */

@@ -55,6 +55,7 @@
 
   &__title
     display: inline-block
+    vertical-align: top
     margin: 0 45px 10px 0
     font-family: $ptsans-regular
     fsh(18px, 27px)
@@ -66,7 +67,18 @@
   &__list
     margin: 0; padding: 0; list-style-type: none
     display: inline-block
+    vertical-align: top
     fs(0px)
+
+    // YANDEX SHARE
+
+    .ya-share2__container_size_m .ya-share2__item
+      margin-right: 5px !important
+
+    .ya-share2__container_size_m .ya-share2__icon
+      width: 27px !important; height: 27px !important
+
+    // end YANDEX SHARE
 
   &__item
     display: inline-block
@@ -81,50 +93,57 @@
 
     &::before
       absolute: left 8px top 0
-      size: 45px 100%
+      size: auto 100%
       font-family: $fontello
 
     &[data-share='facebook']
       background-color: #19559b
 
       &::before
-        content: 'X'
+        content: $icon-fb
+        fs(16px)
 
     &[data-share='google-plus']
       background-color: #fe3f2b
 
       &::before
-        content: 'X'
+        content: $icon-google
+        fs(15px)
 
     &[data-share='twitter']
       background-color: #00aeca
 
       &::before
-        content: 'X'
+        content: $icon-tw
+        fs(15px)
 
     &[data-share='linkedin']
       background-color: #0086a9
 
       &::before
-        content: 'X'
+        content: $icon-linkedin
+        fs(16px)
 
     &[data-share='pinterest']
       background-color: #0086a9
 
       &::before
-        content: 'X'
+        content: $icon-pinterest
+        fs(17px)
 
     &[data-share='vkontakte']
       background-color: #4c75a3
 
       &::before
-        content: 'X'
+        content: $icon-vk
+        fs(12px)
 
     &[data-share='instagram']
       background-color: #864c2d
 
       &::before
-        content: 'X'
+        content: $icon-instagram
+        fs(16px)
 
 
 .article-tags
@@ -133,5 +152,7 @@
   &__item
     @extend .transparent-green-regular-button
     margin-right: 15px
+
+
 
 /* ----- end ARTICLE SIMPLE ----- */
