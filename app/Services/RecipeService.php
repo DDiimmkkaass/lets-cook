@@ -14,13 +14,17 @@ use App\Models\Recipe;
 use App\Models\RecipeIngredient;
 use App\Models\RecipeStep;
 use App\Models\WeeklyMenu;
+use App\Models\WeeklyMenuBasket;
+use App\Transformers\RecipeTransformer;
 use Carbon;
 use Datatables;
 use DB;
 use Exception;
 use FlashMessages;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Class RecipeService
@@ -490,6 +494,47 @@ class RecipeService
     }
     
     /**
+     * @return LengthAwarePaginator
+     */
+    public function getList()
+    {
+        $list = Recipe::with(['tags', 'tags.tag.translations', 'ingredients'])->visible()->nameSorted();
+        
+        $list = $this->_implodeFrontFilters($list);
+        
+        if (request('page', 1) == 0) {
+            $list = $list->get();
+        } else {
+            $list = $this->_paginate($list);
+        }
+        
+        $list = $this->_prepareData($list);
+        
+        return $list;
+    }
+    
+    /**
+     * @param \App\Models\Recipe $model
+     *
+     * @return Collection
+     */
+    public function activeBaskets(Recipe $model)
+    {
+        $now = Carbon::now();
+        
+        return WeeklyMenuBasket::with('basket')
+            ->joinWeeklyMenu()
+            ->joinBasket()
+            ->joinBasketRecipes()
+            ->where('weekly_menus.year', $now->year)
+            ->where('weekly_menus.week', $now->weekOfYear)
+            ->where('basket_recipes.recipe_id', $model->id)
+            ->whereNotNull('basket_recipes.weekly_menu_basket_id')
+            ->groupBy('weekly_menu_baskets.basket_id')
+            ->get(['weekly_menu_baskets.id', 'baskets.name']);
+    }
+    
+    /**
      * @param \Illuminate\Http\Request $request
      *
      * @return array
@@ -567,5 +612,108 @@ class RecipeService
                 }
             }
         }
+    }
+    
+    /**
+     * @param Builder $list
+     *
+     * @return Builder
+     */
+    private function _implodeFrontFilters(Builder $list)
+    {
+        $category_id = request()->route('category_id', 0);
+        $tag_id = request()->route('tag_id', 0);
+        $search_text = request('search_text', '');
+        
+        if ($category_id > 0) {
+            $list->whereExists(
+                function ($query) use ($category_id, $tag_id) {
+                    $query->leftJoin('tags', 'tags.id', '=', 'tagged.tag_id')
+                        ->select(DB::raw('1'))
+                        ->from('tagged')
+                        ->whereRaw(
+                            'recipes.id = tagged.taggable_id AND
+                            tagged.taggable_type = \''.str_replace('\\', '\\\\', Recipe::class).'\' AND
+                            tags.category_id = '.$category_id.
+                            ($tag_id > 0 ? ' AND tagged.tag_id = '.$tag_id : '')
+                        );
+                }
+            );
+        }
+        
+        if (!$category_id && $tag_id > 0) {
+            $list->whereExists(
+                function ($query) use ($tag_id) {
+                    $query->select(DB::raw('1'))
+                        ->from('tagged')
+                        ->whereRaw(
+                            'recipes.id = tagged.taggable_id AND
+                            tagged.taggable_type = \''.str_replace('\\', '\\\\', Recipe::class).'\' AND
+                            tagged.tag_id = '.$tag_id
+                        );
+                }
+            );
+        }
+        
+        if (!empty($search_text)) {
+            $list->search($search_text);
+        }
+        
+        return $list;
+    }
+    
+    /**
+     * @param Builder $list
+     *
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    private function _paginate($list)
+    {
+        $page = request('page', 1);
+    
+        $total = (clone $list);
+        $list = $list->take(config('recipe.per_page'))->skip(($page - 1) * config('recipe.per_page'))->get();
+    
+        return new LengthAwarePaginator(
+            $list,
+            $total->get()->count(),
+            config('recipe.per_page'),
+            $page,
+            [
+                'path'  => route('recipes.index'),
+                'query' => ['search_text' => request('search_text', '')],
+            ]
+        );
+    }
+    
+    /**
+     * @param $list
+     *
+     * @return array
+     */
+    private function _prepareData($list)
+    {
+        $data = ['recipes' => []];
+        
+        foreach ($list as $item) {
+            $data['recipes'][] = RecipeTransformer::transform($item);
+        }
+        
+        if ($list instanceof Collection) {
+            $data['next_count'] = 0;
+        } else {
+            if ($list->lastPage() == $list->currentPage()) {
+                $data['next_count'] = 0;
+            } else {
+                $data['next_count'] = $list->total() - $list->currentPage() * $list->perPage();
+                $data['next_count'] = $data['next_count'] > $list->perPage() ? $list->perPage() : $data['next_count'];
+                
+                $data['next_count'] = $data['next_count'] >= 0 ? $data['next_count'] : 0;
+            }
+        }
+    
+        $data['next_count_label'] = trans_choice('labels.count_of_recipes', $data['next_count']);
+        
+        return $data;
     }
 }

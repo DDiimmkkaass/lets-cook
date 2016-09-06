@@ -8,19 +8,23 @@
 
 namespace App\Models;
 
+use App\Contracts\FrontLink;
+use App\Contracts\MetaGettable;
 use App\Traits\Models\TaggableTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 /**
  * Class Recipe
  * @package App\Models
  */
-class Recipe extends Model
+class Recipe extends Model implements FrontLink, MetaGettable
 {
     
     use SoftDeletes;
     use TaggableTrait;
+    use SearchableTrait;
     
     /**
      * @var array
@@ -42,6 +46,19 @@ class Recipe extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+    
+    /**
+     * Searchable rules.
+     *
+     * @var array
+     */
+    protected $searchable = [
+        'columns' => [
+            'recipes.name'          => 100,
+            'recipes.recipe'        => 50,
+            'recipes.helpful_hints' => 25,
+        ],
+    ];
     
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -180,5 +197,57 @@ class Recipe extends Model
         }
         
         return $this->price;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return localize_route('recipes.show', $this->id);
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaTitle()
+    {
+        return $this->name;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaDescription()
+    {
+        return $this->name;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaKeywords()
+    {
+        return $this->name;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaImage()
+    {
+        $img = empty($this->image) ? config('seo.share.default_image') : $this->image;
+        
+        return $img ? url($img) : $img;
+    }
+    
+    /**
+     * TODO: make normal rating
+     *
+     * @return int
+     */
+    public function getRating()
+    {
+        return rand(3, 5);
     }
 }

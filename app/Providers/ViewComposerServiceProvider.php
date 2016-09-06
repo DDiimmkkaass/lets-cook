@@ -24,10 +24,9 @@ class ViewComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        view()->composer(
-            ['news/partials/filters', 'article/partials/filters'],
-            '\App\Http\ViewComposers\NewsComposer'
-        );
+        view()->composer('news/partials/filters', '\App\Http\ViewComposers\NewsComposer');
+        view()->composer('article/partials/filters', '\App\Http\ViewComposers\ArticleComposer');
+        view()->composer('recipe/partials/filters', '\App\Http\ViewComposers\RecipeComposer');
     }
     
     /**

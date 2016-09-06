@@ -25,6 +25,14 @@ $router->get(
     ->where(['category_id' => '[0-9]+', 'tag_id' => '[0-9]+']);
 $router->get('articles/{slug}', ['as' => 'articles.show', 'uses' => 'Frontend\ArticleController@show']);
 
+// recipes
+$router->get(
+    'recipes/{category_id?}/{tag_id?}',
+    ['as' => 'recipes.index', 'uses' => 'Frontend\RecipeController@index']
+)
+    ->where(['category_id' => '[0-9]+', 'tag_id' => '[0-9]+']);
+$router->get('recipes/{recipe_id}/show', ['as' => 'recipes.show', 'uses' => 'Frontend\RecipeController@show']);
+
 // baskets
 $router->get('baskets', ['as' => 'baskets.index', 'uses' => 'Frontend\BasketController@index']);
 $router->get('baskets/{id}', ['as' => 'baskets.show', 'uses' => 'Frontend\BasketController@show'])

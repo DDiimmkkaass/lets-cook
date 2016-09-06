@@ -123,6 +123,8 @@ class NewsService
                 $data['next_count'] = $data['next_count'] >= 0 ? $data['next_count'] : 0;
             }
         }
+    
+        $data['next_count_label'] = trans_choice('labels.count_of_news', $data['next_count']);
         
         return $data;
     }

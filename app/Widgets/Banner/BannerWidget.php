@@ -22,13 +22,14 @@ class BannerWidget extends Widget
      * @var string
      */
     protected $view = 'default';
-
+    
     /**
      * @param string $position
+     * @param array  $data
      *
      * @return $this
      */
-    public function index($position)
+    public function index($position, $data = [])
     {
         $banners = [];
 
@@ -45,6 +46,7 @@ class BannerWidget extends Widget
 
                 $banners[] = view('widgets.banner.templates.'.$this->view.'.index')
                     ->with(['banner' => $banner])
+                    ->with($data)
                     ->render();
             }
 

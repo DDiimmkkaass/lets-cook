@@ -84,6 +84,41 @@ class WeeklyMenuBasket extends Model
     }
     
     /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinWeeklyMenu($query)
+    {
+        return $query->rightJoin('weekly_menus', 'weekly_menus.id', '=', 'weekly_menu_baskets.weekly_menu_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinBasket($query)
+    {
+        return $query->leftJoin('baskets', 'baskets.id', '=', 'weekly_menu_baskets.basket_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinBasketRecipes($query)
+    {
+        return $query->leftJoin(
+            'basket_recipes',
+            'basket_recipes.weekly_menu_basket_id',
+            '=',
+            'weekly_menu_baskets.id'
+        );
+    }
+    
+    /**
      * @param int $portions
      * @param int $days
      *
