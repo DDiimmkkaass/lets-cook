@@ -18,5 +18,5 @@
         </ul>
     @endif
 
-    <a href="#" class="cook-with-us__know-more white-long-button">Узнать больше</a>
+    <a href="{!! localize_route('home') !!}" class="cook-with-us__know-more white-long-button">Узнать больше</a>
 </section>
