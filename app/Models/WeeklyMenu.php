@@ -56,6 +56,25 @@ class WeeklyMenu extends Model
     }
     
     /**
+     * @return array
+     */
+    public function getDeliveryDates()
+    {
+        $dt = Carbon::create($this->year, 1, 1, 0)->addWeek($this->week);
+        
+        $dates = [
+            clone $dt->endOfWeek(),
+            clone $dt->endOfWeek()->addDay(),
+        ];
+        
+        foreach ($dates as $key => $date) {
+            $dates[$key] = $date->format('d').' '.get_localized_date($date->format('Y-m-d'), 'Y-m-d', false, '', '%f');
+        }
+        
+        return $dates;
+    }
+    
+    /**
      * @return bool
      */
     public function isCurrentWeekMenu()
@@ -99,6 +118,11 @@ class WeeklyMenu extends Model
      */
     public function scopeJoinBasketRecipes($query)
     {
-        return $query->leftJoin('basket_recipes', 'basket_recipes.weekly_menu_basket_id', '=', 'weekly_menu_baskets.id');
+        return $query->leftJoin(
+            'basket_recipes',
+            'basket_recipes.weekly_menu_basket_id',
+            '=',
+            'weekly_menu_baskets.id'
+        );
     }
 }

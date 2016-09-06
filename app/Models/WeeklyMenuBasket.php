@@ -52,6 +52,14 @@ class WeeklyMenuBasket extends Model
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function main_recipes()
+    {
+        return $this->hasMany(BasketRecipe::class)->whereMain(true)->with('recipe');
+    }
+    
+    /**
      * @param array $value
      */
     public function setPricesAttribute($value)

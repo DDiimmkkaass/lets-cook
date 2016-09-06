@@ -284,19 +284,26 @@ if (!function_exists('get_localized_date')) {
      * @param string $in_format
      * @param bool   $time_format
      * @param string $time_position
+     * @param string $out_format
      *
      * @return string
      */
-    function get_localized_date($date, $in_format = 'Y-m-d H:i:s', $time_format = false, $time_position = 'after')
-    {
+    function get_localized_date(
+        $date,
+        $in_format = 'Y-m-d H:i:s',
+        $time_format = false,
+        $time_position = 'after',
+        $out_format = ''
+    ) {
         $date = LocalizedCarbon::createFromFormat($in_format, $date);
         
         return
             trim(
                 ($time_position == 'before' ? (($time_format) ? $date->format($time_format) : '') : '').' '.
-                $date->format('d').' '.
-                $date->formatLocalized('%f').' '.
-                $date->format('Y').' '.
+                (empty($format) ?
+                    $date->format('d').' '.$date->formatLocalized('%f').' '.$date->format('Y') :
+                    $date->formatLocalized($out_format)
+                ).' '.
                 ($time_position == 'after' ? (($time_format) ? $date->format($time_format) : '') : '')
             );
     }
@@ -419,12 +426,12 @@ if (!function_exists('thumb')) {
         if ($path) {
             if ($width && $height) {
                 $img_info = getimagesize(public_path($path));
-    
+                
                 if (!empty($img_info)) {
                     $width = $width <= $img_info[0] ? $width : $img_info[0];
                     $height = $height <= $img_info[1] ? $height : $img_info[1];
                 }
-    
+                
                 $thumb = url(Thumb::thumb($path, $width, $height)->link());
             } else {
                 $thumb = url($path);

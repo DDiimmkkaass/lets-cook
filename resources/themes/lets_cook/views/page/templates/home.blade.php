@@ -132,51 +132,7 @@
                 </ul>
             </div>
 
-            <div class="recipes-and-baskets__item baskets-menu">
-                <h2 class="baskets-menu__title">наши корзины</h2>
-
-                <table class="baskets-menu__list">
-                    <tbody>
-                    <tr>
-                        <td><a href="#">Классическая корзина</a></td>
-                        <td><span>5</span> ужинов</td>
-                        <td><span>4</span> порции</td>
-                    </tr>
-
-                    <tr>
-                        <td><a href="#">Три ужина</a></td>
-                        <td><span>3</span> ужинов</td>
-                        <td><span>3</span> порции</td>
-                    </tr>
-
-                    <tr>
-                        <td><a href="#">Простая классика</a></td>
-                        <td><span>4</span> ужинов</td>
-                        <td><span>2</span> порции</td>
-                    </tr>
-
-                    <tr>
-                        <td><a href="#">Четыре ужина</a></td>
-                        <td><span>2</span> ужинов</td>
-                        <td><span>4</span> порции</td>
-                    </tr>
-
-                    <tr>
-                        <td><a href="#">Вегетарианская корзина</a></td>
-                        <td><span>3</span> ужинов</td>
-                        <td><span>2</span> порции</td>
-                    </tr>
-                    </tbody>
-                </table>
-
-                <div class="baskets-menu__desc">
-                    Оформите сегодня, и вы <span>получите заказ 22 или23 февраля</span>.<br/>
-                    Заказы на это меню принимаются до <span>14:00 19 февраля</span>.<br/>
-                    Заказав после, вы получите продукты меню следующей недели.
-                </div>
-
-                <a href="#" class="baskets-menu__details black-long-button">Подробнее про корзины</a>
-            </div>
+            @widget__weekly_menu_baskets()
         </section>
 
         @widget__banner('what_makes_us_different')

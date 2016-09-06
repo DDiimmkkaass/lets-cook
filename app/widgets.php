@@ -27,3 +27,5 @@ Widget::register('widget__last_articles', 'App\Widgets\LastArticles\LastArticles
 Widget::register('widget__subscribe', 'App\Widgets\Subscribe\SubscribeWidget@index');
 
 Widget::register('widget__random_comments', 'App\Widgets\RandomComments\RandomCommentsWidget@index');
+
+Widget::register('widget__weekly_menu_baskets', 'App\Widgets\WeeklyMenuBaskets\WeeklyMenuBasketsWidget@index');
