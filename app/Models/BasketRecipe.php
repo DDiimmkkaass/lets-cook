@@ -118,4 +118,12 @@ class BasketRecipe extends Model
         $this->recipe->name.'-'.
         (empty($this->basket_id) ? $this->weekly_menu_basket->portions : '');
     }
+    
+    /**
+     * @return string
+     */
+    public function getRecipeName()
+    {
+        return $this->recipe->name;
+    }
 }

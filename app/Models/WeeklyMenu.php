@@ -106,6 +106,19 @@ class WeeklyMenu extends Model
      *
      * @return mixed
      */
+    public function scopeNext($query)
+    {
+        $next = Carbon::now()->addWeek();
+        
+        return $query->where('year', '=', $next->year)
+            ->where('week', '=', $next->weekOfYear);
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
     public function scopeJoinWeeklyMenuBaskets($query)
     {
         return $query->leftJoin('weekly_menu_baskets', 'weekly_menu_baskets.weekly_menu_id', '=', 'weekly_menus.id');

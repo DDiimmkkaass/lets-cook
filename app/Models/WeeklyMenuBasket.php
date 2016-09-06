@@ -8,13 +8,15 @@
 
 namespace App\Models;
 
+use App\Contracts\FrontLink;
+use App\Contracts\MetaGettable;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class WeeklyMenuBasket
  * @package App\Models
  */
-class WeeklyMenuBasket extends Model
+class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
 {
     
     /**
@@ -178,5 +180,47 @@ class WeeklyMenuBasket extends Model
         }
         
         return $this->price;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        return localize_route('baskets.show', $this->id);
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaTitle()
+    {
+        return $this->getName();
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaDescription()
+    {
+        return empty($this->basket->description) ? $this->getName() : $this->basket->description;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaKeywords()
+    {
+        return $this->getName();
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaImage()
+    {
+        $img = empty($this->basket->image) ? config('seo.share.default_image') : $this->basket->image;
+        
+        return $img ? url($img) : $img;
     }
 }
