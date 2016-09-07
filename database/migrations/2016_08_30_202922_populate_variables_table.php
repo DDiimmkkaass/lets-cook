@@ -50,7 +50,7 @@ class PopulateVariablesTable extends Migration
                 'type'   => 'text',
                 'name'   => 'Телефон в Москве',
                 'status' => true,
-                'value'  => '8 (499) 390–98–98',
+                'value'  => '8 (499) 390–98–87',
             ],
         ];
         

@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\Page;
 use App\Services\PageService;
+use JavaScript;
 use Response;
 use View;
 
@@ -19,17 +20,17 @@ use View;
  */
 class PageController extends FrontendController
 {
-
+    
     /**
      * @var string
      */
     public $module = 'page';
-
+    
     /**
      * @var \App\Services\PageService
      */
     protected $pageService;
-
+    
     /**
      * PageController constructor.
      *
@@ -38,7 +39,7 @@ class PageController extends FrontendController
     public function __construct(PageService $pageService)
     {
         parent::__construct();
-
+        
         $this->pageService = $pageService;
     }
     
@@ -48,11 +49,11 @@ class PageController extends FrontendController
     public function getHome()
     {
         abort_if(!$this->home_page, 404);
-
+        
         $this->data('model', $this->home_page);
-
+        
         $this->fillMeta($this->home_page, $this->module);
-
+        
         return $this->render($this->module.'.templates.'.$this->home_page->template);
     }
     
@@ -63,19 +64,19 @@ class PageController extends FrontendController
     {
         $slug = func_get_args();
         $slug = array_pop($slug);
-
+        
         if ($slug == 'home') {
             return redirect(localize_route('home'), 301);
         }
-
+        
         $model = Page::with(['translations', 'parent', 'parent.translations'])->visible()->whereSlug($slug)->first();
-
+        
         abort_if(!$model, 404);
-
+        
         $this->data('model', $model);
-
+        
         $this->fillMeta($model, $this->module);
-
+        
         return $this->render($this->module.'.templates.'.$model->template);
     }
     
@@ -84,16 +85,18 @@ class PageController extends FrontendController
      */
     public function contacts()
     {
-        return $this->render('contacts');
+        JavaScript::put(['map_lat' => variable('map_marker_latitude'), 'map_lng' => variable('map_marker_longitude')]);
+        
+        return $this->render('page.contacts');
     }
-
+    
     /**
      * @return \Illuminate\Http\Response
      */
     public function notFound()
     {
         $view = View::make('errors.404')->render();
-
+        
         return Response::make($view, 404);
     }
 }
