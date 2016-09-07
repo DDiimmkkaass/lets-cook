@@ -126,4 +126,12 @@ class BasketRecipe extends Model
     {
         return $this->recipe->name;
     }
+    
+    /**
+     * @return string
+     */
+    public function getRecipeImage()
+    {
+        return $this->recipe->image;
+    }
 }

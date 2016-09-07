@@ -8,6 +8,9 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\WeeklyMenu;
+use App\Models\WeeklyMenuBasket;
+
 /**
  * Class BasketController
  * @package App\Http\Controllers\Frontend
@@ -25,6 +28,16 @@ class BasketController extends FrontendController
      */
     public function index()
     {
+        $baskets = [];
+        
+        $menu = WeeklyMenu::with('baskets', 'baskets.main_recipes')->current()->first();
+        
+        if ($menu) {
+            $baskets = $menu->baskets;
+        }
+        
+        $this->data('baskets', $baskets);
+        
         return $this->render($this->module.'.index');
     }
     
@@ -35,6 +48,14 @@ class BasketController extends FrontendController
      */
     public function show($basket_id)
     {
+        $model = WeeklyMenuBasket::with('main_recipes')->find($basket_id);
+        
+        abort_if(!$model, 404);
+        
+        $this->fillMeta($model, $this->module);
+        
+        $this->data('model', $model);
+        
         return $this->render($this->module.'.show');
     }
 }

@@ -111,7 +111,7 @@ class FrontendController extends BaseController
             [
                 'app_url'                            => Config::get('app.url', ''),
                 'lang'                               => Lang::getLocale(),
-                'currency'                           => trans('labels.grn'),
+                'currency'                           => trans('labels.currency'),
                 'max_upload_file_size'               => $max_upload_file_size,
                 'max_upload_image_width'             => config('image.max_upload_width'),
                 'max_upload_image_height'            => config('image.max_upload_height'),

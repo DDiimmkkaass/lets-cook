@@ -67,6 +67,9 @@ $router->post(
     ['middleware' => 'ajax', 'as' => 'subscribes.store', 'uses' => 'Frontend\SubscribeController@store']
 );
 
+//order
+$router->get('order/{basket_id}', ['as' => 'order.index', 'uses' => 'Frontend\OrderController@index']);
+
 // profiles
 $router->group(
     [
