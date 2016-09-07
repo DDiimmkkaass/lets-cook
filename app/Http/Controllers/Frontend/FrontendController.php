@@ -102,7 +102,7 @@ class FrontendController extends BaseController
         View::share('max_upload_image_width', config('image.max_upload_width'));
         View::share('max_upload_image_height', config('image.max_upload_height'));
 
-        View::share('currency', trans('labels.grn'));
+        View::share('currency', currency());
 
         View::share('no_image_user', config('user.no_image'));
 
@@ -111,7 +111,7 @@ class FrontendController extends BaseController
             [
                 'app_url'                            => Config::get('app.url', ''),
                 'lang'                               => Lang::getLocale(),
-                'currency'                           => trans('labels.currency'),
+                'currency'                           => currency(),
                 'max_upload_file_size'               => $max_upload_file_size,
                 'max_upload_image_width'             => config('image.max_upload_width'),
                 'max_upload_image_height'            => config('image.max_upload_height'),
