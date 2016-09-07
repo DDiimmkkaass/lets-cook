@@ -140,6 +140,16 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
     }
     
     /**
+     * @return float
+     */
+    public function getOrderPrice()
+    {
+        $recipes = $this->main_recipes->count();
+        
+        return $recipes ? $this->getPrice($this->portions, $this->main_recipes->count()) : 0;
+    }
+    
+    /**
      * @param int $portions
      * @param int $days
      *

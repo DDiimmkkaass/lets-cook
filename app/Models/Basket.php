@@ -262,6 +262,18 @@ class Basket extends Model
     }
     
     /**
+     * @return string
+     */
+    public function getImage()
+    {
+        if ($this->recipes->count()) {
+            return $this->recipes->random()->getRecipeImage();
+        }
+        
+        return '';
+    }
+    
+    /**
      * @param string $type
      *
      * @return int|string

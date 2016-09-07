@@ -27,4 +27,15 @@ class City extends Model
         'name',
         'position',
     ];
+    
+    /**
+     * @param        $query
+     * @param string $order
+     *
+     * @return mixed
+     */
+    public function scopeNameSorted($query, $order = 'ASC')
+    {
+        return $query->orderBy('name', $order);
+    }
 }

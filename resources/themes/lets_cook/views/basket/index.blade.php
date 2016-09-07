@@ -37,29 +37,25 @@
                                                 </li>
                                             </ul>
 
-                                            @if ($basket->main_recipes->count())
-                                                <div class="baskets-main-item__price" data-device="mobile">
-                                                    {!! $basket->getPrice($basket->portions, $basket->main_recipes->count()) !!}
-                                                    <span>{!! $currency !!}</span>
-                                                </div>
-                                            @endif
+                                            <div class="baskets-main-item__price" data-device="mobile">
+                                                {!! $basket->getOrderPrice() !!}
+                                                <span>{!! $currency !!}</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                @if ($basket->main_recipes->count())
-                                    <div class="baskets-main-item__right">
-                                        <div class="baskets-main-item__price" data-device="desktop">
-                                            {!! $basket->getPrice($basket->poritons, $basket->main_recipes->count()) !!}
-                                            <span>{!! $currency !!}</span>
-                                        </div>
-                                        <a href="{!! localize_route('order.index', $basket->id) !!}"
-                                           class="baskets-main-item__make-order"
-                                           data-device="desktop">
-                                            Оформить заказ
-                                        </a>
+                                <div class="baskets-main-item__right">
+                                    <div class="baskets-main-item__price" data-device="desktop">
+                                        {!! $basket->getOrderPrice() !!}
+                                        <span>{!! $currency !!}</span>
                                     </div>
-                                @endif
+                                    <a href="{!! localize_route('order.index', $basket->id) !!}"
+                                       class="baskets-main-item__make-order"
+                                       data-device="desktop">
+                                        Оформить заказ
+                                    </a>
+                                </div>
                             </div>
 
                             <div class="baskets-main-item__main">
