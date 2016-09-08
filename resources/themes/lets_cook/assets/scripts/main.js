@@ -403,12 +403,12 @@ function makeOrderDaySize() {
     }).resize();
 }
 
-function orderIngridients() {
+function orderIngredients() {
     let $orderIng = $('.order-ing'),
         $title = $orderIng.find('.order-ing__title'),
         $lists = $orderIng.find('.order-ing__list-wrapper'),
         $addList = $lists.eq(2),
-        $addListItems = $addList.find('.order-ing__list li .checkbox-button input[name="order-ingridients"]');
+        $addListItems = $addList.find('.order-ing__list li .checkbox-button input[type="checkbox"]');
 
     $title.on('click', function(e) {
         let orderHeight = parseInt($title.css('line-height'), 10),
@@ -435,46 +435,17 @@ function orderIngridients() {
         }
     });
 
-
     $addListItems.on('change', function() {
         let $that = $(this),
-            $label = $that.next(),
-            myCheckboxes = {};
+            $label = $that.next();
 
         if ($that.is(':checked')) {
             $label.text($label.attr('data-remove'));
+            $(this).attr('name', $(this).data('name'))
         } else {
             $label.text($label.attr('data-add'));
+            $(this).removeAttr('name')
         }
-
-        $addListItems.each(function() {
-            let $that = $(this),
-                thatObj = { [$that.attr('data-id')]: $that.is(':checked')};
-
-            Object.assign(myCheckboxes, thatObj);
-        });
-
-        $.ajax({
-            type: 'POST',
-            url: 'order.php',
-            dataType: 'json',
-            cache: false,
-            data: JSON.stringify(myCheckboxes), // {"1":false,"2":true,"3":false}
-            xhrFields: {
-                withCredentials: true
-            },
-
-            success: function() {
-
-
-                console.log('ORDER INGIRIDIENTS CHECKBOX AJAX SUCCESS');
-            },
-
-            error: function() {
-
-                console.log('ORDER INGIRIDIENTS CHECKBOX AJAX ERROR');
-            }
-        });
     });
 }
 
@@ -482,7 +453,7 @@ function orderAndMoreSize() {
     let $orderAddMore = $('.order-add-more'),
         $list = $orderAddMore.find('.order-add-more__list-wrapper'),
         $listItems = $list.find('.order-add-more__item.more-item'),
-        $listItemsCheckboxes = $listItems.find('.checkbox-button input[name="order-add-more"]');
+        $listItemsCheckboxes = $listItems.find('.checkbox-button input[type="checkbox"]');
 
     const imageRatio = 120 / 180;
 
@@ -510,48 +481,20 @@ function orderAndMoreSize() {
 
     $list.on('click', '.order-add-more__item', function() {
         let $that = $(this),
-            $checkbox = $that.find('input[name="order-add-more"]'),
-            $label = $checkbox.next(),
-            myCheckboxes = {};
+            $checkbox = $that.find('input[type="checkbox"]'),
+            $label = $checkbox.next();
 
         if ($checkbox.is(':checked')) {
             $checkbox.prop('checked', false);
+            $checkbox.removeAttr('name');
             $label.text($label.attr('data-add'));
             $that.removeAttr('data-active');
         } else {
             $checkbox.prop('checked', true);
+            $checkbox.attr('name', $checkbox.data('name'));
             $label.text($label.attr('data-remove'));
             $that.attr('data-active', '');
         }
-
-        $listItemsCheckboxes.each(function() {
-            let $that = $(this),
-                thatObj = { [$that.attr('data-id')]: $that.is(':checked')};
-
-            Object.assign(myCheckboxes, thatObj);
-        });
-
-        $.ajax({
-            type: 'POST',
-            url: 'order.php',
-            dataType: 'json',
-            cache: false,
-            data: JSON.stringify(myCheckboxes), // {"1":false,"2":true,"3":false}
-            xhrFields: {
-                withCredentials: true
-            },
-
-            success: function() {
-
-
-                console.log('ORDER ADD MORE CHECKBOX AJAX SUCCESS');
-            },
-
-            error: function() {
-
-                console.log('ORDER ADD MORE CHECKBOX AJAX ERROR');
-            }
-        });
     });
 }
 
@@ -1221,7 +1164,7 @@ $(function() {
     }
 
     if ($('main[class="main order"]').length) {
-        orderIngridients();
+        orderIngredients();
     }
 
     if ($('main[class="main baskets"]').length) {
@@ -1252,7 +1195,7 @@ $(function() {
 
 
     if ($('main[class="main recipe-simple"]').length) {
-        orderIngridients();
+        orderIngredients();
         subscribeNews();
     }
 

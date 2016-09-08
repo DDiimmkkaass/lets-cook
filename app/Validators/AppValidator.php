@@ -79,6 +79,22 @@ class AppValidator extends Validator
      *
      * @return bool
      */
+    public function validateMaxDeliveryDateDate($attribute, $value, $parameters)
+    {
+        $max_date = Carbon::now()->endOfWeek()->addDay()->addWeek()->endOfDay();
+        
+        $delivery_date = Carbon::createFromFormat('d-m-Y', $value)->startOfDay();
+        
+        return $delivery_date <= $max_date;
+    }
+    
+    /**
+     * @param string $attribute
+     * @param string $value
+     * @param array  $parameters
+     *
+     * @return bool
+     */
     public function validateDeliveryDateDayOfWeek($attribute, $value, $parameters)
     {
         $delivery_date = Carbon::createFromFormat('d-m-Y', $value)->startOfDay();

@@ -22,7 +22,7 @@
     <a id="order_user_link"
        target="_blank"
        class="display-block margin-top-5"
-       href="@if ($model->exists) {!! route('admin.user.edit', $model->user_id) !!} @else#@endif"
+       href="@if ($model->exists && $model->user_id){!! route('admin.user.edit', $model->user_id) !!}@else#@endif"
        title="@lang('labels.go_to_user')">
         @lang('labels.go_to_user')
     </a>

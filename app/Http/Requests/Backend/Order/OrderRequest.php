@@ -69,7 +69,7 @@ class OrderRequest extends FormRequest
         ];
         
         if ($this->request->get('delivery_date') != $this->request->get('old_delivery_date')) {
-            $rules['delivery_date'] .= '|delivery_date_day_of_week|delivery_date_date';
+            $rules['delivery_date'] .= '|delivery_date_day_of_week|delivery_date_date|max_delivery_date_date';
         }
         
         return $rules;

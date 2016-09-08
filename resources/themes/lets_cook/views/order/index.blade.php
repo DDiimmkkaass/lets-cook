@@ -3,25 +3,29 @@
 @section('content')
 
     <main class="main order">
-        @include('order.partials.basket')
+        <form action="{!! localize_route('order.store') !!}" method="post" class="order-create-form">
+            {!! csrf_field() !!}
 
-        @if ($basket->main_recipes->count())
-            @include('order.partials.ingredients')
-        @endif
+            @include('order.partials.basket')
 
-        @if ($additional_baskets->count())
-            @include('order.partials.additional_baskets')
-        @endif
+            @if ($basket->main_recipes->count())
+                @include('order.partials.ingredients')
+            @endif
 
-        @include('order.partials.delivery')
+            @if ($additional_baskets->count())
+                @include('order.partials.additional_baskets')
+            @endif
 
-        @include('order.partials.payment')
+            @include('order.partials.delivery')
 
-        @include('order.partials.subscribe')
+            @include('order.partials.payment')
 
-        @include('order.partials.button')
+            @include('order.partials.subscribe')
 
-        @widget__banner('what_you_get')
+            @include('order.partials.button')
+
+            @widget__banner('what_you_get')
+        </form>
     </main>
 
 @endsection

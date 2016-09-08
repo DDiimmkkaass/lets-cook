@@ -9,10 +9,14 @@
 namespace App\Services;
 
 use App\Models\Basket;
+use App\Models\BasketRecipe;
 use App\Models\Order;
 use App\Models\OrderComment;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
+use App\Models\User;
+use App\Models\WeeklyMenu;
+use App\Models\WeeklyMenuBasket;
 use Carbon;
 use Datatables;
 use DB;
@@ -233,6 +237,45 @@ class OrderService
     }
     
     /**
+     * @param \Illuminate\Http\Request $request
+     * @param User|null                $user
+     *
+     * @return array
+     */
+    public function prepareFrontInputData(Request $request, $user = null)
+    {
+        $data = [];
+        
+        $data['user_id'] = $user ? $user->id : null;
+        $data['full_name'] = $user ? $user->full_name : $request->get('full_name');
+        $data['email'] = $user ? $user->email : $request->get('email');
+        $data['phone'] = $user ? $user->phone : $request->get('phone');
+        
+        $data['basket_id'] = $request->get('basket_id');
+        
+        $data['type'] = empty($input['subscribe_period']) ?
+            Order::getTypeIdByName('subscribe') :
+            Order::getTypeIdByName('single');
+        
+        $data['subscribe_period'] = $request->get('subscribe_period', 0);
+        $data['payment_method'] = $request->get('payment_method');
+        
+        $data['delivery_date'] = $request->get('delivery_date');
+        $data['delivery_time'] = $request->get('delivery_time');
+        
+        $data['city_id'] = $request->get('city_id');
+        $data['city_name'] = empty($data['city_id']) ? $request->get('city_name') : '';
+        $data['address'] = $request->get('address');
+        $data['comment'] = $request->get('comment');
+        
+        $data['verify_call'] = empty($request->get('verify_call', null)) ? 0 : 1;
+        
+        $data['status'] = Order::getStatusIdByName('changed');
+        
+        return $data;
+    }
+    
+    /**
      * @param \App\Models\Order $model
      * @param array             $input
      */
@@ -314,6 +357,79 @@ class OrderService
         );
         
         $model->comments()->save($comment);
+    }
+    
+    /**
+     * @param int $basket_id
+     *
+     * @return bool
+     */
+    public function checkCurrentWeekBasket($basket_id)
+    {
+        if (!WeeklyMenu::joinWeeklyMenuBaskets()->current()->where('weekly_menu_baskets.id', $basket_id)->first()) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * @param \App\Models\Order $model
+     * @param int               $basket_id
+     */
+    public function saveRecipes(Order $model, $basket_id)
+    {
+        $basket = WeeklyMenuBasket::with('main_recipes')->find($basket_id);
+        
+        $basket->main_recipes->each(
+            function ($item, $index) use ($model) {
+                $input = [
+                    'basket_recipe_id' => $item->id,
+                    'name'             => $item->getRecipeName(),
+                ];
+                $recipe = new OrderRecipe($input);
+                
+                $model->recipes()->save($recipe);
+            }
+        );
+    }
+    
+    /**
+     * @param \App\Models\Order $model
+     * @param array             $baskets
+     */
+    public function saveAdditionalBaskets(Order $model, $baskets)
+    {
+        $model->baskets()->sync($baskets);
+    }
+    
+    /**
+     * @param \App\Models\Order $model
+     * @param array             $ingredients
+     */
+    public function saveIngredients(Order $model, $ingredients)
+    {
+        foreach ($ingredients as $ingredient) {
+            list($basket_recipe_id, $recipe_ingredient_id) = explode('_', $ingredient);
+            
+            $basket_recipe = BasketRecipe::with('recipe.home_ingredients')->find($basket_recipe_id);
+            
+            if ($basket_recipe) {
+                $recipe_ingredient = $basket_recipe->recipe->home_ingredients->find($recipe_ingredient_id);
+                
+                if ($recipe_ingredient && $recipe_ingredient->ingredient->inSale()) {
+                    $input = [
+                        'basket_recipe_id' => $basket_recipe_id,
+                        'ingredient_id'    => $recipe_ingredient->ingredient_id,
+                        'name'             => $recipe_ingredient->ingredient->name,
+                        'count'            => $recipe_ingredient->count,
+                    ];
+                    $ingredient = new OrderIngredient($input);
+                    
+                    $model->ingredients()->save($ingredient);
+                }
+            }
+        }
     }
     
     /**

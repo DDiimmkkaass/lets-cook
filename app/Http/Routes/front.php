@@ -70,6 +70,10 @@ $router->post(
 
 //order
 $router->get('order/{basket_id}', ['as' => 'order.index', 'uses' => 'Frontend\OrderController@index']);
+$router->post(
+    'order/store',
+    ['as' => 'order.store', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@store']
+);
 
 // profiles
 $router->group(

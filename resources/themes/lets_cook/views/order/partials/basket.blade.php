@@ -1,4 +1,6 @@
 <section class="order__main order-main">
+    <input type="hidden" name="basket_id" value="{!! $basket->id !!}">
+
     <div class="order-main__wrapper">
         <div class="order-main__top">
             <div class="order-main__left">

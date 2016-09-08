@@ -14,7 +14,7 @@ class SubscribeController extends FrontendController
      * @var string
      */
     public $module = 'subscribe';
-
+    
     /**
      * @param SubscribeRequest $request
      *
@@ -27,7 +27,9 @@ class SubscribeController extends FrontendController
             
             return ['status' => 'success', 'message' => trans('front_messages.thanks for your subscribe')];
         } catch (Exception $e) {
-            return ['status' => 'error', 'message' => trans('front_messages.an error has occurred, try_later')];
+            return ['status'  => 'error',
+                    'message' => trans('front_messages.an error has occurred, please reload the page and try again'),
+            ];
         }
     }
 }

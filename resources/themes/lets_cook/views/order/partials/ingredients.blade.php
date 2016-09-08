@@ -31,23 +31,29 @@
             <h3 class="order-ing__list-title">Должно быть дома</h3>
 
             <ul class="order-ing__list">
+                @php($i = 0)
                 @foreach($basket->main_recipes as $recipe)
                     @foreach($recipe->recipe->home_ingredients as $ingredient)
-                        <li>
-                            <span>{!! $ingredient->ingredient->getTitle() !!}</span>
+                        @if ($ingredient->ingredient->inSale())
+                            <li>
+                                <span>{!! $ingredient->ingredient->getTitle() !!}</span>
 
-                            <div class="checkbox-button">
-                                <input type="checkbox"
-                                       id="f-order-ing-{!! $recipe->id !!}-{!! $ingredient->id !!}"
-                                       name="order-ingridients"
-                                       class="checkbox-button"
-                                       href="#"
-                                       data-id="{!! $recipe->id !!}-{!! $ingredient->id !!}"><label
-                                        for="f-order-ing-{!! $recipe->id !!}-{!! $ingredient->id !!}"
-                                        data-add="Добавить"
-                                        data-remove="Убрать">Добавить</label>
-                            </div>
-                        </li>
+                                <div class="checkbox-button">
+                                    <input type="checkbox"
+                                           id="f-order-ing-{!! $recipe->id !!}_{!! $ingredient->id !!}"
+                                           data-name="ingredients[{!! $i !!}]"
+                                           value="{!! $recipe->id !!}_{!! $ingredient->id !!}"
+                                           class="checkbox-button"
+                                           data-id="{!! $recipe->id !!}_{!! $ingredient->id !!}">
+                                    <label for="f-order-ing-{!! $recipe->id !!}_{!! $ingredient->id !!}"
+                                           data-add="Добавить"
+                                           data-remove="Убрать">
+                                        Добавить
+                                    </label>
+                                </div>
+                            </li>
+                            @php($i++)
+                        @endif
                     @endforeach
                 @endforeach
             </ul>

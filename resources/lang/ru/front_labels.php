@@ -1,6 +1,10 @@
 <?php
 
 return array(
+  'error' => 'Ошибка',
+  'success' => 'Успешно',
+  'payment_method_cash' => 'Наличными',
+  'payment_method_online' => 'Онлайн оплата',
   'subscribe_period_label' => '{0} без подписки|{1} раз в неделю|{2} раз в две недели',
   'count_of_dinners' => '{0} ужинов|{1} ужин|[2,4] ужина|[5,Inf] ужинов',
   'count_of_portions' => '{0} порций|{1} порция|[2,4] порции|[5,Inf] порций',
