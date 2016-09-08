@@ -11,14 +11,6 @@
         </li>
 
         <li class="order-payment__item transparent-large-button">
-            <input type="radio" id="f-order-payment-2" name="order-payment" value="2">
-            <label for="f-order-payment-2">
-                <span data-device="mobile">Картой</span>
-                <span data-device="desktop">Банковской картой</span>
-            </label>
-        </li>
-
-        <li class="order-payment__item transparent-large-button">
             <input type="radio" id="f-order-payment-3" name="order-payment" value="3">
             <label for="f-order-payment-3">
                 <span data-device="desktop">Электронными деньгами</span>
