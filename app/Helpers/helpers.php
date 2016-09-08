@@ -300,7 +300,7 @@ if (!function_exists('get_localized_date')) {
         return
             trim(
                 ($time_position == 'before' ? (($time_format) ? $date->format($time_format) : '') : '').' '.
-                (empty($format) ?
+                (empty($out_format) ?
                     $date->format('d').' '.$date->formatLocalized('%f').' '.$date->format('Y') :
                     $date->formatLocalized($out_format)
                 ).' '.
