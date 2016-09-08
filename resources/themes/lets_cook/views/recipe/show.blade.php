@@ -53,7 +53,7 @@
             <ul class="all-baskets__list">
                 @foreach($active_baskets as $basket)
                     <li>
-                        <a href="#">{!! $basket->name !!}</a>
+                        <a href="{!! localize_route('order.index', $basket->id) !!}">{!! $basket->name !!}</a>
                     </li>
                 @endforeach
             </ul>
