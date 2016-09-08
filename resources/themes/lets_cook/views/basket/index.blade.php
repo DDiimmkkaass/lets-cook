@@ -50,11 +50,13 @@
                                         {!! $basket->getOrderPrice() !!}
                                         <span>{!! $currency !!}</span>
                                     </div>
-                                    <a href="{!! localize_route('order.index', $basket->id) !!}"
-                                       class="baskets-main-item__make-order"
-                                       data-device="desktop">
-                                        Оформить заказ
-                                    </a>
+                                    @if (empty($next))
+                                        <a href="{!! localize_route('order.index', $basket->id) !!}"
+                                           class="baskets-main-item__make-order"
+                                           data-device="desktop">
+                                            Оформить заказ
+                                        </a>
+                                    @endif
                                 </div>
                             </div>
 

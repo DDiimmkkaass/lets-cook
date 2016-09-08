@@ -30,7 +30,7 @@
                             @endforeach
                         </ul>
 
-                        <a href="{!! $menu->getUrl() !!}" class="recipes-menu__all yellow-small-button">Все рецепты</a>
+                        <a href="{!! localize_route('baskets.index') !!}" class="recipes-menu__all yellow-small-button">Все рецепты</a>
                     </li>
                 @endif
             @endif
@@ -55,7 +55,7 @@
                             @endforeach
                         </ul>
 
-                        <a href="{!! $next_menu->getUrl() !!}" class="recipes-menu__all yellow-small-button">
+                        <a href="{!! localize_route('baskets.next') !!}" class="recipes-menu__all yellow-small-button">
                             Все рецепты</a>
                     </li>
                 @endif

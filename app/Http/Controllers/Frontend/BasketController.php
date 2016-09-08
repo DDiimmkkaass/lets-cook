@@ -42,6 +42,24 @@ class BasketController extends FrontendController
     }
     
     /**
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function indexNext()
+    {
+        $baskets = [];
+        
+        $menu = WeeklyMenu::with('baskets', 'baskets.main_recipes')->next()->first();
+        
+        if ($menu) {
+            $baskets = $menu->baskets;
+        }
+        
+        $this->data('baskets', $baskets);
+        
+        return $this->render($this->module.'.next');
+    }
+    
+    /**
      * @param int $basket_id
      *
      * @return \Illuminate\Contracts\View\View
