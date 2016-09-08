@@ -56,7 +56,7 @@
     {!! Form::label('image', trans('labels.image'), ['class' => 'control-label col-xs-12 padding-left-0 padding-right-0']) !!}
 
     <div class="col-xs-12 padding-left-0 padding-right-0">
-        {!! Form::imageInput('image', $model->image) !!}
+        {!! Form::imageInput('image', old('image') ? : $model->image) !!}
     </div>
 
     <div class="clearfix"></div>

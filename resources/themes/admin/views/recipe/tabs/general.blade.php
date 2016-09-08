@@ -32,7 +32,7 @@
     {!! Form::label('image', trans('labels.image'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-7 col-md-4">
-        {!! Form::imageInput('image', $model->image) !!}
+        {!! Form::imageInput('image', old('image') ? : $model->image) !!}
 
         {!! $errors->first('image', '<p class="help-block error">:message</p>') !!}
     </div>
@@ -42,7 +42,7 @@
     {!! Form::label('ingredients_image', trans('labels.ingredients_image'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-7 col-md-4">
-        {!! Form::imageInput('ingredients_image', $model->ingredients_image) !!}
+        {!! Form::imageInput('ingredients_image', old('ingredients_image') ? : $model->ingredients_image) !!}
 
         {!! $errors->first('ingredients_image', '<p class="help-block error">:message</p>') !!}
     </div>

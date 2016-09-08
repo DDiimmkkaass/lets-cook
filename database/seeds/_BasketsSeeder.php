@@ -28,10 +28,12 @@ class _BasketsSeeder extends DataSeeder
             }
             
             $input = [
-                'name'     => $this->getLocalizedFaker()->word,
-                'type'     => Basket::getTypeIdByName('basic'),
-                'position' => $i,
-                'prices'   => $prices,
+                'name'        => $this->getLocalizedFaker()->word,
+                'description' => $this->getLocalizedFaker()->realText(),
+                'image'       => $this->getLocalizedFaker()->imageUrl(250, 250, 'food'),
+                'type'        => Basket::getTypeIdByName('basic'),
+                'position'    => $i,
+                'prices'      => $prices,
             ];
             
             $model = new Basket($input);
@@ -40,10 +42,12 @@ class _BasketsSeeder extends DataSeeder
         
         foreach (range(1, 10) as $index) {
             $input = [
-                'name'     => $this->getLocalizedFaker()->word,
-                'type'     => Basket::getTypeIdByName('additional'),
-                'position' => $index,
-                'price'    => rand(3000, 10000),
+                'name'        => $this->getLocalizedFaker()->word,
+                'description' => $this->getLocalizedFaker()->realText(),
+                'image'       => $this->getLocalizedFaker()->imageUrl(250, 250, 'food'),
+                'type'        => Basket::getTypeIdByName('additional'),
+                'position'    => $index,
+                'price'       => rand(3000, 10000),
             ];
             
             $model = new Basket($input);

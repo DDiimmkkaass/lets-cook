@@ -28,6 +28,7 @@ class Basket extends Model
     protected $fillable = [
         'name',
         'description',
+        'image',
         'price',
         'prices',
         'places',
@@ -266,11 +267,7 @@ class Basket extends Model
      */
     public function getImage()
     {
-        if ($this->recipes->count()) {
-            return $this->recipes->random()->getRecipeImage();
-        }
-        
-        return '';
+        return $this->image;
     }
     
     /**

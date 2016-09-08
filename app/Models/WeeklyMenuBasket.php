@@ -173,7 +173,7 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
      */
     public function getName()
     {
-        return $this->basket->name;
+        return $this->basket->getName();
     }
     
     /**
@@ -189,11 +189,7 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
      */
     public function getImage()
     {
-        if ($this->main_recipes->count()) {
-            return $this->main_recipes->random()->getRecipeImage();
-        }
-        
-        return '';
+        return $this->basket->getImage();
     }
     
     /**
