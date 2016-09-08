@@ -34,7 +34,7 @@ class PopulateMenusTable extends Migration
             
             $items = [
                 [
-                    'link'     => '/pages/pervyj-raz',
+                    'link'     => '/pages/kak-eto-rabotaet',
                     'name'     => 'Первый раз',
                     'position' => 0,
                 ],

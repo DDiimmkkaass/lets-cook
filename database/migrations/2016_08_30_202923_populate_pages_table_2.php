@@ -17,20 +17,20 @@ class PopulatePagesTable2 extends Migration
         $pageService = new PageService();
         
         $input = [
-            'slug'     => 'pervyj-raz',
+            'slug'     => 'kak-eto-rabotaet',
             'position' => 0,
             'status'   => 1,
-            'template' => 'default',
+            'template' => 'how_it_works',
         ];
         
         foreach (config('app.locales') as $locale) {
             $input[$locale] = [
-                'name'             => 'Первый раз',
-                'short_content'    => 'Первый раз',
-                'content'          => 'Первый раз',
-                'meta_keywords'    => 'Первый раз',
-                'meta_title'       => 'Первый раз',
-                'meta_description' => 'Первый раз',
+                'name'             => 'Как это работает',
+                'short_content'    => 'Как это работает',
+                'content'          => 'Как это работает',
+                'meta_keywords'    => 'Как это работает',
+                'meta_title'       => 'Как это работает',
+                'meta_description' => 'Как это работает',
             ];
         }
         
