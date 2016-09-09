@@ -279,8 +279,8 @@ class Order extends Model
      */
     public function scopeForCurrentWeek($query)
     {
-        $year = Carbon::now()->year;
-        $week = Carbon::now()->weekOfYear;
+        $year = Carbon::now()->startOfWeek()->year;
+        $week = Carbon::now()->startOfWeek()->weekOfYear;
         
         return $query->forWeek($year, $week);
     }
@@ -306,8 +306,8 @@ class Order extends Model
      */
     public function forCurrentWeek()
     {
-        $year = Carbon::now()->year;
-        $week = Carbon::now()->weekOfYear;
+        $year = Carbon::now()->startOfWeek()->year;
+        $week = Carbon::now()->startOfWeek()->weekOfYear;
         
         $from = Carbon::create($year, 1, 1)->startOfWeek()->addWeeks($week)->endOfWeek()->format('d-m-Y');
         $to = Carbon::create($year, 1, 1)->startOfWeek()->addWeeks($week)->endOfWeek()->addDay()->format('d-m-Y');

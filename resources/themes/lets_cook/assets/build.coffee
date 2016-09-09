@@ -31,7 +31,7 @@ dev_path =
   vendor: __dirname.concat('/vendor/**')
   images: __dirname.concat('/images/**')
   coffee:__dirname.concat('/coffee/**.coffee')
-  js:__dirname.concat('/scripts/**')
+  js:__dirname.concat('/scripts/**.js')
   stylus: __dirname.concat('/styles/')
 
 prod_path =
@@ -102,6 +102,7 @@ gulp.task theme.concat('::purejs'), ->
   gulp.src(dev_path.js)
   .pipe(plumber())
   .pipe($.babel())
+  .pipe(concat('main.js'))
   .pipe(uglify({outSourceMap: true}))
   .pipe(gulp.dest(prod_path.js))
   .on('error', plumber)

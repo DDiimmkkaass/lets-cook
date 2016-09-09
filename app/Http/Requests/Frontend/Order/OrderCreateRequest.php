@@ -4,6 +4,7 @@ namespace App\Http\Requests\Frontend\Order;
 
 use App\Http\Requests\FormRequest;
 use App\Models\Order;
+use App\Services\WeeklyMenuService;
 use Sentry;
 
 /**
@@ -13,6 +14,23 @@ use Sentry;
 class OrderCreateRequest extends FormRequest
 {
     /**
+     * @var \App\Services\WeeklyMenuService
+     */
+    private $weeklyMenuService;
+    
+    /**
+     * OrderCreateRequest constructor.
+     *
+     * @param \App\Services\WeeklyMenuService $weeklyMenuService
+     */
+    public function __construct(WeeklyMenuService $weeklyMenuService)
+    {
+        parent::__construct();
+        
+        $this->weeklyMenuService = $weeklyMenuService;
+    }
+    
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -21,11 +39,20 @@ class OrderCreateRequest extends FormRequest
     {
         $user_id = Sentry::getUser()->getId();
         
+        $weekly_menu = $this->weeklyMenuService->getWeeklyMenuByBasketId($this->request->get('basket_id', 0));
+        
         $rules = [
             'basket_id'   => 'required|exists:weekly_menu_baskets,id',
             'verify_call' => 'boolean',
             
-            'delivery_date' => 'required|date_format:"d-m-Y"|delivery_date_day_of_week|delivery_date_date|max_delivery_date_date',
+            'delivery_date' => [
+                'required',
+                'date_format:"d-m-Y"',
+                'delivery_date_day_of_week',
+                'delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week,
+                'max_delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week,
+                'min_delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week,
+            ],
             'delivery_time' => 'required|in:'.implode(',', config('order.delivery_times')),
             
             'city_id'   => 'required_without:city_name|exists:cities,id',

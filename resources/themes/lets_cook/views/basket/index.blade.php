@@ -15,7 +15,7 @@
                     @foreach($baskets as $basket)
                         <li class="baskets-main__item baskets-main-item"
                             data-filter="{!! $basket->portions.'_'.$basket->main_recipes->count() !!}">
-                            <div class="baskets-main-item__top" style="background-color: #1b5238;">
+                            <div class="baskets-main-item__top">
                                 <div class="baskets-main-item__left">
                                     <h1 class="baskets-main-item__title">
                                         <span data-device="mobile">{!! $basket->getName() !!}</span>
@@ -65,8 +65,7 @@
                                     <a href="#" class="baskets-main-item__link">
                                         <div class="baskets-main-item__img"
                                              style="background-image: url({!! thumb($basket->getImage(), 980, 335) !!}); height: 335px"></div>
-                                        <h3 class="baskets-main-item__main-title"
-                                            style="background-color: #a0152d; color: #ffd8ae;">
+                                        <h3 class="baskets-main-item__main-title">
                                             {!! $basket->getDescription() !!}
                                         </h3>
                                     </a>
@@ -80,8 +79,7 @@
                                                    class="baskets-main-item__link">
                                                     <div class="baskets-main-item__img"
                                                          style="background-image: url({!! thumb($recipe->getRecipeImage(), 195, 134) !!});"></div>
-                                                    <h3 class="baskets-main-item__item-title"
-                                                        style="background-color: #ea9c1f; color: #0a2229;">
+                                                    <h3 class="baskets-main-item__item-title">
                                                         @choice('front_labels.day_with_number', $key + 1)
                                                         : {!! $recipe->getRecipeName() !!}
                                                     </h3>

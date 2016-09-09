@@ -215,11 +215,38 @@
       &:not(:last-of-type)
         margin-right: 1px
 
+    &:nth-of-type(5n+1)
+      .order-main__item-title
+        background-color: $bg-orange-1
+        color: $font-black-2
+
+    &:nth-of-type(5n+2)
+      .order-main__item-title
+        background-color: $bg-red-4
+        color: $font-yellow-2
+
+    &:nth-of-type(5n+3)
+      .order-main__item-title
+        background-color: $bg-red-2
+        color: $font-yellow-2
+
+    &:nth-of-type(5n+4)
+      .order-main__item-title
+        background-color: $bg-orange-2
+        color: $font-yellow-2
+
+    &:nth-of-type(5n)
+      .order-main__item-title
+        background-color: $bg-green-2
+        color: $font-yellow-2
+
   &__link
     display: block
     text-decoration: none
 
   &__img
+    size: 100% auto
+    padding-bottom: (160 / 240) * 100%
     background: $bg-green-1 center center / cover no-repeat
 
   &__item-title
@@ -408,6 +435,7 @@
 // ORDER ADD MORE
 .order-add-more
   background-color: $bg-yellow-1
+  overflow: hidden
 
   +bp('1024')
     padding-bottom: 40px
@@ -431,30 +459,32 @@
       text-transform: lowercase
 
   &__list
-    position: relative
-    z-index: 1
-
-    +bp('1024')
-      &::before
-        content: ''
-
-    &::before
-      absolute: bottom -20px left 0
-      z-index: -1
-      size: 100% 70px
-      background: url('../images/yellow-bg.png') top left repeat
-
-  &__list-wrapper
     margin: 0 auto; padding: 0; list-style-type: none
     js-display: flex; display: flex
-    justify-content: space-between
+    flex-wrap: wrap
+    justify-content: flex-start
     max-width: 980px
 
   &__item
     width: 25%
 
     +bp('1024')
+      position: relative
+      z-index: 1
+      margin-bottom: 50px
+      margin-right: (((980 - (220 * 4)) / 3) / 980) * 100%
       width: (220 / 980) * 100%
+
+      &:nth-of-type(4n+4)
+        margin-right: 0
+
+      &:nth-of-type(4n+1)
+        &::before
+          content: ''
+          absolute: bottom -20px left -10000em
+          z-index: -1
+          size: 20000em 70px
+          background: url('../images/yellow-bg.png') top left repeat
 
 .more-item
   cursor: pointer
@@ -462,38 +492,38 @@
   &[data-active]
     .more-item__img
       &::before
-        content: ''
+        border-width: 7px * (320 / 720)
+
+        +bp('480')
+          border-width: 7px * (480 / 720)
+
+        +bp('768')
+          border-width: 7px
+
+        +bp('1024')
+          border-width: 0px
 
   &:hover
     .more-item__img
-      &::before
-        absolute: top 0 left 0
-        size: 100%
-        border: 7px solid $bg-green-1
-
-        +bp('1024')
-          content: ''
-
-
+      +bp('1024')
+        &::before
+          absolute: top 0 left 0
+          size: 100%
+          border-width: 7px
 
   &__img
     position: relative
     size: 100% auto
+    padding-bottom: (120 / 180) * 100%
     background: $bg-green-1 center center / cover no-repeat
 
     &::before
+      content: ''
       absolute: top 0 left 0
       size: 100%
-      border: (7px * (310 / 720)) solid $bg-green-1
-
-      +bp('480')
-        border-width: 7px * (480 / 720)
-
-      +bp('768')
-        border-width: 7px
-
-      +bp('1024')
-        border-width: 0px
+      border: 0 solid $bg-green-1
+      will-change: border-width
+      transition: border-width 0.3s
 
   &__info
 

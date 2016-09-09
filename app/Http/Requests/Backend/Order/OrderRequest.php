@@ -10,7 +10,7 @@ namespace App\Http\Requests\Backend\Order;
 
 use App\Http\Requests\FormRequest;
 use App\Models\Order;
-use Carbon\Carbon;
+use App\Services\WeeklyMenuService;
 
 /**
  * Class OrderRequest
@@ -18,6 +18,22 @@ use Carbon\Carbon;
  */
 class OrderRequest extends FormRequest
 {
+    /**
+     * @var \App\Services\WeeklyMenuService
+     */
+    private $weeklyMenuService;
+    
+    /**
+     * OrderCreateRequest constructor.
+     *
+     * @param \App\Services\WeeklyMenuService $weeklyMenuService
+     */
+    public function __construct(WeeklyMenuService $weeklyMenuService)
+    {
+        parent::__construct();
+        
+        $this->weeklyMenuService = $weeklyMenuService;
+    }
     
     /**
      * Get the validation rules that apply to the request.
@@ -26,6 +42,8 @@ class OrderRequest extends FormRequest
      */
     public function rules()
     {
+        $weekly_menu = $this->weeklyMenuService->getWeeklyMenuByBasketId($this->request->get('basket', 0));
+        
         $rules = [
             'parent_id'        => 'exists:orders,id',
             'user_id'          => 'required|exists:users,id',
@@ -39,11 +57,11 @@ class OrderRequest extends FormRequest
             'phone'            => 'required',
             'verify_call'      => 'boolean',
             
-            'delivery_date' => 'required|date_format:"d-m-Y"',
+            'delivery_date' => ['required', 'date_format:"d-m-Y"'],
             'delivery_time' => 'required',
             
-            'city_name'     => 'required_without:city_id',
-            'address'       => 'required',
+            'city_name' => 'required_without:city_id',
+            'address'   => 'required',
             
             'recipes.new'    => 'array|required_without:recipes.old',
             'recipes.old'    => 'array|required_without:recipes.new',
@@ -69,7 +87,10 @@ class OrderRequest extends FormRequest
         ];
         
         if ($this->request->get('delivery_date') != $this->request->get('old_delivery_date')) {
-            $rules['delivery_date'] .= '|delivery_date_day_of_week|delivery_date_date|max_delivery_date_date';
+            $rules['delivery_date'][] = 'delivery_date_day_of_week';
+            $rules['delivery_date'][] = 'delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week;
+            $rules['delivery_date'][] = 'max_delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week;
+            $rules['delivery_date'][] = 'min_delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week;
         }
         
         return $rules;

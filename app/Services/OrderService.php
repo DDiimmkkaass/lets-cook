@@ -360,20 +360,6 @@ class OrderService
     }
     
     /**
-     * @param int $basket_id
-     *
-     * @return bool
-     */
-    public function checkCurrentWeekBasket($basket_id)
-    {
-        if (!WeeklyMenu::joinWeeklyMenuBaskets()->current()->where('weekly_menu_baskets.id', $basket_id)->first()) {
-            return false;
-        }
-        
-        return true;
-    }
-    
-    /**
      * @param \App\Models\Order $model
      * @param int               $basket_id
      */

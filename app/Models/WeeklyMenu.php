@@ -79,7 +79,7 @@ class WeeklyMenu extends Model
      */
     public function isCurrentWeekMenu()
     {
-        return $this->year == Carbon::now()->year && $this->week == Carbon::now()->weekOfYear;
+        return $this->year == Carbon::now()->startOfWeek()->year && $this->week == Carbon::now()->startOfWeek()->weekOfYear;
     }
     
     /**
@@ -87,7 +87,7 @@ class WeeklyMenu extends Model
      */
     public function old()
     {
-        return $this->year <= Carbon::now()->year && $this->week < Carbon::now()->weekOfYear;
+        return $this->year <= Carbon::now()->startOfWeek()->year && $this->week < Carbon::now()->startOfWeek()->weekOfYear;
     }
     
     /**
@@ -97,8 +97,8 @@ class WeeklyMenu extends Model
      */
     public function scopeCurrent($query)
     {
-        return $query->where('year', '=', Carbon::now()->year)
-            ->where('week', '=', Carbon::now()->weekOfYear);
+        return $query->where('year', '=', Carbon::now()->startOfWeek()->year)
+            ->where('week', '=', Carbon::now()->startOfWeek()->weekOfYear);
     }
     
     /**
@@ -108,7 +108,7 @@ class WeeklyMenu extends Model
      */
     public function scopeNext($query)
     {
-        $next = Carbon::now()->addWeek();
+        $next = Carbon::now()->startOfWeek()->addWeek();
         
         return $query->where('year', '=', $next->year)
             ->where('week', '=', $next->weekOfYear);

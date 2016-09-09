@@ -158,8 +158,8 @@ class WeeklyMenuController extends BackendController
         $model = new WeeklyMenu();
         
         if (session('current_week_menu', false)) {
-            $model->week = Carbon::now()->weekOfYear;
-            $model->year = Carbon::now()->year;
+            $model->week = Carbon::now()->startOfWeek()->weekOfYear;
+            $model->year = Carbon::now()->startOfWeek()->year;
             
             session()->forget('current_week_menu');
         }

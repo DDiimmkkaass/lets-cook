@@ -51,7 +51,7 @@
                             <div class="order-main__img"
                                  style="background-image: url({!! thumb($recipe->getRecipeImage(), 195, 130) !!});">
                             </div>
-                            <h3 class="order-main__item-title" style="background-color: #ea9c1f; color: #0a2229;">
+                            <h3 class="order-main__item-title">
                                 @choice('front_labels.day_with_number', $key + 1): {!! $recipe->getRecipeName() !!}
                             </h3>
                         </a>

@@ -39,7 +39,7 @@ class PopulateMenusTable extends Migration
                     'position' => 0,
                 ],
                 [
-                    'link'     => '/baskets',
+                    'link'     => '/baskets/current',
                     'name'     => 'Корзины',
                     'position' => 1,
                 ],

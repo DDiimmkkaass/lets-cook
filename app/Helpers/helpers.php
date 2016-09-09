@@ -813,7 +813,7 @@ if (!function_exists('before_finalisation')) {
      */
     function before_finalisation($year, $week)
     {
-        $now = Carbon::now();
+        $now = Carbon::now()->startOfWeek();
         
         if (
             ($year > $now->year)
@@ -873,7 +873,7 @@ if (!function_exists('past_week')) {
      */
     function past_week($year, $week)
     {
-        $now = Carbon::now();
+        $now = Carbon::now()->startOfWeek();
         
         if ($year < $now->year) {
             return true;

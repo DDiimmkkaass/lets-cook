@@ -1,1 +1,0 @@
-@include('basket.index', ['next' => true])

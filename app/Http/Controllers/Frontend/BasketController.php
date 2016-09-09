@@ -9,7 +9,6 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Models\WeeklyMenu;
-use App\Models\WeeklyMenuBasket;
 
 /**
  * Class BasketController
@@ -24,13 +23,15 @@ class BasketController extends FrontendController
     public $module = 'basket';
     
     /**
+     * @param string $week
+     *
      * @return \Illuminate\Contracts\View\View
      */
-    public function index()
+    public function index($week = 'current')
     {
         $baskets = [];
         
-        $menu = WeeklyMenu::with('baskets', 'baskets.main_recipes')->current()->first();
+        $menu = WeeklyMenu::with('baskets', 'baskets.main_recipes')->{$week}()->first();
         
         if ($menu) {
             $baskets = $menu->baskets;
@@ -39,41 +40,5 @@ class BasketController extends FrontendController
         $this->data('baskets', $baskets);
         
         return $this->render($this->module.'.index');
-    }
-    
-    /**
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function indexNext()
-    {
-        $baskets = [];
-        
-        $menu = WeeklyMenu::with('baskets', 'baskets.main_recipes')->next()->first();
-        
-        if ($menu) {
-            $baskets = $menu->baskets;
-        }
-        
-        $this->data('baskets', $baskets);
-        
-        return $this->render($this->module.'.next');
-    }
-    
-    /**
-     * @param int $basket_id
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function show($basket_id)
-    {
-        $model = WeeklyMenuBasket::with('main_recipes')->find($basket_id);
-        
-        abort_if(!$model, 404);
-        
-        $this->fillMeta($model, $this->module);
-        
-        $this->data('model', $model);
-        
-        return $this->render($this->module.'.show');
     }
 }

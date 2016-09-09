@@ -99,6 +99,43 @@ class WeeklyMenuService
     }
     
     /**
+     * @param int $basket_id
+     *
+     * @return bool
+     */
+    public function checkActiveWeeksBasket($basket_id)
+    {
+        if (!WeeklyMenu::joinWeeklyMenuBaskets()->where(
+            function ($query) {
+                $query->where(
+                    function ($query) {
+                        $query->current();
+                    }
+                )->orWhere(
+                    function ($query) {
+                        $query->next();
+                    }
+                );
+            }
+        )->where('weekly_menu_baskets.id', $basket_id)->first()
+        ) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * @param int $basket_id
+     *
+     * @return WeeklyMenu|null mixed
+     */
+    public function getWeeklyMenuByBasketId($basket_id)
+    {
+        return WeeklyMenu::joinWeeklyMenuBaskets()->where('weekly_menu_baskets.id', $basket_id)->first();
+    }
+    
+    /**
      * @param \App\Models\WeeklyMenuBasket $model
      * @param array                        $data
      */

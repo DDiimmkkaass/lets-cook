@@ -373,6 +373,26 @@
   &__item
     width: 50%
 
+    &:nth-of-type(4n+1)
+      .recipes-menu__title
+        background-color: $bg-yellow-6
+        color: $font-black-2
+
+    &:nth-of-type(4n+2)
+      .recipes-menu__title
+        background-color: $bg-red-2
+        color: $font-yellow-2
+
+    &:nth-of-type(4n+3)
+      .recipes-menu__title
+        background-color: $bg-green-2
+        color: $font-yellow-2
+
+    &:nth-of-type(4n)
+      .recipes-menu__title
+        background-color: $bg-red-4
+        color: $font-yellow-2
+
   &__link
     display: block
     position: relative
@@ -380,6 +400,8 @@
     text-decoration: none
 
   &__img
+    size: 100% auto
+    padding-bottom: (140 / 300) * 100%
     background: #346048 center center / cover no-repeat
 
   &__title
@@ -390,11 +412,9 @@
     justify-content: center
     align-content: center
     flex-direction: column
-    background-color: $bg-orange-2
     text-align: center
     font-family: $ptsans-regular
     fsh(14px, 17px)
-    color: $font-yellow-2
 
   &__all
     absolute: left 75% top 100% - (100% / 6)

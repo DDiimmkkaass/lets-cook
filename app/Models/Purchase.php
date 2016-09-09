@@ -100,7 +100,7 @@ class Purchase extends Model
      */
     public function scopeForCurrentWeek($query)
     {
-        return $query->forWeek(Carbon::now()->year, Carbon::now()->weekOfYear);
+        return $query->forWeek(Carbon::now()->startOfWeek()->year, Carbon::now()->startOfWeek()->weekOfYear);
     }
     
     /**
@@ -110,9 +110,10 @@ class Purchase extends Model
      */
     public function scopeForFuture($query)
     {
-        return $query->where('year', '>', Carbon::now()->year)->orWhere(
+        return $query->where('year', '>', Carbon::now()->startOfWeek()->year)->orWhere(
             function ($query) {
-                $query->where('year', '=', Carbon::now()->year)->where('week', '>=', Carbon::now()->weekOfYear);
+                $query->where('year', '=', Carbon::now()->startOfWeek()->year)
+                    ->where('week', '>=', Carbon::now()->startOfWeek()->weekOfYear);
             }
         );
     }
@@ -166,7 +167,7 @@ class Purchase extends Model
      */
     public function isCurrentWeek()
     {
-        $now = Carbon::now();
+        $now = Carbon::now()->startOfWeek();
         
         return $this->year == $now->year && $this->week == $now->weekOfYear;
     }

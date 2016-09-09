@@ -92,6 +92,22 @@
     height: auto
     overflow: hidden
 
+    &:nth-of-type(4n+1)
+      .baskets-main-item__top, .baskets-main-item__main-title
+        background-color: $bg-green-7
+
+    &:nth-of-type(4n+2)
+      .baskets-main-item__top, .baskets-main-item__main-title
+        background-color: $bg-black-2
+
+    &:nth-of-type(4n+3)
+      .baskets-main-item__top, .baskets-main-item__main-title
+        background-color: $bg-red-5
+
+    &:nth-of-type(4n)
+      .baskets-main-item__top, .baskets-main-item__main-title
+        background-color: $bg-orange-8
+
     +bp('1024')
       width: 100%
 
@@ -312,6 +328,31 @@
 
     &:not(:last-of-type)
       margin-right: 1px
+
+    &:nth-of-type(5n+1)
+      .baskets-main-item__item-title
+        background-color: $bg-orange-1
+        color: $font-black-2
+
+    &:nth-of-type(5n+2)
+      .baskets-main-item__item-title
+        background-color: $bg-red-4
+        color: $font-yellow-2
+
+    &:nth-of-type(5n+3)
+      .baskets-main-item__item-title
+        background-color: $bg-red-2
+        color: $font-yellow-2
+
+    &:nth-of-type(5n+4)
+      .baskets-main-item__item-title
+        background-color: $bg-orange-2
+        color: $font-yellow-2
+
+    &:nth-of-type(5n)
+      .baskets-main-item__item-title
+        background-color: $bg-green-2
+        color: $font-yellow-2
 
   &__img
     size: 100% 134px

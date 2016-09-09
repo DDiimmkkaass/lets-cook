@@ -14,7 +14,7 @@
                 @if ($menu->main_recipes->count())
                     <li class="recipes-menu__contentItem">
                         <ul class="recipes-menu__list">
-                            @foreach($menu->main_recipes as $recipe)
+                            @foreach($menu->main_recipes as $key => $recipe)
                                 <li class="recipes-menu__item">
                                     <a href="{!! $recipe->recipe->getUrl() !!}"
                                        title="{!! $recipe->getRecipeName() !!}"
@@ -27,10 +27,12 @@
                                         </h3>
                                     </a>
                                 </li>
+                                @continue($key >= 4)
                             @endforeach
                         </ul>
 
-                        <a href="{!! localize_route('baskets.index') !!}" class="recipes-menu__all yellow-small-button">Все рецепты</a>
+                        <a href="{!! localize_route('baskets.index', 'current') !!}"
+                           class="recipes-menu__all yellow-small-button">Все рецепты</a>
                     </li>
                 @endif
             @endif
@@ -39,7 +41,7 @@
                 @if ($next_menu->main_recipes->count())
                     <li class="recipes-menu__contentItem">
                         <ul class="recipes-menu__list">
-                            @foreach($next_menu->main_recipes as $recipe)
+                            @foreach($next_menu->main_recipes as $key => $recipe)
                                 <li class="recipes-menu__item">
                                     <a href="{!! $recipe->recipe->getUrl() !!}"
                                        title="{!! $recipe->getRecipeName() !!}"
@@ -52,11 +54,12 @@
                                         </h3>
                                     </a>
                                 </li>
+                                @continue($key >= 4)
                             @endforeach
                         </ul>
 
-                        <a href="{!! localize_route('baskets.next') !!}" class="recipes-menu__all yellow-small-button">
-                            Все рецепты</a>
+                        <a href="{!! localize_route('baskets.index', 'next') !!}"
+                           class="recipes-menu__all yellow-small-button">Все рецепты</a>
                     </li>
                 @endif
             @endif

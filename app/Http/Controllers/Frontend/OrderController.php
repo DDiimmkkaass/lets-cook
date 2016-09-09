@@ -14,6 +14,7 @@ use App\Models\City;
 use App\Models\Order;
 use App\Models\WeeklyMenuBasket;
 use App\Services\OrderService;
+use App\Services\WeeklyMenuService;
 use Carbon\Carbon;
 use DB;
 use Exception;
@@ -37,15 +38,22 @@ class OrderController extends FrontendController
     private $orderService;
     
     /**
+     * @var \App\Services\WeeklyMenuService
+     */
+    private $weeklyMenuService;
+    
+    /**
      * OrderController constructor.
      *
-     * @param \App\Services\OrderService $orderService
+     * @param \App\Services\OrderService      $orderService
+     * @param \App\Services\WeeklyMenuService $weeklyMenuService
      */
-    public function __construct(OrderService $orderService)
+    public function __construct(OrderService $orderService, WeeklyMenuService $weeklyMenuService)
     {
         parent::__construct();
         
         $this->orderService = $orderService;
+        $this->weeklyMenuService = $weeklyMenuService;
     }
     
     /**
@@ -55,25 +63,17 @@ class OrderController extends FrontendController
      */
     public function index($basket_id)
     {
-        $now = Carbon::now();
+        abort_if(!$this->weeklyMenuService->checkActiveWeeksBasket($basket_id), 404);
         
         $basket = WeeklyMenuBasket::with(
-            [
-                'main_recipes',
-                'main_recipes.recipe.ingredients',
-                'main_recipes.recipe.home_ingredients',
-            ]
-        )->JoinWeeklyMenu()
-            ->where('weekly_menus.year', $now->year)
-            ->where('weekly_menus.week', $now->weekOfYear)
-            ->select('weekly_menu_baskets.*')
+            ['main_recipes', 'main_recipes.recipe.ingredients', 'main_recipes.recipe.home_ingredients']
+        )->joinWeeklyMenu()
+            ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
             ->find($basket_id);
-        
-        abort_if(!$basket, 404);
         
         $this->data('basket', $basket);
         
-        $this->_fillAdditionalTemplateData();
+        $this->_fillAdditionalTemplateData($basket->year, $basket->week);
         
         return $this->render($this->module.'.index');
     }
@@ -90,7 +90,7 @@ class OrderController extends FrontendController
             
             $input = $this->orderService->prepareFrontInputData($request, $this->user);
             
-            abort_if(!$this->orderService->checkCurrentWeekBasket($input['basket_id']), 404);
+            abort_if(!$this->weeklyMenuService->checkActiveWeeksBasket($input['basket_id']), 404);
             
             $model = new Order($input);
             $model->save();
@@ -119,8 +119,11 @@ class OrderController extends FrontendController
     
     /**
      * fill additional template data
+     *
+     * @param int $year
+     * @param int $week
      */
-    private function _fillAdditionalTemplateData()
+    private function _fillAdditionalTemplateData($year, $week)
     {
         $now = Carbon::now();
         
@@ -131,7 +134,12 @@ class OrderController extends FrontendController
         $this->data('additional_baskets', $additional_baskets);
         
         $delivery_dates = [];
-        if ($now->dayOfWeek > $stop_day || ($now->dayOfWeek == $stop_day && $now->format('H:i') >= $stop_time)) {
+        if (
+            $now->dayOfWeek > $stop_day ||
+            ($now->dayOfWeek == $stop_day && $now->format('H:i') >= $stop_time) ||
+            $year > $now->year ||
+            $week > $now->weekOfYear
+        ) {
             $now->addWeek();
         }
         $delivery_dates[] = clone ($now->endOfWeek()->startOfDay());

@@ -520,7 +520,7 @@ class RecipeService
      */
     public function activeBaskets(Recipe $model)
     {
-        $now = Carbon::now();
+        $now = Carbon::now()->startOfWeek();
         
         return WeeklyMenuBasket::with('basket')
             ->joinWeeklyMenu()
