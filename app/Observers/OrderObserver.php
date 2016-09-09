@@ -10,6 +10,7 @@ namespace App\Observers;
 
 use App\Models\Order;
 use App\Services\PurchaseService;
+use Carbon;
 
 /**
  * Class OrderObserver
@@ -44,9 +45,13 @@ class OrderObserver
             (
                 $model->isStatus('processed')
                 ||
-                (isset($model->original['status']) && $model->isOriginalStatus('processed')))
+                (isset($model->original['status']) && $model->isOriginalStatus('processed'))
+            )
         ) {
-            if (after_finalisation()) {
+            $year = Carbon::now()->startOfWeek()->year;
+            $week = Carbon::now()->startOfWeek()->weekOfYear;
+            
+            if (after_finalisation($year, $week)) {
                 $this->purchaseService->generate();
             }
         }
