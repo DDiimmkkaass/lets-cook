@@ -6,7 +6,7 @@
         <tr>
             <td colspan="5">
                 <div style="text-align: center;">
-                    <b>{!! $title !!}</b>
+                    <b style="color: #ff0000">{!! $title !!}</b>
                 </div>
             </td>
         </tr>
@@ -29,11 +29,11 @@
 
         @foreach($list as $ingredient)
             <tr>
-                <td>{!! $ingredient->ingredient->name !!}</td>
-                <td style="text-align: center">@if ($ingredient->in_stock) @lang('labels.yes') @endif</td>
-                <td style="background-color: #dddddd;">{!! $ingredient->ingredient->category->name !!}</td>
-                <td style="text-align: right;">{!! $ingredient->count !!}</td>
-                <td style="background-color: #dddddd; text-align: left;">{!! $ingredient->getUnitName() !!}</td>
+                <td>{!! $ingredient['name'] !!}</td>
+                <td style="text-align: center">@if ($ingredient['in_stock']) @lang('labels.yes') @endif</td>
+                <td style="background-color: #dddddd;">{!! $ingredient['category_name'] !!}</td>
+                <td style="text-align: right;">{!! $ingredient['count'] !!}</td>
+                <td style="background-color: #dddddd; text-align: left;">{!! $ingredient['unit'] !!}</td>
             </tr>
         @endforeach
 

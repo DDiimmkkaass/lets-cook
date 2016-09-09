@@ -5,6 +5,12 @@
         <tbody>
 
         <tr>
+            <td colspan="7">
+                <div style="color: #ff0000; text-align: center"><b>{!! $title !!}</b></div>
+            </td>
+        </tr>
+
+        <tr>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.ingredient')</th>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.in_stock')</th>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.category')</th>
@@ -20,13 +26,13 @@
 
         @foreach($list as $ingredient)
             <tr>
-                <td>{!! $ingredient->ingredient->name !!}</td>
-                <td style="text-align: center">@if ($ingredient->in_stock) @lang('labels.yes') @endif</td>
-                <td style="background-color: #dddddd;">{!! $ingredient->ingredient->category->name !!}</td>
-                <td style="background-color: #dddddd;">{!! $ingredient->ingredient->supplier->name !!}</td>
-                <td style="text-align: right;">{!! $ingredient->price !!}</td>
-                <td style="text-align: right;">{!! $ingredient->count !!}</td>
-                <td style="background-color: #dddddd; text-align: left;">{!! $ingredient->getUnitName() !!}</td>
+                <td>{!! $ingredient['name'] !!}</td>
+                <td style="text-align: center">@if ($ingredient['in_stock']) @lang('labels.yes') @endif</td>
+                <td style="background-color: #dddddd;">{!! $ingredient['category_name'] !!}</td>
+                <td style="background-color: #dddddd;">{!! $ingredient['supplier_name'] !!}</td>
+                <td style="text-align: right;">{!! $ingredient['price'] !!}</td>
+                <td style="text-align: right;">{!! $ingredient['count'] !!}</td>
+                <td style="background-color: #dddddd; text-align: left;">{!! $ingredient['unit'] !!}</td>
             </tr>
         @endforeach
 

@@ -170,9 +170,15 @@ class PurchaseService
     {
         $file_name = $this->_getDownloadFileName($year, $week, $supplier_id, $pre_report);
         $sheet_name = $this->_getSheetTabName($supplier_id, $pre_report);
-        $view = $this->_getViewName($supplier_id);
+        $view = $this->_getViewName($supplier_id, $pre_report);
         
-        $list = $this->_getPurchaseFor($year, $week, $supplier_id);
+        if ($pre_report) {
+            $list = $this->preGenerate($year, $week);
+            
+            $list = $this->_prepareToDownload($list, $supplier_id);
+        } else {
+            $list = $this->_getPurchaseFor($year, $week, $supplier_id);
+        }
         
         return Excel::create(
             $file_name,
@@ -284,7 +290,9 @@ class PurchaseService
             ->whereIn('recipe_id', array_keys($recipes))
             ->where('recipe_ingredients.type', RecipeIngredient::getTypeIdByName('normal'))
             ->orderBy('suppliers.priority')
+            ->orderBy('suppliers.name')
             ->orderBy('categories.position')
+            ->orderBy('categories.name')
             ->orderBy('ingredients.name')
             ->get();
         
@@ -307,7 +315,9 @@ class PurchaseService
             ->joinIngredientCategory()
             ->whereIn('order_id', $orders)
             ->orderBy('suppliers.priority')
+            ->orderBy('suppliers.name')
             ->orderBy('categories.position')
+            ->orderBy('categories.name')
             ->orderBy('ingredients.name')
             ->get();
         
@@ -472,10 +482,19 @@ class PurchaseService
                         }
                         
                         $list['categories'][$category_id]['ingredients'][$key] = $list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'][$key];
+                        $list['categories'][$category_id]['ingredients'][$key]['supplier_name'] = $supplier['name'];
                         
                         unset($list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'][$key]);
                     }
                 }
+                
+                if (empty($list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'])) {
+                    unset($list['suppliers'][$supplier_id]['categories'][$category_id]);
+                }
+            }
+    
+            if (empty($list['suppliers'][$supplier_id]['categories'])) {
+                unset($list['suppliers'][$supplier_id]);
             }
         }
         
@@ -526,16 +545,13 @@ class PurchaseService
     
     /**
      * @param bool|int $supplier_id
+     * @param bool     $pre_report
      *
      * @return string
      */
-    private function _getViewName($supplier_id = false)
+    private function _getViewName($supplier_id = false, $pre_report = false)
     {
-        if ($supplier_id === false) {
-            return 'download_all';
-        }
-        
-        return 'download';
+        return 'download'.($supplier_id === false ? '_all' : '').($pre_report ? '_pre_report' : '');
     }
     
     /**
@@ -565,6 +581,64 @@ class PurchaseService
             ->orderBy('suppliers.priority')
             ->orderBy('categories.position')
             ->orderBy('ingredients.name')
-            ->get();
+            ->get(['purchases.*']);
+    }
+    
+    /**
+     * @param array $list
+     * @param int|bool  $supplier_id
+     *
+     * @return array
+     */
+    private function _prepareToDownload($list, $supplier_id = false)
+    {
+        $_list = [];
+    
+        if ($supplier_id > 0) {
+            foreach ($list['suppliers'][$supplier_id]['categories'] as $category_id => $category) {
+                foreach ($category['ingredients'] as $key => $ingredient) {
+                    $_list[$key] = $ingredient;
+                    $_list[$key]['supplier_name'] = $list['suppliers'][$supplier_id]['name'];
+                    $_list[$key]['category_name'] = $category['name'];
+            
+                    unset($list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'][$key]);
+                }
+    
+                unset($list['suppliers'][$supplier_id]['categories'][$category_id]);
+            }
+            
+            return $_list;
+        } elseif ($supplier_id !== false) {
+            foreach ($list['categories'] as $category_id => $category) {
+                foreach ($category['ingredients'] as $key => $ingredient) {
+                    $_list[$key] = $ingredient;
+                    $_list[$key]['category_name'] = $category['name'];
+            
+                    unset($list['categories'][$category_id]['ingredients'][$key]);
+                }
+                
+                unset($list['categories'][$category_id]);
+            }
+            
+            return $_list;
+        }
+        
+        foreach ($list['suppliers'] as $supplier_id => $supplier) {
+            foreach ($supplier['categories'] as $category_id => $category) {
+                foreach ($category['ingredients'] as $key => $ingredient) {
+                    $_list[$key] = $ingredient;
+                    $_list[$key]['supplier_name'] = $supplier['name'];
+                    $_list[$key]['category_name'] = $category['name'];
+            
+                    unset($list['suppliers'][$supplier_id]['categories'][$category_id]['ingredients'][$key]);
+                }
+    
+                unset($list['suppliers'][$supplier_id]['categories'][$category_id]);
+            }
+            
+            unset($list['suppliers'][$supplier_id]);
+        }
+        
+        return $_list;
     }
 }
