@@ -74,6 +74,8 @@ class Order extends Model
         'paid',
         'processed',
         'tmpl',
+        'deleted',
+        'archived',
     ];
     
     /**

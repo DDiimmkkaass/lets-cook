@@ -76,8 +76,6 @@ class OrderController extends BackendController
         Meta::title(trans('labels.orders'));
         
         $this->breadcrumbs(trans('labels.orders'), route('admin.'.$this->module.'.index'));
-        
-        $this->middleware('admin.order.editable:admin', ['only' => 'update']);
     }
     
     /**
