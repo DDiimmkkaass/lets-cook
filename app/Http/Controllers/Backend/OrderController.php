@@ -200,7 +200,7 @@ class OrderController extends BackendController
                 'page_title',
                 trans('labels.order').': #'.$model->id.
                 (
-                    !$model->editable('admin') ?
+                !$model->editable('admin') ?
                     '<span class="label label-warning">'.trans('labels.un_editable_order').'</span>' :
                     ''
                 )

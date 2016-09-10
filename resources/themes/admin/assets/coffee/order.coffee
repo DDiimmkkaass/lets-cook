@@ -92,11 +92,13 @@ $(document).on "ready", () ->
 
       $('#full_name').val $option.data('full_name')
       $('#email').val $option.data('email')
+      $('#phone').val $option.data('phone')
 
       $('#order_user_link').attr 'href', $option.data('link')
     else
       $('#full_name').val ''
       $('#email').val ''
+      $('#phone').val ''
 
       $('#order_user_link').attr 'href', '#'
 

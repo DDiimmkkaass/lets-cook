@@ -8,8 +8,9 @@
                 <option value="{!! $user->id !!}"
                         data-full_name="{!! $user->getFullName() !!}"
                         data-email="{!! $user->email !!}"
+                        data-phone="{!! $user->phone !!}"
                         data-link="{!! route('admin.user.edit', $user->id) !!}"
-                        @if ($user->id == $model->user_id || $user->id == old('user_id'))) selected="selected" @endif
+                        @if ($user->id == $model->user_id || $user->id == old('user_id')) selected="selected" @endif
                 >
                     {!! $user->getFullName() !!}
                 </option>
