@@ -10,6 +10,6 @@ return [
     
     'default_portions_count' => 2,
     
-    'menu_days' => 5,
+    'menu_days' => 7,
 
 ];

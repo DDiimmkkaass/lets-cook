@@ -17,7 +17,7 @@
                     @foreach(range(1, config('weekly_menu.menu_days')) as $day)
                         <td>
                             <div class="form-group required @if ($errors->has('places.'.$portion.'.'.$day)) has-error @endif">
-                                <div class="col-sm-6 col-sm-push-3">
+                                <div class="col-sm-10 col-sm-push-1">
                                     {!! Form::select('places['.$portion.']['.$day.']', $places, old('places.'.$portion.'.'.$day) ?: (isset($model->places[$portion][$day]) ? $model->places[$portion][$day] : 0), ['id' => "places_".$portion."_".$day, 'class' => 'form-control select2 input-sm margin-top-5', 'aria-hidden' => 'true', 'required' => true]) !!}
                                 </div>
                             </div>
