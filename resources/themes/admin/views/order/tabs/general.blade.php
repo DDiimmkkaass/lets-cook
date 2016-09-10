@@ -110,7 +110,7 @@
     </div>
 </div>
 
-<div id="status-comment-block" class="form-group required @if ($errors->has('status_comment')) has-error @endif hidden">
+<div id="status-comment-block" class="form-group @if ($errors->has('status_comment')) has-error @endif hidden">
     {!! Form::label('status_comment', trans('labels.status_comment'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-6 col-md-7">

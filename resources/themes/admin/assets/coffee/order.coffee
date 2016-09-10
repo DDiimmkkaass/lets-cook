@@ -10,9 +10,12 @@ Order.processCity = () ->
 
 Order.processStatus = () ->
   $status_block = $('#status-comment-block')
+  $old_status = $('[name=\'old_status\']').val()
 
   unless parseInt($('[name=\'status\']').val()) == parseInt($('[name=\'old_status\']').val())
-    $status_block.removeClass('hidden').addClass('required').find('textarea').attr('required', 'required')
+    $status_block.removeClass('hidden')
+    if $old_status
+      $status_block.addClass('required').find('textarea').attr('required', 'required')
   else
     $status_block.addClass('hidden').removeClass('required').find('textarea').removeAttr('required').val('')
 
