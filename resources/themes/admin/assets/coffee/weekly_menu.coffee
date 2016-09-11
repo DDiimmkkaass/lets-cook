@@ -22,6 +22,17 @@ window.updateBasketInternalPrice = ($basket) ->
 
   $basket.find('.basket-internal-price').val price;
 
+window.updateBasketRecipesPositions = ($basket) ->
+  max_position = 0
+  $recipe = $basket.find('.recipe-block:last-of-type')
+
+  $basket.find('.recipe-block').each () ->
+    position = parseInt $(this).find('.position-input').val()
+    if position > max_position
+      max_position = position
+
+  $recipe.find('.position-input').val(max_position + 1)
+
 WeeklyMenu = {}
 
 WeeklyMenu.removeBasket = ($button) ->
@@ -102,6 +113,8 @@ WeeklyMenu.addRecipe = (recipe_id, basket_id, portions, copy) ->
 
               updateBasketInternalPrice($('#basket_' + basket_id + '_' + portions))
 
+              updateBasketRecipesPositions($('#basket_' + basket_id + '_' + portions))
+
               if copy
                 parent_basket_id = WeeklyMenu.copyParentBasketId
                 parent_portions = WeeklyMenu.copyParentPortions
@@ -148,6 +161,8 @@ $(document).on 'ready', ->
   $('.menu-recipes-table').each () ->
     unless $(this).find('.recipe-block').length
       $(this).closest('.box-body').find('.main-recipe-helper-message').fadeOut()
+    else
+      $(this).closest('.box-body').find('.main-recipe-helper-message').fadeIn()
 
   $('.tab-pane').each () ->
     updateBasketInternalPrice($(this))

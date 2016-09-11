@@ -38,11 +38,11 @@ class WeeklyMenuUpdateRequest extends FormRequest
             'baskets.*.portions' => 'required|numeric|in:'.implode(',', config('recipe.available_portions')),
 
             'baskets.*.old.*.recipe_id' => 'required_with:baskets.*.new|exists:recipes,id',
-            'baskets.*.old.*.position'  => 'required_with:baskets.*.new|numeric|min:0',
+            'baskets.*.old.*.position'  => 'required_with:baskets.*.new|numeric|min:1',
             'baskets.*.old.*.main'      => 'boolean',
 
             'baskets.*.new.*.recipe_id' => 'required_with:baskets.*.new|exists:recipes,id',
-            'baskets.*.new.*.position'  => 'required_with:baskets.*.new|numeric|min:0',
+            'baskets.*.new.*.position'  => 'required_with:baskets.*.new|numeric|min:1',
             'baskets.*.new.*.main'      => 'boolean',
         ];
     }

@@ -453,6 +453,11 @@ table.dataTable
   .recipe-block
     display: inline-block
     vertical-align: top
+    height: 210px
+    margin-bottom: 15px
+    h5
+      height: 36px
+      overflow-y: hidden
     .inner
       cursor: pointer
       position: relative
@@ -464,6 +469,9 @@ table.dataTable
         height: auto
       p
         font-size: 12px
+    .form-group
+      &.has-error
+        margin-bottom: 0
     .action
       &.destroy
         position: absolute
