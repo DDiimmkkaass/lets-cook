@@ -62,13 +62,17 @@ class WeeklyMenuService
      */
     public function saveBasket(WeeklyMenu $model, $data = [])
     {
-        $weekly_menu_basket = $model->baskets()->firstOrNew($data);
+        $weekly_menu_basket = $model->baskets()->where($data)->first();
         
-        $weekly_menu_basket->prices = Basket::whereId($weekly_menu_basket->basket_id)
-            ->first()
-            ->getPrice($weekly_menu_basket->portions);
-        
-        $weekly_menu_basket->save();
+        if (!$weekly_menu_basket) {
+            $weekly_menu_basket = new WeeklyMenuBasket($data);
+            
+            $weekly_menu_basket->prices = Basket::whereId($weekly_menu_basket->basket_id)
+                ->first()
+                ->getPrice($weekly_menu_basket->portions);
+    
+            $model->baskets()->save($weekly_menu_basket);
+        }
         
         return $weekly_menu_basket;
     }

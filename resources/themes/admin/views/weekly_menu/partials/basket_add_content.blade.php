@@ -3,15 +3,22 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">@lang('labels.basket_price'):</label>
             <div class="col-sm-10">
-                @foreach($basket->getPrice($portions) as $day => $price)
-                    <div class="col-sm-2">
-                        <input type="text"
-                               name="baskets[{!! $basket->id !!}_{!! $portions !!}][prices][{!! $day !!}]"
-                               readonly="readonly"
-                               class="form-control input-sm"
-                               value="{!! $day . ' ' . trans_choice('labels.count_of_days', $day) !!}: {!! $price !!} {!! $currency !!}">
-                    </div>
-                @endforeach
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        @foreach($basket->getPrice($portions) as $day => $price)
+                            <td class="text-center">
+                                {!! $day . ' ' . trans_choice('labels.count_of_days', $day) !!}:
+                                {!! $price !!} {!! $currency !!}
+
+                                <input type="hidden"
+                                       name="baskets[{!! $basket->id !!}_{!! $portions !!}][prices][{!! $day !!}]"
+                                       value="{!! $day . ' ' . trans_choice('labels.count_of_days', $day) !!}: {!! $price !!} {!! $currency !!}">
+                            </td>
+                        @endforeach
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
@@ -19,7 +26,8 @@
             <label class="col-sm-2 control-label">@lang('labels.internal_price'):</label>
             <div class="col-sm-10">
                 <div class="col-sm-1 with-after-helper currency-rub">
-                    <input type="text" readonly="readonly" class="form-control input-sm basket-internal-price" value="0">
+                    <input type="text" readonly="readonly" class="form-control input-sm basket-internal-price"
+                           value="0">
                 </div>
             </div>
         </div>
@@ -40,9 +48,12 @@
             <div class="col-sm-12">
                 @include('weekly_menu.partials.recipes_select', ['basket_id' => $basket->id, 'portions' => $portions])
 
-                <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][name]" value="{!! $basket->name !!}">
-                <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][id]" value="{!! $basket->id !!}">
-                <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][portions]" value="{!! $portions !!}">
+                <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][name]"
+                       value="{!! $basket->name !!}">
+                <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][id]"
+                       value="{!! $basket->id !!}">
+                <input type="hidden" name="baskets[{!! $basket->id !!}_{!! $portions !!}][portions]"
+                       value="{!! $portions !!}">
             </div>
         </div>
     </div>

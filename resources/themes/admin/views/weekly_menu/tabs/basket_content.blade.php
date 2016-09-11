@@ -2,15 +2,22 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">@lang('labels.basket_price'):</label>
         <div class="col-sm-10">
-            @foreach($basket->getPrice() as $day => $price)
-                <div class="col-sm-2">
-                    <input type="text"
-                           name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][prices][{!! $day !!}]"
-                           readonly="readonly"
-                           class="form-control input-sm"
-                           value="{!! $day . ' ' . trans_choice('labels.count_of_days', $day) !!}: {!! $price !!} {!! $currency !!}">
-                </div>
-            @endforeach
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    @foreach($basket->getWeekPrice() as $day => $price)
+                        <td class="text-center">
+                            {!! $day . ' ' . trans_choice('labels.count_of_days', $day) !!}:
+                            {!! $price !!} {!! $currency !!}
+
+                            <input type="hidden"
+                                   name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][prices][{!! $day !!}]"
+                                   value="{!! $day . ' ' . trans_choice('labels.count_of_days', $day) !!}: {!! $price !!} {!! $currency !!}">
+                        </td>
+                    @endforeach
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
@@ -18,7 +25,8 @@
         <label class="col-sm-2 control-label">@lang('labels.internal_price'):</label>
         <div class="col-sm-10">
             <div class="col-sm-1 with-after-helper currency-rub">
-                <input type="text" readonly="readonly" class="form-control input-sm basket-internal-price" value="{!! $basket->getInternalPrice() !!}">
+                <input type="text" readonly="readonly" class="form-control input-sm basket-internal-price"
+                       value="{!! $basket->getInternalPrice() !!}">
             </div>
         </div>
     </div>
@@ -32,7 +40,8 @@
 
     @if (isset($model) && $model->exists)
         @foreach($basket->recipes as $recipe)
-            <div id="recipe_{!! $recipe->recipe->id !!}" class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe->main) main @endif">
+            <div id="recipe_{!! $recipe->recipe->id !!}"
+                 class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe->main) main @endif">
                 <div class="small-box bg-aqua">
                     <div class="inner">
                         <div class="inner-block col-sm-8 no-padding">
@@ -70,10 +79,13 @@
                         </div>
                     </div>
                     <div class="clearfix"></div>
-                    <a href="{!! route('admin.recipe.show', $recipe->recipe->id) !!}" target="_blank" class="small-box-footer lover-case">
+                    <a href="{!! route('admin.recipe.show', $recipe->recipe->id) !!}" target="_blank"
+                       class="small-box-footer lover-case">
                         @lang('labels.detailed') <i class="fa fa-arrow-circle-right"></i>
                     </a>
-                    <a class="btn btn-flat btn-danger btn-xs action exist destroy" data-id="{!! $recipe->id !!}" data-name="baskets[{!! $basket->basket_id.'_'.$basket->portions !!}][remove][]"><i class="fa fa-remove"></i></a>
+                    <a class="btn btn-flat btn-danger btn-xs action exist destroy" data-id="{!! $recipe->id !!}"
+                       data-name="baskets[{!! $basket->basket_id.'_'.$basket->portions !!}][remove][]"><i
+                                class="fa fa-remove"></i></a>
                 </div>
             </div>
 
@@ -89,9 +101,12 @@
         <div class="col-sm-12">
             @include('weekly_menu.partials.recipes_select', ['basket_id' => $basket->basket_id, 'portions' => $basket->portions])
 
-            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][name]" value="{!! $basket->basket->name !!}">
-            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][id]" value="{!! $basket->basket_id !!}">
-            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][portions]" value="{!! $basket->portions !!}">
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][name]"
+                   value="{!! $basket->basket->name !!}">
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][id]"
+                   value="{!! $basket->basket_id !!}">
+            <input type="hidden" name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][portions]"
+                   value="{!! $basket->portions !!}">
         </div>
     </div>
 </div>

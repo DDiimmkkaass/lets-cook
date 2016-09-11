@@ -3,15 +3,21 @@
         <label class="col-sm-2 control-label">@lang('labels.basket_price'):</label>
         <div class="col-sm-10">
             @if (isset($basket['prices']))
-                @foreach($basket['prices'] as $day => $price)
-                    <div class="col-sm-2">
-                        <input type="text"
-                               name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][prices][{!! $day !!}]"
-                               readonly="readonly"
-                               class="form-control input-sm"
-                               value="{!! $price !!}">
-                    </div>
-                @endforeach
+                <table class="table table-bordered">
+                    <tbody>
+                    <tr>
+                        @foreach($basket['prices'] as $day => $price)
+                            <td class="text-center">
+                                {!! $price !!}
+
+                                <input type="hidden"
+                                       name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][prices][{!! $day !!}]"
+                                       value="{!! $price !!}">
+                            </td>
+                        @endforeach
+                    </tr>
+                    </tbody>
+                </table>
             @endif
         </div>
     </div>
@@ -33,7 +39,8 @@
 <div id="basket_recipes_{!! $basket['id'] !!}_{!! $basket['portions'] !!}" class="menu-recipes-table margin-bottom-40">
 
     @foreach(old('baskets.'.$basket['id'].'_'.$basket['portions'].'.old', []) as $key => $recipe)
-        <div id="recipe_{!! $recipe['recipe_id'] !!}" class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe['main']) main @endif">
+        <div id="recipe_{!! $recipe['recipe_id'] !!}"
+             class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe['main']) main @endif">
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <div class="inner-block col-sm-8 no-padding">
@@ -72,16 +79,20 @@
                     </div>
                 </div>
                 <div class="clearfix"></div>
-                <a href="{!! route('admin.recipe.show', $recipe['recipe_id']) !!}" target="_blank" class="small-box-footer lover-case">
+                <a href="{!! route('admin.recipe.show', $recipe['recipe_id']) !!}" target="_blank"
+                   class="small-box-footer lover-case">
                     @lang('labels.detailed') <i class="fa fa-arrow-circle-right"></i>
                 </a>
-                <a class="btn btn-flat btn-danger btn-xs action exist destroy" data-id="{!! $key !!}" data-name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][remove][]"><i class="fa fa-remove"></i></a>
+                <a class="btn btn-flat btn-danger btn-xs action exist destroy" data-id="{!! $key !!}"
+                   data-name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][remove][]"><i
+                            class="fa fa-remove"></i></a>
             </div>
         </div>
     @endforeach
 
     @foreach(old('baskets.'.$basket['id'].'_'.$basket['portions'].'.new', []) as $recipe_key => $recipe)
-        <div id="recipe_{!! $recipe['recipe_id'] !!}" class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe['main']) main @endif">
+        <div id="recipe_{!! $recipe['recipe_id'] !!}"
+             class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe['main']) main @endif">
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <div class="inner-block col-sm-8 no-padding">
@@ -99,13 +110,25 @@
                         @include('partials.image', ['src' => $recipe['image'], 'attributes' => ['width' => 100, 'class' => 'img-circle']])
                     </div>
 
-                    <input type="hidden" name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][main]" value="{!! $recipe['main'] ? 1 : 0 !!}" class="main-checkbox main-input">
+                    <input type="hidden"
+                           name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][main]"
+                           value="{!! $recipe['main'] ? 1 : 0 !!}" class="main-checkbox main-input">
 
-                    <input type="hidden" name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][recipe_id]" value="{!! $recipe['recipe_id'] !!}">
-                    <input type="hidden" name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][name]" value="{!! $recipe['name'] !!}">
-                    <input type="hidden" name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][image]" value="{!! $recipe['image'] !!}">
-                    <input type="hidden" name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][recipe_portions]" value="{!! $recipe['recipe_portions'] !!}">
-                    <input type="hidden" name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][recipe_price]" value="{!! $recipe['recipe_price'] !!}" class="recipe-price">
+                    <input type="hidden"
+                           name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][recipe_id]"
+                           value="{!! $recipe['recipe_id'] !!}">
+                    <input type="hidden"
+                           name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][name]"
+                           value="{!! $recipe['name'] !!}">
+                    <input type="hidden"
+                           name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][image]"
+                           value="{!! $recipe['image'] !!}">
+                    <input type="hidden"
+                           name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][recipe_portions]"
+                           value="{!! $recipe['recipe_portions'] !!}">
+                    <input type="hidden"
+                           name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][recipe_price]"
+                           value="{!! $recipe['recipe_price'] !!}" class="recipe-price">
 
                     <div class="clearfix"></div>
                 </div>
@@ -120,7 +143,8 @@
                     </div>
                 </div>
                 <div class="clearfix"></div>
-                <a href="{!! route('admin.recipe.show', $recipe['recipe_id']) !!}" target="_blank" class="small-box-footer lover-case">
+                <a href="{!! route('admin.recipe.show', $recipe['recipe_id']) !!}" target="_blank"
+                   class="small-box-footer lover-case">
                     @lang('labels.detailed') <i class="fa fa-arrow-circle-right"></i>
                 </a>
                 <a class="btn btn-flat btn-danger btn-xs action destroy"><i class="fa fa-remove"></i></a>
@@ -137,9 +161,12 @@
         <div class="col-sm-12">
             @include('weekly_menu.partials.recipes_select', ['basket_id' => $basket['id'], 'portions' => $basket['portions']])
 
-            <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][name]" value="{!! $basket['name'] !!}">
-            <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][id]" value="{!! $basket['id'] !!}">
-            <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][portions]" value="{!! $basket['portions'] !!}">
+            <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][name]"
+                   value="{!! $basket['name'] !!}">
+            <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][id]"
+                   value="{!! $basket['id'] !!}">
+            <input type="hidden" name="baskets[{!! $basket['id'] !!}_{!! $basket['portions'] !!}][portions]"
+                   value="{!! $basket['portions'] !!}">
         </div>
     </div>
 </div>
