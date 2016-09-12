@@ -42,6 +42,7 @@
                                     <input type="checkbox"
                                            id="f-order-ing-{!! $recipe->id !!}_{!! $ingredient->id !!}"
                                            data-name="ingredients[{!! $i !!}]"
+                                           data-price="{!! $ingredient->ingredient->sale_price !!}"
                                            value="{!! $recipe->id !!}_{!! $ingredient->id !!}"
                                            class="checkbox-button"
                                            data-id="{!! $recipe->id !!}_{!! $ingredient->id !!}">

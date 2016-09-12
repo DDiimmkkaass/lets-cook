@@ -38,11 +38,13 @@ function orderIngredients() {
             $label = $that.next();
 
         if ($that.is(':checked')) {
-            $label.text($label.attr('data-remove'));
-            $(this).attr('name', $(this).data('name'))
-        } else {
             $label.text($label.attr('data-add'));
-            $(this).removeAttr('name')
+            $(this).removeAttr('name');
+            updateOrderTotal($(this).data('price'));
+        } else {
+            $label.text($label.attr('data-remove'));
+            $(this).attr('name', $(this).data('name'));
+            updateOrderTotal($(this).data('price'), 'sub');
         }
     });
 }

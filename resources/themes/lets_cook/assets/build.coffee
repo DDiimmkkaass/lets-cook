@@ -108,7 +108,7 @@ gulp.task theme.concat('::purejs'), ->
   .on('error', plumber)
 
 gulp.task theme.concat('::purejs:watch'), ->
-  gulp.watch dev_path.js.concat('/*.js'), [theme.concat('::purejs')]
+  gulp.watch dev_path.js, [theme.concat('::purejs')]
 
 
 # IMAGES #

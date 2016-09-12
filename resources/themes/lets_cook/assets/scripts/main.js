@@ -32,6 +32,7 @@ $(function() {
     if ($('main[class="main order"]').length) {
         order();
         orderIngredients();
+        orderAddMore();
         orderSubscribe();
     }
 
@@ -116,7 +117,6 @@ $(window).load(function() {
 
     if ($('main[class="main order"]').length) {
         makeOrderDaysSize();
-        orderAddMore();
     }
 
     if ($('main[class="main baskets"]').length) {

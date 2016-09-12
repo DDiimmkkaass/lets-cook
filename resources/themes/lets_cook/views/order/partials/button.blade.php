@@ -4,8 +4,8 @@
             <div class="order-submit__promocode order-promocode">
                 <h3 class="order-promocode__title">
                     <span data-device="mobile">Промокод</span>
-                    <span data-device="desktop">Промокод можно получить в купонных сервисах или следите за акция на
-                                нашем сайте.</span>
+                    <span data-device="desktop">
+                        Промокод можно получить в купонных сервисах или следите за акция на нашем сайте.</span>
                 </h3>
 
                 <div class="order-promocode__inputs">
@@ -15,11 +15,15 @@
                 </div>
             </div>
 
-            <div class="order-submit__price georgia-title" data-device="mobile">4900<span>руб.</span></div>
+            <div id="order_total_mobile" class="order-submit__price georgia-title" data-device="mobile">
+                {!! $basket->getOrderPrice() !!}<span>{!! $currency !!}</span>
+            </div>
         </div>
 
         <div class="order-submit__right">
-            <div class="order-submit__price" data-device="desktop">4900<span>руб.</span></div>
+            <div id="order_total_desktop" data-total="{!! $basket->getOrderPrice() !!}" class="order-submit__price" data-device="desktop">
+                {!! $basket->getOrderPrice() !!}<span>{!! $currency !!}</span>
+            </div>
 
             <button type="submit" name="order-submit">
                 <span data-device="mobile">Заказать</span>
