@@ -2,7 +2,7 @@
     <div class="small-box bg-aqua @if ($model->main) main @endif">
         <div class="inner">
             <div class="inner-block col-sm-8 no-padding">
-                <h4>{!! $model->name !!}</h4>
+                <h5>{!! $model->name !!}</h5>
 
                 <p class="font-size-12">
                     @lang('labels.portions'): {!! $model->portions !!}
