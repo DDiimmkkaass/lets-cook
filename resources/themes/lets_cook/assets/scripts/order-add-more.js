@@ -5,7 +5,7 @@ function orderAddMore() {
     let $orderAddMore = $('.order-add-more'),
         $list = $orderAddMore.find('.order-add-more__list'),
         $listItems = $list.find('.order-add-more__item.more-item'),
-        $listItemsCheckboxes = $listItems.find('.checkbox-button input[name="order-add-more"]');
+        $listItemsCheckboxes = $listItems.find('.checkbox-button input[type="checkbox"]');
 
     function init() {
         $listItemsCheckboxes.each(function() {
@@ -24,48 +24,20 @@ function orderAddMore() {
 
     $list.on('click', '.order-add-more__item', function() {
         let $that = $(this),
-            $checkbox = $that.find('input[name="order-add-more"]'),
-            $label = $checkbox.next(),
-            myCheckboxes = {};
+            $checkbox = $that.find('input[type="checkbox"]'),
+            $label = $checkbox.next();
 
         if ($checkbox.is(':checked')) {
             $checkbox.prop('checked', false);
+            $checkbox.removeAttr('name');
             $label.text($label.attr('data-add'));
             $that.removeAttr('data-active');
         } else {
             $checkbox.prop('checked', true);
+            $checkbox.attr('name', $checkbox.data('name'));
             $label.text($label.attr('data-remove'));
             $that.attr('data-active', '');
         }
-
-        $listItemsCheckboxes.each(function() {
-            let $that = $(this),
-                thatObj = { [$that.attr('data-id')]: $that.is(':checked')};
-
-            Object.assign(myCheckboxes, thatObj);
-        });
-
-        $.ajax({
-            type: 'POST',
-            url: 'order.php',
-            dataType: 'json',
-            cache: false,
-            data: JSON.stringify(myCheckboxes), // {"1":false,"2":true,"3":false}
-            xhrFields: {
-                withCredentials: true
-            },
-
-            success: function() {
-
-
-                console.log('ORDER ADD MORE CHECKBOX AJAX SUCCESS');
-            },
-
-            error: function() {
-
-                console.log('ORDER ADD MORE CHECKBOX AJAX ERROR');
-            }
-        });
     });
 }
 

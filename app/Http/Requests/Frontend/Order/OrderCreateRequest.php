@@ -40,6 +40,7 @@ class OrderCreateRequest extends FormRequest
         $user_id = Sentry::getUser()->getId();
         
         $weekly_menu = $this->weeklyMenuService->getWeeklyMenuByBasketId($this->request->get('basket_id', 0));
+        $city_id = $this->request->get('city_id', '');
         
         $rules = [
             'basket_id'   => 'required|exists:weekly_menu_baskets,id',
@@ -55,8 +56,8 @@ class OrderCreateRequest extends FormRequest
             ],
             'delivery_time' => 'required|in:'.implode(',', config('order.delivery_times')),
             
-            'city_id'   => 'required_without:city_name|exists:cities,id',
-            'city_name' => 'required_without:city_id',
+            'city_id'   => 'required_without:city_name'.($city_id != 0 ? '|exists:cities,id' : ''),
+            'city_name' => $city_id == 0 ? 'required' : '',
             'address'   => 'required',
             
             'subscribe_period' => 'numeric|min:1|required_if:type,'.Order::getTypeIdByName('subscribe'),

@@ -654,45 +654,58 @@
     +bp('1024')
       background: url('../images/transparent-bg.png') top left repeat
 
-    &:nth-of-type(2)
+    &:not(:last-of-type)
       +bp('1024')
-        margin-top: 20px
+        margin-bottom: 20px
 
   &__inner
     margin: 0 auto
     js-display: flex; display: flex
-    justify-content: space-between
-    align-items: flex-start
+    flex-direction: column
     max-width: 980px
 
     &[data-order='1']
       padding: 15px 9px 0
 
     &[data-order='2']
-      padding: 20px 9px 12px
+      padding: 15px 9px 0
+
+    &[data-order='3']
+      padding: 15px 9px 12px
 
     +bp('480')
       &[data-order='1']
         padding: 15px 12px 0
 
       &[data-order='2']
-        padding: 25px 12px 15px
+        padding: 15px 12px 0
+
+      &[data-order='3']
+        padding: 15px 12px 15px
 
     +bp('768')
       &[data-order='1']
         padding: 24px 20px 0
 
       &[data-order='2']
-        padding: 34px 20px 24px
+        padding: 24px 20px 0
+
+      &[data-order='3']
+        padding: 24px 20px 24px
 
     +bp('1024')
+      flex-direction: row
       justify-content: flex-start
       align-items: center
+
 
       &[data-order='1']
         padding: 14px 0
 
       &[data-order='2']
+        padding: 14px 0
+
+      &[data-order='3']
         padding: 14px 0
 
   &__subTitle
@@ -707,40 +720,78 @@
   &__date-select
     margin: 0
     fs(0px)
-    width: 45%
+    width: 100%
+
+    &:not(:last-of-type)
+      margin-bottom: 10px
 
     +bp('1024')
       width: (230 / 980) * 100%
 
-    &[data-select='time']
+      &:not(:last-of-type)
+        margin-bottom: 0
+
+    &[data-select='personal']
 
       +bp('1024')
-        margin-left: 30px
+        width: ((770 / 3) / 980) * 100%
+
+        &:not(:last-of-type)
+          margin-right: (30 / 980) * 100%
+
+    &[data-select='date-time']
+
+      +bp('1024')
+        width: ((770 / 3) / 980) * 100%
+
+        &:not(:last-of-type)
+          margin-right: (30 / 980) * 100%
+
 
     &[data-select='city']
-      display: none
 
       +bp('1024')
         display: inline-block
+        margin-right: (30 / 980) * 100%
+        width: ((770 / 3) / 980) * 100%
 
-    &[data-select='address']
-      width: 100%
+
+    &[data-select='city-name']
+      display: none
 
       +bp('1024')
-        width: 58.5%
-        margin-left: 30px
+        margin-right: (30 / 980) * 100%
+        width: ((770 / 3) / 980) * 100%
+
+      &[data-active]
+        display: inline-block
+        width: 100%
+
+        +bp('1024')
+          width: ((770 / 3) / 980) * 100%
+
+        & + [data-select='address']
+          +bp('1024')
+            width: ((770 / 3) / 980) * 100%
+
+
+    &[data-select='address']
+
+      +bp('1024')
+        display: inline-block
+        width: (543 / 980) * 100%
 
     & > select, & > input
-      width: calc(100% - (70px * (310 / 720)))
+      width: calc(100% - (150px * (310 / 720)))
       vertical-align: top
       background-color: $base-bg-color
       text-align: left
 
       +bp('480')
-        width: calc(100% - (70px * (470 / 720)))
+        width: calc(100% - (150px * (470 / 720)))
 
       +bp('768')
-        width: calc(100% - 70px)
+        width: calc(100% - 150px)
 
       +bp('1024')
         width: 100%
@@ -752,7 +803,7 @@
     label
       display: inline-block
       vertical-align: top
-      width: 70px * (310 / 720)
+      width: 110px * (310 / 720)
       padding-right: 17px * (310 / 720)
       text-align: right
       color: $font-black-1
@@ -760,12 +811,12 @@
       fsh(25px * (310 / 720), 80px * (310 / 720))
 
       +bp('480')
-        width: 70px * (470 / 720)
+        width: 110px * (470 / 720)
         padding-right: 17px * (470 / 720)
         fsh(25px * (470 / 720), 80px * (470 / 720))
 
       +bp('768')
-        width: 70px
+        width: 110px
         padding-right: 17px
         fsh(25px, 80px)
 
@@ -791,7 +842,7 @@
 
     +bp('1024')
       margin: 0 0 0 auto
-      width: 58.4%
+      width: 55.8%
 
 
   &__comment-title
@@ -913,7 +964,7 @@
       +bp('1024')
         display: inline-block
 
-    input[name='order-payment']
+    input[type='radio']
       display: none
 
       &:checked + label
@@ -1047,7 +1098,7 @@
       +bp('1024')
         display: inline-block
 
-    input[name='order-subscribe']
+    input[type='radio']
       display: none
 
       &:checked + label

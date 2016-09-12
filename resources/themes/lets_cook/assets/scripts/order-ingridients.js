@@ -1,14 +1,13 @@
 
-/* ----- ORDER INGRIDIENTS ----- */
+/* ----- ORDER INGREDIENTS ----- */
 
-function orderIngridients() {
+function orderIngredients() {
     let $orderIng = $('.order-ing'),
         $title = $orderIng.find('.order-ing__title'),
         $lists = $orderIng.find('.order-ing__list-wrapper'),
         $addList = $lists.eq(2),
-        $addListItems = $addList.find('.order-ing__list li .checkbox-button input[name="order-ingridients"]');
+        $addListItems = $addList.find('.order-ing__list li .checkbox-button input[type="checkbox"]');
 
-    // SHOW-HIDE BLOCK in MOBILE VERSION
     $title.on('click', function(e) {
         let orderHeight = parseInt($title.css('line-height'), 10),
             allListsHeight = 0;
@@ -34,46 +33,17 @@ function orderIngridients() {
         }
     });
 
-    // CHECKBOX CHANGE EVENT
     $addListItems.on('change', function() {
         let $that = $(this),
-            $label = $that.next(),
-            myCheckboxes = {};
+            $label = $that.next();
 
         if ($that.is(':checked')) {
             $label.text($label.attr('data-remove'));
+            $(this).attr('name', $(this).data('name'))
         } else {
             $label.text($label.attr('data-add'));
+            $(this).removeAttr('name')
         }
-
-        $addListItems.each(function() {
-            let $that = $(this),
-                thatObj = { [$that.attr('data-id')]: $that.is(':checked')};
-
-            Object.assign(myCheckboxes, thatObj);
-        });
-
-        $.ajax({
-            type: 'POST',
-            url: 'order.php',
-            dataType: 'json',
-            cache: false,
-            data: JSON.stringify(myCheckboxes), // {"1":false,"2":true,"3":false}
-            xhrFields: {
-                withCredentials: true
-            },
-
-            success: function() {
-
-
-                console.log('ORDER INGIRIDIENTS CHECKBOX AJAX SUCCESS');
-            },
-
-            error: function() {
-
-                console.log('ORDER INGIRIDIENTS CHECKBOX AJAX ERROR');
-            }
-        });
     });
 }
 

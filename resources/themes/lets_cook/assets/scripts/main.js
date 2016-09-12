@@ -31,7 +31,8 @@ $(function() {
 
     if ($('main[class="main order"]').length) {
         order();
-        orderIngridients();
+        orderIngredients();
+        orderSubscribe();
     }
 
     if ($('main[class="main baskets"]').length) {
@@ -62,7 +63,7 @@ $(function() {
 
 
     if ($('main[class="main recipe-simple"]').length) {
-        orderIngridients();
+        orderIngredients();
         subscribeNews();
     }
 

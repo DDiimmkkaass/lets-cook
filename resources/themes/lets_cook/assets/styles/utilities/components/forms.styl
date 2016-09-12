@@ -53,14 +53,14 @@
 
 .input-text-small
   margin: 0 auto
-  size: auto (60px * (310 / 720))
-  padding: 0 14px
+  size: auto (80px * (310 / 720))
+  padding: 0 10px
   border: 1px solid $font-black-1
   outline: none
   text-align: center
   color: $font-black-1
   font-family: $ptsans-caption-regular
-  fsh(25px * (310 / 720), 60px * (310 / 720))
+  fsh(40px * (310 / 720), 80px * (310 / 720))
 
   &::-webkit-input-placeholder
     color: $font-gray-1
@@ -78,12 +78,14 @@
     color: $font-gray-1
 
   +bp('480')
+    padding: 0 15px
     size: auto (80px * (470 / 720))
-    fsh(25px * (470 / 720), 60px * (470 / 720))
+    fsh(40px * (470 / 720), 80px * (470 / 720))
 
   +bp('768')
-    size: auto 60px
-    fsh(25px, 60px)
+    padding: 0 20px
+    size: auto 80px
+    fsh(40px, 80px)
 
   +bp('1024')
     text-align: left
@@ -185,7 +187,7 @@
 
   &__wrapper
 
-    input[name='addr-date__terms']
+    input[type='checkbox']
       display: none
 
       &:checked + label::before
