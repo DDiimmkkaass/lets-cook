@@ -8,9 +8,9 @@
 
 namespace App\Services;
 
-use App\Models\Basket;
 use App\Models\BasketRecipe;
 use App\Models\Order;
+use App\Models\OrderBasket;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
 use App\Models\Purchase;
@@ -234,15 +234,15 @@ class PurchaseService
             ->keyBy('recipe_id')
             ->toArray();
         
-        $_baskets = Basket::additional()->joinBasketOrder()->joinOrders()
-            ->with('recipes')
-            ->whereIn('orders.id', $orders)
-            ->select('baskets.id', DB::raw('count(basket_id) as baskets_count'))
-            ->groupBy('basket_order.basket_id')
+        $_baskets = OrderBasket::additional()
+            ->with('basket', 'basket.recipes')
+            ->whereIn('order_baskets.order_id', $orders)
+            ->select('order_baskets.basket_id', DB::raw('count(order_baskets.basket_id) as baskets_count'))
+            ->groupBy('order_baskets.basket_id')
             ->get();
         
         foreach ($_baskets as $basket) {
-            foreach ($basket->recipes as $recipe) {
+            foreach ($basket->basket->recipes as $recipe) {
                 if (!isset($recipes[$recipe->recipe_id])) {
                     $recipes[$recipe->recipe_id] = [
                         'recipe_id'     => $recipe->recipe_id,

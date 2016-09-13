@@ -38,7 +38,7 @@
                                             </ul>
 
                                             <div class="baskets-main-item__price" data-device="mobile">
-                                                {!! $basket->getOrderPrice() !!}
+                                                {!! $basket->getPriceInOrder() !!}
                                                 <span>{!! $currency !!}</span>
                                             </div>
                                         </div>
@@ -47,7 +47,7 @@
 
                                 <div class="baskets-main-item__right">
                                     <div class="baskets-main-item__price" data-device="desktop">
-                                        {!! $basket->getOrderPrice() !!}
+                                        {!! $basket->getPriceInOrder() !!}
                                         <span>{!! $currency !!}</span>
                                     </div>
                                     @if (empty($next))

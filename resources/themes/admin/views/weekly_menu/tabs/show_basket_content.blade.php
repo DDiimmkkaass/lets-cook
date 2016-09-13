@@ -2,14 +2,22 @@
     <div class="form-group">
         <label class="col-sm-2 control-label">@lang('labels.basket_price'):</label>
         <div class="col-sm-10">
-            @foreach($basket->getWeekPrice() as $day => $price)
-                <div class="col-sm-2">
-                    <input type="text"
-                           readonly="readonly"
-                           class="form-control input-sm"
-                           value="{!! $day . ' ' . trans_choice('labels.count_of_days', $day) !!}: {!! $price !!} {!! $currency !!}">
-                </div>
-            @endforeach
+            <table class="table table-bordered">
+                <tbody>
+                <tr>
+                    @foreach($basket->getWeekPrice() as $day => $price)
+                        <td class="text-center">
+                            {!! $day . ' ' . trans_choice('labels.count_of_days', $day) !!}:
+                            {!! $price !!} {!! $currency !!}
+
+                            <input type="hidden"
+                                   name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][prices][{!! $day !!}]"
+                                   value="{!! $day . ' ' . trans_choice('labels.count_of_days', $day) !!}: {!! $price !!} {!! $currency !!}">
+                        </td>
+                    @endforeach
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 

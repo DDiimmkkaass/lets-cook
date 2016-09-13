@@ -33,17 +33,19 @@ function orderIngredients() {
         }
     });
 
-    $addListItems.on('change', function() {
+    $addListItems.on('change', function(e) {
+        e.preventDefault();
+
         let $that = $(this),
             $label = $that.next();
 
         if ($that.is(':checked')) {
-            $label.text($label.attr('data-add'));
-            $(this).removeAttr('name');
-            updateOrderTotal($(this).data('price'));
-        } else {
             $label.text($label.attr('data-remove'));
             $(this).attr('name', $(this).data('name'));
+            updateOrderTotal($(this).data('price'));
+        } else {
+            $label.text($label.attr('data-add'));
+            $(this).removeAttr('name');
             updateOrderTotal($(this).data('price'), 'sub');
         }
     });

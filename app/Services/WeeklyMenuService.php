@@ -12,6 +12,7 @@ use App\Models\Basket;
 use App\Models\BasketRecipe;
 use App\Models\WeeklyMenu;
 use App\Models\WeeklyMenuBasket;
+use Carbon;
 use Datatables;
 use Exception;
 use FlashMessages;
@@ -23,6 +24,9 @@ use FlashMessages;
 class WeeklyMenuService
 {
     
+    /**
+     * @return array|\Bllim\Datatables\json
+     */
     public function table()
     {
         $list = WeeklyMenu::select('id', 'week', 'year');
@@ -137,6 +141,35 @@ class WeeklyMenuService
     public function getWeeklyMenuByBasketId($basket_id)
     {
         return WeeklyMenu::joinWeeklyMenuBaskets()->where('weekly_menu_baskets.id', $basket_id)->first();
+    }
+    
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return array
+     */
+    public function getDeliveryDates($year, $week)
+    {
+        $now = Carbon::now();
+    
+        $stop_day = variable('stop_ordering_date');
+        $stop_time = variable('stop_ordering_time');
+        
+        if (
+            $now->dayOfWeek > $stop_day ||
+            ($now->dayOfWeek == $stop_day && $now->format('H:i') >= $stop_time) ||
+            $year > $now->year ||
+            $week > $now->weekOfYear
+        ) {
+            $now->addWeek();
+        }
+        $delivery_dates[] = clone ($now->endOfWeek()->startOfDay());
+        $delivery_dates[] = clone ($now->endOfWeek()->addDay()->endOfDay());
+        $delivery_dates[] = clone ($now->endOfWeek()->startOfDay());
+        $delivery_dates[] = clone ($now->endOfWeek()->addDay()->endOfDay());
+        
+        return $delivery_dates;
     }
     
     /**

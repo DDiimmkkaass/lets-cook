@@ -66,6 +66,8 @@ class ProcessTmplOrdersForCurrentWeek extends Command
         
         foreach (Order::ofStatus('tmpl')->forCurrentWeek()->get() as $order) {
             try {
+                $this->orderService->updatePrices($order);
+                
                 $order->total = $order->getTotal();
                 
                 $this->log('process order #'.$order->id, 'info', $order->toArray());

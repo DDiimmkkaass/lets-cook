@@ -114,6 +114,14 @@ class Order extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
+    public function main_basket()
+    {
+        return $this->hasOne(OrderBasket::class, 'order_id')->with('weekly_menu_basket')->main();
+    }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function recipes()
     {
         return $this->hasMany(OrderRecipe::class)->with('recipe');
@@ -122,17 +130,17 @@ class Order extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function ingredients()
+    public function additional_baskets()
     {
-        return $this->hasMany(OrderIngredient::class)->with('ingredient');
+        return $this->hasMany(OrderBasket::class, 'order_id')->with('basket')->additional();
     }
     
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\belongsToMany
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function baskets()
+    public function ingredients()
     {
-        return $this->belongsToMany(Basket::class);
+        return $this->hasMany(OrderIngredient::class)->with('ingredient');
     }
     
     /**
@@ -292,7 +300,7 @@ class Order extends Model
      */
     public function scopeJoinAdditionalBaskets($query)
     {
-        return $query->leftJoin('basket_order', 'basket_order.order_id', '=', 'orders.id');
+        return $query->leftJoin('order_baskets', 'order_baskets.order_id', '=', 'orders.id');
     }
     
     /**
@@ -362,37 +370,17 @@ class Order extends Model
     {
         $total = 0;
         
-        $basket = $this->getMainBasket();
-        if ($basket) {
-            $days = count($this->recipes);
-            
-            $total += $basket->getPrice(null, $days);
-        }
+        $total += $this->main_basket()->first()->price;
         
-        $total += $this->baskets()->sum('price') / 100;
+        $total += $this->additional_baskets()->get()->sum('price');
         
-        $total += $this->ingredients()->get()->reduce(
+        $total += $this->ingredients()->get(['count', 'price'])->reduce(
             function ($_total, $item) {
-                return $_total + ($item->ingredient->sale_price * $item->count);
+                return $_total + $item->getPriceInOrder();
             }
         );
         
         return $total;
-    }
-    
-    /**
-     * @return WeeklyMenuBasket|null
-     */
-    public function getMainBasket()
-    {
-        $recipe = $this->recipes()->first();
-        
-        if ($recipe) {
-            return WeeklyMenuBasket::with('basket')
-                ->find($recipe->recipe->weekly_menu_basket_id);
-        }
-        
-        return null;
     }
     
     /**
@@ -402,16 +390,13 @@ class Order extends Model
     {
         $places = 0;
         
-        $basket = $this->getMainBasket();
-        if ($basket) {
-            $days = count($this->recipes);
-            
-            $places += $basket->getPlaces(null, $days);
-        }
+        $recipes = $this->recipes->count();
+        
+        $places += $this->main_basket->getPlaces($recipes);
     
-        $places += $this->baskets()->get()->sum(function ($item) {
-            return $item->places;
-        });
+        foreach ($this->additional_baskets as $basket) {
+            $places += $basket->getPlaces();
+        }
         
         return $places;
     }
@@ -423,13 +408,7 @@ class Order extends Model
      */
     public function getMainBasketName($with_portions = false)
     {
-        $basket = $this->getMainBasket();
-        
-        if (!$basket) {
-            return '';
-        }
-        
-        return $basket->getName().' '.($with_portions ? $basket->portions : '');
+        return $this->main_basket->name.' '.($with_portions ? $this->main_basket->weekly_menu_basket->portions : '');
     }
     
     /**

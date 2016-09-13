@@ -179,26 +179,6 @@ class Basket extends Model
     }
     
     /**
-     * @param $query
-     *
-     * @return mixed
-     */
-    public function scopeJoinBasketOrder($query)
-    {
-        return $query->leftJoin('basket_order', 'basket_order.basket_id', '=', 'baskets.id');
-    }
-    
-    /**
-     * @param $query
-     *
-     * @return mixed
-     */
-    public function scopeJoinOrders($query)
-    {
-        return $query->leftJoin('orders', 'orders.id', '=', 'basket_order.order_id');
-    }
-    
-    /**
      * @param string $type
      *
      * @return bool

@@ -53,6 +53,24 @@ class OrderIngredient extends Model
     }
     
     /**
+     * @param int|float $value
+     */
+    public function setPriceAttribute($value)
+    {
+        $this->attributes['price'] = (int) ($value * 100);
+    }
+    
+    /**
+     * @param int $value
+     *
+     * @return float
+     */
+    public function getPriceAttribute($value)
+    {
+        return $value / 100;
+    }
+    
+    /**
      * @param $query
      *
      * @return mixed
@@ -121,6 +139,14 @@ class OrderIngredient extends Model
     {
         return $query->leftJoin('ingredient_parameter', 'ingredient_parameter.ingredient_id', '=', 'ingredients.id')
             ->leftJoin('parameters', 'parameters.id', '=', 'ingredient_parameter.parameter_id');
+    }
+    
+    /**
+     * @return float|int
+     */
+    public function getPriceInOrder()
+    {
+        return $this->price * $this->count;
     }
     
     /**

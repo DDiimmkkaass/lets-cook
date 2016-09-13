@@ -430,8 +430,8 @@ class RecipeService
         
         $orders = Order::joinAdditionalBaskets()
             ->ofStatus('archived')
-            ->whereIn('basket_id', $additional_baskets)
-            ->get();
+            ->whereIn('order_baskets.basket_id', $additional_baskets)
+            ->get(['orders.*']);
         
         foreach ($orders as $order) {
             $week = trans('labels.w_label').$order->created_at->weekOfYear.', '.$order->created_at->year;

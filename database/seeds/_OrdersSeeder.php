@@ -5,10 +5,12 @@ use App\Models\BasketRecipe;
 use App\Models\City;
 use App\Models\Group;
 use App\Models\Order;
+use App\Models\OrderBasket;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
 use App\Models\RecipeIngredient;
 use App\Models\WeeklyMenu;
+use Illuminate\Database\Eloquent\Collection;
 
 /**
  * Class _OrderSeeder
@@ -74,12 +76,25 @@ class _OrdersSeeder extends DataSeeder
                             ]
                         );
                     }
+                    
+                    $main_basket = new OrderBasket(
+                        [
+                            'weekly_menu_basket_id' => $basket->id,
+                            'price'                 => $basket->getPriceInOrder(),
+                            'name'                  => $basket->getName(),
+                        ]
+                    );
+                    
+                    $order->main_basket()->save($main_basket);
                 }
                 
                 $recipes = $basket->recipes->pluck('recipe_id')->toArray();
                 $ingredients = RecipeIngredient::with('ingredient')
+                    ->joinIngredient()
                     ->home()
                     ->whereIn('recipe_id', $recipes)
+                    ->where('ingredients.sale_price', '>', 0)
+                    ->whereNotNull('ingredients.sale_unit_id')
                     ->get();
                 
                 $ingredients_count = $ingredients->count();
@@ -99,6 +114,7 @@ class _OrdersSeeder extends DataSeeder
                                 'ingredient_id'    => $ingredients->ingredient_id,
                                 'name'             => $ingredients->ingredient->name,
                                 'count'            => rand(1, 10),
+                                'price'            => $ingredients->ingredient->sale_price,
                             ]
                         );
                     } else {
@@ -115,6 +131,7 @@ class _OrdersSeeder extends DataSeeder
                                     'ingredient_id'    => $ingredient->ingredient_id,
                                     'name'             => $ingredient->ingredient->name,
                                     'count'            => rand(1, 10),
+                                    'price'            => $ingredient->ingredient->sale_price,
                                 ]
                             );
                         }
@@ -125,13 +142,35 @@ class _OrdersSeeder extends DataSeeder
             $baskets_count = Basket::additional()->count();
             if ($baskets_count) {
                 $baskets = Basket::additional()->get()
-                    ->random(rand(1, ($baskets_count < 2 ? $baskets_count : 2)))
-                    ->pluck('id')->toArray();
+                    ->random(rand(1, ($baskets_count < 2 ? $baskets_count : 2)));
                 
-                if (count($baskets)) {
-                    $order->baskets()->sync($baskets);
+                if ($baskets instanceof Collection) {
+                    foreach ($baskets as $basket) {
+                        $_basket = new OrderBasket(
+                            [
+                                'basket_id' => $basket->id,
+                                'price'     => $basket->getPrice(),
+                                'name'      => $basket->getName(),
+                            ]
+                        );
+                        
+                        $order->additional_baskets()->save($_basket);
+                    }
+                } else {
+                    $_basket = new OrderBasket(
+                        [
+                            'basket_id' => $baskets->id,
+                            'price'     => $baskets->getPrice(),
+                            'name'      => $baskets->getName(),
+                        ]
+                    );
+                    
+                    $order->additional_baskets()->save($_basket);
                 }
             }
+            
+            $order->total = $order->getTotal();
+            $order->save();
         }
     }
 }

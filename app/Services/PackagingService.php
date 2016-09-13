@@ -8,9 +8,9 @@
 
 namespace App\Services;
 
-use App\Models\Basket;
 use App\Models\Ingredient;
 use App\Models\Order;
+use App\Models\OrderBasket;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
 use App\Models\Purchase;
@@ -56,6 +56,7 @@ class PackagingService
         $this->_addOrderedIngredients($orders, $recipes);
         
         $recipes = new Collection($recipes);
+        
         $recipes = $recipes->sortByDesc(
             function ($recipe) {
                 return $recipe['recipes_count'];
@@ -123,7 +124,7 @@ class PackagingService
         $orders = $this->_getOrders(
             $year,
             $week,
-            ['user', 'city', 'recipes', 'ingredients', 'ingredients.recipe', 'baskets']
+            ['user', 'city', 'recipes', 'ingredients', 'ingredients.recipe', 'additional_baskets']
         );
         
         foreach ($orders as $order) {
@@ -155,9 +156,9 @@ class PackagingService
                 ];
             }
             
-            foreach ($order->baskets as $basket) {
+            foreach ($order->additional_baskets as $basket) {
                 $users[$order->user_id]['baskets'][] = [
-                    'name' => $basket->name,
+                    'name' => $basket->getName(),
                 ];
             }
         }
@@ -175,7 +176,11 @@ class PackagingService
     {
         $days = [];
         
-        $orders = $this->_getOrders($year, $week, ['user', 'user.orders', 'city', 'recipes', 'baskets'])
+        $orders = $this->_getOrders(
+            $year,
+            $week,
+            ['user', 'user.orders', 'city', 'recipes', 'main_basket', 'additional_baskets']
+        )
             ->sortBy('delivery_date');
         
         foreach ($orders as $order) {
@@ -362,20 +367,24 @@ class PackagingService
             ->keyBy('recipe_id')
             ->toArray();
         
-        $_baskets = Basket::additional()->joinBasketOrder()->joinOrders()
-            ->with('recipes')
-            ->whereIn('orders.id', $orders)
-            ->select('baskets.id', 'baskets.name', DB::raw('count(basket_id) as baskets_count'))
-            ->groupBy('basket_order.basket_id')
+        $_baskets = OrderBasket::additional()
+            ->joinBasket()
+            ->with('basket', 'basket.recipes')
+            ->whereIn('order_baskets.order_id', $orders)
+            ->select(
+                'order_baskets.basket_id',
+                DB::raw('count(order_baskets.basket_id) as baskets_count')
+            )
+            ->groupBy('order_baskets.basket_id')
             ->get();
         
         foreach ($_baskets as $basket) {
-            foreach ($basket->recipes as $recipe) {
+            foreach ($basket->basket->recipes as $recipe) {
                 if (!isset($recipes[$recipe->recipe_id])) {
                     $recipes[$recipe->recipe_id] = [
-                        'basket_id'        => $basket->id,
-                        'basket_type'      => $basket->type,
-                        'basket_name'      => $basket->name,
+                        'basket_id'        => $basket->basket_id,
+                        'basket_type'      => $basket->basket->type,
+                        'basket_name'      => $basket->getName(),
                         'basket_recipe_id' => $recipe->id,
                         'recipe_id'        => $recipe->recipe_id,
                         'name'             => $recipe->recipe->name,

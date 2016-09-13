@@ -120,6 +120,14 @@ class RecipeIngredient extends Model
     }
     
     /**
+     * @return float|int
+     */
+    public function getPriceInOrder()
+    {
+        return $this->ingredient->sale_price * $this->count;
+    }
+    
+    /**
      * @return string
      */
     public function getStringType()

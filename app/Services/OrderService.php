@@ -10,16 +10,18 @@ namespace App\Services;
 
 use App\Models\Basket;
 use App\Models\BasketRecipe;
+use App\Models\Ingredient;
 use App\Models\Order;
+use App\Models\OrderBasket;
 use App\Models\OrderComment;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
 use App\Models\User;
-use App\Models\WeeklyMenu;
 use App\Models\WeeklyMenuBasket;
 use Carbon;
 use Datatables;
 use DB;
+use Illuminate\Database\Eloquent\Collection;
 use Exception;
 use FlashMessages;
 use Illuminate\Database\Eloquent\Builder;
@@ -207,16 +209,16 @@ class OrderService
             $statistic['baskets'][$recipe->recipe->weekly_menu_basket_id]['recipes'][$recipe->recipe->id]['count']++;
         }
         
-        $statistic['additional_baskets'] = Basket::additional()->joinBasketOrder()->joinOrders()
-            ->with('recipes')
-            ->whereIn('orders.id', $orders->pluck('id'))
+        $statistic['additional_baskets'] = OrderBasket::additional()
+            ->joinBasket()
+            ->whereIn('order_baskets.order_id', $orders->pluck('id'))
             ->select(
-                'baskets.id',
+                'order_baskets.basket_id',
                 'baskets.name',
                 DB::raw('SUM(baskets.price) as total'),
-                DB::raw('count(basket_id) as count')
+                DB::raw('count(order_baskets.basket_id) as count')
             )
-            ->groupBy('basket_order.basket_id')
+            ->groupBy('order_baskets.basket_id')
             ->get();
         
         return $statistic;
@@ -281,9 +283,13 @@ class OrderService
      */
     public function saveRelationships(Order $model, $input)
     {
-        $this->_saveRecipes($model, isset($input['recipes']) ? $input['recipes'] : []);
+        $recipes = isset($input['recipes']) ? $input['recipes'] : [];
         
-        $this->_saveAdditionalBaskets($model, isset($input['baskets']) ? $input['baskets'] : []);
+        $this->_saveRecipes($model, $recipes);
+    
+        $this->saveMainBasket($model, $input['basket_id'], $model->recipes->count());
+        
+        $this->saveAdditionalBaskets($model, isset($input['baskets']) ? $input['baskets'] : []);
         
         $this->_saveIngredients($model, isset($input['ingredients']) ? $input['ingredients'] : []);
         
@@ -301,23 +307,32 @@ class OrderService
         
         $tmpl->parent_id = $order->id;
         $tmpl->status = Order::getStatusIdByName('tmpl');
+        $tmpl->type = Order::getTypeIdByName('single');
+        $tmpl->subscribe_period = 0;
         $tmpl->delivery_date = $this->_getDeliveryDateForTmplOrder($order);
         $tmpl->total = 0;
         
         $tmpl->save();
         
-        $tmpl->baskets()->sync($order->baskets()->get(['id'])->pluck('id')->toArray());
-        
-        $order->load('recipes', 'ingredients');
+        $order->load('recipes.recipe', 'ingredients', 'main_basket', 'additional_baskets');
         $relations = $order->getRelations();
         foreach ($relations as $relation_name => $relation) {
+            if (!$relation instanceof Collection) {
+                $relation = [$relation];
+            }
+            
             foreach ($relation as $record) {
                 $tmpl_record = $record->replicate();
                 $tmpl_record->order_id = $tmpl->id;
-                
+
                 $tmpl_record->push();
             }
         }
+        
+        $this->updatePrices($tmpl);
+    
+        $tmpl->total = $tmpl->getTotal();
+        $tmpl->save();
         
         $this->addSystemOrderComment($tmpl, trans('messages.auto generated tmpl order'), 'tmpl');
         
@@ -361,6 +376,35 @@ class OrderService
     
     /**
      * @param \App\Models\Order $model
+     * @param int               $weekly_menu_basket_id
+     * @param int               $days
+     *
+     * @return \App\Models\OrderBasket
+     */
+    public function saveMainBasket(Order $model, $weekly_menu_basket_id, $days)
+    {
+        $weekly_menu_basket = WeeklyMenuBasket::with('basket')->findOrFail($weekly_menu_basket_id);
+        
+        $main_basket = $model->main_basket()->first();
+        if (!$main_basket) {
+            $main_basket = new OrderBasket(
+                [
+                    'weekly_menu_basket_id' => $weekly_menu_basket_id,
+                ]
+            );
+        } else {
+            $main_basket->weekly_menu_basket_id = $weekly_menu_basket_id;
+        }
+        $main_basket->name = $weekly_menu_basket->getName();
+        $main_basket->price = $weekly_menu_basket->getPriceInOrder($days);
+        
+        $model->main_basket()->save($main_basket);
+        
+        return $main_basket;
+    }
+    
+    /**
+     * @param \App\Models\Order $model
      * @param int               $basket_id
      */
     public function saveRecipes(Order $model, $basket_id)
@@ -386,7 +430,23 @@ class OrderService
      */
     public function saveAdditionalBaskets(Order $model, $baskets)
     {
-        $model->baskets()->sync($baskets);
+        foreach ($baskets as $basket_id) {
+            if (!$model->additional_baskets()->whereBasketId($basket_id)->count()) {
+                $basket = Basket::findOrFail($basket_id);
+                
+                $order_basket = new OrderBasket(
+                    [
+                        'basket_id' => $basket_id,
+                        'name'      => $basket->name,
+                    ]
+                );
+                $order_basket->price = $basket->getPrice();
+                
+                $model->additional_baskets()->save($order_basket);
+            }
+        }
+        
+        $model->additional_baskets()->whereNotIn('basket_id', $baskets)->delete();
     }
     
     /**
@@ -404,17 +464,36 @@ class OrderService
                 $recipe_ingredient = $basket_recipe->recipe->home_ingredients->find($recipe_ingredient_id);
                 
                 if ($recipe_ingredient && $recipe_ingredient->ingredient->inSale()) {
-                    $input = [
+                    $ingredient = new OrderIngredient([
                         'basket_recipe_id' => $basket_recipe_id,
                         'ingredient_id'    => $recipe_ingredient->ingredient_id,
                         'name'             => $recipe_ingredient->ingredient->name,
                         'count'            => $recipe_ingredient->count,
-                    ];
-                    $ingredient = new OrderIngredient($input);
+                    ]);
+                    $ingredient->price = $recipe_ingredient->ingredient->sale_price;
                     
                     $model->ingredients()->save($ingredient);
                 }
             }
+        }
+    }
+    
+    /**
+     * @param \App\Models\Order $order
+     */
+    public function updatePrices(Order $order)
+    {
+        $order->main_basket->price = $order->main_basket->weekly_menu_basket->getPrice(null, $order->recipes->count());
+        $order->main_basket->save();
+        
+        foreach ($order->additional_baskets as $basket) {
+            $basket->price = $basket->basket->getPrice();
+            $basket->save();
+        }
+        
+        foreach ($order->ingredients as $ingredient) {
+            $ingredient->price = $ingredient->ingredient->sale_price;
+            $ingredient->save();
         }
     }
     
@@ -463,15 +542,6 @@ class OrderService
     
     /**
      * @param \App\Models\Order $model
-     * @param array             $baskets
-     */
-    private function _saveAdditionalBaskets(Order $model, $baskets)
-    {
-        $model->baskets()->sync($baskets);
-    }
-    
-    /**
-     * @param \App\Models\Order $model
      * @param array             $input
      */
     private function _saveIngredients(Order $model, $input)
@@ -502,7 +572,11 @@ class OrderService
         $data = isset($input['new']) ? $input['new'] : [];
         foreach ($data as $ingredient) {
             try {
+                $_ingredient = Ingredient::findOrFail($ingredient['ingredient_id']);
+                
                 $ingredient = new OrderIngredient($ingredient);
+                $ingredient->price = $_ingredient->sale_price;
+                
                 $model->ingredients()->save($ingredient);
             } catch (Exception $e) {
                 FlashMessages::add(

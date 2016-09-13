@@ -4,7 +4,7 @@
             @lang('labels.main_basket')
         </div>
         <div class="col-sm-12 full-width-select">
-            {!! Form::select('basket', $baskets, $basket ? $basket->id : null, ['id' => 'order_basket_select', 'class' => 'form-control select2 order-basket-select input-sm', 'aria-hidden' => 'true']) !!}
+            {!! Form::select('basket_id', $baskets, $basket ? $basket->id : null, ['id' => 'order_basket_select', 'class' => 'form-control select2 order-basket-select input-sm', 'aria-hidden' => 'true']) !!}
 
             <div class="clearfix"></div>
 

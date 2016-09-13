@@ -22,7 +22,7 @@
                         </ul>
 
                         <div class="order-main__price" data-device="mobile">
-                            {!! $basket->getOrderPrice() !!}<span>{!! $currency !!}</span>
+                            {!! $basket->getPriceInOrder() !!}<span>{!! $currency !!}</span>
                         </div>
                     </div>
                 </div>
@@ -30,7 +30,7 @@
 
             <div class="order-main__right">
                 <div class="order-main__price">
-                    {!! $basket->getOrderPrice() !!}
+                    {!! $basket->getPriceInOrder() !!}
                     <span>{!! $currency !!}</span>
                 </div>
                 <a href="#" class="order-main__make-order black-short-button" data-device="desktop">

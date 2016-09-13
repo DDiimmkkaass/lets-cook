@@ -92,7 +92,7 @@
             <div class="order-addr-date__terms square-checkbox">
                 <div class="square-checkbox__wrapper">
                     <input type="checkbox" name="verify_call" id="f-addr-date__call-me" value="1">
-                    <label for="f-addr-date__terms"></label>
+                    <label for="f-addr-date__call-me"></label>
                 </div>
 
                 <label class="square-checkbox__text" for="f-addr-date__call-me">

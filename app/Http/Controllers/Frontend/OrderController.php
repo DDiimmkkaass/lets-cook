@@ -125,28 +125,10 @@ class OrderController extends FrontendController
      */
     private function _fillAdditionalTemplateData($year, $week)
     {
-        $now = Carbon::now();
-        
-        $stop_day = variable('stop_ordering_date');
-        $stop_time = variable('stop_ordering_time');
-        
         $additional_baskets = Basket::with('recipes')->additional()->positionSorted()->get();
         $this->data('additional_baskets', $additional_baskets);
         
-        $delivery_dates = [];
-        if (
-            $now->dayOfWeek > $stop_day ||
-            ($now->dayOfWeek == $stop_day && $now->format('H:i') >= $stop_time) ||
-            $year > $now->year ||
-            $week > $now->weekOfYear
-        ) {
-            $now->addWeek();
-        }
-        $delivery_dates[] = clone ($now->endOfWeek()->startOfDay());
-        $delivery_dates[] = clone ($now->endOfWeek()->addDay()->endOfDay());
-        $delivery_dates[] = clone ($now->endOfWeek()->startOfDay());
-        $delivery_dates[] = clone ($now->endOfWeek()->addDay()->endOfDay());
-        $this->data('delivery_dates', $delivery_dates);
+        $this->data('delivery_dates', $this->weeklyMenuService->getDeliveryDates($year, $week));
         
         $this->data('delivery_times', config('order.delivery_times'));
         
@@ -175,6 +157,8 @@ class OrderController extends FrontendController
     private function _saveRelationships(Order $model, Request $request)
     {
         $this->orderService->saveRecipes($model, $request->get('basket_id'));
+    
+        $this->orderService->saveMainBasket($model, $request->get('basket_id'), $model->recipes->count());
         
         $this->orderService->saveAdditionalBaskets($model, $request->get('baskets', []));
         

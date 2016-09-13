@@ -70,11 +70,11 @@
                             {!! $order->comment !!}
                         </td>
                         <td>
-                            @lang('labels.main_basket'): {!! $order->getMainBasketName(true) !!}<br>
-                            @if (count($order->baskets))
+                            @lang('labels.main_basket'): {!! $order->main_basket->getName() !!}<br>
+                            @if ($order->additional_baskets->count())
                                 @lang('labels.additional_baskets'):
-                                @foreach($order->baskets as $basket)
-                                    {!! $basket->name !!},
+                                @foreach($order->additional_baskets as $basket)
+                                    {!! $basket->getName() !!},
                                 @endforeach
                             @endif
                         </td>

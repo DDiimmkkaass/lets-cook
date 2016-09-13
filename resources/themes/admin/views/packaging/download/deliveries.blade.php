@@ -67,10 +67,10 @@
                             {!! $order->comment !!}
                         </td>
                         <td style="{!! $background !!}">
-                            {!! $order->getMainBasketName(true) !!}<br>
-                            @if (count($order->baskets))
-                                @foreach($order->baskets as $basket)
-                                    {!! $basket->name !!},
+                            {!! $order->main_basket->getName() !!}<br>
+                            @if ($order->additional_baskets->count())
+                                @foreach($order->additional_baskets as $basket)
+                                    {!! $basket->getName() !!},
                                 @endforeach
                             @endif
                         </td>

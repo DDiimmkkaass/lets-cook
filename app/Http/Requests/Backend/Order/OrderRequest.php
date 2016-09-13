@@ -43,7 +43,7 @@ class OrderRequest extends FormRequest
     public function rules()
     {
         $order = $this->route('order', false);
-        $weekly_menu = $this->weeklyMenuService->getWeeklyMenuByBasketId($this->request->get('basket', 0));
+        $weekly_menu = $this->weeklyMenuService->getWeeklyMenuByBasketId($this->request->get('basket_id', 0));
         
         $rules = [
             'parent_id'        => 'exists:orders,id',

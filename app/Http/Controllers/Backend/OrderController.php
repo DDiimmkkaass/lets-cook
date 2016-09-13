@@ -192,19 +192,12 @@ class OrderController extends BackendController
             $model = Order::with(
                 'ingredients',
                 'ingredients.recipe',
-                'baskets',
+                'main_basket',
+                'additional_baskets',
                 'comments'
             )->findOrFail($id);
             
-            $this->data(
-                'page_title',
-                trans('labels.order').': #'.$model->id.
-                (
-                !$model->editable('admin') ?
-                    '<span class="label label-warning">'.trans('labels.un_editable_order').'</span>' :
-                    ''
-                )
-            );
+            $this->data('page_title', trans('labels.order').': #'.$model->id);
             
             $this->breadcrumbs(trans('labels.order_editing'));
             
@@ -222,7 +215,7 @@ class OrderController extends BackendController
      * Update the specified resource in storage.
      * PUT /order/{id}
      *
-     * @param  int         $id
+     * @param int          $id
      * @param OrderRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -515,16 +508,16 @@ class OrderController extends BackendController
                 ]
             );
         $this->data('recipes', $recipes);
-        
-        $basket = $model->getMainBasket();
-        $this->data('basket', $basket);
-        if ($basket) {
+    
+        if ($model->main_basket) {
+            $basket = $model->main_basket->weekly_menu_basket;
             $baskets = [
                 $basket->id => $basket->basket->name.' ('.
                     trans('labels.portions_lowercase').' '.
                     $basket->portions.')',
             ];
         } else {
+            $basket = null;
             $baskets = ['' => trans('labels.please_select')];
             $weekly_menu = WeeklyMenu::current()->first();
             if ($weekly_menu) {
@@ -535,10 +528,11 @@ class OrderController extends BackendController
                 }
             }
         }
+        $this->data('basket', $basket);
         $this->data('baskets', $baskets);
         
         $this->data('additional_baskets', Basket::additional()->positionSorted()->get());
         
-        $this->data('selected_baskets', $model->baskets->keyBy('id')->toArray());
+        $this->data('selected_baskets', $model->additional_baskets->keyBy('basket_id')->toArray());
     }
 }
