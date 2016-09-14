@@ -64,17 +64,17 @@
                     </tr>
                     @foreach($user['ingredients'] as $ingredients)
                         <tr>
-                            <td>
+                            <td style="width: 50px;">
                                 {!! $ingredients['name'] !!}
                                 @if ($ingredients['repacking']) (@lang('labels.need_repacking')) @endif
                             </td>
-                            <td style="text-align: center">
+                            <td  style="width: 15px; text-align: center">
                                 {!! $ingredients['count'] !!}
                             </td>
-                            <td style="text-align: center">
+                            <td  style="width: 25px; text-align: center">
                                 {!! $ingredients['unit'] !!}
                             </td>
-                            <td style="text-align: center">
+                            <td  style="width: 50px; text-align: center">
                                 {!! $ingredients['recipe'] !!}
                             </td>
                         </tr>
