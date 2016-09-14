@@ -556,13 +556,27 @@ table.dataTable
         width: 90px!important
 
 /*orders-table*/
-/*recipes table*/
 .orders-table
+  .basket-row
+    border-bottom: 1px dotted #c0c0c0
+  tbody
+    td:nth-child(5),
+    td:nth-child(6)
+      text-align: center
   tfoot
     th:nth-child(2)
       width: 200px!important
       .input-sm
         width: 90px!important
+        &:nth-last-of-type
+          float: right
+  .status-changer
+    .change-status
+      margin-right: 15px
+      display: inline-block
+      cursor: pointer
+    .change-status+.change-status
+      margin-right: 0
 
 /*packaging*/
 .repackaging-packaging,

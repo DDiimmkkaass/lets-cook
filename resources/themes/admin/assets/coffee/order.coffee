@@ -84,6 +84,31 @@ Order.getBasketRecipesIngredients = ($basket_select) ->
           message.show response.message, response.status
 
 $(document).on "ready", () ->
+  $('.orders-table').on 'click', '.change-status', (e) ->
+    e.preventDefault()
+
+    data =
+      _token: $(this).data('_token')
+      status: $(this).data('status')
+
+    $.ajax
+      url: '/admin/order/' + $(this).data('order_id') + '/update_status'
+      type: 'POST'
+      dataType: 'json'
+      data: data
+      error: (response) =>
+        processError response
+      success: (response) =>
+        if response.status is 'success'
+          $label = $(this).closest('.status-changer').find('.label')
+          $label.addClass('label-' + $(this).data('status')).text($(this).data('status_label'))
+
+          $(this).closest('.status-changer-buttons').fadeOut()
+
+        message.show response.message, response.status
+
+    return false;
+
   Order.getBasketRecipes($('.order-basket-select'))
 
   Order.getBasketRecipesIngredients($('.order-basket-select'))

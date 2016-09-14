@@ -372,6 +372,14 @@ $router->group(
                 $router->resource('coupon', 'Backend\CouponController');
                 
                 //orders
+                $router->post(
+                    'order/{order_id}/update_status',
+                    [
+                        'middleware' => ['ajax'],
+                        'as'         => 'admin.order.update_status',
+                        'uses'       => 'Backend\OrderController@updateStatus',
+                    ]
+                )->where('order_id', '[0-9]+');
                 $router->get(
                     'order/get-basket-recipes/{basket_id}',
                     [

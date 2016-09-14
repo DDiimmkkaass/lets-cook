@@ -25,7 +25,7 @@ trait AjaxFieldsChangerTrait
      *
      * @param $id
      *
-     * @return json array
+     * @return \Illuminate\Http\JsonResponse
      */
     public function ajaxFieldChange($id)
     {

@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Requests\Backend\Order\OrderCommentCreateRequest;
 use App\Http\Requests\Backend\Order\OrderRequest;
+use App\Http\Requests\Backend\Order\OrderStatusChangeRequest;
 use App\Models\Basket;
 use App\Models\BasketRecipe;
 use App\Models\City;
@@ -254,6 +255,36 @@ class OrderController extends BackendController
             FlashMessages::add("error", trans('messages.update_error'));
             
             return redirect()->back()->withInput();
+        }
+    }
+    
+    /**
+     * @param int                                                       $order_id
+     * @param \App\Http\Requests\Backend\Order\OrderStatusChangeRequest $request
+     *
+     * @return array
+     */
+    public function updateStatus($order_id, OrderStatusChangeRequest $request)
+    {
+        try {
+            $model = Order::findOrFail($order_id);
+            
+            $value = $request->get('status');
+            
+            $model->status = Order::getStatusIdByName($value);
+            $model->save();
+    
+            $this->orderService->addAdminOrderComment($model, trans('messages.changed from orders list'));
+            
+            return [
+                'status'  => 'success',
+                'message' => trans('messages.field_value_successfully_saved'),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
         }
     }
     
@@ -508,7 +539,7 @@ class OrderController extends BackendController
                 ]
             );
         $this->data('recipes', $recipes);
-    
+        
         if ($model->main_basket) {
             $basket = $model->main_basket->weekly_menu_basket;
             $baskets = [

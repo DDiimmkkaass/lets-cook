@@ -13,19 +13,20 @@
                             TablesBuilder::create(['id' => "datatable1", 'class' => "filtered-datatable table table-bordered table-striped table-hover"], ['bStateSave' => true])
                             ->addHead([
                                 ['text' => trans('labels.id')],
-                                ['text' => trans('labels.user')],
-                                ['text' => trans('labels.type')],
-                                ['text' => trans('labels.payment_method')],
-                                ['text' => trans('labels.status')],
-                                ['text' => trans('labels.created_at')],
-                                ['text' => trans('labels.delivery_date')],
-                                ['text' => trans('labels.order_total')],
+                                ['attr' => ['class' => 'col-sm-2'], 'text' => trans('labels.user')],
+                                ['text' => trans('labels.phones')],
+                                ['attr' => ['class' => 'col-sm-2'], 'text' => trans('labels.basket_name').'/'.trans('labels.price')],
+                                ['text' => trans('labels.total_cost')],
+                                ['attr' => ['class' => 'col-sm-1'], 'text' => trans('labels.status')],
+                                ['text' => trans('labels.coupon_simple')],
+                                ['attr' => ['class' => 'col-sm-2'], 'text' => trans('labels.delivery_date')],
+                                ['attr' => ['class' => 'col-sm-2'], 'text' => trans('labels.address').'/'.trans('labels.comments')],
                                 ['text' => trans('labels.actions')]
                             ])
                             ->addFoot([
-                                ['attr' => ['colspan' => 6]],
+                                ['attr' => ['colspan' => 7]],
                                 ['text' => Form::text('datatable_filters[delivery_date_from]', '', ['class' => 'form-control input-sm datatable-filter datatable-date-filter inputmask-birthday datepicker-birthday', 'placeholder' => trans('labels.from')]).' - '.Form::text('datatable_filters[delivery_date_to]', '', ['class' => 'form-control input-sm datatable-filter datatable-date-filter inputmask-birthday datepicker-birthday', 'placeholder' => trans('labels.to')])],
-                                ['attr' => ['colspan' => 2]],
+                                ['attr' => ['colspan' => 1]],
                             ])
                              ->make()
                         !!}

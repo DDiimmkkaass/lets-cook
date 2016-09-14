@@ -21,10 +21,10 @@ use App\Models\WeeklyMenuBasket;
 use Carbon;
 use Datatables;
 use DB;
-use Illuminate\Database\Eloquent\Collection;
 use Exception;
 use FlashMessages;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Sentry;
 
@@ -42,19 +42,22 @@ class OrderService
      */
     public function table(Request $request)
     {
-        $list = Order::select(
-            'id',
-            'full_name',
-            'user_id',
-            'type',
-            'subscribe_period',
-            'payment_method',
-            'status',
-            'created_at',
-            'delivery_date',
-            'delivery_time',
-            'total'
-        );
+        $list = Order::with('user', 'main_basket', 'additional_baskets')
+            ->select(
+                'id',
+                'full_name',
+                'user_id',
+                'phone',
+                'additional_phone',
+                DB::raw('1 as baskets_list'),
+                'total',
+                'status',
+                DB::raw('4 as coupon'),
+                'delivery_date',
+                'delivery_time',
+                'address',
+                'comment'
+            );
         
         $this->_implodeFilters($list, $request);
         
@@ -71,44 +74,37 @@ class OrderService
                 }
             )
             ->editColumn(
-                'type',
+                'phone',
                 function ($model) {
-                    $html = trans('labels.order_type_'.$model->getStringType());
-                    $html .= $model->isSubscribe() ?
-                        ' ('.trans_choice('labels.subscribe_period_label', $model->subscribe_period).')' :
-                        '';
-                    
-                    return $html;
+                    return view('order.datatables.user_phones', ['model' => $model])->render();
                 }
             )
             ->editColumn(
-                'payment_method',
+                'baskets_list',
                 function ($model) {
-                    return trans('labels.payment_method_'.$model->getStringPaymentMethod());
+                    return view('order.datatables.baskets_list', ['model' => $model])->render();
+                }
+            )
+            ->editColumn(
+                'total',
+                function ($model) {
+                    return $model->total.'<br>'.
+                    ($model->paymentMethod('cash') ?
+                        '<div class="red">'.trans('labels.for_courier').'</div>' :
+                        ''
+                    );
                 }
             )
             ->editColumn(
                 'status',
                 function ($model) {
-                    return view(
-                        'partials.datatables.status_label',
-                        [
-                            'status' => $model->getStringStatus(),
-                            'label'  => trans('labels.order_status_'.$model->getStringStatus()),
-                        ]
-                    )->render();
+                    return view('order.datatables.status_changer', ['model' => $model])->render();
                 }
             )
             ->editColumn(
-                'created_at',
+                'coupon',
                 function ($model) {
-                    return view(
-                        'partials.datatables.humanized_date',
-                        [
-                            'date'        => $model->created_at,
-                            'time_format' => 'H:i',
-                        ]
-                    )->render();
+                    return $model->getCouponCode();
                 }
             )
             ->editColumn(
@@ -122,13 +118,13 @@ class OrderService
                         ]
                     )->render();
                     
-                    return '<div class="text-center">'.$model->delivery_time.' '.$html.'<div>';
+                    return '<div class="text-center">'.$html.' '.$model->delivery_time.'<div>';
                 }
             )
             ->editColumn(
-                'total',
+                'address',
                 function ($model) {
-                    return $model->total.' '.currency();
+                    return view('order.datatables.address', ['model' => $model])->render();
                 }
             )
             ->editColumn(
@@ -145,8 +141,12 @@ class OrderService
                 }
             )
             ->setIndexColumn('id')
+            ->removeColumn('user')
+            ->removeColumn('main_basket')
+            ->removeColumn('additional_baskets')
             ->removeColumn('user_id')
-            ->removeColumn('subscribe_period')
+            ->removeColumn('additional_phone')
+            ->removeColumn('comment')
             ->removeColumn('delivery_time')
             ->make();
     }
@@ -286,7 +286,7 @@ class OrderService
         $recipes = isset($input['recipes']) ? $input['recipes'] : [];
         
         $this->_saveRecipes($model, $recipes);
-    
+        
         $this->saveMainBasket($model, $input['basket_id'], $model->recipes->count());
         
         $this->saveAdditionalBaskets($model, isset($input['baskets']) ? $input['baskets'] : []);
@@ -324,13 +324,13 @@ class OrderService
             foreach ($relation as $record) {
                 $tmpl_record = $record->replicate();
                 $tmpl_record->order_id = $tmpl->id;
-
+                
                 $tmpl_record->push();
             }
         }
         
         $this->updatePrices($tmpl);
-    
+        
         $tmpl->total = $tmpl->getTotal();
         $tmpl->save();
         
@@ -464,12 +464,14 @@ class OrderService
                 $recipe_ingredient = $basket_recipe->recipe->home_ingredients->find($recipe_ingredient_id);
                 
                 if ($recipe_ingredient && $recipe_ingredient->ingredient->inSale()) {
-                    $ingredient = new OrderIngredient([
-                        'basket_recipe_id' => $basket_recipe_id,
-                        'ingredient_id'    => $recipe_ingredient->ingredient_id,
-                        'name'             => $recipe_ingredient->ingredient->name,
-                        'count'            => $recipe_ingredient->count,
-                    ]);
+                    $ingredient = new OrderIngredient(
+                        [
+                            'basket_recipe_id' => $basket_recipe_id,
+                            'ingredient_id'    => $recipe_ingredient->ingredient_id,
+                            'name'             => $recipe_ingredient->ingredient->name,
+                            'count'            => $recipe_ingredient->count,
+                        ]
+                    );
                     $ingredient->price = $recipe_ingredient->ingredient->sale_price;
                     
                     $model->ingredients()->save($ingredient);

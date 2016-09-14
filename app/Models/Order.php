@@ -454,6 +454,14 @@ class Order extends Model
     }
     
     /**
+     * @return string
+     */
+    public function getCouponCode()
+    {
+        return empty($this->coupon_id) ? '-' : '+';
+    }
+    
+    /**
      * @param string $permissions
      *
      * @return bool

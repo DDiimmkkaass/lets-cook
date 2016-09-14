@@ -152,4 +152,5 @@ return array (
   'coupon dates helper message' => 'пусто - без ограничений',
   'deleted, because payment was not made on time' => 'Отменен, так как вовремя не было проведено оплату',
   'this action is not allowed any more' => 'Это действие недоступно',
+  'changed from orders list' => 'Изменен менеджером из списка заказов',
 );
