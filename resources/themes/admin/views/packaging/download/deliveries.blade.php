@@ -4,7 +4,7 @@
     <div class="box-body table-responsive no-padding">
         <table class="table table-bordered deliveries-packaging">
             <tbody>
-
+            @php($total = 0)
             @foreach($list as $day => $orders)
                 <tr>
                     <th style="background-color: #3a9a18; height: 20px; vertical-align: bottom" colspan="8">{!! $day !!} ({!! day_of_week($day, 'd-m-Y') !!})</th>
@@ -80,6 +80,8 @@
                         <td style="text-align: center; color: #ff0000; {!! $background !!}">
                             @if ($order->paymentMethod('cash'))
                                 {!! $order->total !!} {!! $currency !!}
+
+                                @php($total += $order->total)
                             @endif
                         </td>
                         <td style="{!! $background !!}">
@@ -89,7 +91,34 @@
                 @endforeach
 
                 <tr><td colspan="10"></td></tr>
+                <tr><td colspan="10"></td></tr>
+                <tr><td colspan="10"></td></tr>
             @endforeach
+
+            <tr><td colspan="10"></td></tr>
+
+            <tr>
+                <td colspan="6" style="text-align: right">@lang('labels.approve')</td>
+                <td></td>
+                <td>@lang('labels.ceo')</td>
+                <td colspan="2"></td>
+            </tr>
+            <tr>
+                <td colspan="7"></td>
+                <td>{!! variable('ceo') !!}</td>
+                <td colspan="2"></td>
+            </tr>
+
+            <tr><td colspan="10"></td></tr>
+            <tr><td colspan="10"></td></tr>
+            <tr><td colspan="10"></td></tr>
+
+            <tr>
+                <td colspan="7"></td>
+                <td colspan="3" style="color: #ff0000; font-size: 17px; border: 1px solid #000000">
+                    @lang('labels.cash_total'): {!! $total !!} {!! $currency !!}
+                </td>
+            </tr>
 
             </tbody>
         </table>
