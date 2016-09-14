@@ -486,6 +486,25 @@
           size: 20000em 70px
           background: url('../images/yellow-bg.png') top left repeat
 
+    &:nth-of-type(5n+1)
+      .more-item__info[data-device='mobile']
+        background-color: $bg-orange-1
+
+    &:nth-of-type(5n+2)
+      .more-item__info[data-device='mobile']
+        background-color: $bg-red-4
+
+    &:nth-of-type(5n+3)
+      .more-item__info[data-device='mobile']
+        background-color: $bg-red-2
+    &:nth-of-type(5n+4)
+      .more-item__info[data-device='mobile']
+        background-color: $bg-orange-2
+
+    &:nth-of-type(5n)
+      .more-item__info[data-device='mobile']
+        background-color: $bg-green-2
+
 .more-item
   cursor: pointer
 
