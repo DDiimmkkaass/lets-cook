@@ -13,9 +13,9 @@
         <table class="table table-bordered repackaging-packaging">
             <tbody>
             <tr class="title">
-                <th class="col-sm-6">{!! trans('labels.categories_&_ingredients') !!}</th>
-                <th class="col-sm-3 text-center">{!! trans('labels.count') !!}</th>
-                <th class="col-sm-3 text-center">{!! trans('labels.unit') !!}</th>
+                <th class="col-sm-6">@lang('labels.categories_&_ingredients') </th>
+                <th class="col-sm-3 text-center">@lang('labels.packaging') </th>
+                <th class="col-sm-3 text-center">@lang('labels.count')(@lang('labels.count_short'))</th>
             </tr>
 
             @foreach($list as $category)
@@ -26,8 +26,8 @@
                 @foreach($category['ingredients'] as $ingredient)
                     <tr>
                         <td>{!! $ingredient['name'] !!}</td>
+                        <td class="text-center">{!! $ingredient['package'] !!} {!! $ingredient['unit_name'] !!}</td>
                         <td class="text-center">{!! $ingredient['count'] !!}</td>
-                        <td class="text-center">{!! $ingredient['unit'] !!}</td>
                     </tr>
                 @endforeach
 

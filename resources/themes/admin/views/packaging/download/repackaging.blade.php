@@ -5,9 +5,9 @@
         <table class="table table-bordered repackaging-packaging">
             <tbody>
             <tr style="background-color: #cccccc">
-                <th>{!! trans('labels.categories_&_ingredients') !!}</th>
-                <th style="text-align: center">{!! trans('labels.count') !!}</th>
-                <th style="text-align: center">{!! trans('labels.unit') !!}</th>
+                <th>@lang('labels.categories_&_ingredients')</th>
+                <th style="text-align: center">@lang('labels.packaging')</th>
+                <th style="text-align: center">@lang('labels.count')(@lang('labels.count_short'))</th>
             </tr>
 
             <tr>
@@ -26,8 +26,8 @@
                 @foreach($category['ingredients'] as $ingredient)
                     <tr>
                         <td>{!! $ingredient['name'] !!}</td>
+                        <td style="text-align: center">{!! $ingredient['package'] !!} {!! $ingredient['unit_name'] !!}</td>
                         <td style="text-align: center">{!! $ingredient['count'] !!}</td>
-                        <td style="text-align: center">{!! $ingredient['unit'] !!}</td>
                     </tr>
                 @endforeach
 

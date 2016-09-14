@@ -13,11 +13,10 @@ use App\Models\Order;
 use App\Models\OrderBasket;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
-use App\Models\Purchase;
 use App\Models\RecipeIngredient;
 use DB;
 use Excel;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection;
 
 /**
  * Class PackagingService
@@ -30,11 +29,19 @@ class PackagingService
      * @param int $year
      * @param int $week
      *
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function repackagingForWeek($year, $week)
     {
-        $ingredients = $this->_getRepackagingIngredients($year, $week);
+        $orders = $this->_getOrders($year, $week)->pluck('id');
+        
+        $recipes = $this->_getOrderedRecipes($orders);
+        
+        $ingredients = $this->_getIngredients($recipes);
+        
+        $ordered_ingredients = $this->_getOrderedIngredients($orders);
+        
+        $ingredients = array_merge($ingredients, $ordered_ingredients);
         
         $categories = $this->_buildCategories($ingredients);
         
@@ -314,32 +321,7 @@ class PackagingService
     }
     
     /**
-     * @param int $year
-     * @param int $week
-     *
-     * @return array
-     */
-    private function _getRepackagingIngredients($year, $week)
-    {
-        $ingredients = Purchase::with('ingredient', 'ingredient.category', 'ingredient.sale_unit')
-            ->JoinIngredient()
-            ->JoinIngredientCategory()
-            ->forWeek($year, $week)
-            ->where('ingredients.repacking', true)
-            ->orderBy('categories.position')
-            ->orderBy('ingredients.name')
-            ->get()
-            ->keyBy(
-                function ($item) {
-                    return $item->ingredient_id.'_'.$item->type;
-                }
-            );
-        
-        return $ingredients;
-    }
-    
-    /**
-     * @param array $orders
+     * @param Collection $orders
      *
      * @return array
      */
@@ -367,7 +349,7 @@ class PackagingService
             ->groupBy('basket_recipes.recipe_id')
             ->orderBy('recipes.name')
             ->get();
-    
+        
         foreach ($_recipes as $recipe) {
             $name = $recipe->recipe->getName();
             
@@ -456,7 +438,7 @@ class PackagingService
     }
     
     /**
-     * @param array $orders
+     * @param Collection $orders
      * @param array $recipes
      */
     private function _addOrderedIngredients($orders, &$recipes)
@@ -503,31 +485,136 @@ class PackagingService
     }
     
     /**
-     * @param array $ingredients
+     * @param array $recipes
      *
      * @return array
+     */
+    private function _getIngredients($recipes = [])
+    {
+        $ingredients = [];
+        
+        $_ingredients = RecipeIngredient::with('ingredient', 'ingredient.category')
+            ->joinIngredient()
+            ->joinIngredientCategory()
+            ->whereIn('recipe_ingredients.recipe_id', array_keys($recipes))
+            ->where('recipe_ingredients.type', RecipeIngredient::getTypeIdByName('normal'))
+            ->where('ingredients.repacking', true)
+            ->groupBy('recipe_ingredients.count')
+            ->get(
+                [
+                    'ingredients.id',
+                    'ingredients.unit_id',
+                    'ingredients.category_id',
+                    'recipe_ingredients.ingredient_id',
+                    'recipe_ingredients.recipe_id',
+                    'recipe_ingredients.type',
+                    'ingredients.name',
+                    DB::raw('categories.name as category_name'),
+                    DB::raw('categories.position as category_position'),
+                    'categories.position',
+                    'recipe_ingredients.count',
+                ]
+            );
+        
+        foreach ($_ingredients as $ingredient) {
+            $id = $ingredient->id.'_'.$ingredient->type;
+            
+            if (!isset($ingredients[$id])) {
+                $ingredients[$id] = [
+                    'name'              => $ingredient->name,
+                    'category_id'       => $ingredient->category_id,
+                    'category_name'     => $ingredient->category_name,
+                    'category_position' => $ingredient->category_position,
+                    'package'           => $ingredient->count,
+                    'count'             => 0,
+                    'unit_name'         => $ingredient->ingredient->unit->name,
+                ];
+            }
+            
+            $ingredients[$id]['count'] += $recipes[$ingredient->recipe_id]['recipes_count'];
+        }
+        
+        return $ingredients;
+    }
+    
+    /**
+     * @param Collection $orders
+     *
+     * @return array
+     */
+    private function _getOrderedIngredients($orders)
+    {
+        $ingredients = [];
+        $type = RecipeIngredient::getTypeIdByName('home');
+        
+        $_ingredients = OrderIngredient::with('ingredient', 'ingredient.category')
+            ->joinIngredient()
+            ->joinIngredientCategory()
+            ->whereIn('order_id', $orders)
+            ->where('ingredients.repacking', true)
+            ->groupBy('order_ingredients.count')
+            ->get(
+                [
+                    'ingredients.id',
+                    'ingredients.sale_unit_id',
+                    'ingredients.category_id',
+                    'order_ingredients.ingredient_id',
+                    'ingredients.name',
+                    DB::raw('categories.name as category_name'),
+                    DB::raw('categories.position as category_position'),
+                    'categories.position',
+                    'order_ingredients.count',
+                ]
+            );
+        
+        foreach ($_ingredients as $ingredient) {
+            $id = $ingredient->id.'_'.$type;
+            
+            if (!isset($ingredients[$id])) {
+                $ingredients[$id] = [
+                    'name'              => $ingredient->name,
+                    'category_id'       => $ingredient->category_id,
+                    'category_name'     => $ingredient->category_name,
+                    'category_position' => $ingredient->category_position,
+                    'package'           => $ingredient->count,
+                    'count'             => 0,
+                    'unit_name'         => $ingredient->ingredient->sale_unit->name,
+                ];
+            }
+            
+            $ingredients[$id]['count']++;
+        }
+        
+        return $ingredients;
+    }
+    
+    /**
+     * @param array $ingredients
+     *
+     * @return \Illuminate\Support\Collection
      */
     private function _buildCategories($ingredients)
     {
         $categories = [];
         
-        foreach ($ingredients as $key => $ingredient) {
-            if (!isset($categories[$ingredient->ingredient->category_id])) {
-                $categories[$ingredient->ingredient->category_id] = [
-                    'name'        => $ingredient->ingredient->category->name,
-                    'position'    => $ingredient->ingredient->category->position,
+        foreach ($ingredients as $ingredient) {
+            if (!isset($categories[$ingredient['category_id']])) {
+                $categories[$ingredient['category_id']] = [
+                    'name'        => $ingredient['category_name'],
+                    'position'    => $ingredient['category_position'],
                     'ingredients' => [],
                 ];
             }
             
-            $categories[$ingredient->category_id]['ingredients'][$key] = [
-                'name'  => $ingredient->ingredient->name,
-                'unit'  => $ingredient->isType('order') ?
-                    $ingredient->ingredient->sale_unit->name :
-                    $ingredient->ingredient->unit->name,
-                'count' => $ingredient->count,
-            ];
+            $categories[$ingredient['category_id']]['ingredients'][] = $ingredient;
         }
+        
+        $categories = collect($categories)->sort(
+            function ($a, $b) {
+                return strnatcmp($a['position'], $b['position'])
+                    ? : strnatcmp($a['name'], $b['name']);
+            }
+        );
         
         return $categories;
     }
