@@ -304,13 +304,13 @@ class OrderController extends BackendController
             
             $recipes->sortBy(
                 function ($item) {
-                    return $item->recipe->name;
+                    return $item->getName();
                 }
             )->each(
                 function ($item, $index) use (&$html) {
                     return $html .= view(
                         'partials.selects.option',
-                        ['item' => ['id' => $item->id, 'name' => $item->recipe->name]]
+                        ['item' => ['id' => $item->id, 'name' => $item->getName()]]
                     )->render();
                 }
             );

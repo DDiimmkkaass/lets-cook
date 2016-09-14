@@ -48,7 +48,7 @@
                             {!! Form::text('recipes[old][' .$recipe->id. '][recipe_id]', $recipe->recipe_id, ['id' => 'recipes.old.' .$recipe->id. '.recipe_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
 
                             {!! Form::hidden('recipes[old][' .$recipe->id. '][basket_recipe_id]', $recipe->basket_recipe_id) !!}
-                            {!! Form::hidden('recipes[old][' .$recipe->id. '][name]', $recipe->name) !!}
+                            {!! Form::hidden('recipes[old][' .$recipe->id. '][name]', $recipe->recipe->getName()) !!}
                         </div>
                     </td>
                     <td>
@@ -56,8 +56,7 @@
                             @if ($recipe->image)
                                 @include('partials.image', ['src' => $recipe->image, 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
                             @endif
-                            {!! link_to_route('admin.recipe.show', $recipe->name, $recipe->recipe_id, ['target' => '_blank']) !!}
-                            <span class="lover-case">(@lang('labels.portions'): {!! $recipe->portions !!})</span>
+                            {!! link_to_route('admin.recipe.show', $recipe->recipe->getName(), $recipe->recipe_id, ['target' => '_blank']) !!}
                         </div>
                     </td>
                     <td class="text-center coll-actions">
@@ -85,12 +84,9 @@
                                     @include('partials.image', ['src' => $recipe['image'], 'attributes' => ['width' => 50, 'class' => 'margin-right-10', 'required' => true]])
                                 @endif
                                 {!! link_to_route('admin.recipe.show', $recipe['name'], $recipe_key, ['target' => '_blank']) !!}
-                                <span class="lover-case">(@lang('labels.portions')
-                                    : {!! $recipe['recipe_portions'] !!})</span>
 
                                 {!! Form::hidden('recipes[new][' .$recipe_key. '][image]', $recipe['image']) !!}
                                 {!! Form::hidden('recipes[new][' .$recipe_key. '][name]', $recipe['name']) !!}
-                                {!! Form::hidden('recipes[new][' .$recipe_key. '][recipe_portions]', $recipe['recipe_portions']) !!}
                             </div>
                         </td>
                         <td class="text-center coll-actions">
