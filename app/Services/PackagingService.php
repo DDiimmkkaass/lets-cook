@@ -345,7 +345,10 @@ class PackagingService
      */
     private function _getOrderedRecipes($orders)
     {
-        $recipes = OrderRecipe::whereIn('order_id', $orders)
+        $recipes = [];
+        
+        $_recipes = OrderRecipe::whereIn('order_id', $orders)
+            ->with('recipe')
             ->joinBasketRecipe()
             ->joinWeeklyMenuBasket()
             ->joinBasket()
@@ -363,9 +366,16 @@ class PackagingService
             )
             ->groupBy('basket_recipes.recipe_id')
             ->orderBy('recipes.name')
-            ->get()
-            ->keyBy('recipe_id')
-            ->toArray();
+            ->get();
+    
+        foreach ($_recipes as $recipe) {
+            $name = $recipe->recipe->getName();
+            
+            $recipes[$recipe->recipe_id] = $recipe->toArray();
+            $recipes[$recipe->recipe_id]['name'] = $name;
+        }
+        
+        unset($_recipes);
         
         $_baskets = OrderBasket::additional()
             ->joinBasket()
@@ -388,7 +398,7 @@ class PackagingService
                         'basket_recipe_id' => $recipe->id,
                         'recipe_id'        => $recipe->recipe_id,
                         'name'             => $recipe->recipe->name,
-                        'position'         => $recipe->position,
+                        'position'         => 0,
                         'portions'         => $recipe->recipe->portions,
                         'recipes_count'    => 0,
                     ];
@@ -436,9 +446,11 @@ class PackagingService
                 ->toArray();
             
             foreach ($ingredients as $ingredient) {
-                $recipes[$key]['packages'][$ingredient['package']][$ingredient['id']] = $ingredient;
+                $package = empty($ingredient['package']) ? 1 : $ingredient['package'];
                 
-                $recipes[$key]['packages'][$ingredient['package']][$ingredient['id']]['total'] = $ingredient['count'] * $recipe['recipes_count'];
+                $recipes[$key]['packages'][$package][$ingredient['id']] = $ingredient;
+                
+                $recipes[$key]['packages'][$package][$ingredient['id']]['total'] = $ingredient['count'] * $recipe['recipes_count'];
             }
         }
     }
@@ -476,6 +488,8 @@ class PackagingService
             );
         
         foreach ($ingredients as $ingredient) {
+            $ingredient['package'] = empty($ingredient['package']) ? 1 : $ingredient['package'];
+            
             if (!isset($recipes[$ingredient->recipe_id]['ingredients'])) {
                 $recipes[$ingredient->recipe_id]['ingredients'] = [];
             }
