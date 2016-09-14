@@ -32,6 +32,7 @@ class CouponService
             'coupons.type',
             'coupons.count',
             'coupons.users_count',
+            'coupons.users_type',
             'coupons.started_at',
             'coupons.expired_at'
         );
@@ -73,8 +74,34 @@ class CouponService
             )
             ->setIndexColumn('id')
             ->removeColumn('users_count')
+            ->removeColumn('users_type')
             ->removeColumn('expired_at')
             ->make();
+    }
+    
+    /**
+     * @param array $input
+     */
+    public function create($input)
+    {
+        if (empty($input['codes'])) {
+            for ($i = 0; $i < $input['create_count']; $i++) {
+                $model = new Coupon($input);
+                $model->code = $this->newCode();
+    
+                $model->save();
+            }
+        } else {
+            $codes = trim(strip_tags($input['codes']));
+            $codes = preg_split('/\r\n|[\r\n]/', $codes);
+            
+            foreach ($codes as $code) {
+                $model = new Coupon($input);
+                $model->code = $code;
+        
+                $model->save();
+            }
+        }
     }
     
     /**

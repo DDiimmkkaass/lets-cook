@@ -32,6 +32,7 @@ class Coupon extends Model
         'discount_type',
         'count',
         'users_count',
+        'users_type',
         'started_at',
         'expired_at',
     ];
@@ -51,6 +52,15 @@ class Coupon extends Model
     protected static $discount_types = [
         'absolute',
         'percentage',
+    ];
+    
+    /**
+     * @var array
+     */
+    protected static $users_types = [
+        'new',
+        'exists',
+        'all',
     ];
     
     /**
@@ -140,6 +150,20 @@ class Coupon extends Model
     }
     
     /**
+     * @return string
+     */
+    public function getStringUsersType()
+    {
+        foreach (self::$users_types as $id => $type) {
+            if ($id == $this->users_type) {
+                return $type;
+            }
+        }
+        
+        return '';
+    }
+    
+    /**
      * @return array
      */
     public static function getTypes()
@@ -153,6 +177,14 @@ class Coupon extends Model
     public static function getDiscountTypes()
     {
         return self::$discount_types;
+    }
+    
+    /**
+     * @return array
+     */
+    public static function getUsersTypes()
+    {
+        return self::$users_types;
     }
     
     /**
@@ -180,6 +212,22 @@ class Coupon extends Model
     {
         foreach (self::$discount_types as $id => $_discount_type) {
             if ($_discount_type == $discount_type) {
+                return $id;
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * @param string $users_type
+     *
+     * @return int|null
+     */
+    public static function getUsersTypeIdByName($users_type)
+    {
+        foreach (self::$users_types as $id => $_users_type) {
+            if ($_users_type == $users_type) {
                 return $id;
             }
         }

@@ -34,6 +34,7 @@ class CouponRequest extends FormRequest
             'discount_type' => 'required|in:'.implode(',', array_keys(Coupon::getDiscountTypes())),
             'count'         => 'required|integer|min:0',
             'users_count'   => 'required|integer|min:0',
+            'users_type'    => 'required|in:'.implode(',', array_keys(Coupon::getUsersTypes())),
             'started_at'    => 'date_format:d-m-Y',
             'expired_at'    => 'date_format:d-m-Y|after:started_at',
         ];
@@ -44,6 +45,12 @@ class CouponRequest extends FormRequest
             $rules['discount'] .= '|integer|max:100';
         } else {
             $rules['discount'] .= '|numeric';
+        }
+    
+        $coupon = $this->route('coupon', null);
+        if (!$coupon) {
+            $rules['create_count'] = 'required_without:codes|integer';
+            $rules['codes'] = 'required_without:create_count';
         }
         
         return $rules;

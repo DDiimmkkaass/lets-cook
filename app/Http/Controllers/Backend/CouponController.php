@@ -69,7 +69,7 @@ class CouponController extends BackendController
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Contracts\View\View
+     * @return array|\Bllim\Datatables\json|\Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
@@ -113,10 +113,7 @@ class CouponController extends BackendController
     public function store(CouponRequest $request)
     {
         try {
-            $model = new Coupon($request->all());
-            $model->code = $this->couponService->newCode();
-            
-            $model->save();
+            $this->couponService->create($request->all());
             
             FlashMessages::add('success', trans('messages.save_ok'));
             
@@ -225,6 +222,9 @@ class CouponController extends BackendController
         return redirect()->route('admin.'.$this->module.'.index');
     }
     
+    /**
+     * fill additional template data
+     */
     private function _fillAdditionalTemplateData()
     {
         $types = [];
@@ -238,5 +238,11 @@ class CouponController extends BackendController
             $discount_types[$id] = trans('labels.discount_discount_type_'.$discount_type);
         }
         $this->data('discount_types', $discount_types);
+    
+        $users_types = [];
+        foreach (Coupon::getUsersTypes() as $id => $users_type) {
+            $users_types[$id] = trans('labels.discount_users_type_'.$users_type);
+        }
+        $this->data('users_types', $users_types);
     }
 }
