@@ -48,36 +48,17 @@ class AppValidator extends Validator
     {
         $this->requireParameterCount(2, $parameters, 'delivery_date_date');
         
-        $stop_day = variable('stop_ordering_date');
-        $stop_time = variable('stop_ordering_time');
-        
         $now = Carbon::now();
         $year = $parameters[0];
         $week = $parameters[1];
-        
-        if ($year > Carbon::now()->startOfWeek()->year || $week > Carbon::now()->startOfWeek()->weekOfYear) {
-            return true;
-        }
-        
+    
         $delivery_date = Carbon::createFromFormat('d-m-Y', $value)->startOfDay();
         
-        if ($now->dayOfWeek >= 1 && $now->dayOfWeek < $stop_day) {
+        if (before_week_closing($year, $week)) {
             return $delivery_date > $now->startOfDay();
         }
         
-        if ($now->dayOfWeek == $stop_day) {
-            $now_time = $now->format('H:i');
-            
-            if ($now_time < $stop_time) {
-                return $delivery_date > $now->startOfDay();
-            }
-        }
-        
-        if ($now->dayOfWeek >= $stop_day || $now->dayOfWeek == 0) {
-            return $delivery_date >= $now->startOfDay()->addWeek();
-        };
-        
-        return true;
+        return $delivery_date >= $now->addWeek()->startOfDay();
     }
     
     /**
