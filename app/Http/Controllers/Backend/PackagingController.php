@@ -182,7 +182,6 @@ class PackagingController extends BackendController
                 'html'   => $html,
             ];
         } catch (Exception $e) {
-            dd('message: ' . $e->getMessage() . ', line: ' . $e->getLine() . ', file: ' . $e->getFile());
             return [
                 'status'  => 'error',
                 'message' => trans('messages.an error has occurred, please reload the page and try again'),
