@@ -814,6 +814,7 @@ if (!function_exists('before_finalisation')) {
     function before_finalisation($year, $week)
     {
         $now = Carbon::now()->startOfWeek();
+        $day_of_week = Carbon::now()->dayOfWeek;
         
         if (
             ($year > $now->year)
@@ -827,18 +828,18 @@ if (!function_exists('before_finalisation')) {
                     (
                         variable('finalising_reports_date') > 0 &&
                         (
-                            $now->dayOfWeek < variable('finalising_reports_date') &&
-                            $now->dayOfWeek > 0
+                            $day_of_week < variable('finalising_reports_date') &&
+                            $day_of_week > 0
                         )
                     )
                     ||
                     (
                         variable('finalising_reports_date') == 0 &&
-                        $now->dayOfWeek > 0
+                        $day_of_week > 0
                     )
                     ||
                     (
-                        $now->dayOfWeek == variable('finalising_reports_date') &&
+                        $day_of_week == variable('finalising_reports_date') &&
                         $now->format('H:i') < variable('finalising_reports_time')
                     )
                 )
@@ -864,6 +865,56 @@ if (!function_exists('after_finalisation')) {
     }
 }
 
+if (!function_exists('before_week_closing')) {
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return bool
+     */
+    function before_week_closing($year, $week)
+    {
+        $stop_day = variable('stop_ordering_date');
+        $stop_time = variable('stop_ordering_time');
+    
+        $now = Carbon::now()->startOfWeek();
+        $day_of_week = Carbon::now()->dayOfWeek;
+    
+        if (future_week($year, $week)) {
+            return true;
+        }
+        
+        if ($year == $now->year && $week == $now->weekOfYear) {
+            if ($day_of_week >= 1 && ($day_of_week < $stop_day || $stop_day == 0)) {
+                return true;
+            }
+    
+            if ($day_of_week == $stop_day) {
+                $now_time = Carbon::now()->format('H:i');
+        
+                if ($now_time < $stop_time) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+}
+
+if (!function_exists('after_week_closing')) {
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return bool
+     */
+    function after_week_closing($year, $week)
+    {
+        return !before_week_closing($year, $week);
+    }
+}
+
 if (!function_exists('past_week')) {
     /**
      * @param int $year
@@ -875,11 +926,26 @@ if (!function_exists('past_week')) {
     {
         $now = Carbon::now()->startOfWeek();
         
-        if ($year < $now->year) {
+        if ($year < $now->year || ($year == $now->year && $week < $now->weekOfYear)) {
             return true;
         }
         
-        if ($year == $now->year && $week < $now->weekOfYear) {
+        return false;
+    }
+}
+
+if (!function_exists('future_week')) {
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return bool
+     */
+    function future_week($year, $week)
+    {
+        $now = Carbon::now()->startOfWeek();
+        
+        if ($year > $now->year || ($year == $now->year && $week > $now->weekOfYear)) {
             return true;
         }
         

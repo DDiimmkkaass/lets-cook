@@ -624,7 +624,7 @@ return array (
   'un_editable_order' => 'Заказ не редактируется',
   'places_count_choice' => '{0} мест|{1} место|[2,4] места|[5,Inf] мест',
   'purchase_for_week' => 'Закупка на неделю',
-  'this_is_not_final_version' => 'Это не финальная версия отчёта',
+  'this_is_not_final_version' => 'НЕ ФИНАЛЬНАЯ ВЕРСИЯ ОТЧЁТА',
   'not_final_version' => 'НЕ ФИНАЛЬНАЯ ВЕРСИЯ ОТЧЁТА',
   'generate_report' => 'Сгенерировать отчёт c заказов',
   'back_ro_list' => 'Вернуться к листу',
@@ -643,4 +643,5 @@ return array (
   'make_order_paid' => 'Подтвердить заказ(назначить статус оплачен)',
   'make_order_deleted' => 'Отменить заказ(назначить статус удален)',
   'count_short' => 'шт.',
+  'tab_stickers' => 'Стикеры',
 );

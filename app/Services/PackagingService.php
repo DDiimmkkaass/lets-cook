@@ -212,7 +212,7 @@ class PackagingService
         $data = $this->repackagingForWeek($year, $week);
         
         return Excel::create(
-            trans('labels.tab_repackaging').' '.trans('labels.w_label').$week.', '.$year,
+            $this->_getFileName($year, $week, 'repackaging'),
             function ($excel) use ($data, $year, $week) {
                 $excel->sheet(
                     trans('labels.ingredients_which_need_repackaging'),
@@ -235,11 +235,11 @@ class PackagingService
         $data = $this->recipesForWeek($year, $week);
         
         return Excel::create(
-            trans('labels.tab_packaging_recipes').' '.trans('labels.w_label').$week.', '.$year,
+            $this->_getFileName($year, $week, 'packaging_recipes'),
             function ($excel) use ($data, $year, $week) {
                 foreach ($data as $recipe) {
                     $sheet = get_excel_sheet_name($recipe['name']);
-                    
+            
                     $excel->sheet(
                         $sheet,
                         function ($sheet) use ($recipe) {
@@ -262,7 +262,7 @@ class PackagingService
         $list = $this->stickersForWeek($year, $week);
         
         return Excel::create(
-            trans('labels.stickers').' '.trans('labels.w_label').$week.', '.$year,
+            $this->_getFileName($year, $week, 'stickers'),
             function ($excel) use ($list, $year, $week) {
                 $excel->sheet(
                     trans('labels.stickers'),
@@ -285,7 +285,7 @@ class PackagingService
         $data = $this->usersForWeek($year, $week);
         
         return Excel::create(
-            trans('labels.tab_packaging_users').' '.trans('labels.w_label').$week.', '.$year,
+            $this->_getFileName($year, $week, 'packaging_recipes'),
             function ($excel) use ($data, $year, $week) {
                 $excel->sheet(
                     trans('labels.users'),
@@ -308,7 +308,7 @@ class PackagingService
         $data = $this->deliveriesForWeek($year, $week);
         
         return Excel::create(
-            trans('labels.tab_packaging_deliveries').' '.trans('labels.w_label').$week.', '.$year,
+            $this->_getFileName($year, $week, 'packaging_deliveries'),
             function ($excel) use ($data, $year, $week) {
                 $excel->sheet(
                     trans('labels.deliveries'),
@@ -439,7 +439,7 @@ class PackagingService
     
     /**
      * @param Collection $orders
-     * @param array $recipes
+     * @param array      $recipes
      */
     private function _addOrderedIngredients($orders, &$recipes)
     {
@@ -628,9 +628,34 @@ class PackagingService
      */
     private function _getOrders($year, $week, $with = [])
     {
-        return Order::ofStatus(past_week($year, $week) ? 'archived' : 'processed')
-            ->with($with)
-            ->forWeek($year, $week)
-            ->get();
+        $status = 'processed';
+        
+        if (past_week($year, $week)) {
+            $status = 'archived';
+        }
+        
+        if (before_week_closing($year, $week)) {
+            $status = 'paid';
+        }
+        
+        return Order::ofStatus($status)->with($with)->forWeek($year, $week)->get();
+    }
+    
+    /**
+     * @param int    $year
+     * @param int    $week
+     * @param string $type
+     *
+     * @return string
+     */
+    private function _getFileName($year, $week, $type)
+    {
+        $file_name = trans('labels.tab_'.$type).' '.trans('labels.w_label').$week.', '.$year;
+        
+        if (before_week_closing($year, $week)) {
+            return trans('labels.this_is_not_final_version').'. '.$file_name;
+        }
+        
+        return $file_name;
     }
 }

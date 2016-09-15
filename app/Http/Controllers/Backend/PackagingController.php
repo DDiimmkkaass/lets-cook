@@ -131,10 +131,11 @@ class PackagingController extends BackendController
         
         $this->data('year', $year);
         $this->data('week', $week);
-        
-        $this->data('page_title', trans('labels.list_of_packaging').': '.trans('labels.w_label').$week.', '.$year);
-        
-        $this->breadcrumbs(trans('labels.list_of_packaging').': '.trans('labels.w_label').$week.', '.$year);
+    
+        $page_title = $this->_getPageTitle($year, $week);
+    
+        $this->data('page_title', $page_title);
+        $this->breadcrumbs($page_title);
         
         return $this->render('views.'.$this->module.'.show');
     }
@@ -150,9 +151,10 @@ class PackagingController extends BackendController
         $this->data('year', $year);
         $this->data('week', $week);
         
-        $this->data('page_title', trans('labels.for_current_week').': '.trans('labels.w_label').$week.', '.$year);
+        $page_title = $this->_getPageTitle($year, $week, true);
         
-        $this->breadcrumbs(trans('labels.for_current_week').': '.trans('labels.w_label').$week.', '.$year);
+        $this->data('page_title', $page_title);
+        $this->breadcrumbs($page_title);
         
         return $this->render('views.'.$this->module.'.show');
     }
@@ -209,5 +211,29 @@ class PackagingController extends BackendController
             
             return redirect()->route('admin.'.$this->module.'.show', [$year, $week]);
         }
+    }
+    
+    /**
+     * @param int  $year
+     * @param int  $week
+     * @param bool $current
+     *
+     * @return string
+     */
+    private function _getPageTitle($year, $week, $current = false)
+    {
+        if ($current) {
+            $title = trans('labels.for_current_week').': '.trans('labels.w_label').$week.', '.$year;
+        } else {
+            $title = trans('labels.list_of_packaging').': '.trans('labels.w_label').$week.', '.$year;
+        }
+    
+        if (before_week_closing($year, $week)) {
+            $title .= '<span class="label label-danger warning-labels">'.
+                trans('labels.this_is_not_final_version').
+                '</span>';
+        }
+        
+        return $title;
     }
 }
