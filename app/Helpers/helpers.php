@@ -840,7 +840,7 @@ if (!function_exists('before_finalisation')) {
                     ||
                     (
                         $day_of_week == variable('finalising_reports_date') &&
-                        $now->format('H:i') < variable('finalising_reports_time')
+                        Carbon::now()->format('H:i') < variable('finalising_reports_time')
                     )
                 )
             )
