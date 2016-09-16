@@ -27,7 +27,7 @@
                                         </h3>
                                     </a>
                                 </li>
-                                @continue($key >= 4)
+                                @break($key >= 4)
                             @endforeach
                         </ul>
 
@@ -54,7 +54,7 @@
                                         </h3>
                                     </a>
                                 </li>
-                                @continue($key >= 4)
+                                @break($key >= 4)
                             @endforeach
                         </ul>
 
