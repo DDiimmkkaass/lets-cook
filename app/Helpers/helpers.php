@@ -813,6 +813,8 @@ if (!function_exists('before_finalisation')) {
      */
     function before_finalisation($year, $week)
     {
+        $week--;
+        
         $now = Carbon::now()->startOfWeek();
         $day_of_week = Carbon::now()->dayOfWeek;
         
@@ -874,6 +876,8 @@ if (!function_exists('before_week_closing')) {
      */
     function before_week_closing($year, $week)
     {
+        $week--;
+        
         $stop_day = variable('stop_ordering_date');
         $stop_time = variable('stop_ordering_time');
     
@@ -924,9 +928,9 @@ if (!function_exists('past_week')) {
      */
     function past_week($year, $week)
     {
-        $now = Carbon::now()->startOfWeek();
+        $dt = Carbon::now()->startOfWeek();
         
-        if ($year < $now->year || ($year == $now->year && $week < $now->weekOfYear)) {
+        if ($year < $dt->year || ($year == $dt->year && $week < $dt->weekOfYear)) {
             return true;
         }
         
@@ -943,9 +947,9 @@ if (!function_exists('future_week')) {
      */
     function future_week($year, $week)
     {
-        $now = Carbon::now()->startOfWeek();
+        $dt = Carbon::now()->startOfWeek();
         
-        if ($year > $now->year || ($year == $now->year && $week > $now->weekOfYear)) {
+        if ($year > $dt->year || ($year == $dt->year && $week > $dt->weekOfYear)) {
             return true;
         }
         

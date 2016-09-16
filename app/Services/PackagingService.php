@@ -637,7 +637,7 @@ class PackagingService
         if (before_week_closing($year, $week)) {
             $status = 'paid';
         }
-        
+    
         return Order::ofStatus($status)->with($with)->forWeek($year, $week)->get();
     }
     
@@ -652,7 +652,7 @@ class PackagingService
     {
         $file_name = trans('labels.tab_'.$type).' '.trans('labels.w_label').$week.', '.$year;
         
-        if (before_week_closing($year, $week)) {
+        if (before_finalisation($year, $week)) {
             return trans('labels.this_is_not_final_version').'. '.$file_name;
         }
         

@@ -119,11 +119,9 @@ class PurchaseController extends BackendController
      */
     public function show($year, $week)
     {
-        if (
-            $year > Carbon::now()->startOfWeek()->year
-            ||
-            ($year == Carbon::now()->startOfWeek()->year && $week >= Carbon::now()->startOfWeek()->weekOfYear)
-        ) {
+        $dt = Carbon::now()->addWeek()->startOfWeek();
+        
+        if ($year > $dt->year || ($year == $dt->year && $week > $dt->weekOfYear)) {
             return redirect()->route('admin.'.$this->module.'.edit', [$year, $week]);
         }
         
@@ -148,7 +146,7 @@ class PurchaseController extends BackendController
     {
         $now = Carbon::now()->startOfWeek();
         
-        if ($year < $now->year || ($year == $now->year && $week < $now->weekOfYear)) {
+        if ($year < $now->year || ($year == $now->year && $week <= $now->weekOfYear)) {
             return redirect()->route('admin.'.$this->module.'.show', [$year, $week]);
         }
         

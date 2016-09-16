@@ -34,8 +34,8 @@ class PurchaseService
     public function generate()
     {
         $list = [
-            'year' => Carbon::now()->startOfWeek()->year,
-            'week' => Carbon::now()->startOfWeek()->weekOfYear,
+            'year' => Carbon::now()->addWeek()->startOfWeek()->year,
+            'week' => Carbon::now()->addWeek()->startOfWeek()->weekOfYear,
         ];
         
         $list['suppliers'] = $this->_getSuppliers();

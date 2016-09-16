@@ -392,7 +392,7 @@ class RecipeService
         return WeeklyMenu::joinWeeklyMenuBaskets()
             ->joinBasketRecipes()
             ->whereNotNull('basket_recipes.weekly_menu_basket_id')
-            ->where('week', '>=', Carbon::now()->weekOfYear)
+            ->where('week', '>', Carbon::now()->weekOfYear)
             ->where('basket_recipes.recipe_id', $recipe_id)
             ->groupBy('weekly_menus.id')
             ->get(empty($select) ? ['weekly_menus.*'] : $select);

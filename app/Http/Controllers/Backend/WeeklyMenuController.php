@@ -103,7 +103,7 @@ class WeeklyMenuController extends BackendController
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Illuminate\Contracts\View\View
+     * @return array|\Bllim\Datatables\json|\Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
@@ -158,8 +158,8 @@ class WeeklyMenuController extends BackendController
         $model = new WeeklyMenu();
         
         if (session('current_week_menu', false)) {
-            $model->week = Carbon::now()->startOfWeek()->weekOfYear;
-            $model->year = Carbon::now()->startOfWeek()->year;
+            $model->week = Carbon::now()->addWeek()->startOfWeek()->weekOfYear;
+            $model->year = Carbon::now()->addWeek()->startOfWeek()->year;
             
             session()->forget('current_week_menu');
         }

@@ -151,23 +151,12 @@ class WeeklyMenuService
      */
     public function getDeliveryDates($year, $week)
     {
-        $now = Carbon::now();
-    
-        $stop_day = variable('stop_ordering_date');
-        $stop_time = variable('stop_ordering_time');
+        $dt = Carbon::create($year, 1, 1, 0, 0, 0)->addWeek($week - 1);
         
-        if (
-            $now->dayOfWeek > $stop_day ||
-            ($now->dayOfWeek == $stop_day && $now->format('H:i') >= $stop_time) ||
-            $year > $now->year ||
-            $week > $now->weekOfYear
-        ) {
-            $now->addWeek();
-        }
-        $delivery_dates[] = clone ($now->endOfWeek()->startOfDay());
-        $delivery_dates[] = clone ($now->endOfWeek()->addDay()->endOfDay());
-        $delivery_dates[] = clone ($now->endOfWeek()->startOfDay());
-        $delivery_dates[] = clone ($now->endOfWeek()->addDay()->endOfDay());
+        $delivery_dates[] = clone ($dt->endOfWeek()->startOfDay());
+        $delivery_dates[] = clone ($dt->endOfWeek()->addDay()->endOfDay());
+        $delivery_dates[] = clone ($dt->endOfWeek()->startOfDay());
+        $delivery_dates[] = clone ($dt->endOfWeek()->addDay()->endOfDay());
         
         return $delivery_dates;
     }

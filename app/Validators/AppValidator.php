@@ -48,17 +48,16 @@ class AppValidator extends Validator
     {
         $this->requireParameterCount(2, $parameters, 'delivery_date_date');
         
-        $now = Carbon::now();
         $year = $parameters[0];
         $week = $parameters[1];
     
         $delivery_date = Carbon::createFromFormat('d-m-Y', $value)->startOfDay();
         
         if (before_week_closing($year, $week)) {
-            return $delivery_date > $now->startOfDay();
+            return $delivery_date > Carbon::now()->startOfDay();
         }
         
-        return $delivery_date >= $now->addWeek()->startOfDay();
+        return $delivery_date >= Carbon::now()->addWeek()->startOfDay();
     }
     
     /**
@@ -72,19 +71,13 @@ class AppValidator extends Validator
     {
         $this->requireParameterCount(2, $parameters, 'max_delivery_date_date');
         
-        $dt = Carbon::now()->startOfWeek();
         $year = $parameters[0];
         $week = $parameters[1];
-        
-        if ($year > $dt->year || $week > $dt->weekOfYear) {
-            $dt->addWeek();
-        }
-        
-        $max_date = $dt->endOfWeek()->addDay()->addWeek()->endOfDay();
-        
+    
         $delivery_date = Carbon::createFromFormat('d-m-Y', $value)->startOfDay();
+        $dt = Carbon::create($year, 1, 1, 0, 0, 0)->addWeek($week + 1)->startOfWeek()->endOfDay();
         
-        return $delivery_date <= $max_date;
+        return $delivery_date <= $dt;
     }
     
     /**
@@ -98,17 +91,13 @@ class AppValidator extends Validator
     {
         $this->requireParameterCount(2, $parameters, 'min_delivery_date_date');
         
-        $dt = Carbon::now()->startOfWeek();
         $year = $parameters[0];
         $week = $parameters[1];
         
-        if ($year > $dt->year || $week > $dt->weekOfYear) {
-            $dt->addWeek();
-        }
-        
         $delivery_date = Carbon::createFromFormat('d-m-Y', $value)->startOfDay();
+        $dt = Carbon::create($year, 1, 1, 0, 0, 0)->addWeek($week)->startOfWeek()->subDay()->startOfDay();
         
-        return $delivery_date > $dt;
+        return $delivery_date >= $dt;
     }
     
     /**

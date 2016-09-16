@@ -125,7 +125,11 @@ class PackagingController extends BackendController
      */
     public function show($year, $week)
     {
-        if ($year == Carbon::now()->startOfWeek()->year && $week == Carbon::now()->startOfWeek()->weekOfYear) {
+        if (
+            $year == Carbon::now()->addWeek()->startOfWeek()->year
+            &&
+            $week == Carbon::now()->addWeek()->startOfWeek()->weekOfYear
+        ) {
             return redirect()->route('admin.'.$this->module.'.current');
         }
         
@@ -145,8 +149,8 @@ class PackagingController extends BackendController
      */
     public function current()
     {
-        $week = Carbon::now()->startOfWeek()->weekOfYear;
-        $year = Carbon::now()->startOfWeek()->year;
+        $year = Carbon::now()->addWeek()->startOfWeek()->year;
+        $week = Carbon::now()->addWeek()->startOfWeek()->weekOfYear;
         
         $this->data('year', $year);
         $this->data('week', $week);
@@ -228,7 +232,7 @@ class PackagingController extends BackendController
             $title = trans('labels.list_of_packaging').': '.trans('labels.w_label').$week.', '.$year;
         }
     
-        if (before_week_closing($year, $week)) {
+        if (before_finalisation($year, $week)) {
             $title .= '<span class="label label-danger warning-labels">'.
                 trans('labels.this_is_not_final_version').
                 '</span>';
