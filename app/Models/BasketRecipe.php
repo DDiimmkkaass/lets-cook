@@ -113,7 +113,7 @@ class BasketRecipe extends Model
     {
         $basket = empty($this->basket_id) ? $this->weekly_menu_basket : $this->basket;
         
-        return str_limit(str_slug($basket->getName()), 3, '').''.
+        return $basket->getCode().''.
         $this->position.'-'.
         $this->recipe->name.'-'.
         (empty($this->basket_id) ? $this->weekly_menu_basket->portions : $this->recipe->portions);

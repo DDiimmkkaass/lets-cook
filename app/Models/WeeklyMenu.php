@@ -95,6 +95,18 @@ class WeeklyMenu extends Model
     }
     
     /**
+     * @param     $query
+     * @param int $year
+     * @param int $week
+     *
+     * @return mixed
+     */
+    public function scopeForWeek($query, $year, $week)
+    {
+        return $query->where('year', '=', $year)->where('week', '=', $week);
+    }
+    
+    /**
      * @param $query
      *
      * @return mixed
@@ -103,7 +115,7 @@ class WeeklyMenu extends Model
     {
         $dt = active_week_menu_week();
         
-        return $query->where('year', '=', $dt->year)->where('week', '=', $dt->weekOfYear);
+        return $query->forWeek($dt->year, $dt->weekOfYear);
     }
     
     /**
@@ -114,8 +126,8 @@ class WeeklyMenu extends Model
     public function scopeNext($query)
     {
         $dt = active_week_menu_week()->addWeek();
-        
-        return $query->where('year', '=', $dt->year)->where('week', '=', $dt->weekOfYear);
+    
+        return $query->forWeek($dt->year, $dt->weekOfYear);
     }
     
     /**

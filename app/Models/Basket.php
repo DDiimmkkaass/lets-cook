@@ -245,6 +245,14 @@ class Basket extends Model
     /**
      * @return string
      */
+    public function getCode()
+    {
+        return str_limit(str_slug($this->getName()), 3, '');
+    }
+    
+    /**
+     * @return string
+     */
     public function getImage()
     {
         return $this->image;
