@@ -520,14 +520,29 @@ class RecipeService
      */
     public function activeBaskets(Recipe $model)
     {
-        $now = Carbon::now()->startOfWeek();
-        
         return WeeklyMenuBasket::with('basket')
             ->joinWeeklyMenu()
             ->joinBasket()
             ->joinBasketRecipes()
-            ->where('weekly_menus.year', $now->year)
-            ->where('weekly_menus.week', $now->weekOfYear)
+            ->where(
+                function ($query) {
+                    $query->where(
+                        function ($query)  {
+                            $dt = Carbon::now()->addWeek()->startOfWeek();
+                            
+                            $query->where('weekly_menus.year', '=', $dt->year)
+                                ->where('weekly_menus.week', '=', $dt->weekOfYear);
+                        }
+                    )->orWhere(
+                        function ($query) {
+                            $dt = Carbon::now()->addWeeks(2)->startOfWeek();
+                            
+                            $query->where('weekly_menus.year', '=', $dt->year)
+                                ->where('weekly_menus.week', '=', $dt->weekOfYear);
+                        }
+                    );
+                }
+            )
             ->where('basket_recipes.recipe_id', $model->id)
             ->whereNotNull('basket_recipes.weekly_menu_basket_id')
             ->groupBy('weekly_menu_baskets.basket_id')
