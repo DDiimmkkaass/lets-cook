@@ -113,20 +113,7 @@ class WeeklyMenuService
      */
     public function checkActiveWeeksBasket($basket_id)
     {
-        if (!WeeklyMenu::joinWeeklyMenuBaskets()->where(
-            function ($query) {
-                $query->where(
-                    function ($query) {
-                        $query->current();
-                    }
-                )->orWhere(
-                    function ($query) {
-                        $query->next();
-                    }
-                );
-            }
-        )->where('weekly_menu_baskets.id', $basket_id)->first()
-        ) {
+        if (!WeeklyMenu::joinWeeklyMenuBaskets()->active()->where('weekly_menu_baskets.id', $basket_id)->first()) {
             return false;
         }
         

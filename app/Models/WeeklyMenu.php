@@ -79,7 +79,7 @@ class WeeklyMenu extends Model
      */
     public function isCurrentWeekMenu()
     {
-        $dt = Carbon::now()->addWeek()->startOfWeek();
+        $dt = active_week_menu_week();
         
         return $this->year == $dt->year && $this->week == $dt->weekOfYear;
     }
@@ -89,8 +89,8 @@ class WeeklyMenu extends Model
      */
     public function old()
     {
-        $dt = Carbon::now()->addWeek()->startOfWeek();
-        
+        $dt = active_week_menu_week();
+    
         return $this->year <= $dt->year && $this->week < $dt->weekOfYear;
     }
     
@@ -101,10 +101,9 @@ class WeeklyMenu extends Model
      */
     public function scopeCurrent($query)
     {
-        $dt = Carbon::now()->addWeek()->startOfWeek();
-        
-        return $query->where('year', '=', $dt->year)
-            ->where('week', '=', $dt->weekOfYear);
+        $dt = active_week_menu_week();
+    
+        return $query->where('year', '=', $dt->year)->where('week', '=', $dt->weekOfYear);
     }
     
     /**
@@ -114,10 +113,31 @@ class WeeklyMenu extends Model
      */
     public function scopeNext($query)
     {
-        $dt = Carbon::now()->addWeeks(2)->startOfWeek();
+        $dt = active_week_menu_week()->addWeek();
         
-        return $query->where('year', '=', $dt->year)
-            ->where('week', '=', $dt->weekOfYear);
+        return $query->where('year', '=', $dt->year)->where('week', '=', $dt->weekOfYear);
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeActive($query)
+    {
+        return $query->where(
+            function ($query) {
+                $query->where(
+                    function ($query) {
+                        $query->current();
+                    }
+                )->orWhere(
+                    function ($query) {
+                        $query->next();
+                    }
+                );
+            }
+        );
     }
     
     /**
@@ -128,6 +148,21 @@ class WeeklyMenu extends Model
     public function scopeJoinWeeklyMenuBaskets($query)
     {
         return $query->leftJoin('weekly_menu_baskets', 'weekly_menu_baskets.weekly_menu_id', '=', 'weekly_menus.id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinBaskets($query)
+    {
+        return $query->leftJoin(
+            'baskets',
+            'baskets.id',
+            '=',
+            'weekly_menu_baskets.basket_id'
+        );
     }
     
     /**

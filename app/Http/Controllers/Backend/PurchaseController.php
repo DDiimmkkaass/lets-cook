@@ -119,7 +119,7 @@ class PurchaseController extends BackendController
      */
     public function show($year, $week)
     {
-        $dt = Carbon::now()->addWeek()->startOfWeek();
+        $dt = active_week();
         
         if ($year > $dt->year || ($year == $dt->year && $week > $dt->weekOfYear)) {
             return redirect()->route('admin.'.$this->module.'.edit', [$year, $week]);

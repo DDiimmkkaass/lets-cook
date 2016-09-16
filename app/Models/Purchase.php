@@ -100,7 +100,7 @@ class Purchase extends Model
      */
     public function scopeForCurrentWeek($query)
     {
-        $dt = Carbon::now()->addWeek()->startOfWeek();
+        $dt = active_week();
         
         return $query->forWeek($dt->year, $dt->weekOfYear);
     }
@@ -171,7 +171,7 @@ class Purchase extends Model
      */
     public function isCurrentWeek()
     {
-        $now = Carbon::now()->addWeek()->startOfWeek();
+        $now = active_week();
         
         return $this->year == $now->year && $this->week == $now->weekOfYear;
     }

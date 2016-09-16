@@ -199,7 +199,7 @@
             @endif
             @if ($user->hasAccess('purchase.read'))
                 <li class="{!! active_class('admin.purchase.edit') !!}">
-                    <a href="{!! route('admin.purchase.edit', [Carbon::now()->addWeek()->year, Carbon::now()->addWeek()->weekOfYear]) !!}">
+                    <a href="{!! route('admin.purchase.edit', [active_week()->year, active_week()->weekOfYear]) !!}">
                         <i class="fa fa-list-ol"></i>
                         <span>@lang('labels.list_of_purchasing')</span>
                     </a>

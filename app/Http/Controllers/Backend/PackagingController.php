@@ -126,9 +126,9 @@ class PackagingController extends BackendController
     public function show($year, $week)
     {
         if (
-            $year == Carbon::now()->addWeek()->startOfWeek()->year
+            $year == active_week()->year
             &&
-            $week == Carbon::now()->addWeek()->startOfWeek()->weekOfYear
+            $week == active_week()->weekOfYear
         ) {
             return redirect()->route('admin.'.$this->module.'.current');
         }
@@ -149,8 +149,8 @@ class PackagingController extends BackendController
      */
     public function current()
     {
-        $year = Carbon::now()->addWeek()->startOfWeek()->year;
-        $week = Carbon::now()->addWeek()->startOfWeek()->weekOfYear;
+        $year = active_week()->year;
+        $week = active_week()->weekOfYear;
         
         $this->data('year', $year);
         $this->data('week', $week);

@@ -956,3 +956,29 @@ if (!function_exists('future_week')) {
         return false;
     }
 }
+
+if (!function_exists('active_week')) {
+    /**
+     * @return Carbon
+     */
+    function active_week()
+    {
+        return Carbon::now()->addWeek()->startOfWeek();
+    }
+}
+
+if (!function_exists('active_week_menu_week')) {
+    /**
+     * @return Carbon
+     */
+    function active_week_menu_week()
+    {
+        $dt = active_week();
+    
+        if (after_week_closing($dt->year, $dt->weekOfYear)) {
+            $dt->addWeek();
+        }
+        
+        return $dt;
+    }
+}
