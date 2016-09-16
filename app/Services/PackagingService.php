@@ -379,7 +379,7 @@ class PackagingService
                         'basket_name'      => $basket->getName(),
                         'basket_recipe_id' => $recipe->id,
                         'recipe_id'        => $recipe->recipe_id,
-                        'name'             => $recipe->recipe->name,
+                        'name'             => $recipe->getName(),
                         'position'         => 0,
                         'portions'         => $recipe->recipe->portions,
                         'recipes_count'    => 0,

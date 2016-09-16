@@ -1,4 +1,4 @@
-<tr id="recipe_{!! $model->id !!}">
+<tr class="recipe-row" id="recipe_{!! $model->id !!}">
     <td>
         <div class="form-group">
             <input type="text" class="form-control input-sm" name="recipes[new][{!! $model->id !!}][recipe_id]"
@@ -21,9 +21,11 @@
     </td>
     <td>
         <div class="form-group">
-            <input type="text" class="form-control input-sm" name="recipes[new][{!! $model->id !!}][position]"
+            <input type="text"
+                   class="form-control input-sm position-input"
+                   name="recipes[new][{!! $model->id !!}][position]"
                    required="required"
-                   value="0">
+                   value="1">
         </div>
     </td>
     <td class="text-center">

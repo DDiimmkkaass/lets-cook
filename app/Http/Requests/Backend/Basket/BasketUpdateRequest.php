@@ -38,11 +38,11 @@ class BasketUpdateRequest extends FormRequest
             
             'recipes.old.*.recipe_id' => 'required_with:recipes.old|exists:recipes,id',
             'recipes.old.*.main'      => 'boolean',
-            'recipes.old.*.position'  => 'required_with:recipes.old|numeric|min:0',
+            'recipes.old.*.position'  => 'required_with:recipes.old|numeric|min:1',
             
             'recipes.new.*.recipe_id' => 'required_with:recipes.new|exists:recipes,id',
             'recipes.new.*.main'      => 'boolean',
-            'recipes.new.*.position'  => 'required_with:recipes.new|numeric|min:0',
+            'recipes.new.*.position'  => 'required_with:recipes.new|numeric|min:1',
             
             'tags.*' => 'exists:tags,id',
         ];

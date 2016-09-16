@@ -9,6 +9,19 @@ Basket.deleteRecipe = ($button) ->
 
     $button.closest("tr").remove()
 
+Basket.updateBasketRecipesPositions = () ->
+  max_position = 0
+  $basket = $('.basket-recipes-table')
+  $recipe = $basket.find('.recipe-row:last-of-type')
+
+  $basket.find('.recipe-row').each () ->
+    position = parseInt $(this).find('.position-input').val()
+
+    if position > max_position
+      max_position = position
+
+  $recipe.find('.position-input').val(max_position + 1)
+
 $(document).on 'ready', ->
   $('.recipe-select').on "change", ->
     recipe = $(this).val()
@@ -26,6 +39,8 @@ $(document).on 'ready', ->
               $('.basket-recipes-table').append response.html
 
               fixCustomInputs($('.basket-recipes-table tr:last-child'))
+
+              Basket.updateBasketRecipesPositions()
             else
               message.show lang_recipeAlreadyAddedToList, 'warning'
           else

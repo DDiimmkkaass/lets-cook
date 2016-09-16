@@ -21,7 +21,7 @@
 
         @if (count($model->recipes))
             @foreach($model->recipes as $recipe)
-                <tr id="recipe_{!! $recipe->recipe_id !!}">
+                <tr class="recipe-row" id="recipe_{!! $recipe->recipe_id !!}">
                     <td>
                         <div class="form-group @if ($errors->has('recipes.old.' .$recipe->id. '.recipe_id')) has-error @endif">
                             {!! Form::text('recipes[old][' .$recipe->id. '][recipe_id]', $recipe->recipe_id, ['id' => 'recipes.old.' .$recipe->id. '.recipe_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
@@ -37,7 +37,7 @@
                     </td>
                     <td>
                         <div class="form-group required @if ($errors->has('recipes.old.' .$recipe->id. '.position')) has-error @endif">
-                            {!! Form::text('recipes[old][' .$recipe->id. '][position]', $recipe->position ?: 0, ['id' => 'recipes.old.' .$recipe->id. '.position', 'class' => 'form-control input-sm', 'required' => true]) !!}
+                            {!! Form::text('recipes[old][' .$recipe->id. '][position]', old('recipes.old.' .$recipe->id. '.position') ?: $recipe->position, ['id' => 'recipes.old.' .$recipe->id. '.position', 'class' => 'form-control input-sm position-input', 'required' => true]) !!}
                         </div>
                     </td>
                     <td class="text-center coll-actions">
@@ -51,7 +51,7 @@
         @if (count(old('recipes.new')))
             @foreach(old('recipes.new') as $recipe_key => $recipe)
                 @if ($recipe_key !== 'replaseme')
-                    <tr id="recipe_{!! $recipe_key !!}">
+                    <tr class="recipe-row" id="recipe_{!! $recipe_key !!}">
                         <td>
                             <div class="form-group">
                                 <div class="form-group @if ($errors->has('recipes.new.' .$recipe_key. '.recipe_id')) has-error @endif">
@@ -73,7 +73,7 @@
                         </td>
                         <td>
                             <div class="form-group required @if ($errors->has('recipes.new.' .$recipe_key. '.position')) has-error @endif">
-                                {!! Form::text('recipes[new][' .$recipe_key. '][position]', $recipe['position'], ['id' => 'recipes.new.' .$recipe_key. '.position', 'class' => 'form-control input-sm', 'required' => true]) !!}
+                                {!! Form::text('recipes[new][' .$recipe_key. '][position]', $recipe['position'], ['id' => 'recipes.new.' .$recipe_key. '.position', 'class' => 'form-control input-sm position-input', 'required' => true]) !!}
                             </div>
                         </td>
                         <td class="text-center coll-actions">
