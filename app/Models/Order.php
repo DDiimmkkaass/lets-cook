@@ -279,10 +279,10 @@ class Order extends Model
     public function scopeForWeek($query, $year, $week)
     {
         $dt = Carbon::create($year, 1, 1)->addWeeks($week)->startOfWeek();
-        
-        $from = clone($dt->subDay()->startOfDay());
-        $to = $dt->addDay()->endOfDay();
-        
+    
+        $to = clone($dt->endOfDay());
+        $from = $dt->subDay()->startOfDay();
+    
         return $query->where('delivery_date', '>=', $from)->where('delivery_date', '<=', $to);
     }
     
@@ -291,10 +291,9 @@ class Order extends Model
      */
     public function scopeForCurrentWeek($query)
     {
-        $year = Carbon::now()->startOfWeek()->year;
-        $week = Carbon::now()->startOfWeek()->weekOfYear;
+        $dt = active_week();
         
-        return $query->forWeek($year, $week);
+        return $query->forWeek($dt->year, $dt->weekOfYear);
     }
     
     /**
@@ -318,13 +317,10 @@ class Order extends Model
      */
     public function forCurrentWeek()
     {
-        $year = Carbon::now()->startOfWeek()->year;
-        $week = Carbon::now()->startOfWeek()->weekOfYear;
-        
-        $dt = Carbon::create($year, 1, 1)->addWeeks($week)->endOfWeek();
-        
-        $from = $dt->format('d-m-Y');
-        $to = $dt->addDay()->format('d-m-Y');
+        $dt = active_week();
+    
+        $to = $dt->endOfDay()->format('d-m-Y');
+        $from = $dt->subDay()->startOfDay()->format('d-m-Y');
         
         return $this->delivery_date >= $from && $this->delivery_date <= $to;
     }

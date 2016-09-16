@@ -48,10 +48,9 @@ class OrderObserver
                 (isset($model->original['status']) && $model->isOriginalStatus('processed'))
             )
         ) {
-            $year = Carbon::now()->startOfWeek()->year;
-            $week = Carbon::now()->startOfWeek()->weekOfYear;
+            $dt = active_week();
             
-            if (after_finalisation($year, $week)) {
+            if (after_finalisation($dt->year, $dt->weekOfYear)) {
                 $this->purchaseService->generate();
             }
         }

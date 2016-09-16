@@ -112,12 +112,12 @@ class Purchase extends Model
      */
     public function scopeForFuture($query)
     {
-        $dt = Carbon::now()->addWeek(2)->startOfWeek();
+        $dt = active_week();
         
         return $query->where('year', '>', $dt->year)->orWhere(
             function ($query) use ($dt) {
                 $query->where('year', '=', $dt->year)
-                    ->where('week', '>=', $dt->weekOfYear);
+                    ->where('week', '>', $dt->weekOfYear);
             }
         );
     }
