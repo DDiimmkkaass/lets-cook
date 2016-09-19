@@ -299,7 +299,7 @@ class Order extends Model
     /**
      * @param $query
      */
-    public function scopeJoinAdditionalBaskets($query)
+    public function scopeJoinOrderBaskets($query)
     {
         return $query->leftJoin('order_baskets', 'order_baskets.order_id', '=', 'orders.id');
     }

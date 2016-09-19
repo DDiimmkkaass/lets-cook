@@ -94,6 +94,16 @@ class OrderBasket extends Model
      *
      * @return mixed
      */
+    public function scopeJoinOrder($query)
+    {
+        return $query->leftJoin('orders', 'orders.id', '=', 'order_baskets.order_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
     public function scopeJoinBasket($query)
     {
         return $query->leftJoin('baskets', 'baskets.id', '=', 'order_baskets.basket_id');

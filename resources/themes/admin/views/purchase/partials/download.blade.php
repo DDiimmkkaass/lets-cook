@@ -19,8 +19,8 @@
 
             @foreach($baskets as $basket)
                 <th style="background-color: #92D050;">
-                    <div style="text-align: center; writing-mode: vertical-rl;">
-                        @lang($basket['name'])
+                    <div style="text-align: center;">
+                        {!! $basket['name'] !!}
                     </div>
                 </th>
             @endforeach
@@ -35,9 +35,10 @@
             <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.category')</th>
             <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.supplier')</th>
 
-            @for ($i = 0; $i < $baskets_count; $i++)
-                <th style="background-color: #FCD5B4; text-align: center;"></th>
-            @endfor
+            @foreach($baskets as $basket)
+                {!! $basket !!}
+                <th style="background-color: #FCD5B4; text-align: center;">{!! $basket['count'] !!}</th>
+            @endforeach
         </tr>
 
         @foreach($list as $key => $ingredient)

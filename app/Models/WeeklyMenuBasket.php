@@ -181,6 +181,14 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
     /**
      * @return string
      */
+    public function getCode()
+    {
+        return $this->basket->getCode();
+    }
+    
+    /**
+     * @return string
+     */
     public function getDescription()
     {
         return $this->basket->description;

@@ -428,7 +428,7 @@ class RecipeService
             ->pluck('basket_id')
             ->toArray();
         
-        $orders = Order::joinAdditionalBaskets()
+        $orders = Order::joinOrderBaskets()
             ->ofStatus('archived')
             ->whereIn('order_baskets.basket_id', $additional_baskets)
             ->get(['orders.*']);

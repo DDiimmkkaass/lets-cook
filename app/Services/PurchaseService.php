@@ -179,7 +179,7 @@ class PurchaseService
         $sheet_name = $this->_getSheetTabName($supplier_name, $pre_report);
         $view = $this->_getViewName($pre_report);
         
-        $baskets = $this->_basketsForReport($year, $week);
+        $baskets = $this->_basketsForReport($year, $week, $pre_report);
         
         if ($pre_report) {
             $list = $this->preGenerate($year, $week);
@@ -656,54 +656,104 @@ class PurchaseService
     }
     
     /**
-     * @param int $year
-     * @param int $week
+     * @param int  $year
+     * @param int  $week
+     * @param bool $pre_report
      *
      * @return array
      */
-    private function _basketsForReport($year, $week)
+    private function _basketsForReport($year, $week, $pre_report = false)
     {
         $baskets = [];
+    
+        $orders = $this->_getOrders($year, $week, $pre_report);
         
-        $weekly_menu = WeeklyMenu::with(
-            'baskets',
-            'baskets.recipes',
-            'baskets.recipes.recipe',
-            'baskets.recipes.recipe.ingredients'
-        )
-            ->forWeek($year, $week)
-            ->first();
-        foreach ($weekly_menu->baskets as $basket) {
-            $ingredients = [];
-            foreach ($basket->recipes->sortBy('position') as $recipe) {
+        $_order_baskets = OrderBasket::with('weekly_menu_basket', 'weekly_menu_basket.recipes')
+            ->main()
+            ->whereIn('order_id', $orders)
+            ->get();
+        foreach ($_order_baskets as $key => $basket) {
+            if (!isset($baskets[$basket->weekly_menu_basket->basket_id])) {
+                $baskets[$basket->weekly_menu_basket->basket_id] = [
+                    'name'        => $basket->weekly_menu_basket->getCode(),
+                    'count'       => 0,
+                    'ingredients' => [],
+                ];
+            }
+            
+            foreach ($basket->weekly_menu_basket->recipes->sortBy('position') as $recipe) {
                 foreach ($recipe->recipe->ingredients as $ingredient) {
-                    $ingredients[$ingredient->ingredient_id] = $ingredient->count;
+                    if (!isset($baskets[$basket->weekly_menu_basket->basket_id]['ingredients'][$ingredient->ingredient_id])) {
+                        $baskets[$basket->weekly_menu_basket->basket_id]['ingredients'][$ingredient->ingredient_id] = $ingredient->count;
+                    }
                 }
             }
             
-            $baskets[] = [
-                'name'        => $basket->basket->getCode(),
-                'ingredients' => $ingredients,
-            ];
+            $baskets[$basket->weekly_menu_basket->basket_id]['count']++;
+            
+            unset($_order_baskets[$key]);
         }
         
         $additional_baskets = Basket::with('recipes')->additional()->get();
-        foreach ($additional_baskets as $basket) {
+        foreach ($additional_baskets as $key => $basket) {
             $recipe = $basket->recipes->sortBy('position')->first();
             
             if ($recipe) {
-                $ingredients = [];
-                foreach ($recipe->recipe->ingredients as $ingredient) {
-                    $ingredients[$ingredient->ingredient_id] = $ingredient->count;
-                }
+                $count = $this->_getAdditionalBasketOrdersCount($basket->id, $year, $week, $pre_report);
                 
-                $baskets[] = [
+                $baskets[$basket->id] = [
                     'name'        => $recipe->getName(),
-                    'ingredients' => $ingredients,
+                    'count'       => $count,
                 ];
+    
+                foreach ($recipe->recipe->ingredients as $ingredient) {
+                    if (!isset($baskets[$basket->id]['ingredients'][$ingredient->ingredient_id])) {
+                        $baskets[$basket->id]['ingredients'][$ingredient->ingredient_id] = $ingredient->count;
+                    }
+                }
             }
+    
+            unset($_order_baskets[$key]);
         }
         
         return $baskets;
+    }
+    
+    /**
+     * @param int  $basket_id
+     * @param int  $year
+     * @param int  $week
+     * @param bool $pre_generation
+     *
+     * @return int
+     */
+    private function _getAdditionalBasketOrdersCount($basket_id, $year, $week, $pre_generation = false)
+    {
+        $orders = $this->_getOrders($year, $week, $pre_generation);
+        
+        $count = Order::joinOrderBaskets()
+            ->whereIn('orders.id', $orders)
+            ->where('order_baskets.basket_id', $basket_id)
+            ->count();
+        
+        return $count;
+    }
+    
+    /**
+     * @param      $year
+     * @param      $week
+     * @param bool $pre_generation
+     *
+     * @return Collection
+     */
+    private function _getOrders($year, $week, $pre_generation = false)
+    {
+        if ($pre_generation) {
+            $orders = Order::notOfStatus(['archived', 'deleted']);
+        } else {
+            $orders = Order::ofStatus('processed');
+        }
+        
+        return $orders->forWeek($year, $week)->get(['id'])->pluck('id');
     }
 }
