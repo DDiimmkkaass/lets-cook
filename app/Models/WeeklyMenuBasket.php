@@ -54,14 +54,6 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
     }
     
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function main_recipes()
-    {
-        return $this->hasMany(BasketRecipe::class)->whereMain(true)->with('recipe');
-    }
-    
-    /**
      * @param array $value
      */
     public function setPricesAttribute($value)
@@ -146,7 +138,7 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
      */
     public function getPriceInOrder($days = 0)
     {
-        $days = $days > 0 ? $days : $this->main_recipes->count();
+        $days = $days > 0 ? $days : $this->recipes->count();
     
         return isset($this->prices[$days]) ? $this->prices[$days] : 0;
     }

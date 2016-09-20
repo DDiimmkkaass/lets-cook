@@ -13,8 +13,8 @@
                         </td>
                         <td>
                         <span>
-                            {!! $basket->main_recipes->count() !!}
-                        </span> @choice('front_labels.count_of_dinners', $basket->main_recipes->count())
+                            {!! $basket->recipes->count() !!}
+                        </span> @choice('front_labels.count_of_dinners', $basket->recipes->count())
                         </td>
                         <td>
                             <span>{!! $basket->portions !!}</span> @choice('front_labels.count_of_portions', $basket->portions)

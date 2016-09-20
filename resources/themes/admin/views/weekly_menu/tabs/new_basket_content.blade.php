@@ -32,15 +32,11 @@
     </div>
 </div>
 
-<h4 class="main-recipe-helper-message col-am-12 margin-bottom-15">
-    @lang('messages.click on recipe for make him main')
-</h4>
-
 <div id="basket_recipes_{!! $basket['id'] !!}_{!! $basket['portions'] !!}" class="menu-recipes-table margin-bottom-40">
 
     @foreach(old('baskets.'.$basket['id'].'_'.$basket['portions'].'.old', []) as $key => $recipe)
         <div id="recipe_{!! $recipe['recipe_id'] !!}"
-             class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe['main']) main @endif">
+             class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4">
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <div class="inner-block col-sm-8 no-padding">
@@ -57,8 +53,6 @@
                     <div class="image col-sm-4 no-padding text-center">
                         @include('partials.image', ['src' => $recipe['image'], 'attributes' => ['width' => 100, 'class' => 'img-circle']])
                     </div>
-
-                    {!! Form::hidden('baskets['.$basket['id'].'_'.$basket['portions'].'][old]['.$key.'][main]', $recipe['main'] ? 1 : 0, ['id' => 'baskets_'.$basket['id'].'_'.$basket['portions'].'_old_'.$key.'_main', 'class' => 'main-checkbox main-input']) !!}
 
                     {!! Form::hidden('baskets['.$basket['id'].'_'.$basket['portions'].'][old]['.$key.'][image]', $recipe['image']) !!}
                     {!! Form::hidden('baskets['.$basket['id'].'_'.$basket['portions'].'][old]['.$key.'][name]', $recipe['name']) !!}
@@ -92,7 +86,7 @@
 
     @foreach(old('baskets.'.$basket['id'].'_'.$basket['portions'].'.new', []) as $recipe_key => $recipe)
         <div id="recipe_{!! $recipe['recipe_id'] !!}"
-             class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe['main']) main @endif">
+             class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4">
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <div class="inner-block col-sm-8 no-padding">
@@ -109,10 +103,6 @@
                     <div class="image col-sm-4 no-padding text-center">
                         @include('partials.image', ['src' => $recipe['image'], 'attributes' => ['width' => 100, 'class' => 'img-circle']])
                     </div>
-
-                    <input type="hidden"
-                           name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][main]"
-                           value="{!! $recipe['main'] ? 1 : 0 !!}" class="main-checkbox main-input">
 
                     <input type="hidden"
                            name="baskets[{!! $basket['id'].'_'.$basket['portions'] !!}][new][{!! $recipe_key !!}][recipe_id]"

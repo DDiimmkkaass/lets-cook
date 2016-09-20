@@ -12,8 +12,8 @@
                     <div class="order-main__result-wrapper">
                         <ul class="order-main__count-list">
                             <li class="order-main__count-item">
-                                <span>{!! $basket->main_recipes->count() !!}</span>
-                                <span>@choice('front_labels.count_of_dinners', $basket->main_recipes->count())</span>
+                                <span>{!! $basket->recipes->count() !!}</span>
+                                <span>@choice('front_labels.count_of_dinners', $basket->recipes->count())</span>
                             </li>
                             <li class="order-main__count-item">
                                 <span>{!! $basket->portions !!}</span>
@@ -43,9 +43,9 @@
             Оформить заказ
         </a>
 
-        @if ($basket->main_recipes->count())
+        @if ($basket->recipes->count())
             <ul class="order-main__list">
-                @foreach($basket->main_recipes as $key => $recipe)
+                @foreach($basket->recipes as $key => $recipe)
                     <li class="order-main__item">
                         <a href="{!! $recipe->recipe->getUrl() !!}" class="order-main__link">
                             <div class="order-main__img"

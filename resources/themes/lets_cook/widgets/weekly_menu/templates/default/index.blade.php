@@ -11,10 +11,10 @@
 
         <ul class="recipes-menu__content">
             @if ($menu)
-                @if ($menu->main_recipes->count())
+                @if ($menu->recipes->count())
                     <li class="recipes-menu__contentItem">
                         <ul class="recipes-menu__list">
-                            @foreach($menu->main_recipes as $key => $recipe)
+                            @foreach($menu->recipes as $key => $recipe)
                                 <li class="recipes-menu__item">
                                     <a href="{!! $recipe->recipe->getUrl() !!}"
                                        title="{!! $recipe->getRecipeName() !!}"
@@ -38,10 +38,10 @@
             @endif
 
             @if ($next_menu)
-                @if ($next_menu->main_recipes->count())
+                @if ($next_menu->recipes->count())
                     <li class="recipes-menu__contentItem">
                         <ul class="recipes-menu__list">
-                            @foreach($next_menu->main_recipes as $key => $recipe)
+                            @foreach($next_menu->recipes as $key => $recipe)
                                 <li class="recipes-menu__item">
                                     <a href="{!! $recipe->recipe->getUrl() !!}"
                                        title="{!! $recipe->getRecipeName() !!}"

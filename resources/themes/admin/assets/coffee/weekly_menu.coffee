@@ -51,9 +51,6 @@ WeeklyMenu.removeRecipe = ($button) ->
       name = $button.data("name")
       $button.closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
 
-  unless ($button.closest('.menu-recipes-table').find('.recipe-block').length - 1)
-    $button.closest('.box-body').find('.main-recipe-helper-message').fadeOut()
-
   $basket = $button.closest('.tab-pane')
 
   $button.closest(".recipe-block").remove()
@@ -123,15 +120,8 @@ WeeklyMenu.addRecipe = (recipe_id, basket_id, portions, copy) ->
                 $recipe = $('#basket_recipes_' + basket_id + '_' + portions).find('#recipe_' + response.recipe_id)
 
                 $recipe.find('.position-input').val $parent_recipe.find('.position-input').val()
-
-                if $parent_recipe.hasClass('main')
-                  $recipe.addClass('main')
-                  $recipe.find('.main-checkbox').val(1)
             else
               message.show lang_recipeAlreadyAddedToList, 'warning'
-
-            if $basket.find('.recipe-block').length
-              $basket.closest('.tab-pane').find('.main-recipe-helper-message').fadeIn()
         else
           message.show response.message, response.status
   else
@@ -158,12 +148,6 @@ WeeklyMenu.copyRecipes = () ->
       WeeklyMenu.addRecipe(recipe_id[1], basket_id, portions, 1)
 
 $(document).on 'ready', ->
-  $('.menu-recipes-table').each () ->
-    unless $(this).find('.recipe-block').length
-      $(this).closest('.box-body').find('.main-recipe-helper-message').fadeOut()
-    else
-      $(this).closest('.box-body').find('.main-recipe-helper-message').fadeIn()
-
   $('.tab-pane').each () ->
     updateBasketInternalPrice($(this))
 
@@ -209,17 +193,6 @@ $(document).on 'ready', ->
     WeeklyMenu.addRecipe(recipe_id, basket_id, portions)
 
     return false
-
-  $(document).on "click", ".menu-recipes-table .inner", ->
-    unless $(this).hasClass 'inner-show'
-      $recipe = $(this).closest('.recipe-block')
-
-      unless $recipe.hasClass 'main'
-        $recipe.addClass 'main'
-        $recipe.find('.main-checkbox').val(1)
-      else
-        $recipe.removeClass 'main'
-        $recipe.find('.main-checkbox').val(0)
 
   $(document).on "click", ".menu-recipes-table .destroy", ->
     confirm_dialog () =>

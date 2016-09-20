@@ -66,7 +66,7 @@ class OrderController extends FrontendController
         abort_if(!$this->weeklyMenuService->checkActiveWeeksBasket($basket_id), 404);
         
         $basket = WeeklyMenuBasket::with(
-            ['main_recipes', 'main_recipes.recipe.ingredients', 'main_recipes.recipe.home_ingredients']
+            ['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients']
         )->joinWeeklyMenu()
             ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
             ->find($basket_id);

@@ -8,7 +8,7 @@
 
             @include('order.partials.basket')
 
-            @if ($basket->main_recipes->count())
+            @if ($basket->recipes->count())
                 @include('order.partials.ingredients')
             @endif
 

@@ -55,6 +55,7 @@ class OrderService
                 DB::raw('4 as coupon'),
                 'delivery_date',
                 'delivery_time',
+                'city_id',
                 'address',
                 'comment'
             );
@@ -147,6 +148,7 @@ class OrderService
             ->removeColumn('user_id')
             ->removeColumn('additional_phone')
             ->removeColumn('comment')
+            ->removeColumn('city_id')
             ->removeColumn('delivery_time')
             ->make();
     }
@@ -409,9 +411,9 @@ class OrderService
      */
     public function saveRecipes(Order $model, $basket_id)
     {
-        $basket = WeeklyMenuBasket::with('main_recipes')->find($basket_id);
+        $basket = WeeklyMenuBasket::with('recipes')->find($basket_id);
         
-        $basket->main_recipes->each(
+        $basket->recipes->each(
             function ($item, $index) use ($model) {
                 $input = [
                     'basket_recipe_id' => $item->id,

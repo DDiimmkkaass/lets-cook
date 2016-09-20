@@ -14,7 +14,7 @@
                 <ul class="baskets-main__list">
                     @foreach($baskets as $basket)
                         <li class="baskets-main__item baskets-main-item"
-                            data-filter="{!! $basket->portions.'_'.$basket->main_recipes->count() !!}">
+                            data-filter="{!! $basket->portions.'_'.$basket->recipes->count() !!}">
                             <div class="baskets-main-item__top">
                                 <div class="baskets-main-item__left">
                                     <h1 class="baskets-main-item__title">
@@ -26,9 +26,9 @@
                                         <div class="baskets-main-item__result-wrapper">
                                             <ul class="baskets-main-item__count-list">
                                                 <li class="baskets-main-item__count-item">
-                                                    <span>{!! $basket->main_recipes->count() !!}</span>
+                                                    <span>{!! $basket->recipes->count() !!}</span>
                                                     <span>
-                                                        @choice('front_labels.count_of_dinners', $basket->main_recipes->count())
+                                                        @choice('front_labels.count_of_dinners', $basket->recipes->count())
                                                     </span>
                                                 </li>
                                                 <li class="baskets-main-item__count-item">
@@ -71,9 +71,9 @@
                                     </a>
                                 </div>
 
-                                @if ($basket->main_recipes->count())
+                                @if ($basket->recipes->count())
                                     <ul class="baskets-main-item__list">
-                                        @foreach($basket->main_recipes as $key => $recipe)
+                                        @foreach($basket->recipes as $key => $recipe)
                                             <li class="baskets-main-item__item">
                                                 <a href="{!! $recipe->recipe->getUrl() !!}"
                                                    class="baskets-main-item__link">

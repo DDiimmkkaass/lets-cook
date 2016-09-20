@@ -32,16 +32,12 @@
     </div>
 </div>
 
-<h4 class="main-recipe-helper-message col-am-12 margin-bottom-15">
-    @lang('messages.click on recipe for make him main')
-</h4>
-
 <div id="basket_recipes_{!! $basket->basket_id !!}_{!! $basket->portions !!}" class="menu-recipes-table">
 
     @if (isset($model) && $model->exists)
         @foreach($basket->recipes as $recipe)
             <div id="recipe_{!! $recipe->recipe->id !!}"
-                 class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe->main) main @endif">
+                 class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4">
                 <div class="small-box bg-aqua">
                     <div class="inner">
                         <div class="inner-block col-sm-8 no-padding">
@@ -58,8 +54,6 @@
                         <div class="image col-sm-4 no-padding text-center">
                             @include('partials.image', ['src' => $recipe->recipe->image, 'attributes' => ['width' => 100, 'class' => 'img-circle']])
                         </div>
-
-                        {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][main]', $recipe->main ? 1 : 0, ['id' => 'baskets_'.$basket->basket_id.'_'.$basket->portions.'_old_'.$recipe->id.'_main', 'class' => 'main-checkbox main-input']) !!}
 
                         {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][image]', $recipe->recipe->image) !!}
                         {!! Form::hidden('baskets['.$basket->basket_id.'_'.$basket->portions.'][old]['.$recipe->id.'][name]', $recipe->recipe->name) !!}

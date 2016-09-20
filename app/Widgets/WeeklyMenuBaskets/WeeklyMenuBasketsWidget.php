@@ -30,7 +30,7 @@ class WeeklyMenuBasketsWidget extends Widget
      */
     public function index($template = '')
     {
-        $menu = WeeklyMenu::with('baskets', 'baskets.main_recipes')->current()->first();
+        $menu = WeeklyMenu::with('baskets', 'baskets.recipes')->current()->first();
         
         if (view()->exists('widgets.weekly_menu_baskets.templates.'.$template.'.index')) {
             $this->template = $template;

@@ -34,7 +34,7 @@
 <div id="basket_recipes_{!! $basket->basket_id !!}_{!! $basket->portions !!}" class="menu-recipes-table">
 
     @foreach($basket->recipes as $recipe)
-        <div id="recipe_{!! $recipe->recipe->id !!}" class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4 @if ($recipe->main) main @endif">
+        <div id="recipe_{!! $recipe->recipe->id !!}" class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4">
             <div class="small-box bg-aqua">
                 <div class="inner inner-show">
                     <div class="inner-block col-sm-8 no-padding">

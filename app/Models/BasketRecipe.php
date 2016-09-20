@@ -27,7 +27,6 @@ class BasketRecipe extends Model
         'basket_id',
         'weekly_menu_basket_id',
         'recipe_id',
-        'main',
         'position',
     ];
     

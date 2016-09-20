@@ -31,7 +31,7 @@ class BasketController extends FrontendController
     {
         $baskets = [];
         
-        $menu = WeeklyMenu::with('baskets', 'baskets.main_recipes')->{$week}()->first();
+        $menu = WeeklyMenu::with('baskets', 'baskets.recipes')->{$week}()->first();
         
         if ($menu) {
             $baskets = $menu->baskets;

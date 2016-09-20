@@ -9,7 +9,7 @@
             <h3 class="order-ing__list-title">Ингредиенты</h3>
 
             <ul class="order-ing__list">
-                @foreach($basket->main_recipes as $recipe)
+                @foreach($basket->recipes as $recipe)
                     @foreach($recipe->recipe->ingredients as $ingredient)
                         <li>{!! $ingredient->ingredient->getTitle() !!}</li>
                     @endforeach
@@ -21,7 +21,7 @@
             <h3 class="order-ing__list-title">Понадобится на кухне</h3>
 
             <ul class="order-ing__list">
-                @foreach($basket->main_recipes as $recipe)
+                @foreach($basket->recipes as $recipe)
                     <li>{!! $recipe->recipe->home_equipment !!}</li>
                 @endforeach
             </ul>
@@ -32,7 +32,7 @@
 
             <ul class="order-ing__list">
                 @php($i = 0)
-                @foreach($basket->main_recipes as $recipe)
+                @foreach($basket->recipes as $recipe)
                     @foreach($recipe->recipe->home_ingredients as $ingredient)
                         @if ($ingredient->ingredient->inSale())
                             <li>

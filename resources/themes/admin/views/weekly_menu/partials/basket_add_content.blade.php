@@ -33,10 +33,6 @@
         </div>
     </div>
 
-    <h4 class="main-recipe-helper-message col-am-12 margin-bottom-15">
-        @lang('messages.click on recipe for make him main')
-    </h4>
-
     <div id="basket_recipes_{!! $basket->id !!}_{!! $portions !!}" class="menu-recipes-table margin-bottom-40">
 
     </div>

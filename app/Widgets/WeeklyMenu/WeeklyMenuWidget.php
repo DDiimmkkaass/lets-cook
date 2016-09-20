@@ -30,12 +30,12 @@ class WeeklyMenuWidget extends Widget
      */
     public function index($template = '')
     {
-        $menu = WeeklyMenu::with('baskets', 'baskets.main_recipes')->current()->first();
+        $menu = WeeklyMenu::with('baskets', 'baskets.recipes')->current()->first();
         if ($menu && $menu->baskets->count()) {
             $menu = $menu->baskets->random();
         }
 
-        $next_menu = WeeklyMenu::with('baskets', 'baskets.main_recipes')->next()->first();
+        $next_menu = WeeklyMenu::with('baskets', 'baskets.recipes')->next()->first();
         if ($next_menu && $next_menu->baskets->count()) {
             $next_menu = $next_menu->baskets->random();
         }

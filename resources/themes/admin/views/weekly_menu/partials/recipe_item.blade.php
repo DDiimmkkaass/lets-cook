@@ -1,5 +1,5 @@
 <div id="recipe_{!! $model->id !!}" class="recipe-block col-xs-12 col-sm-6 col-md-6 col-lg-4">
-    <div class="small-box bg-aqua @if ($model->main) main @endif">
+    <div class="small-box bg-aqua">
         <div class="inner">
             <div class="inner-block col-sm-8 no-padding">
                 <h5>{!! $model->name !!}</h5>
@@ -21,8 +21,6 @@
             <div class="image col-sm-4 no-padding text-center">
                 @include('partials.image', ['src' => $model->image, 'attributes' => ['width' => 100, 'class' => 'img-circle']])
             </div>
-
-            {!! Form::hidden('baskets['.$basket_id.'_'.$portions.'][new]['.$model->id.'][main]', 0, ['id' => 'baskets_'.$basket_id.'_'.$portions.'_new_'.$model->id.'_main', 'class' => 'main-checkbox main-input']) !!}
 
             <div class="clearfix"></div>
         </div>
