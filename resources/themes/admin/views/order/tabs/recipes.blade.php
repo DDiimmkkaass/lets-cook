@@ -1,20 +1,52 @@
-<h3 class="margin-bottom-15">
-    <div class="form-group margin-bottom-25 @if ($errors->has('basket')) has-error @endif">
-        <div class="col-xs-12 margin-bottom-5 font-size-16 text-left">
-            @lang('labels.main_basket')
-        </div>
+<div class="margin-bottom-15">
+    <div class="form-group margin-bottom-25">
+        <h3 class="col-xs-12 margin-bottom-5 font-size-16 text-left margin-top-0">
+            @lang('labels.week')
+        </h3>
         <div class="col-sm-12 full-width-select">
-            {!! Form::select('basket_id', $baskets, $basket ? $basket->id : null, ['id' => 'order_basket_select', 'class' => 'form-control select2 order-basket-select input-sm', 'aria-hidden' => 'true']) !!}
-
-            <div class="clearfix"></div>
-
-            {!! $errors->first('basket', '<p class="help-block error position-relative">:message</p>') !!}
+            {!! Form::select('weekly_menu_id', $weekly_menus, old('weekly_menu_id') ?: $weekly_menu_id, ['id' => 'order_weekly_menu_select', 'class' => 'form-control select2 order-weekly-menu-select input-sm', 'aria-hidden' => 'true']) !!}
         </div>
     </div>
-</h3>
+</div>
+
+<div class="margin-bottom-15">
+    <div class="form-group margin-bottom-25 @if ($errors->has('basket_id')) has-error @endif">
+        <h3 class="col-xs-12 margin-bottom-5 font-size-16 text-left margin-top-0">
+            @lang('labels.main_basket')
+        </h3>
+        <div class="col-sm-12 full-width-select">
+            {!! Form::select('basket_id', $baskets, $basket_id, ['id' => 'order_basket_select', 'class' => 'form-control select2 order-basket-select input-sm', 'aria-hidden' => 'true']) !!}
+
+            <input id="old_basket_id" type="hidden" value="{!! $basket_id !!}">
+            <input id="new_basket_id" type="hidden" value="{!! old('basket_id') ?: $basket_id !!}">
+            <div class="clearfix"></div>
+
+            {!! $errors->first('basket_id', '<p class="help-block error position-relative">:message</p>') !!}
+        </div>
+    </div>
+</div>
+
+<div class="margin-bottom-15">
+    <div class="form-group margin-bottom-25 @if ($errors->has('recipes_count')) has-error @endif">
+        <h3 class="col-xs-12 margin-bottom-5 font-size-16 text-left margin-top-0">
+            @lang('labels.recipes_count')
+        </h3>
+        <div class="col-sm-12 full-width-select">
+            <select class="form-control select2 order-recipes-count-select" name="recipes_count" id="recipes_count">
+                <option value="">@lang('labels.please_select')</option>
+                @for($i = config('order.min_recipes'); $i <= config('weekly_menu.menu_days'); $i++)
+                    <option value="{!! $i !!}"
+                            @if ((old('recipes_count') ?: $recipes_count) == $i) selected="selected" @endif>
+                        {!! $i !!}
+                    </option>
+                    @endfor
+            </select>
+        </div>
+    </div>
+</div>
 
 <div class="recipes-add-control">
-    <div class="form-group margin-bottom-25 @if ($errors->has('recipes.new') || $errors->has('recipes.old')) has-error @endif">
+    <div class="form-group margin-bottom-25 @if ($errors->has('recipes')) has-error @endif">
         <div class="col-xs-12 margin-bottom-5 font-size-16 text-left">
             @lang('labels.add_recipes')
         </div>
@@ -23,9 +55,8 @@
 
             <div class="clearfix"></div>
 
-            @if ($errors->has('recipes.new') || $errors->has('recipes.old'))
-                {!! $errors->first('recipes.new', '<p class="help-block error position-relative">:message</p>') !!}
-                {!! $errors->first('recipes.old', '<p class="help-block error position-relative">:message</p>') !!}
+            @if ($errors->has('recipes'))
+                {!! $errors->first('recipes', '<p class="help-block error position-relative">:message</p>') !!}
             @endif
         </div>
     </div>
@@ -42,7 +73,7 @@
 
         @if (count($recipes))
             @foreach($recipes as $recipe)
-                <tr id="recipe_{!! $recipe->basket_recipe_id !!}">
+                <tr id="recipe_{!! $recipe->basket_recipe_id !!}" class="basket-{!! $basket_id !!}-recipe">
                     <td>
                         <div class="form-group @if ($errors->has('recipes.old.' .$recipe->id. '.basket_recipe_id')) has-error @endif">
                             {!! Form::text('recipes[old][' .$recipe->id. '][recipe_id]', $recipe->recipe_id, ['id' => 'recipes.old.' .$recipe->id. '.recipe_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}

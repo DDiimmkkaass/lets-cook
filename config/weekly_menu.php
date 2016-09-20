@@ -11,5 +11,10 @@ return [
     'default_portions_count' => 2,
     
     'menu_days' => 7,
+    
+    'recipes_for_days' => [
+        3 => [1, 4, 5],
+        4 => [1, 2, 4, 5],
+    ],
 
 ];

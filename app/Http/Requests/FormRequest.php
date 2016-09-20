@@ -64,8 +64,8 @@ class FormRequest extends IlluminateRequest
         
         foreach ($errors as $key => $error) {
             foreach ($error as $_key => $e) {
-                preg_match_all('/.*\s([a-zA-z0-9\.*]+)\s.*/iUs', $e, $matches);
-                
+                preg_match_all('/.*\s([a-zA-z0-9\.]{3,})\s.*/iUs', $e, $matches);
+    
                 if (!empty($matches[1])) {
                     foreach ($matches[1] as $match) {
                         $title = explode('.', $match);

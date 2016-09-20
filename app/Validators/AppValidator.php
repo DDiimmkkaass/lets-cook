@@ -115,6 +115,34 @@ class AppValidator extends Validator
     }
     
     /**
+     * @param string $attribute
+     * @param string $value
+     * @param array  $parameters
+     *
+     * @return bool
+     */
+    public function validateMinRecipesCount($attribute, $value, $parameters)
+    {
+        $count = (isset($value['old']) ? count($value['old']): 0) + (isset($value['new']) ? count($value['new']): 0);
+        
+        return $count >= config('order.min_recipes');
+    }
+    
+    /**
+     * @param string $attribute
+     * @param string $value
+     * @param array  $parameters
+     *
+     * @return bool
+     */
+    public function validateMaxRecipesCount($attribute, $value, $parameters)
+    {
+        $count = (isset($value['old']) ? count($value['old']): 0) + (isset($value['new']) ? count($value['new']): 0);
+        
+        return $count <= config('weekly_menu.menu_days');
+    }
+    
+    /**
      * @param  string $message
      * @param  string $attribute
      * @param  string $rule
@@ -125,5 +153,31 @@ class AppValidator extends Validator
     public function replaceDiffInDays($message, $attribute, $rule, $parameters)
     {
         return str_replace([':attribute', ':param', ':diff'], [$attribute, $parameters[0], $parameters[1]], $message);
+    }
+    
+    /**
+     * @param  string $message
+     * @param  string $attribute
+     * @param  string $rule
+     * @param  array  $parameters
+     *
+     * @return string
+     */
+    public function replaceMinRecipesCount($message, $attribute, $rule, $parameters)
+    {
+        return str_replace([':count'], [config('order.min_recipes')], $message);
+    }
+    
+    /**
+     * @param  string $message
+     * @param  string $attribute
+     * @param  string $rule
+     * @param  array  $parameters
+     *
+     * @return string
+     */
+    public function replaceMaxRecipesCount($message, $attribute, $rule, $parameters)
+    {
+        return str_replace([':count'], [config('weekly_menu.menu_days')], $message);
     }
 }

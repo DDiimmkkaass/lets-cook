@@ -66,10 +66,8 @@ class OrderRequest extends FormRequest
             'city_name' => 'required_without:city_id',
             'address'   => 'required',
             
-            'recipes.new'    => 'array|required_without:recipes.old',
-            'recipes.old'    => 'array|required_without:recipes.new',
-            'recipes.new.*'  => 'array|required_without:recipes.old',
-            'recipes.old.*'  => 'array|required_without:recipes.new',
+            'recipes' => 'min_recipes_count|max_recipes_count',
+            
             'recipes.remove' => 'array',
             
             'baskets' => 'array',
@@ -97,18 +95,5 @@ class OrderRequest extends FormRequest
         }
         
         return $rules;
-    }
-    
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [
-            'recipes.old.required_without' => trans('validation.you cant remove all recipes'),
-            'recipes.new.required_without' => trans('validation.you must add at least one recipe'),
-        ];
     }
 }

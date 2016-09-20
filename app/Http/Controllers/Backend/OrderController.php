@@ -20,6 +20,7 @@ use App\Models\Order;
 use App\Models\OrderComment;
 use App\Models\RecipeIngredient;
 use App\Models\WeeklyMenu;
+use App\Models\WeeklyMenuBasket;
 use App\Services\OrderService;
 use DB;
 use Exception;
@@ -28,6 +29,7 @@ use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use JavaScript;
 use Meta;
 
 /**
@@ -273,7 +275,7 @@ class OrderController extends BackendController
             
             $model->status = Order::getStatusIdByName($value);
             $model->save();
-    
+            
             $this->orderService->addAdminOrderComment($model, trans('messages.changed from orders list'));
             
             return [
@@ -311,6 +313,45 @@ class OrderController extends BackendController
                 'status'  => 'success',
                 'comment' => view('order.partials.comment', ['comment' => $comment])->render(),
                 'message' => trans('messages.comment successfully added'),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
+     * @param int $weekly_menu_id
+     *
+     * @return array
+     */
+    public function getWeeklyMenuBaskets($weekly_menu_id)
+    {
+        try {
+            $html = '';
+    
+            $baskets = WeeklyMenuBasket::where('weekly_menu_id', $weekly_menu_id)->get();
+            
+            $baskets->sortBy(
+                function ($item) {
+                    $item->name = $item->getName().' ('.trans('labels.portions_lowercase').' '.$item->portions.')';
+                    
+                    return $item->name;
+                }
+            )->each(
+                function ($item, $index) use (&$html) {
+                    return $html .= view(
+                        'partials.selects.option',
+                        ['item' => ['id' => $item->id, 'name' => $item->name]]
+                    )->render();
+                }
+            );
+            
+            return [
+                'status' => 'success',
+                'html'   => $html,
             ];
         } catch (Exception $e) {
             return [
@@ -526,7 +567,7 @@ class OrderController extends BackendController
             $cities[$city->id] = $city->name;
         }
         $this->data('cities', $cities);
-        
+    
         $recipes = $model->recipes()->joinBasketRecipe()->joinRecipe()
             ->get(
                 [
@@ -540,30 +581,41 @@ class OrderController extends BackendController
             );
         $this->data('recipes', $recipes);
         
+        $weekly_menus = ['' => trans('labels.please_select')];
+        foreach (WeeklyMenu::with('baskets')->active()->get() as $weekly_menu) {
+            $weekly_menus[$weekly_menu->id] = $weekly_menu->getName();
+        }
+        $this->data('weekly_menus', $weekly_menus);
+    
         if ($model->main_basket) {
-            $basket = $model->main_basket->weekly_menu_basket;
+            $basket_id = $model->main_basket->weekly_menu_basket->id;
+            $weekly_menu_id = $model->main_basket->weekly_menu_basket->weekly_menu_id;
+            $recipes_count = count($recipes);
+    
             $baskets = [
-                $basket->id => $basket->basket->name.' ('.
-                    trans('labels.portions_lowercase').' '.
-                    $basket->portions.')',
+                $basket_id => $model->main_basket->weekly_menu_basket->getName().' ('.
+                    trans('labels.portions_lowercase').' '.$model->main_basket->weekly_menu_basket->portions.')',
             ];
         } else {
-            $basket = null;
-            $baskets = ['' => trans('labels.please_select')];
-            $weekly_menu = WeeklyMenu::current()->first();
-            if ($weekly_menu) {
-                foreach ($weekly_menu->baskets()->get() as $basket) {
-                    $baskets[$basket->id] = $basket->basket->name.' ('.
-                        trans('labels.portions_lowercase').' '.
-                        $basket->portions.')';
-                }
-            }
+            $basket_id = null;
+            $weekly_menu_id = null;
+            $recipes_count = 0;
+    
+            $baskets = [];
         }
-        $this->data('basket', $basket);
+        $this->data('basket_id', $basket_id);
+        $this->data('weekly_menu_id', $weekly_menu_id);
+        $this->data('recipes_count', $recipes_count);
         $this->data('baskets', $baskets);
-        
+    
         $this->data('additional_baskets', Basket::additional()->positionSorted()->get());
         
         $this->data('selected_baskets', $model->additional_baskets->keyBy('basket_id')->toArray());
+        
+        JavaScript::put(
+            [
+                'recipes_for_days'  => config('weekly_menu.recipes_for_days'),
+            ]
+        );
     }
 }

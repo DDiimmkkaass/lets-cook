@@ -45,6 +45,34 @@ Order.deleteIngredient = ($button) ->
 
   $button.closest("tr").remove()
 
+Order.getWeeklyMenuBaskets = ($weekly_menu_select) ->
+  weekly_menu_id = $weekly_menu_select.val()
+
+  if weekly_menu_id
+    $.ajax
+      url: '/admin/order/get-weekly-menu-baskets/' + weekly_menu_id
+      type: 'GET'
+      dataType: 'json'
+      error: (response) =>
+        processError response, null
+      success: (response) =>
+        if response.status is 'success'
+          $basket_select = $('.order-basket-select')
+
+          $basket_select.html response.html
+
+          new_basket_id = $('#new_basket_id').val()
+          if new_basket_id
+            $basket_select.val(new_basket_id)
+
+          Order.getBasketRecipes($basket_select)
+
+          Order.getBasketRecipesIngredients($basket_select)
+
+          fixCustomInputs($weekly_menu_select.closest('.tab-pane'))
+        else
+          message.show response.message, response.status
+
 Order.getBasketRecipes = ($basket_select) ->
   basket_id = $basket_select.val()
 
@@ -62,6 +90,41 @@ Order.getBasketRecipes = ($basket_select) ->
           fixCustomInputs($basket_select.closest('.tab-pane'))
         else
           message.show response.message, response.status
+
+Order.selectRecipes = ($order_recipes_count_select) ->
+  recipe_count = $order_recipes_count_select.val()
+
+  if recipe_count
+    Order.clearOldData(false);
+
+    days = recipes_for_days[recipe_count]
+
+    if days
+      $('.order-recipe-select option').each (index, item) ->
+        if days.indexOf(index) != -1
+          Order.addRecipe($(this).val());
+    else
+      $('.order-recipe-select option').each (index, item) ->
+        if index > 0 && index <= recipe_count
+          Order.addRecipe($(this).val());
+
+Order.addRecipe = (recipe_id) ->
+  $.ajax
+    url: '/admin/order/get-recipe-row/' + recipe_id
+    type: 'GET'
+    dataType: 'json'
+    error: (response) =>
+      processError response, null
+    success: (response) =>
+      if response.status is 'success'
+        unless $('.order-recipes-table #recipe_' + recipe_id).length
+          $('.order-recipes-table').append response.html
+
+          fixCustomInputs($('.order-recipes-table tr:last-child'))
+        else
+          message.show lang_recipeAlreadyAddedToList, 'warning'
+      else
+        message.show response.message, response.status
 
 Order.getBasketRecipesIngredients = ($basket_select) ->
   basket_id = $basket_select.val()
@@ -82,6 +145,33 @@ Order.getBasketRecipesIngredients = ($basket_select) ->
           fixCustomInputs($ingredients_select.closest('.tab-pane'))
         else
           message.show response.message, response.status
+
+Order.clearOldData = (clear_recipes_count, clear_recipes, clear_ingredients) ->
+  clear_recipes_count = clear_recipes_count == undefined ? true : clear_recipes_count
+  clear_recipes = clear_recipes == undefined || true : clear_recipes
+  clear_ingredients = clear_ingredients == undefined || true : clear_ingredients
+
+  if clear_recipes_count
+    $('.order-recipes-count-select').val('');
+
+  if clear_recipes
+    $('.order-recipes-table [id^="recipe_"]').each () ->
+      Order.deleteRecipe($(this).find('.destroy'))
+
+  if clear_ingredients
+    $('.order-ingredients-table [id^="ingredient_"]').each () ->
+      Order.deleteIngredient($(this).find('.destroy'))
+
+Order.checkBasketChange = () ->
+  old_basket_id = $('#old_basket_id').val()
+  new_basket_id = $('#new_basket_id').val()
+
+  if old_basket_id && new_basket_id && old_basket_id != new_basket_id
+    $('.basket-' + old_basket_id + '-recipe').each () ->
+      Order.deleteRecipe($(this).find('.destroy'))
+
+    $('.basket-' + old_basket_id + '-ingredient').each () ->
+      Order.deleteIngredient($(this).find('.destroy'))
 
 $(document).on "ready", () ->
   $('.orders-table').on 'click', '.change-status', (e) ->
@@ -109,9 +199,14 @@ $(document).on "ready", () ->
 
     return false;
 
-  Order.getBasketRecipes($('.order-basket-select'))
+  if $('.order-weekly-menu-select').val()
+    Order.getWeeklyMenuBaskets($('.order-weekly-menu-select'))
+  else
+    Order.getBasketRecipes($('.order-basket-select'))
 
-  Order.getBasketRecipesIngredients($('.order-basket-select'))
+    Order.getBasketRecipesIngredients($('.order-basket-select'))
+
+  Order.checkBasketChange()
 
   #user select
   $('#user_id').on "select2:select", () ->
@@ -174,47 +269,32 @@ $(document).on "ready", () ->
 
     return false
 
+  #weekly menu
+  $('.order-weekly-menu-select').on "change", ->
+    Order.getWeeklyMenuBaskets($(this))
+
+    Order.clearOldData();
+
   #main basket
   $('.order-basket-select').on "change", ->
     Order.getBasketRecipes($(this))
 
     Order.getBasketRecipesIngredients($(this))
 
-    $('.order-recipes-table [id^="recipe_"]').each () ->
-      $(this).fadeOut(500, () =>
-        $(this).remove()
-      );
+    Order.clearOldData();
 
-    $('.order-ingredients-table [id^="ingredient_"]').each () ->
-      $(this).fadeOut(500, () =>
-        $(this).remove()
-      );
-
-
+  # recipe
   $('.order-recipe-select').on "change", ->
-    recipe = $(this).val()
+    recipe_id = $(this).val()
 
-    if recipe
-      $.ajax
-        url: '/admin/order/get-recipe-row/' + recipe
-        type: 'GET'
-        dataType: 'json'
-        error: (response) =>
-          processError response, null
-        success: (response) =>
-          if response.status is 'success'
-            unless $('.order-recipes-table #recipe_' + recipe).length
-              $('.order-recipes-table').append response.html
-
-              fixCustomInputs($('.order-recipes-table tr:last-child'))
-            else
-              message.show lang_recipeAlreadyAddedToList, 'warning'
-          else
-            message.show response.message, response.status
+    Order.addRecipe(recipe_id)
 
   $(document).on "click", ".order-recipes-table .destroy", ->
     confirm_dialog () =>
       Order.deleteRecipe($(this))
+
+  $('.order-recipes-count-select').on "change", ->
+    Order.selectRecipes($(this))
 
   #ingredients
   $('.order-ingredient-select').on "change", ->

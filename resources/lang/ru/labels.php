@@ -646,4 +646,5 @@ return array (
   'tab_stickers' => 'Стикеры',
   'result' => 'Итог',
   'unit_short' => 'ЕД.',
+  'recipes_count' => 'Количество рецептов',
 );

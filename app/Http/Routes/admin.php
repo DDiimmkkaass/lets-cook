@@ -381,6 +381,14 @@ $router->group(
                     ]
                 )->where('order_id', '[0-9]+');
                 $router->get(
+                    'order/get-weekly-menu-baskets/{weekly_menu_id}',
+                    [
+                        'middleware' => 'ajax',
+                        'as'         => 'admin.order.get_weekly_menu_baskets',
+                        'uses'       => 'Backend\OrderController@getWeeklyMenuBaskets',
+                    ]
+                );
+                $router->get(
                     'order/get-basket-recipes/{basket_id}',
                     [
                         'middleware' => 'ajax',

@@ -190,4 +190,6 @@ return array (
   'min_delivery_date_date' => 'Дата доставки не может быть раннее недели меню на неденю',
   'coupon started_at date_format error' => 'После дата начала не соответствует формату :format.',
   'terms accepted' => 'Вы должны принять "Условия доставки"',
+  'min_recipes_count' => 'Вы должны выбрать не менее :count рецептов',
+  'max_recipes_count' => 'Вы можете выбрать не более :count рецептов',
 );

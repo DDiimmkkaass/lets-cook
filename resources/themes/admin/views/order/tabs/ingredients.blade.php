@@ -26,9 +26,10 @@
             <th class="col-sm-1 text-center">{!! trans('labels.delete') !!}</th>
         </tr>
 
-        @if (count($model->ingredients))
+        @if ($model->ingredients->count())
             @foreach($model->ingredients as $ingredient)
-                <tr id="ingredient_{!! $ingredient->basket_recipe_id.'_'.$ingredient->ingredient_id !!}">
+                <tr id="ingredient_{!! $ingredient->basket_recipe_id.'_'.$ingredient->ingredient_id !!}"
+                    class="basket-{!! $basket_id !!}-ingredient">
                     <td>
                         <div class="form-group @if ($errors->has('ingredients.old.' .$ingredient->id. '.ingredient_id')) has-error @endif">
                             {!! Form::text('ingredients[old][' .$ingredient->id. '][ingredient_id]', $ingredient->ingredient_id, ['id' => 'ingredients.old.' .$ingredient->id. '.ingredient_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
