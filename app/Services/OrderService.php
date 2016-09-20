@@ -257,11 +257,11 @@ class OrderService
         
         $data['basket_id'] = $request->get('basket_id');
         
-        $data['type'] = empty($input['subscribe_period']) ?
-            Order::getTypeIdByName('subscribe') :
-            Order::getTypeIdByName('single');
-        
         $data['subscribe_period'] = $request->get('subscribe_period', 0);
+        $data['type'] = empty($data['subscribe_period']) ?
+            Order::getTypeIdByName('single') :
+            Order::getTypeIdByName('subscribe');
+        
         $data['payment_method'] = $request->get('payment_method');
         
         $data['delivery_date'] = $request->get('delivery_date');
