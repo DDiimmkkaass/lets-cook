@@ -16,6 +16,7 @@ use App\Models\OrderBasket;
 use App\Models\OrderComment;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
+use App\Models\PaymentTransaction;
 use App\Models\User;
 use App\Models\WeeklyMenuBasket;
 use Carbon;
@@ -50,6 +51,7 @@ class OrderService
                 'phone',
                 'additional_phone',
                 DB::raw('1 as baskets_list'),
+                'payment_method',
                 'total',
                 'status',
                 DB::raw('4 as coupon'),
@@ -147,6 +149,7 @@ class OrderService
             ->removeColumn('additional_baskets')
             ->removeColumn('user_id')
             ->removeColumn('additional_phone')
+            ->removeColumn('payment_method')
             ->removeColumn('comment')
             ->removeColumn('city_id')
             ->removeColumn('delivery_time')
@@ -251,9 +254,9 @@ class OrderService
         $data = [];
         
         $data['user_id'] = $user ? $user->id : null;
-        $data['full_name'] = $user ? $user->full_name : $request->get('full_name');
-        $data['email'] = $user ? $user->email : $request->get('email');
-        $data['phone'] = $user ? $user->phone : $request->get('phone');
+        $data['full_name'] = $request->get('full_name');
+        $data['email'] = $request->get('email');
+        $data['phone'] = $request->get('phone');
         
         $data['basket_id'] = $request->get('basket_id');
         

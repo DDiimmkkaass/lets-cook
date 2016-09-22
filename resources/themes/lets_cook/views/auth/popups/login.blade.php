@@ -3,7 +3,8 @@
         <div class="sign-in__title">Вход в личный кабинет</div>
 
         <div class="sign-in__content">
-            <form action="sign-in.php" class="sign-in__form">
+            <form action="{!! localize_route('auth.login.post') !!}" class="sign-in__form">
+                {!! csrf_field() !!}
                 <input type="text" name="sign-in__mail" placeholder="Адрес электронной почты"
                        class="input-text-small" required>
                 <input type="password" name="sign-in__pass" placeholder="Пароль" class="input-text-small" required>

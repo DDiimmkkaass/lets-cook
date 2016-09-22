@@ -5,7 +5,7 @@ function datePicker($obj) {
     let picker = new Pikaday({
         field: document.getElementById($obj.attr('id')),
         firstDay: 1,
-        format: 'D MMMM YYYY',
+        format: 'DD-MM-YYYY',
         i18n: {
             previousMonth : 'Предыдущий месяц',
             nextMonth     : 'Следующий месяц',

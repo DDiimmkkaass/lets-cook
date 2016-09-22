@@ -204,6 +204,7 @@ return [
         Mcamara\LaravelLocalization\LaravelLocalizationServiceProvider::class,
         Collective\Bus\BusServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Artem328\LaravelYandexKassa\YandexKassaServiceProvider::class,
         
         App\Providers\VariableServiceProvider::class,
         App\Providers\ViewComposerServiceProvider::class,
@@ -275,6 +276,7 @@ return [
         'Widget'              => Pingpong\Widget\WidgetFacade::class,
         'LaravelLocalization' => Mcamara\LaravelLocalization\Facades\LaravelLocalization::class,
         'Excel'               => Maatwebsite\Excel\Facades\Excel::class,
+        'YandexKassa'         => Artem328\LaravelYandexKassa\Facades\YandexKassa::class,
     
     ],
 

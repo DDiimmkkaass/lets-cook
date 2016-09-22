@@ -26,12 +26,13 @@ class UserRegisterRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'name'                  => 'required',
-            'email'                 => 'required|email|unique:users',
-            'phone'                 => 'string|regex:/^\+[0-9]+$/|max:17|min:' . config('user.min_phone_length'),
-            'password'              => 'required|confirmed:password_confirmation|min:' .
-                config('auth.passwords.min_length'),
-            'password_confirmation' => 'required',
+            'email'            => 'required|email|unique:users',
+            'full_name'        => 'required',
+            'phone'            => 'required|string|max:17|min:'.config('user.min_phone_length'),
+            'additional_phone' => 'string|max:17|min:'.config('user.min_phone_length'),
+            'gender'           => 'in:'.implode(',', UserInfo::$genders),
+            'birthday'         => 'date_format:d-m-Y',
+            'password'         => 'required|min:'.config('auth.passwords.min_length'),
         ];
         
         return $rules;

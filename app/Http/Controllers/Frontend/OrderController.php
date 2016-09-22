@@ -13,9 +13,10 @@ use App\Models\Basket;
 use App\Models\City;
 use App\Models\Order;
 use App\Models\WeeklyMenuBasket;
+use App\Services\AuthService;
 use App\Services\OrderService;
+use App\Services\PaymentService;
 use App\Services\WeeklyMenuService;
-use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -43,17 +44,37 @@ class OrderController extends FrontendController
     private $weeklyMenuService;
     
     /**
+     * @var \App\Services\PaymentService
+     */
+    private $paymentService;
+    
+    /**
+     * @var \App\Services\AuthService
+     */
+    private $authService;
+    
+    /**
      * OrderController constructor.
      *
      * @param \App\Services\OrderService      $orderService
      * @param \App\Services\WeeklyMenuService $weeklyMenuService
+     * @param \App\Services\PaymentService    $paymentService
+     * @param \App\Services\AuthService       $authService
      */
-    public function __construct(OrderService $orderService, WeeklyMenuService $weeklyMenuService)
-    {
+    public function __construct(
+        OrderService $orderService,
+        WeeklyMenuService $weeklyMenuService,
+        PaymentService $paymentService,
+        AuthService $authService
+    ) {
         parent::__construct();
         
         $this->orderService = $orderService;
         $this->weeklyMenuService = $weeklyMenuService;
+        $this->paymentService = $paymentService;
+        $this->authService = $authService;
+        
+        $this->middleware('auth.check_email_exists', ['only' => ['store']]);
     }
     
     /**
@@ -87,10 +108,14 @@ class OrderController extends FrontendController
     {
         try {
             DB::beginTransaction();
+    
+            abort_if(!$this->weeklyMenuService->checkActiveWeeksBasket($request->get('basket_id', 0)), 404);
+            
+            if (!$this->user) {
+                $this->user = $this->authService->quickRegister($request->all());
+            }
             
             $input = $this->orderService->prepareFrontInputData($request, $this->user);
-            
-            abort_if(!$this->weeklyMenuService->checkActiveWeeksBasket($input['basket_id']), 404);
             
             $model = new Order($input);
             $model->save();
@@ -103,9 +128,16 @@ class OrderController extends FrontendController
             
             DB::commit();
             
+            if ($model->paymentMethod('online')) {
+                $provider = $this->paymentService->getProvider();
+    
+                $html = $provider->getForm($model);
+            }
+            
             return [
                 'status'  => 'success',
                 'message' => trans('front_messages.your order successfully created'),
+                'html'    => isset($html) ? $html : '',
             ];
         } catch (Exception $e) {
             DB::rollBack();
@@ -157,7 +189,7 @@ class OrderController extends FrontendController
     private function _saveRelationships(Order $model, Request $request)
     {
         $this->orderService->saveRecipes($model, $request->get('basket_id'));
-    
+        
         $this->orderService->saveMainBasket($model, $request->get('basket_id'), $model->recipes->count());
         
         $this->orderService->saveAdditionalBaskets($model, $request->get('baskets', []));

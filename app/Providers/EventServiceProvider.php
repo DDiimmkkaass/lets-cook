@@ -36,13 +36,26 @@ class EventServiceProvider extends ServiceProvider
         ],
         
         'App\Events\Frontend\UserRegister' => [
-            'App\Listeners\Events\Frontend\SendAdminEmailAboutNewUser',
             'App\Listeners\Events\Frontend\SendUserActivationEmail',
+        ],
+
+        'App\Events\Frontend\UserQuickRegister' => [
+            'App\Listeners\Events\Frontend\SendUserRegisterInfoEmail',
         ],
 
         'App\Events\Frontend\NewComment' => [
             'App\Listeners\Events\Frontend\SendAdminEmailAboutNewComment',
         ],
+
+        'Artem328\LaravelYandexKassa\Events\BeforeCheckOrderResponse' => [
+            'App\Listeners\Events\Payments\CheckOrderRequisites',
+        ],
+        'Artem328\LaravelYandexKassa\Events\BeforeCancelOrderResponse' => [
+            'App\Listeners\Events\Payments\CancelOrder',
+        ],
+        'Artem328\LaravelYandexKassa\Events\BeforePaymentAvisoResponse' => [
+            'App\Listeners\Events\Payments\ChangeOrderStatusWhenPaymentSuccessful',
+        ]
     ];
 
     /**

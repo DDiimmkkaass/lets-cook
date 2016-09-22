@@ -3,7 +3,9 @@
         <div class="sign-out__title georgia-title">регистрация</div>
 
         <div class="sign-out__content">
-            <form action="sign-out.php" class="sign-out__form">
+            <form action="{!! localize_route('auth.register.post') !!}" method="post" class="sign-out__form">
+                {!! csrf_field() !!}
+
                 <div class="sign-out__side" data-reg="left">
                     <div class="sign-out__form-title">Обязательно заполните</div>
                     <input type="text" name="sign-out__name" placeholder="Как вас зовут" class="input-text-small"
@@ -27,13 +29,13 @@
                     <table class="sign-out__radio-wrapper">
                         <tr class="sign-out__radio">
                             <td><label for="f-sign-out__radio-1">Вас поздравлять с 8 марта</label></td>
-                            <td><input type="radio" id="f-sign-out__radio-1" name="sign-out__radio" value="woman"
+                            <td><input type="radio" id="f-sign-out__radio-1" name="sign-out__radio" value="female"
                                        required><label for="f-sign-out__radio-1"></label></td>
                         </tr>
 
                         <tr class="sign-out__radio">
                             <td><label for="f-sign-out__radio-2">Вас поздравлять с 23 февраля</label></td>
-                            <td><input type="radio" id="f-sign-out__radio-2" name="sign-out__radio" value="man"
+                            <td><input type="radio" id="f-sign-out__radio-2" name="sign-out__radio" value="male"
                                        required><label for="f-sign-out__radio-2"></label></td>
                         </tr>
                     </table>
@@ -54,10 +56,9 @@
                                 <option value="" disabled selected hidden>Откуда вы о нас узнали? Выберите
                                     источник
                                 </option>
-                                <option value="1">От верблюда</option>
-                                <option value="2">Ниоткуда</option>
-                                <option value="3">Бабка возле подъезда</option>
-                                <option value="4">Другое..</option>
+                                <option value="1">От друзей</option>
+                                <option value="2">Из интернета</option>
+                                <option value="3">Другое..</option>
                             </select>
                         </div>
                     </div>

@@ -3,6 +3,7 @@
 return array(
   'error' => 'Ошибка',
   'success' => 'Успешно',
+  'notice' => 'Внимание',
   'payment_method_cash' => 'Наличными',
   'payment_method_online' => 'Онлайн оплата',
   'subscribe_period_label' => '{0} без подписки|{1} раз в неделю|{2} раз в две недели',
@@ -14,4 +15,9 @@ return array(
   'pagination_next' => 'следующие',
   'day_of_week_to_string_when' => '{0} воскресенья|{1} понедельника|{2} вторника|{3} среди|{4} четверга|{5} пятницы|{6} субботы',
   'day_with_number' => '{1} День I|{2} День II|{3} День III|{4} День IV|{5} День V|{6} День VI|{7} День VII',
+  'email' => 'E-mail',
+  'password' => 'Пароль',
+  'login' => 'Войдите',
+  'activate_profile_as_action' => 'Активировать профиль',
+  'to' => 'до',
 );

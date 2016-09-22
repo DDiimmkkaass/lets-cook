@@ -1,11 +1,9 @@
 <?php namespace App\Http\Controllers\Frontend;
 
 use App\Events\Frontend\UserRegister;
-use App\Exceptions\NotValidImageException;
-use App\Services\AuthService;
 use App\Http\Requests\Frontend\Auth\UserRegisterRequest;
 use App\Models\User;
-use App\Models\UserInfo;
+use App\Services\AuthService;
 use App\Services\UserService;
 use App\Traits\Controllers\SaveImageTrait;
 use Carbon;
@@ -18,7 +16,6 @@ use Cartalyst\Sentry\Users\UserNotActivatedException;
 use Cartalyst\Sentry\Users\UserNotFoundException;
 use Cartalyst\Sentry\Users\WrongPasswordException;
 use DB;
-use Event;
 use Exception;
 use FlashMessages;
 use Illuminate\Http\Request;
@@ -38,7 +35,7 @@ class AuthController extends FrontendController
      * @var \App\Services\AuthService
      */
     protected $authService;
-
+    
     /**
      * @var \App\Services\UserService
      */
@@ -56,26 +53,8 @@ class AuthController extends FrontendController
         
         $this->authService = $authService;
         $this->userService = $userService;
-
+        
         $this->setRedirectTo();
-    }
-    
-    /**
-     * @return mixed
-     */
-    public function getLogin()
-    {
-        try {
-            return [
-                'status' => 'success',
-                'html'   => view('partials.popups.auth')->render(),
-            ];
-        } catch (Exception $e) {
-            return [
-                'status'  => 'error',
-                'message' => trans('messages.an error has occurred, try_later'),
-            ];
-        }
     }
     
     /**
@@ -92,24 +71,26 @@ class AuthController extends FrontendController
         
         try {
             if ($user = $this->authService->login($credentials)) {
-                FlashMessages::add('success', trans('messages.you have successfully logged in'));
-                
-                return ['status' => 'success', 'redirect' => session('redirect', false)];
+                return [
+                    'status'   => 'success',
+                    'redirect' => session('redirect', false),
+                    'message'  => trans('front_messages.you have successfully logged in'),
+                ];
             }
             
-            $error = trans('messages.access_denied');
+            $error = trans('front_messages.access_denied');
         } catch (LoginRequiredException $e) {
-            $error = trans('messages.enter your login');
+            $error = trans('front_messages.enter your login');
         } catch (PasswordRequiredException $e) {
-            $error = trans('messages.enter your password');
+            $error = trans('front_messages.enter your password');
         } catch (WrongPasswordException $e) {
-            $error = trans('messages.you have entered a wrong password');
+            $error = trans('front_messages.you have entered a wrong password');
         } catch (UserNotFoundException $e) {
-            $error = trans('messages.user with such email was not found');
+            $error = trans('front_messages.user with such email was not found');
         } catch (UserNotActivatedException $e) {
-            $error = trans('messages.user with such email was not activated');
+            $error = trans('front_messages.user with such email was not activated');
         } catch (UserSuspendedException $e) {
-            $error = trans('messages.user with such email was blocked');
+            $error = trans('front_messages.user with such email was blocked');
             
             $user = User::where('email', $credentials['email'])->first();
             
@@ -120,12 +101,12 @@ class AuthController extends FrontendController
                 $suspensionTime = $throttle->getSuspensionTime();
                 $carbon = Carbon::createFromTimestamp($timestamp)->addMinutes($suspensionTime);
                 
-                $error .= ' '.trans('messages.to').' '.$carbon->format('d.m.Y H:i');
+                $error .= ' '.trans('front_labels.to').' '.$carbon->format('d.m.Y H:i');
             }
         } catch (UserBannedException $e) {
-            $error = trans('messages.user with such email was banned');
+            $error = trans('front_messages.user with such email was banned');
         } catch (Exception $e) {
-            $error = trans('messages.an error has occurred, try_later');
+            $error = trans('front_messages.an error has occurred, try_later');
         }
         
         return ['status' => 'error', 'message' => $error];
@@ -138,23 +119,9 @@ class AuthController extends FrontendController
     {
         Sentry::logout();
         
-        FlashMessages::add('notice', trans('messages.you have successfully logout'));
+        FlashMessages::add('notice', trans('front_messages.you have successfully logout'));
         
         return redirect()->home();
-    }
-    
-    /**
-     * @return array
-     */
-    public function getRegister()
-    {
-        $genders = [];
-        foreach (UserInfo::$genders as $gender) {
-            $genders[$gender] = trans('labels.'.$gender);
-        }
-        $this->data('genders', $genders);
-        
-        return $this->render('auth.register');
     }
     
     /**
@@ -165,45 +132,29 @@ class AuthController extends FrontendController
      */
     public function postRegister(UserRegisterRequest $request, AuthService $authService)
     {
-        $input = $request->all();
-        
         DB::beginTransaction();
         
         try {
-            $this->validateImage('image');
-            
             $input = $this->authService->prepareRegisterInput($request);
             
             $user = $authService->register($input);
-
-            $this->userService->processUserInfo($user, $input);
-
-            $this->userService->processFields($user);
             
-            Event::fire(new UserRegister($user, $input));
+            event(new UserRegister($user, $input));
             
             DB::commit();
             
-            FlashMessages::add(
-                'success',
-                trans('messages.user register success message')
-            );
-            
-            return redirect()->to($this->getRedirectTo());
-        } catch (NotValidImageException $e) {
-            FlashMessages::add(
-                'error',
-                trans('messages.trying to load is too large file or not supported file extension')
-            );
+            return [
+                'status'   => 'success',
+                'message'  => trans('front_messages.user register success message'),
+                'redirect' => $this->getRedirectTo(),
+            ];
         } catch (Exception $e) {
-            $message = trans('messages.user register error');
+            $message = trans('front_messages.user register error');
         }
         
         DB::rollBack();
         
-        FlashMessages::add('error', $message);
-        
-        return redirect()->back()->withInput($input);
+        return ['status' => 'error', 'message' => $message];
     }
     
     /**
@@ -220,19 +171,19 @@ class AuthController extends FrontendController
             if ($user->attemptActivation($code)) {
                 FlashMessages::add(
                     'success',
-                    trans('messages.congratulations, you have successfully activate your account')
+                    trans('front_messages.congratulations, you have successfully activate your account')
                 );
                 
                 return redirect()->home();
             } else {
-                $error = trans('messages.user activation failed, wrong activation code');
+                $error = trans('front_messages.user activation failed, wrong activation code');
             }
         } catch (UserNotFoundException $e) {
-            $error = trans('messages.user with such email was not found');
+            $error = trans('front_messages.user with such email was not found');
         } catch (UserAlreadyActivatedException $e) {
-            $error = trans('messages.user with such email already activated');
+            $error = trans('front_messages.user with such email already activated');
         } catch (Exception $e) {
-            $error = trans('messages.user activation failed, try again later');
+            $error = trans('front_messages.user activation failed, try again later');
         }
         
         FlashMessages::add('error', $error);
@@ -243,7 +194,7 @@ class AuthController extends FrontendController
     /**
      * @param Request $request
      *
-     * @return $this
+     * @return array
      */
     public function postRestore(Request $request)
     {
@@ -258,21 +209,21 @@ class AuthController extends FrontendController
                     ['email' => $email, 'token' => $user->getResetPasswordCode()],
                     function ($message) use ($user) {
                         $message->to($user->email, $user->getFullName())
-                            ->subject(trans('labels.password_restore_subject'));
+                            ->subject(trans('subjects.password_restore_subject'));
                     }
                 );
                 
                 return [
                     'status'  => 'success',
-                    'message' => trans('messages.password restore message'),
+                    'message' => trans('front_messages.password restore message'),
                 ];
             }
             
-            $error = trans('messages.user with such email was not activated');
+            $error = trans('front_messages.user with such email was not activated');
         } catch (UserNotFoundException $e) {
-            $error = trans('messages.user with such email was not found');
+            $error = trans('front_messages.user with such email was not found');
         } catch (Exception $e) {
-            $error = trans('messages.an error has occurred, try_later');
+            $error = trans('front_messages.an error has occurred, please reload the page and try again');
         };
         
         return [
@@ -303,26 +254,26 @@ class AuthController extends FrontendController
                             $user = User::find($user->id);
                             
                             $message->to($user->email, $user->getFullName())
-                                ->subject(trans('labels.password_reset_success_subject'));
+                                ->subject(trans('subjects.password_reset_success_subject'));
                         }
                     );
                     
                     FlashMessages::add(
                         'success',
-                        trans('messages.password restore success message')
+                        trans('front_messages.password restore success message')
                     );
                     
                     return redirect()->home();
                 } else {
-                    $error = trans('messages.you have entered an invalid code');
+                    $error = trans('front_messages.you have entered an invalid code');
                 }
             } else {
-                $error = trans('messages.you have entered an invalid code');
+                $error = trans('front_messages.you have entered an invalid code');
             }
         } catch (UserNotFoundException $e) {
-            $error = trans('messages.user with such email was not found');
+            $error = trans('front_messages.user with such email was not found');
         } catch (Exception $e) {
-            $error = trans('messages.an error has occurred, try_later');
+            $error = trans('front_messages.an error has occurred, try_later');
         }
         
         FlashMessages::add('error', $error);

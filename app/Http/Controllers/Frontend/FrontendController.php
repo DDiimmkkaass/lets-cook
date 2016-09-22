@@ -117,6 +117,7 @@ class FrontendController extends BaseController
                 'max_upload_image_height'            => config('image.max_upload_height'),
                 'lang_error'                         => trans('front_labels.error'),
                 'lang_success'                       => trans('front_labels.success'),
+                'lang_notice'                        => trans('front_labels.notice'),
                 'lang_errorRequestError'             => trans(
                     'messages.an error has occurred, please reload the page and try again'
                 ),

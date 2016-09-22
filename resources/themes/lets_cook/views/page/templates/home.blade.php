@@ -8,14 +8,14 @@
             <h2 class="let-cook__subTitle">просто и вкусно</h2>
 
             <div class="make-order--desktop">
-                <a href="{!! localize_route('baskets.index') !!}" class="choose-basket green-long-button">Выбрать корзину</a>
+                <a href="{!! localize_route('baskets.index', 'current') !!}" class="choose-basket green-long-button">Выбрать корзину</a>
 
                 <a href="#" class="demo-dinner">Заказать пробный ужин</a>
             </div>
         </section>
 
         <section class="make-order--mobile">
-            <a href="{!! localize_route('baskets.index') !!}" class="choose-basket">Выбрать корзину</a>
+            <a href="{!! localize_route('baskets.index', 'current') !!}" class="choose-basket">Выбрать корзину</a>
 
             <a href="#" class="demo-dinner">Заказать пробный ужин</a>
         </section>

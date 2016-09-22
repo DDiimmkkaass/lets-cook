@@ -9,6 +9,7 @@ function popUp(title = '', content = '', callback = function() {}) {
     $title.text(title);
     $content.html(content);
     $popUp.attr('data-active', '');
+    $popUp.attr('style', 'z-index: 999999');
 
     // CLOSE POPUP
     $popUp.off().on('click', '.pop-up__close-layout, .pop-up__close', function() {

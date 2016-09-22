@@ -9,4 +9,7 @@ return array (
   'profile activation' => 'Активация профиля',
   'tmpl_order_successfully_paid' => 'Оплата заказа',
   'tmpl_order_payment_error' => 'Ошибка оплаты заказа',
+  'congrats with register' => 'Поздравляем с регистрацией на сайте',
+  'password_reset_success_subject' => 'Новые данные для входа в аккаунт',
+  'password_restore_subject' => 'Востановление пароля',
 );

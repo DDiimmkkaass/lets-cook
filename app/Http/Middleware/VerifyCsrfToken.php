@@ -30,6 +30,9 @@ class VerifyCsrfToken extends BaseVerifier
         'admin/variable/value/update',
         'admin/order/comment',
         'likes',
+        'payment/check',
+        'payment/cancel',
+        'payment/aviso',
     ];
     
     /**

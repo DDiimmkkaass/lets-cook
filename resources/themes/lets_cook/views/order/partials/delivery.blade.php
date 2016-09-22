@@ -10,17 +10,17 @@
 
             <div class="order-addr-date__date-select" data-select="personal">
                 <label for="f-select-address">Имя</label>
-                <input type="text" id="f-select-full-name" class="order-addr-date__input input-text-small" name="full_name" placeholder="Укажите имя" required>
+                <input type="text" id="f-select-full-name" class="order-addr-date__input input-text-small" name="full_name" placeholder="Укажите имя" value="{!! $user ? $user->getFullName() : '' !!}" required>
             </div>
 
             <div class="order-addr-date__date-select" data-select="personal">
                 <label for="f-select-address">E-mail</label>
-                <input type="text" id="f-select-email" class="order-addr-date__input input-text-small" name="email" placeholder="Укажите e-mail" required>
+                <input type="text" id="f-select-email" class="order-addr-date__input input-text-small" name="email" placeholder="Укажите e-mail" value="{!! $user ? $user->email : '' !!}" required>
             </div>
 
             <div class="order-addr-date__date-select" data-select="personal">
                 <label for="f-select-address">Телефон</label>
-                <input type="text" id="f-select-phone" class="order-addr-date__input input-text-small" name="phone" placeholder="Укажите телефон" required>
+                <input type="text" id="f-select-phone" class="order-addr-date__input input-text-small" name="phone" placeholder="Укажите телефон" value="{!! $user ? $user->phone : '' !!}" required>
             </div>
         </div>
     </div>

@@ -37,8 +37,6 @@ class OrderCreateRequest extends FormRequest
      */
     public function rules()
     {
-        $user_id = Sentry::getUser()->getId();
-        
         $weekly_menu = $this->weeklyMenuService->getWeeklyMenuByBasketId($this->request->get('basket_id', 0));
         $city_id = $this->request->get('city_id', '');
         
@@ -71,7 +69,7 @@ class OrderCreateRequest extends FormRequest
             'terms' => 'accepted',
         ];
         
-        if (!$user_id) {
+        if (!Sentry::check()) {
             $rules['full_name'] = 'required';
             $rules['email'] = 'required|email';
             $rules['phone'] = 'required';

@@ -17,11 +17,6 @@ $router->group(
                 $router->group(
                     ['middleware' => 'guest'],
                     function () use ($router) {
-                        $router->get(
-                            'register',
-                            ['as' => 'auth.register', 'uses' => 'Frontend\AuthController@getRegister']
-                        );
-
                         $router->post(
                             'register',
                             array (
@@ -29,11 +24,7 @@ $router->group(
                                 'uses' => 'Frontend\AuthController@postRegister',
                             )
                         );
-
-                        $router->get(
-                            'login',
-                            ['as' => 'auth.login', 'uses' => 'Frontend\AuthController@getLogin']
-                        );
+                        
                         $router->post(
                             'login',
                             ['as' => 'auth.login.post', 'uses' => 'Frontend\AuthController@postLogin']

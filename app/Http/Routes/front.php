@@ -106,3 +106,37 @@ $router->group(
         );
     }
 );
+
+$router->group(
+    [
+        'prefix' => 'payment',
+    ],
+    function () use ($router) {
+        $router->post(
+            '/check',
+            ['as' => 'payment.check', 'uses' => 'Frontend\PaymentController@check']
+        );
+        $router->post(
+            'aviso',
+            ['as' => 'payment.aviso', 'uses' => 'Frontend\PaymentController@aviso']
+        );
+        $router->post(
+            'cancel',
+            ['as' => 'payment.cancel', 'uses' => 'Frontend\PaymentController@cancel']
+        );
+    
+        $router->get(
+            'success',
+            ['as' => 'payment.success', 'uses' => 'Frontend\PaymentController@success']
+        );
+        $router->get(
+            'fail',
+            ['as' => 'payment.fail', 'uses' => 'Frontend\PaymentController@fail']
+        );
+    
+        $router->get(
+            'instruction',
+            ['as' => 'payment.instruction', 'uses' => 'Frontend\PaymentController@instruction']
+        );
+    }
+);

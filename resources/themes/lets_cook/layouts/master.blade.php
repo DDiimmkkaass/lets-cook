@@ -21,6 +21,8 @@
 
     @include('partials.footer')
 
+    @include('partials.modules.messages')
+
 </div>
 
 @include('partials.foot')
