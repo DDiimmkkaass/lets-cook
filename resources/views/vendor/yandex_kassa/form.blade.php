@@ -1,6 +1,6 @@
 <div id="payment_form">
     <form action="{{yandex_kassa_form_action()}}" method="{{yandex_kassa_form_method()}}" class="form-horizontal">
-        <input name="scId" type="hidden" value="{{yandex_kassa_sc_id()}}">
+        <input name="scid" type="hidden" value="{{yandex_kassa_sc_id()}}">
         <input name="shopId" type="hidden" value="{{yandex_kassa_shop_id()}}">
         <input name="orderNumber" type="hidden" value="{{ $order->id }}">
         <input name="paymentType" type="hidden" value="">
