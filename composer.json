@@ -36,7 +36,8 @@
         "nicolaslopezj/searchable": "1.*",
         "maatwebsite/excel": "~2.1.0",
         "laravelcollective/bus": "^5.2",
-        "artem328/laravel-yandex-kassa": "1.0.*"
+        "artem328/laravel-yandex-kassa": "1.0.*",
+        "guzzlehttp/guzzle": "~5.3|~6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
