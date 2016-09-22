@@ -68,6 +68,17 @@ class CheckOrderRequisites
             
             return $event->responseParameters;
         }
+    
+        $order = Order::find($event->request->get('orderNumber'));
+        
+        if ($order) {
+            $this->paymentService->storeTransaction(
+                $event->request->get('orderNumber'),
+                $event->request->all(),
+                'success',
+                'checkPayment'
+            );
+        }
         
         return null;
     }
