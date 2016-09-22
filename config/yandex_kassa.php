@@ -85,13 +85,13 @@ return [
     */
     'route' => [
         'checkOrder' => [
-            'url' => '/yandex_kassa/checkOrder',
+            'url' => '/payment/check',
         ],
         'cancelOrder' => [
-            'url' => '/yandex_kassa/cancelOrder'
+            'url' => '/payment/cancel'
         ],
         'paymentAviso' => [
-            'url' => '/yandex_kassa/paymentAviso',
+            'url' => '/payment/aviso',
         ]
     ],
 ];

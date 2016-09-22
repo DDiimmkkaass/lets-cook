@@ -114,15 +114,15 @@ $router->group(
     function () use ($router) {
         $router->post(
             '/check',
-            ['as' => 'payment.check', 'uses' => 'Frontend\PaymentController@check']
+            ['as' => 'payment.check', 'uses' => 'Frontend\PaymentController@checkOrder']
         );
         $router->post(
             'aviso',
-            ['as' => 'payment.aviso', 'uses' => 'Frontend\PaymentController@aviso']
+            ['as' => 'payment.aviso', 'uses' => 'Frontend\PaymentController@paymentAviso']
         );
         $router->post(
             'cancel',
-            ['as' => 'payment.cancel', 'uses' => 'Frontend\PaymentController@cancel']
+            ['as' => 'payment.cancel', 'uses' => 'Frontend\PaymentController@cancelOrder']
         );
     
         $router->get(

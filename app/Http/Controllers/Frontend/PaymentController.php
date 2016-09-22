@@ -2,37 +2,15 @@
 
 namespace App\Http\Controllers\Frontend;
 
-use App\Services\PaymentService;
+use Artem328\LaravelYandexKassa\YandexKassaController;
 use FlashMessages;
 
 /**
  * Class PaymentController
  * @package App\Http\Controllers\Frontend
  */
-class PaymentController extends FrontendController
+class PaymentController extends YandexKassaController
 {
-    
-    /**
-     * @var string
-     */
-    public $module = 'payment';
-    
-    /**
-     * @var \App\Services\PaymentService
-     */
-    protected $paymentService;
-    
-    /**
-     * PaymentController constructor.
-     *
-     * @param \App\Services\PaymentService $paymentService
-     */
-    public function __construct(PaymentService $paymentService)
-    {
-        parent::__construct();
-        
-        $this->paymentService = $paymentService;
-    }
     
     /**
      * @return \Illuminate\Http\RedirectResponse
