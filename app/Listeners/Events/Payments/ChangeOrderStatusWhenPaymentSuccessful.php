@@ -51,7 +51,7 @@ class ChangeOrderStatusWhenPaymentSuccessful
         $order = Order::find($event->request->get('orderNumber'));
         
         if ($event->request->isValidHash()) {
-            $order->status(Order::getStatusIdByName('paid'));
+            $order->status = Order::getStatusIdByName('paid');
             $order->save();
     
             $this->orderService->addSystemOrderComment($order, trans('payments.success_payment'));
