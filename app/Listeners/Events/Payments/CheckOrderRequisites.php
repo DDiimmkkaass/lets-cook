@@ -62,7 +62,7 @@ class CheckOrderRequisites
                 
                 $this->orderService->addSystemOrderComment(
                     $order,
-                    trans('payments.validation_fails').': '.implode(', ', $this->paymentService->getErrors())
+                    trans('payments.validation_fails').': '.implode(', ', $provider->getErrors())
                 );
             }
             
