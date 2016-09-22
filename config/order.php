@@ -14,7 +14,7 @@ return [
         'вечером',
     ],
 
-    'min_recipes' => 3,
+    'min_recipes' => 1,
     
     /*
      * time ahead, for which generated subscription orders

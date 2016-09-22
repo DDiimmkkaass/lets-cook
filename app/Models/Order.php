@@ -356,6 +356,14 @@ class Order extends Model
     }
     
     /**
+     * @return int
+     */
+    public function getPortions()
+    {
+        return $this->main_basket->getPortions();
+    }
+    
+    /**
      * @return float
      */
     public function getTotal()
@@ -404,6 +412,22 @@ class Order extends Model
     }
     
     /**
+     * @param string $split
+     *
+     * @return string
+     */
+    public function getAdditionalBasketsList($split = ', ')
+    {
+        $list = [];
+        
+        $this->additional_baskets->each(function ($item) use (&$list) {
+            $list[] = $item->getName();
+        });
+        
+        return implode($split, $list);
+    }
+    
+    /**
      * @return string
      */
     public function getUserFullName()
@@ -443,6 +467,17 @@ class Order extends Model
     public function getDeliveryDate()
     {
         return empty($this->delivery_date) ? '' : Carbon::createFromFormat('d-m-Y', $this->delivery_date)->startOfDay();
+    }
+    
+    /**
+     * @return string
+     */
+    public function getFormattedDeliveryDate()
+    {
+        return $this->getDeliveryDate()->format('d').' '.
+            get_localized_date($this->delivery_date, 'd-m-Y', false, '', '%f').', '.
+            day_of_week($this->delivery_date, 'd-m-Y').', '.
+            $this->delivery_time;
     }
     
     /**

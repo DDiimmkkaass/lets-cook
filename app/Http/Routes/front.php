@@ -69,7 +69,10 @@ $router->post(
 );
 
 //order
-$router->get('order/{basket_id}', ['as' => 'order.index', 'uses' => 'Frontend\OrderController@index']);
+$router->get('order/{basket_id}', ['as' => 'order.index', 'uses' => 'Frontend\OrderController@index'])
+    ->where('basket_id', '[0-9]+');
+$router->get('order/repeat/{basket_id}', ['as' => 'order.repeat', 'uses' => 'Frontend\OrderController@repeat'])
+    ->where('basket_id', '[0-9]+');
 $router->post(
     'order/store',
     ['as' => 'order.store', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@store']
@@ -85,6 +88,15 @@ $router->group(
         $router->get(
             '/index',
             ['as' => 'profiles.index', 'uses' => 'Frontend\ProfileController@index']
+        );
+    
+        $router->get(
+            '/orders',
+            ['as' => 'profiles.orders.index', 'uses' => 'Frontend\ProfileController@ordersIndex']
+        );
+        $router->get(
+            '/orders/{order_id}/edit',
+            ['as' => 'profiles.orders.edit', 'uses' => 'Frontend\ProfileController@orderEdit']
         );
         
         $router->get(
@@ -124,7 +136,7 @@ $router->group(
             'cancel',
             ['as' => 'payment.cancel', 'uses' => 'Frontend\PaymentController@cancelOrder']
         );
-    
+        
         $router->get(
             'success',
             ['as' => 'payment.success', 'uses' => 'Frontend\PaymentController@success']
@@ -133,7 +145,7 @@ $router->group(
             'fail',
             ['as' => 'payment.fail', 'uses' => 'Frontend\PaymentController@fail']
         );
-    
+        
         $router->get(
             'instruction',
             ['as' => 'payment.instruction', 'uses' => 'Frontend\PaymentController@instruction']

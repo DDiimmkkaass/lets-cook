@@ -137,7 +137,7 @@ class AppValidator extends Validator
      */
     public function validateMaxRecipesCount($attribute, $value, $parameters)
     {
-        $count = (isset($value['old']) ? count($value['old']): 0) + (isset($value['new']) ? count($value['new']): 0);
+        $count = (isset($value['old']) ? count($value['old']): 0) + (isset($value['new']) ? count($value['new']) : 0);
         
         return $count <= config('weekly_menu.menu_days');
     }

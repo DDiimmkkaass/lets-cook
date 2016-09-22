@@ -9,7 +9,7 @@
 namespace App\Services;
 
 use App\Http\Requests\Frontend\User\UserUpdateRequest;
-use App\Models\Field;
+use App\Models\Order;
 use App\Models\User;
 use App\Models\UserInfo;
 use Carbon;
@@ -21,7 +21,7 @@ use ImageUploader;
  */
 class UserService
 {
-
+    
     /**
      * @param int $id
      *
@@ -29,9 +29,9 @@ class UserService
      */
     public function getUserById($id)
     {
-        return User::with(['info', 'fields'])->whereId($id)->first();
+        return User::with('fields')->whereId($id)->first();
     }
-
+    
     /**
      * @param UserUpdateRequest $request
      *
@@ -40,13 +40,13 @@ class UserService
     public function prepareInput(UserUpdateRequest $request)
     {
         $input = $request->all();
-
+        
         $input['avatar'] = $request->file('avatar_new') ?
             ImageUploader::upload($request->file('avatar_new'), 'user') :
             $input['avatar_old'];
-
+        
         $input['birthday'] = Carbon::now()->format('d-m-Y');
-
+        
         return $input;
     }
     
@@ -58,12 +58,10 @@ class UserService
     {
         $model->email = $input['email'];
         $model->save();
-
+        
         $this->processUserInfo($model, $input);
-
-        $this->processFields($model);
     }
-
+    
     /**
      * @param \App\Models\User $model
      * @param string           $password
@@ -71,7 +69,7 @@ class UserService
     public function updatePassword(User $model, $password)
     {
         $model->password = $password;
-
+        
         $model->save();
     }
     
@@ -83,47 +81,31 @@ class UserService
     {
         if ($model->info) {
             $model->info->fill($input);
-
+            
             $model->info->save();
         } else {
             $info = new UserInfo();
             $info->fill($input);
-
+            
             $model->info()->save($info);
         }
     }
-
+    
     /**
-     * @param \App\Models\User $user
+     * @param int   $user_id
+     * @param array $status
+     * @param array $with
+     *
+     * @return int
      */
-    public function processFields(User $user)
+    public function getOrders($user_id, $status = ['archived'], $with = [])
     {
-        $data = request('fields.remove', []);
-        foreach ($data as $id) {
-            $item = $user->fields()->find($id);
-
-            if ($item) {
-                $item->delete();
-            }
-        }
-
-        $data = request('fields.old', []);
-        foreach ($data as $key => $item) {
-            if (!empty($item['value'])) {
-                $_item = $user->fields()->find($key);
-
-                if ($item) {
-                    $_item->update($item);
-                }
-            }
-        }
-
-        $data = request('fields.new', []);
-        foreach ($data as $item) {
-            if (!empty($item['value'])) {
-                $item = new Field($item);
-                $user->fields()->save($item);
-            }
-        }
+        $with = array_merge(['main_basket', 'main_basket.weekly_menu_basket', 'additional_baskets'], $with);
+        
+        return Order::with($with)
+            ->ofStatus($status)
+            ->latest()
+            ->where('user_id', $user_id)
+            ->get();
     }
 }

@@ -10,7 +10,6 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Requests\Frontend\User\UserPasswordUpdateRequest;
 use App\Http\Requests\Frontend\User\UserUpdateRequest;
-use App\Models\User;
 use App\Models\UserInfo;
 use App\Services\UserService;
 use Cartalyst\Sentry\Users\WrongPasswordException;
@@ -35,16 +34,16 @@ class ProfileController extends FrontendController
      * @var UserService
      */
     private $userService;
-
+    
     /**
      * ProfileController constructor.
      *
-     * @param \App\Services\UserService    $userService
+     * @param \App\Services\UserService $userService
      */
     public function __construct(UserService $userService)
     {
         parent::__construct();
-
+        
         $this->userService = $userService;
     }
     
@@ -53,24 +52,47 @@ class ProfileController extends FrontendController
      */
     public function index()
     {
-        $user = $this->_getUser();
-
-        view()->share('user', $user);
-
-        Meta::title($user->getFullName());
+        Meta::title($this->user->getFullName());
         
         return $this->render($this->module.'.index');
     }
-
+    
+    /**
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function ordersIndex()
+    {
+        $this->data(
+            'active_orders',
+            $this->userService->getOrders($this->user->id, ['changed', 'paid', 'processed'], ['recipes'])
+        );
+        
+        $this->data('history_orders', $this->userService->getOrders($this->user->id));
+        
+        return $this->render($this->module.'.orders_index');
+    }
+    
+    /**
+     * @param itn $order_id
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function orderEdit($order_id)
+    {
+        $order = $this->user->orders()->whereId($order_id)->first();
+        
+        abort_if(!$order, 404);
+    
+        $this->data('order', $order);
+    
+        return $this->render($this->module.'.order_edit');
+    }
+    
     /**
      * @return \Illuminate\Contracts\View\View
      */
     public function edit()
     {
-        $user = $this->_getUser();
-
-        view()->share('user', $user);
-        
         $this->fillAdditionalTemplateData();
         
         return $this->render($this->module.'.edit');
@@ -91,7 +113,7 @@ class ProfileController extends FrontendController
             $this->userService->update($model, $input);
             
             FlashMessages::add('success', trans('messages.changes successfully saved'));
-
+            
             return redirect()->route('profiles.index');
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.an error has occurred, try_later'));
@@ -99,7 +121,7 @@ class ProfileController extends FrontendController
         
         return redirect()->route('profiles.edit');
     }
-
+    
     /**
      * @return \Illuminate\Contracts\View\View
      */
@@ -107,7 +129,7 @@ class ProfileController extends FrontendController
     {
         return $this->render($this->module.'.change_password');
     }
-
+    
     /**
      * @param \App\Http\Requests\Frontend\User\UserPasswordUpdateRequest $request
      *
@@ -116,24 +138,24 @@ class ProfileController extends FrontendController
     public function updatePassword(UserPasswordUpdateRequest $request)
     {
         $model = $this->_getUser();
-
+        
         try {
             Sentry::findUserByCredentials(['email' => $model->email, 'password' => $request->get('old_password')]);
-
+            
             $this->userService->updatePassword($model, $request->get('password'));
-
+            
             FlashMessages::add('success', trans('messages.changes successfully saved'));
-
+            
             return redirect()->route('profiles.index');
         } catch (WrongPasswordException $e) {
             FlashMessages::add('error', trans('messages.you have entered a wrong password'));
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.an error has occurred, try_later'));
         }
-
+        
         return redirect()->back();
     }
-
+    
     /**
      * fill additional template data
      */
@@ -156,7 +178,7 @@ class ProfileController extends FrontendController
     private function _getUser($id = false)
     {
         $user = $this->userService->getUserById($id ? : $this->user->id);
-
+        
         if (!$user) {
             Sentry::logout();
             

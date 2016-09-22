@@ -86,6 +86,16 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
     }
     
     /**
+     * @param int $value
+     *
+     * @return int
+     */
+    public function getPortionsAttribute($value)
+    {
+        return (int) $value;
+    }
+    
+    /**
      * @param $query
      *
      * @return mixed
@@ -208,6 +218,22 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
         }
         
         return $this->price;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getRecipesCount()
+    {
+        return (int) $this->recipes->count();
+    }
+    
+    /**
+     * @return int
+     */
+    public function getPortions()
+    {
+        return (int) $this->portions;
     }
     
     /**

@@ -118,6 +118,24 @@ class OrderBasket extends Model
     }
     
     /**
+     * @return string
+     */
+    public function getImage()
+    {
+        return empty($this->weekly_menu_basket_id) ? $this->basket->getImage() : $this->weekly_menu_basket->getImage();
+    }
+    
+    /**
+     * @return string
+     */
+    public function getPortions()
+    {
+        return (int) empty($this->weekly_menu_basket_id) ?
+            $this->basket->portions :
+            $this->weekly_menu_basket->portions;
+    }
+    
+    /**
      * @param int $recipes
      *
      * @return int
