@@ -105,7 +105,7 @@ class UserInfo extends Eloquent
      */
     public function getFullAddress()
     {
-        $address = trans('labels.city_short').' ';
+        $address = '';
         
         if (empty($this->city_id)) {
             $address .= $this->city_name;
@@ -113,6 +113,8 @@ class UserInfo extends Eloquent
             $address .= $this->city->name;
         }
         
-        return trim($address.' '.$this->address);
+        $address = trim($address.' '.$this->address);
+        
+        return $address ? trans('labels.city_short').' '.$address : '';
     }
 }
