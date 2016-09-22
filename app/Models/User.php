@@ -19,7 +19,7 @@ class User extends SentryUser implements FrontLink
     /**
      * @var array
      */
-    protected $with = ['info'];
+    protected $with = ['info', 'info.city'];
     
     /**
      * @var string
@@ -133,6 +133,18 @@ class User extends SentryUser implements FrontLink
     /**
      * @return string
      */
+    public function getAdditionalPhoneAttribute()
+    {
+        if (empty($this->info->additional_phone)) {
+            return '';
+        }
+        
+        return $this->info->additional_phone;
+    }
+    
+    /**
+     * @return string
+     */
     public function getBirthdayAttribute()
     {
         if (empty($this->info->birthday)) {
@@ -167,6 +179,42 @@ class User extends SentryUser implements FrontLink
     }
     
     /**
+     * @return string
+     */
+    public function getCityIdAttribute()
+    {
+        if (empty($this->info->city_id)) {
+            return null;
+        }
+        
+        return $this->info->city_id;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getCityNameAttribute()
+    {
+        if (empty($this->info->city_name)) {
+            return '';
+        }
+        
+        return $this->info->city_name;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getAddressAttribute()
+    {
+        if (empty($this->info->address)) {
+            return '';
+        }
+        
+        return $this->info->address;
+    }
+    
+    /**
      * @return mixed
      */
     public function getFullName()
@@ -175,11 +223,11 @@ class User extends SentryUser implements FrontLink
     }
     
     /**
-     * @return bool
+     * @return string
      */
-    public function exist()
+    public function getFullAddress()
     {
-        return !empty($this->id);
+        return $this->info->getFullAddress();
     }
     
     /**

@@ -7,7 +7,7 @@
     <div class="col-md-4 pull-right ta-right">
         @if ($user->hasAccess('user.write'))
             @if (!isset($without_password_change))
-                <a href="{!! route('admin.user.new_password.get', $model->id) !!}" class="btn btn-sm btn-warning margin-right btn-flat">{!! trans("labels.change_password") !!}</a>
+                <a href="{!! route('admin.user.new_password.get', $model->id) !!}" class="btn btn-sm btn-warning margin-right btn-flat margin-right-10">{!! trans("labels.change_password") !!}</a>
             @endif
         @endif
 

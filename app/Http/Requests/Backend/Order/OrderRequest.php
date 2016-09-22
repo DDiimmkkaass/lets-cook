@@ -63,6 +63,7 @@ class OrderRequest extends FormRequest
             'delivery_date' => ['required', 'date_format:"d-m-Y"'],
             'delivery_time' => 'required',
             
+            'city_id'   => 'required_without:city_name|exists:cities,id',
             'city_name' => 'required_without:city_id',
             'address'   => 'required',
             

@@ -17,7 +17,7 @@ use App\Models\UserInfo;
  */
 class UserInfoRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,10 +26,14 @@ class UserInfoRequest extends FormRequest
     public function rules()
     {
         return [
-            'full_name' => 'required',
-            'birthday'  => 'date_format:d-m-Y',
-            'phone'     => 'string|regex:/^\+[0-9]+$/|max:17|min:'.config('user.min_phone_length'),
-            'gender'    => 'in:'.implode(',', UserInfo::$genders),
+            'full_name'        => 'required',
+            'birthday'         => 'date_format:d-m-Y',
+            'phone'            => 'string|regex:/^\+[0-9]+$/|max:17|min:'.config('user.min_phone_length'),
+            'additional_phone' => 'string|regex:/^\+[0-9]+$/|max:17|min:'.config('user.min_phone_length'),
+            'gender'           => 'in:'.implode(',', UserInfo::$genders),
+            'city_id'          => 'required_without:city_name|exists:cities,id',
+            'city_name'        => 'required_without:city_id',
+            'address'          => 'required',
         ];
     }
 }

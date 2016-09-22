@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Requests\Backend\User\PasswordChangeRequest;
 use App\Http\Requests\Backend\User\UserCreateRequest;
 use App\Http\Requests\Backend\User\UserUpdateRequest;
+use App\Models\City;
 use App\Models\Field;
 use App\Models\User;
 use App\Models\UserInfo;
@@ -406,6 +407,12 @@ class UserController extends BackendController
             $genders[$gender] = trans('labels.'.$gender);
         }
         $this->data('genders', $genders);
+    
+        $cities = ['' => trans('labels.another')];
+        foreach (City::positionSorted()->get() as $city) {
+            $cities[$city->id] = $city->name;
+        }
+        $this->data('cities', $cities);
 
         //field types
         $field_types = ['' => trans('labels.please_select')];

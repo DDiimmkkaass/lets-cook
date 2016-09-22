@@ -34,9 +34,13 @@ class UserInfo extends Eloquent
         'user_id',
         'full_name',
         'phone',
+        'additional_phone',
         'gender',
         'birthday',
         'avatar',
+        'city_id',
+        'city_name',
+        'address',
     ];
 
     /**
@@ -49,8 +53,15 @@ class UserInfo extends Eloquent
      */
     public function user()
     {
-
         return $this->belongsTo(User::class, 'user_id');
+    }
+    
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function city()
+    {
+        return $this->belongsTo(City::class, 'city_id');
     }
 
     /**
@@ -66,6 +77,14 @@ class UserInfo extends Eloquent
             $this->attributes['birthday'] = Carbon::createFromFormat('d-m-Y', $value)->startOfDay()->format('Y-m-d');
         }
     }
+    
+    /**
+     * @param int $value
+     */
+    public function setCityIdAttribute($value)
+    {
+        $this->attributes['city_id'] = empty($value) ? null : (int) $value;
+    }
 
     /**
      * @param string $value
@@ -79,5 +98,21 @@ class UserInfo extends Eloquent
         } else {
             return Carbon::createFromFormat('Y-m-d', $value)->startOfDay()->format('d-m-Y');
         }
+    }
+    
+    /**
+     * @return string
+     */
+    public function getFullAddress()
+    {
+        $address = trans('labels.city_short').' ';
+        
+        if (empty($this->city_id)) {
+            $address .= $this->city_name;
+        } else {
+            $address .= $this->city->name;
+        }
+        
+        return trim($address.' '.$this->address);
     }
 }

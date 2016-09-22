@@ -47,29 +47,9 @@ class ProfileController extends FrontendController
 
         $this->userService = $userService;
     }
-
-    /**
-     * public user page
-     *
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function show($id)
-    {
-        $model = $this->userService->getUserById($id);
-
-        abort_if(!$model, 404);
-
-        $this->data('model', $model);
-
-        Meta::title($model->getFullName());
-
-        return $this->render($this->module.'.show');
-    }
     
     /**
-     * @return $this
+     * @return \Illuminate\Contracts\View\View
      */
     public function index()
     {
@@ -83,7 +63,7 @@ class ProfileController extends FrontendController
     }
 
     /**
-     * @return $this
+     * @return \Illuminate\Contracts\View\View
      */
     public function edit()
     {
@@ -121,7 +101,7 @@ class ProfileController extends FrontendController
     }
 
     /**
-     * @return $this
+     * @return \Illuminate\Contracts\View\View
      */
     public function editPassword()
     {

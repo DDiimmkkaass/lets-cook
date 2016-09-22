@@ -197,6 +197,7 @@ return array (
   'patronymic' => 'Отчество',
   'personal_data' => 'Личные данные',
   'phone' => 'Телефон',
+  'additional_phone' => 'Дополнительный телефон',
   'photo' => 'Фото',
   'please_select' => '- выбрать -',
   'please_select_image' => 'Виберите изображение',

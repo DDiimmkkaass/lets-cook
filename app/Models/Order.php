@@ -182,14 +182,6 @@ class Order extends Model
     /**
      * @param string $value
      */
-    public function setCityAttribute($value)
-    {
-        $this->attributes['city'] = empty($value) ? null : (string) $value;
-    }
-    
-    /**
-     * @param string $value
-     */
     public function setDeliveryDateAttribute($value)
     {
         $this->attributes['delivery_date'] = Carbon::createFromFormat('d-m-Y', $value)
