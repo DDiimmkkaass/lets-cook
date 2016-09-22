@@ -16,7 +16,6 @@ use App\Models\OrderBasket;
 use App\Models\OrderComment;
 use App\Models\OrderIngredient;
 use App\Models\OrderRecipe;
-use App\Models\PaymentTransaction;
 use App\Models\User;
 use App\Models\WeeklyMenuBasket;
 use Carbon;
@@ -651,5 +650,36 @@ class OrderService
                 }
             }
         }
+    }
+    
+    /**
+     * @param int $order_id
+     *
+     * @return Order|null
+     */
+    public function getOrder($order_id)
+    {
+        return Order::with('main_basket', 'additional_baskets')->whereId($order_id)->first();
+    }
+    
+    /**
+     * @param $repeat_order
+     *
+     * @return WeeklyMenuBasket|null
+     */
+    public function getSameActiveBasket($repeat_order)
+    {
+        $active_week = active_week_menu_week();
+        
+        $basket = WeeklyMenuBasket::with(
+            ['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients']
+        )->joinWeeklyMenu()
+            ->where(['weekly_menus.year' => $active_week->year, 'weekly_menus.week' => $active_week->weekOfYear])
+            ->whereBasketId($repeat_order->main_basket->weekly_menu_basket->basket_id)
+            ->wherePortions($repeat_order->main_basket->getPortions())
+            ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
+            ->first();
+        
+        return $basket;
     }
 }

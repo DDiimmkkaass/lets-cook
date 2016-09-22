@@ -1,4 +1,25 @@
+Order = {};
+
+Order.calculateTotal = () ->
+  $total = $('#order_total_desktop')
+  $total_mobile = $('#order_total_mobile')
+  total = parseInt($total.data('total'))
+
+  $('.order-add-more__list .checkbox-button input[type="checkbox"]').each () ->
+    if ($(this).is(':checked'))
+      total += parseInt($(this).data('price'))
+
+  $total.data('total', total);
+
+  total += '<span>' + currency + '</span>';
+
+  $total.html(total);
+  $total_mobile.html(total);
+
 $(document).on "ready", () ->
+  if $('.order-create-form').length
+    Order.calculateTotal();
+
   $('.order-create-form').on 'click', '[name="order-submit"]', (e) ->
     e.preventDefault()
     

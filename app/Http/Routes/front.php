@@ -69,9 +69,9 @@ $router->post(
 );
 
 //order
+$router->get('order/{order_id}/repeat', ['as' => 'order.repeat', 'uses' => 'Frontend\OrderController@repeat'])
+    ->where('order_id', '[0-9]+');
 $router->get('order/{basket_id}', ['as' => 'order.index', 'uses' => 'Frontend\OrderController@index'])
-    ->where('basket_id', '[0-9]+');
-$router->get('order/repeat/{basket_id}', ['as' => 'order.repeat', 'uses' => 'Frontend\OrderController@repeat'])
     ->where('basket_id', '[0-9]+');
 $router->post(
     'order/store',

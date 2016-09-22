@@ -10,17 +10,26 @@
 
             <div class="order-addr-date__date-select" data-select="personal">
                 <label for="f-select-address">Имя</label>
-                <input type="text" id="f-select-full-name" class="order-addr-date__input input-text-small" name="full_name" placeholder="Укажите имя" value="{!! $user ? $user->getFullName() : '' !!}" required>
+                <input type="text" id="f-select-full-name" class="order-addr-date__input input-text-small"
+                       name="full_name" placeholder="Укажите имя"
+                       value="{!! empty($repeat_order) ? ($user ? $user->getFullName() : '') : $repeat_order->full_name !!}"
+                       required>
             </div>
 
             <div class="order-addr-date__date-select" data-select="personal">
                 <label for="f-select-address">E-mail</label>
-                <input type="text" id="f-select-email" class="order-addr-date__input input-text-small" name="email" placeholder="Укажите e-mail" value="{!! $user ? $user->email : '' !!}" required>
+                <input type="text" id="f-select-email" class="order-addr-date__input input-text-small" name="email"
+                       placeholder="Укажите e-mail"
+                       value="{!! empty($repeat_order) ? ($user ? $user->email : '') : $repeat_order->email !!}"
+                       required>
             </div>
 
             <div class="order-addr-date__date-select" data-select="personal">
                 <label for="f-select-address">Телефон</label>
-                <input type="text" id="f-select-phone" class="order-addr-date__input input-text-small" name="phone" placeholder="Укажите телефон" value="{!! $user ? $user->phone : '' !!}" required>
+                <input type="text" id="f-select-phone" class="order-addr-date__input input-text-small" name="phone"
+                       placeholder="Укажите телефон"
+                       value="{!! empty($repeat_order) ? ($user ? $user->phone : '') : $repeat_order->phone !!}"
+                       required>
             </div>
         </div>
     </div>
@@ -41,10 +50,13 @@
 
             <div class="order-addr-date__date-select main-select" data-select="date-time">
                 <label for="f-select-time">Время</label>
+                @php($_time = empty($repeat_order) ? '' : $repeat_order->delivery_time)
                 <select class="main-select__wrapper" name="delivery_time" id="f-select-time" required>
                     <option value="" disabled selected hidden>Выберите время</option>
                     @foreach($delivery_times as $time)
-                        <option value="{!! $time !!}">{!! $time !!}</option>
+                        <option value="{!! $time !!}" @if ($time == $_time) selected="selected" @endif>
+                            {!! $time !!}
+                        </option>
                     @endforeach
                 </select>
             </div>
@@ -57,24 +69,32 @@
 
             <div class="order-addr-date__date-select main-select" data-select="city">
                 <label for="f-select-city">Город</label>
+                @php($_city_id = empty($repeat_order) ? ($user ? $user->city_id : '' ) : $repeat_order->city_id)
+                @php($_city_name = empty($repeat_order) ? ($user ? $user->city_name : '') : $repeat_order->city_name)
                 <select class="main-select__wrapper" name="city_id" id="f-select-city" required>
                     <option value="" disabled selected hidden>Выберите город</option>
                     @foreach($cities as $city)
-                        <option value="{!! $city->id !!}">{!! $city->name !!}</option>
+                        <option value="{!! $city->id !!}" @if ($city->id == $_city_id) selected="selected" @endif>
+                            {!! $city->name !!}
+                        </option>
                     @endforeach
-                    <option value="0">Другой..</option>
+                    <option value="0" @unless (empty($_city_name)) selected="selected" @endunless>Другой..</option>
                 </select>
             </div>
 
-            <div class="order-addr-date__date-select" data-select="city-name">
+            <div class="order-addr-date__date-select" data-select="city-name"
+                 @unless (empty($_city_name)) data-active @endunless>
                 <label for="f-select-address">Др. город</label>
-                <input type="text" id="f-select-other-city" class="order-addr-date__input input-text-small" name="city_name" placeholder="Укажите город">
+                <input type="text" id="f-select-other-city" class="order-addr-date__input input-text-small"
+                       name="city_name" placeholder="Укажите город"
+                       value="{!! $_city_name !!}">
             </div>
 
             <div class="order-addr-date__date-select" data-select="address">
                 <label for="f-select-address">Адрес</label>
                 <input type="text" id="f-select-address" class="order-addr-date__input input-text-small"
-                       name="address" placeholder="Укажите адрес">
+                       name="address" placeholder="Укажите адрес"
+                       value="{!! empty($repeat_order) ? ($user ? $user->address : '') : $repeat_order->address !!}">
             </div>
         </div>
     </div>
@@ -87,7 +107,7 @@
             </div>
 
             <input type="text" class="order-addr-date__input input-text-small" name="comment"
-                   placeholder="Комментарий">
+                   placeholder="Комментарий" value="{!! empty($repeat_order) ? '' : $repeat_order->comment !!}">
 
             <div class="order-addr-date__terms square-checkbox">
                 <div class="square-checkbox__wrapper">

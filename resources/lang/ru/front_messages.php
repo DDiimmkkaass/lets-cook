@@ -29,4 +29,5 @@ return array(
     'user with such email was banned' => 'Аккаунт с данным email забанен',
     'you have successfully logout' => 'Вы успешно вышли',
     'user register error' => 'Ошибка регистрации, попробуйте, пожалуйста, позже.',
+    'no same basket on this week' => 'Нет такой же корзины на этой неделе',
 );

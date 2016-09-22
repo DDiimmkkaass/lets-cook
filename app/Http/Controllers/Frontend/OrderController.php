@@ -19,6 +19,7 @@ use App\Services\PaymentService;
 use App\Services\WeeklyMenuService;
 use DB;
 use Exception;
+use FlashMessages;
 use Illuminate\Http\Request;
 
 /**
@@ -93,9 +94,36 @@ class OrderController extends FrontendController
             ->find($basket_id);
         
         $this->data('basket', $basket);
+        $this->data('selected_baskets', collect());
         
         $this->_fillAdditionalTemplateData($basket->year, $basket->week);
         
+        return $this->render($this->module.'.index');
+    }
+    
+    /**
+     * @param int $order_id
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function repeat($order_id)
+    {
+        $repeat_order = $this->orderService->getOrder($order_id);
+        
+        $basket = $this->orderService->getSameActiveBasket($repeat_order);
+        
+        if (!$basket) {
+            FlashMessages::add('error', trans('front_messages.no same basket on this week'));
+            
+            return redirect()->back();
+        }
+    
+        $this->data('basket', $basket);
+        $this->data('repeat_order', $repeat_order);
+        $this->data('selected_baskets', $repeat_order->additional_baskets->pluck('basket_id'));
+    
+        $this->_fillAdditionalTemplateData($basket->year, $basket->week);
+    
         return $this->render($this->module.'.index');
     }
     

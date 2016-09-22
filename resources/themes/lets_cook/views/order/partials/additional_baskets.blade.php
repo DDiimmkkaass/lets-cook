@@ -3,7 +3,8 @@
 
     <ul class="order-add-more__list">
         @foreach($additional_baskets as $key => $_basket)
-            <li class="order-add-more__item more-item">
+            <li class="order-add-more__item more-item"
+                @if ($selected_baskets->contains($_basket->id)) data-active @endif>
                 <div class="more-item__img"
                      style="background-image: url({!! thumb($_basket->getImage(), 220, 146) !!});">
                 </div>
@@ -19,7 +20,7 @@
                     <h3 class="more-item__title" data-device="desktop">{!! $_basket->getName() !!}</h3>
 
                     <div class="more-item__desc">
-                        {!! $_basket->description !!}
+                        {!! $_basket->description !!} {!! $selected_baskets->contains($_basket->id) !!}
                     </div>
 
                     <div class="more-item__bottom">
@@ -31,13 +32,17 @@
                             <input type="checkbox"
                                    id="f-order-add-more-{!! $_basket->id !!}"
                                    data-name="baskets[{!! $key !!}]"
+                                   @if ($selected_baskets->contains($_basket->id))
+                                    name="baskets[{!! $key !!}]"
+                                    checked="checked"
+                                   @endif
                                    data-price="{!! $_basket->getPrice() !!}"
                                    value="{!! $_basket->id !!}"
                                    class="checkbox-button"
                                    data-id="{!! $_basket->id !!}">
                             <label for="f-order-add-more-{!! $_basket->id !!}" data-add="Добавить"
                                    data-remove="Убрать">
-                                Добавить
+                                @if ($selected_baskets->contains($_basket->id)) Убрать @else Добавить @endif
                             </label>
                         </div>
                     </div>

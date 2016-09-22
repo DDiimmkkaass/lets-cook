@@ -100,7 +100,7 @@ class UserService
      */
     public function getOrders($user_id, $status = ['archived'], $with = [])
     {
-        $with = array_merge(['main_basket', 'main_basket.weekly_menu_basket', 'additional_baskets'], $with);
+        $with = array_merge(['main_basket', 'additional_baskets'], $with);
         
         return Order::with($with)
             ->ofStatus($status)
