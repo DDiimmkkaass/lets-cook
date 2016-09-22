@@ -8,7 +8,9 @@
         <section class="profile-main__contacts profile-contacts">
             <ul class="profile-contacts__list">
                 <li data-contacts="name">{!! $user->getFullName() !!}</li>
-                <li data-contacts="birth">{!! get_localized_date($user->birthday, 'd-m-Y') !!}</li>
+                @if ($user->birthday)
+                    <li data-contacts="birth">{!! get_localized_date($user->birthday, 'd-m-Y') !!}</li>
+                @endif
                 <li data-contacts="mail">{!! $user->email !!}</li>
                 <li data-contacts="phone">{!! $user->phone !!}</li>
                 @if ($user->additional_phone)
