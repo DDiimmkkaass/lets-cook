@@ -52,7 +52,7 @@ class YandexKassa implements PaymentProvider
                 $this->errors[] = trans('payments.order not find');
             } else {
                 if ($order->getStringStatus() != 'changed') {
-                    $this->errors[] = trans('payments.order already changed');
+                    $this->errors[] = trans('payments.order status already changed');
                 }
     
                 if ($data['orderSumAmount'] != $order->total) {
