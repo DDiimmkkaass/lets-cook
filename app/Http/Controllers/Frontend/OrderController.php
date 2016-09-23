@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Requests\Frontend\Order\OrderCreateRequest;
+use App\Http\Requests\Frontend\Order\OrderUpdateRequest;
 use App\Models\Basket;
 use App\Models\City;
 use App\Models\Order;
@@ -76,6 +77,7 @@ class OrderController extends FrontendController
         $this->authService = $authService;
         
         $this->middleware('auth.check_email_exists', ['only' => ['store']]);
+        $this->middleware('order.before_finalisation', ['only' => ['update']]);
     }
     
     /**
@@ -117,13 +119,13 @@ class OrderController extends FrontendController
             
             return redirect()->back();
         }
-    
+        
         $this->data('basket', $basket);
         $this->data('repeat_order', $repeat_order);
         $this->data('selected_baskets', $repeat_order->additional_baskets->pluck('basket_id'));
-    
+        
         $this->_fillAdditionalTemplateData($basket->year, $basket->week);
-    
+        
         return $this->render($this->module.'.index');
     }
     
@@ -136,7 +138,7 @@ class OrderController extends FrontendController
     {
         try {
             DB::beginTransaction();
-    
+            
             abort_if(!$this->weeklyMenuService->checkActiveWeeksBasket($request->get('basket_id', 0)), 404);
             
             if (!$this->user) {
@@ -158,13 +160,86 @@ class OrderController extends FrontendController
             
             if ($model->paymentMethod('online')) {
                 $provider = $this->paymentService->getProvider();
-    
+                
                 $html = $provider->getForm($model);
             }
             
             return [
                 'status'  => 'success',
                 'message' => trans('front_messages.your order successfully created'),
+                'html'    => isset($html) ? $html : '',
+            ];
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return [
+                'status'  => 'error',
+                'message' => trans('front_messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
+     * @param $order_id
+     *
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function edit($order_id)
+    {
+        $order = $this->orderService->getOrder($order_id);
+        
+        abort_if(!$order->user_id == $this->user->id, 404);
+        
+        $weekly_menu = $order->main_basket->weekly_menu_basket->weekly_menu;
+        
+        $this->data('weekly_menu', $weekly_menu);
+        $this->data('data_tab', 'my-orders-edit');
+        $this->data('profile_css_class', 'order-edit');
+        
+        $this->data('order', $order);
+        
+        $this->_fillAdditionalTemplateData($weekly_menu->year, $weekly_menu->week);
+        
+        return $this->render($this->module.'.edit');
+    }
+    
+    /**
+     * @param int                                                  $order_id
+     * @param \App\Http\Requests\Frontend\Order\OrderUpdateRequest $request
+     *
+     * @return array
+     */
+    public function update($order_id, OrderUpdateRequest $request)
+    {
+        $model = $this->orderService->getOrder($order_id);
+        
+        abort_if($model->user_id != $this->user->id, 404);
+        
+        try {
+            DB::beginTransaction();
+            
+            $input = $this->orderService->prepareEditFrontInputData($request);
+    
+            $model->fill($input);
+            $model->save();
+            
+            $this->_saveEditRelationships($model, $request);
+            
+            $model->total = $model->getTotal();
+            
+            $model->save();
+            
+            DB::commit();
+            
+            if ($model->paymentMethod('online') && $model->status == Order::getStatusIdByName('changed')) {
+                $provider = $this->paymentService->getProvider();
+    
+                $html = $provider->getForm($model);
+            }
+            
+            return [
+                'status'  => 'success',
+                'message' => trans('front_messages.your order successfully updated'),
                 'html'    => isset($html) ? $html : '',
             ];
         } catch (Exception $e) {
@@ -225,5 +300,25 @@ class OrderController extends FrontendController
         $this->orderService->saveIngredients($model, $request->get('ingredients', []));
         
         $this->orderService->addSystemOrderComment($model, trans('front_messages.new order'));
+    }
+    
+    /**
+     * @param \App\Models\Order        $model
+     * @param \Illuminate\Http\Request $request
+     */
+    private function _saveEditRelationships(Order $model, Request $request)
+    {
+        if ($model->main_basket->weekly_menu_basket_id != $request->get('basket_id')) {
+            $model->ingredients()->delete();
+            $model->recipes()->delete();
+    
+            $this->orderService->saveRecipes($model, $request->get('basket_id'), [], $request->get('recipes_count'));
+        }
+        
+        $this->orderService->saveMainBasket($model, $request->get('basket_id'), $request->get('recipes_count'));
+        
+        $this->orderService->saveAdditionalBaskets($model, $request->get('baskets', []));
+        
+        $this->orderService->addSystemOrderComment($model, trans('front_messages.user change the order'));
     }
 }

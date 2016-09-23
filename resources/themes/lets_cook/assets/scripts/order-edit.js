@@ -8,6 +8,9 @@ function orderEdit() {
         $address = $orderEdit.find('.order-edit__address-wrapper'),
         $addressInner = $address.find('.order-edit__address-inner'),
         $addressTextarea = $address.find('.order-edit__address-input'),
+        $addressCityId = $address.find('#order-edit-city-id'),
+        $addressCityName = $address.find('#order-edit-city-name'),
+        $addressAddress = $address.find('#order-edit-address'),
         $addressText = $address.find('.order-edit__address-text'),
         $addressChange = $address.find('.order-edit__address-change'),
         $makeOrder = $orderEdit.find('.order-edit__make-order');
@@ -18,6 +21,14 @@ function orderEdit() {
     }
 
     (function addressChange() {
+        $addressCityId.on('change', function () {
+            if (parseInt($(this).val()) == 0) {
+                $addressCityName.removeClass('h-hidden')
+            } else {
+                $addressCityName.addClass('h-hidden').val('')
+            }
+        });
+
         $addressChange.on('click', function() {
             if ($addressText.is('[data-active]')) {
                 $addressInner.attr('data-info', 'save');
@@ -27,8 +38,14 @@ function orderEdit() {
 
                 init();
             } else {
+                let city_id = $addressCityId.find('option:selected').text(),
+                    city_name = $addressCityName.val(),
+                    address = $addressAddress.val();
+
+                address = 'г. ' + (city_name == '' ? city_id : city_name) + ' ' + address;
+
                 $addressInner.attr('data-info', 'change');
-                $addressText.text($addressTextarea.val());
+                $addressText.text(address);
                 $addressTextarea.removeAttr('data-active');
                 $addressText.attr('data-active', '');
                 $addressChange.attr('data-info', 'change');

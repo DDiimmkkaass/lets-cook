@@ -27,6 +27,8 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer('news/partials/filters', '\App\Http\ViewComposers\NewsComposer');
         view()->composer('article/partials/filters', '\App\Http\ViewComposers\ArticleComposer');
         view()->composer('recipe/partials/filters', '\App\Http\ViewComposers\RecipeComposer');
+        view()->composer('layouts/profile', '\App\Http\ViewComposers\ProfileComposer');
+        view()->composer('profile/layouts/orders', '\App\Http\ViewComposers\ProfileOrdersComposer');
     }
     
     /**

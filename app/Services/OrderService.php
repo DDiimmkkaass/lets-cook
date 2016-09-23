@@ -282,6 +282,35 @@ class OrderService
     }
     
     /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array
+     */
+    public function prepareEditFrontInputData(Request $request)
+    {
+        $data = [];
+        
+        $data['basket_id'] = $request->get('basket_id');
+        
+        $data['subscribe_period'] = $request->get('subscribe_period', 0);
+        $data['type'] = empty($data['subscribe_period']) ?
+            Order::getTypeIdByName('single') :
+            Order::getTypeIdByName('subscribe');
+        
+        $data['payment_method'] = $request->get('payment_method');
+        
+        $data['delivery_date'] = $request->get('delivery_date');
+        $data['delivery_time'] = $request->get('delivery_time');
+        
+        $data['city_id'] = $request->get('city_id');
+        $data['city_name'] = empty($data['city_id']) ? $request->get('city_name') : '';
+        $data['address'] = $request->get('address');
+        $data['comment'] = $request->get('comment');
+        
+        return $data;
+    }
+    
+    /**
      * @param \App\Models\Order $model
      * @param array             $input
      */
@@ -410,20 +439,47 @@ class OrderService
     /**
      * @param \App\Models\Order $model
      * @param int               $basket_id
+     * @param array             $recipes
+     * @param int               $recipes_count
      */
-    public function saveRecipes(Order $model, $basket_id)
+    public function saveRecipes(Order $model, $basket_id, $recipes = [], $recipes_count = 0)
     {
         $basket = WeeklyMenuBasket::with('recipes')->find($basket_id);
+    
+        $indexes = null;
+        if ($recipes_count > 0) {
+            $recipes_for_days = config('weekly_menu.recipes_for_days');
+            
+            $indexes = isset($recipes_for_days[$recipes_count]) ? $recipes_for_days[$recipes_count] : (int) $recipes_count;
+        }
         
         $basket->recipes->each(
-            function ($item, $index) use ($model) {
-                $input = [
-                    'basket_recipe_id' => $item->id,
-                    'name'             => $item->getRecipeName(),
-                ];
-                $recipe = new OrderRecipe($input);
+            function ($item, $index) use ($model, $recipes, $recipes_count, $indexes) {
+                $add = false;
+    
+                $index += 1;
                 
-                $model->recipes()->save($recipe);
+                if (isset($recipes[$item->id])) {
+                    $add = true;
+                }
+                
+                if (is_array($indexes) && in_array($index, $indexes)) {
+                    $add = true;
+                }
+                    
+                if (is_int($indexes) && ($index <= $indexes)) {
+                    $add = true;
+                }
+                
+                if ($add) {
+                    $input = [
+                        'basket_recipe_id' => $item->id,
+                        'name'             => $item->getRecipeName(),
+                    ];
+                    $recipe = new OrderRecipe($input);
+
+                    $model->recipes()->save($recipe);
+                }
             }
         );
     }
@@ -659,7 +715,10 @@ class OrderService
      */
     public function getOrder($order_id)
     {
-        return Order::with('main_basket', 'additional_baskets')->whereId($order_id)->first();
+        return Order::with('main_basket', 'additional_baskets', 'main_basket.weekly_menu_basket.weekly_menu')
+            ->notOfStatus(['archived', 'deleted'])
+            ->whereId($order_id)
+            ->first();
     }
     
     /**

@@ -66,26 +66,10 @@ class ProfileController extends FrontendController
             'active_orders',
             $this->userService->getOrders($this->user->id, ['changed', 'paid', 'processed'], ['recipes'])
         );
-        
-        $this->data('history_orders', $this->userService->getOrders($this->user->id));
+    
+        $this->data('data_tab', 'my-orders');
         
         return $this->render($this->module.'.orders_index');
-    }
-    
-    /**
-     * @param itn $order_id
-     *
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function orderEdit($order_id)
-    {
-        $order = $this->user->orders()->whereId($order_id)->first();
-        
-        abort_if(!$order, 404);
-    
-        $this->data('order', $order);
-    
-        return $this->render($this->module.'.order_edit');
     }
     
     /**

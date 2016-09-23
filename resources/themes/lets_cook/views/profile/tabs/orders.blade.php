@@ -2,7 +2,7 @@
     @if ($active_orders->count())
         @foreach($active_orders as $order)
             <li class="profile-orders-own__item own-order">
-                <a href="{!! localize_route('profiles.orders.edit', $order->id) !!}" class="own-order__change-link">
+                <a href="{!! localize_route('order.edit', $order->id) !!}" class="own-order__change-link">
                     <div class="own-order__image"
                          style="background-image: url({!! $order->main_basket->getImage() !!});"></div>
 

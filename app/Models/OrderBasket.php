@@ -128,6 +128,16 @@ class OrderBasket extends Model
     /**
      * @return string
      */
+    public function getDescription()
+    {
+        return empty($this->weekly_menu_basket_id) ?
+            $this->basket->getDescription() :
+            $this->weekly_menu_basket->getDescription();
+    }
+    
+    /**
+     * @return string
+     */
     public function getPortions()
     {
         return (int) empty($this->weekly_menu_basket_id) ?

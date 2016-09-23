@@ -30,4 +30,8 @@ return array(
     'you have successfully logout' => 'Вы успешно вышли',
     'user register error' => 'Ошибка регистрации, попробуйте, пожалуйста, позже.',
     'no same basket on this week' => 'Нет такой же корзины на этой неделе',
+    'your order successfully updated' => 'Заказ успешно обновлен',
+    'user change the order' => 'Заказ изменен пользователем',
+    'you can not edit this order any more' => 'Вы больше не можете редактировать этот заказ',
+    'the orders for this week are no longer accepted' => 'Заказы на эту неделю больше не принимаются',
 );

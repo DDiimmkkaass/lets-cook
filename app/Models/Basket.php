@@ -259,6 +259,14 @@ class Basket extends Model
     }
     
     /**
+     * @return mixed
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+    
+    /**
      * @param string $type
      *
      * @return int|string

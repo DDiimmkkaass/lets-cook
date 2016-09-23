@@ -57,5 +57,6 @@ class Kernel extends HttpKernel
         'localeSessionRedirect'          => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
         'admin.order.editable'           => \App\Http\Middleware\EditableOrder::class,
         'admin.before_finalisation_date' => \App\Http\Middleware\BeforeFinalisationDate::class,
+        'order.before_finalisation'      => \App\Http\Middleware\OrderBeforeFinalisationDate::class,
     ];
 }

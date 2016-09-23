@@ -141,9 +141,9 @@ class WeeklyMenuService
         $dt = Carbon::create($year, 1, 1, 0, 0, 0)->addWeek($week - 1);
         
         $delivery_dates[] = clone ($dt->endOfWeek()->startOfDay());
-        $delivery_dates[] = clone ($dt->endOfWeek()->addDay()->endOfDay());
+        $delivery_dates[] = clone ($dt->endOfWeek()->addDay()->startOfDay());
         $delivery_dates[] = clone ($dt->endOfWeek()->startOfDay());
-        $delivery_dates[] = clone ($dt->endOfWeek()->addDay()->endOfDay());
+        $delivery_dates[] = clone ($dt->endOfWeek()->addDay()->startOfDay());
         
         return $delivery_dates;
     }

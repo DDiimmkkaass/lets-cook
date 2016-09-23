@@ -69,13 +69,42 @@ $router->post(
 );
 
 //order
-$router->get('order/{order_id}/repeat', ['as' => 'order.repeat', 'uses' => 'Frontend\OrderController@repeat'])
-    ->where('order_id', '[0-9]+');
-$router->get('order/{basket_id}', ['as' => 'order.index', 'uses' => 'Frontend\OrderController@index'])
-    ->where('basket_id', '[0-9]+');
-$router->post(
-    'order/store',
-    ['as' => 'order.store', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@store']
+$router->group(
+    [
+        'prefix' => 'order',
+    ],
+    function () use ($router) {
+        $router->get('/{basket_id}', ['as' => 'order.index', 'uses' => 'Frontend\OrderController@index'])
+            ->where('basket_id', '[0-9]+');
+        $router->post(
+            '/store',
+            ['as' => 'order.store', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@store']
+        );
+        
+        $router->group(
+            [
+                'middleware' => 'auth',
+            ],
+            function () use ($router) {
+                $router->get(
+                    '/{order_id}/repeat',
+                    ['as' => 'order.repeat', 'uses' => 'Frontend\OrderController@repeat']
+                )
+                    ->where('order_id', '[0-9]+');
+                
+                $router->get(
+                    '/{order_id}/edit',
+                    ['as' => 'order.edit', 'uses' => 'Frontend\OrderController@edit']
+                )
+                    ->where('order_id', '[0-9]+');
+                $router->post(
+                    '/{order_id}/update',
+                    ['as' => 'order.update', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@update']
+                )
+                    ->where('order_id', '[0-9]+');
+            }
+        );
+    }
 );
 
 // profiles
@@ -89,14 +118,10 @@ $router->group(
             '/index',
             ['as' => 'profiles.index', 'uses' => 'Frontend\ProfileController@index']
         );
-    
+        
         $router->get(
             '/orders',
             ['as' => 'profiles.orders.index', 'uses' => 'Frontend\ProfileController@ordersIndex']
-        );
-        $router->get(
-            '/orders/{order_id}/edit',
-            ['as' => 'profiles.orders.edit', 'uses' => 'Frontend\ProfileController@orderEdit']
         );
         
         $router->get(
