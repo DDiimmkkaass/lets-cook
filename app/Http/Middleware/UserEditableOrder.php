@@ -59,7 +59,7 @@ class UserEditableOrder
         $error = false;
         
         $order = $this->orderService->getOrder($request->route('order_id', 0));
-        $now = Carbon::now()->addWeek();
+        $now = active_week();
         
         if (!$order) {
             $error = true;

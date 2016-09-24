@@ -522,7 +522,7 @@ return array (
   'weekly_menu_show' => 'Просмотр меню на неделю',
   'order_status_changed' => 'Изменен',
   'order_status_paid' => 'Оплачен',
-  'order_status_processed' => 'Обрабатываеться',
+  'order_status_processed' => 'Обрабатывается',
   'order_status_tmpl' => 'По подписке',
   'order_status_deleted' => 'Отменен',
   'order_status_archived' => 'Завершен',
