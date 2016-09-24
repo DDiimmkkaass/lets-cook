@@ -59,7 +59,7 @@
                 @endforeach
             </tr>
 
-            @if (($key > 0 && $ingredient->ingredient->supplier_id != $list[$key - 1]->ingredient->supplier_id) || $ingredients_count - 1 == $key)
+            @if ($ingredients_count - 1 == $key || $ingredient->ingredient->supplier_id != $list[$key + 1]->ingredient->supplier_id)
                 <tr>
                     <th></th><th></th><th></th><th></th><th></th><th></th>
                     <th style="text-align: center">
