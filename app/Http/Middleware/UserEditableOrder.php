@@ -10,6 +10,7 @@ namespace App\Http\Middleware;
 
 use App\Services\OrderService;
 use Carbon;
+use Sentry;
 use Closure;
 use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -63,6 +64,9 @@ class UserEditableOrder
         if (!$order) {
             $error = true;
             $message = trans('front_messages.order not find');
+        } elseif ($order->user_id != Sentry::getUser()->getId()) {
+            $error = true;
+            $message = trans('front_messages.you can not edit other users orders');
         } elseif (!$order->editable('user')) {
             $error = true;
             $message = trans('front_messages.order has un editable status');
@@ -95,7 +99,7 @@ class UserEditableOrder
             
             FlashMessages::add('error', $message);
             
-            return $this->response->redirectToRoute('profiles.order.index');
+            return $this->response->redirectToRoute('profiles.orders.index');
         }
         
         return $next($request);

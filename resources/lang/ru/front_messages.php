@@ -40,4 +40,5 @@ return array(
     'order not find' => 'Заказ не найден',
     'order has un editable status' => 'Вы не можете оредактировать этот заказ',
     'you can not edit already paid online orders' => 'Вы не можете редактировать уже оплаченый онлайн заказ',
+    'you can not edit other users orders' => 'Вы не можете редактировать заказы других пользователей',
 );

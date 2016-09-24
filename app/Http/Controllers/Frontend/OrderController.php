@@ -87,7 +87,7 @@ class OrderController extends FrontendController
         $this->subscribeService = $subscribeService;
     
         $this->middleware('auth.check_email_exists', ['only' => ['store']]);
-        $this->middleware('user.order.editable', ['only' => ['update']]);
+        $this->middleware('user.order.editable', ['only' => ['edit', 'update']]);
     }
     
     /**
@@ -200,12 +200,6 @@ class OrderController extends FrontendController
     {
         $order = $this->orderService->getOrder($order_id);
         
-        if (!$order || $order->user_id != $this->user->id) {
-            FlashMessages::add('error', trans('front_messages.order not find'));
-            
-            return redirect()->route('profiles.orders.index');
-        }
-        
         $weekly_menu = $order->main_basket->weekly_menu_basket->weekly_menu;
         
         $this->data('weekly_menu', $weekly_menu);
@@ -228,8 +222,6 @@ class OrderController extends FrontendController
     public function update($order_id, OrderUpdateRequest $request)
     {
         $model = $this->orderService->getOrder($order_id);
-        
-        abort_if(!$model || $model->user_id != $this->user->id, 404);
         
         try {
             DB::beginTransaction();
