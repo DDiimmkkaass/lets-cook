@@ -36,7 +36,6 @@
             <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.supplier')</th>
 
             @foreach($baskets as $basket)
-                {!! $basket !!}
                 <th style="background-color: #FCD5B4; text-align: center;">{!! $basket['count'] !!}</th>
             @endforeach
         </tr>
