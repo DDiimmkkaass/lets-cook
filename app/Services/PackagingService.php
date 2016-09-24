@@ -66,7 +66,7 @@ class PackagingService
         
         $recipes = $recipes->sortByDesc(
             function ($recipe) {
-                return $recipe['recipes_count'];
+                return (int) $recipe['recipes_count'];
             }
         );
         
