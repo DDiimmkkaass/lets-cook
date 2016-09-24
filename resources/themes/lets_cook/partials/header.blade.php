@@ -1,10 +1,5 @@
 <header class="header">
-    <div class="header__top header-top" data-active="true">
-        <a href="#" class="header-top__link">
-            Закажите пробный <span>ужин на двоих за 600 рублей</span>
-        </a>
-        <a href="#" class="header-top__close">Закрыть</a>
-    </div>
+    @widget__trial_order()
 
     <div class="header__main header-main">
         <a href="{!! route('home') !!}"

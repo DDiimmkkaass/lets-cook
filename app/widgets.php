@@ -31,3 +31,5 @@ Widget::register('widget__random_comments', 'App\Widgets\RandomComments\RandomCo
 Widget::register('widget__weekly_menu_baskets', 'App\Widgets\WeeklyMenuBaskets\WeeklyMenuBasketsWidget@index');
 
 Widget::register('widget__weekly_menu', 'App\Widgets\WeeklyMenu\WeeklyMenuWidget@index');
+
+Widget::register('widget__trial_order', 'App\Widgets\TrialOrder\TrialOrderWidget@index');
