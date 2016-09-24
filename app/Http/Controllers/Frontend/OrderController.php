@@ -226,7 +226,7 @@ class OrderController extends FrontendController
         try {
             DB::beginTransaction();
             
-            $input = $this->orderService->prepareEditFrontInputData($request, $this->user);
+            $input = $this->orderService->prepareEditFrontInputData($request);
     
             $model->fill($input);
             $model->save();
