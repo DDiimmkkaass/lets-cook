@@ -34,4 +34,8 @@ return array(
     'user change the order' => 'Заказ изменен пользователем',
     'you can not edit this order any more' => 'Вы больше не можете редактировать этот заказ',
     'the orders for this week are no longer accepted' => 'Заказы на эту неделю больше не принимаются',
+    'order successfully canceled' => 'Заказ успешно отменен',
+    'basket subscription successfully saved' => 'Параметры подписки успешно обновлены',
+    'basket subscription successfully deleted' => 'Подписка успешно удалена',
+    'order not find' => 'Заказ не найден',
 );

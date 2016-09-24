@@ -102,6 +102,12 @@ $router->group(
                     ['as' => 'order.update', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@update']
                 )
                     ->where('order_id', '[0-9]+');
+    
+                $router->post(
+                    '/{order_id}/delete',
+                    ['as' => 'order.delete', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@delete']
+                )
+                    ->where('order_id', '[0-9]+');
             }
         );
     }
@@ -124,6 +130,15 @@ $router->group(
             ['as' => 'profiles.orders.index', 'uses' => 'Frontend\ProfileController@ordersIndex']
         );
         
+        $router->post(
+            '/basket-subscribes',
+            ['as' => 'profiles.basket_subscribes.update', 'uses' => 'Frontend\ProfileController@updateSubscribe']
+        );
+        $router->post(
+            '/basket-subscribes/delete',
+            ['as' => 'profiles.basket_subscribes.delete', 'uses' => 'Frontend\ProfileController@deleteSubscribe']
+        );
+        
         $router->get(
             'edit',
             ['as' => 'profiles.edit', 'uses' => 'Frontend\ProfileController@edit']
@@ -142,6 +157,15 @@ $router->group(
             ['as' => 'profiles.update.password', 'uses' => 'Frontend\ProfileController@updatePassword']
         );
     }
+);
+
+$router->post(
+    'basket_subscribes',
+    [
+        'as'         => 'basket_subscribes.save',
+        'middleware' => ['auth', 'ajax'],
+        'uses'       => 'Frontend\ProfileController@updatePassword',
+    ]
 );
 
 $router->group(

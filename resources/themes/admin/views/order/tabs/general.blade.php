@@ -69,26 +69,6 @@
     </div>
 </div>
 
-<div class="form-group required @if ($errors->has('type')) has-error @endif">
-    {!! Form::label('type', trans('labels.type'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
-
-    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-        {!! Form::select('type', $types, null, ['class' => 'form-control select2 input-sm order-type-select', 'aria-hidden' => 'true', 'required' => true]) !!}
-
-        {!! $errors->first('type', '<p class="help-block error">:message</p>') !!}
-    </div>
-</div>
-
-<div id="subscribe-period-block" class="form-group required @if ($errors->has('subscribe_period')) has-error @endif @if (!$model->isSubscribe()) hidden @endif">
-    {!! Form::label('subscribe_period', trans('labels.subscribe_period'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
-
-    <div class="col-xs-12 col-sm-4 col-md-3 col-lg-2">
-        {!! Form::select('subscribe_period', $subscribe_periods, null, ['class' => 'form-control select2 input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
-
-        {!! $errors->first('subscribe_period', '<p class="help-block error">:message</p>') !!}
-    </div>
-</div>
-
 <div class="form-group required @if ($errors->has('payment_method')) has-error @endif">
     {!! Form::label('payment_method', trans('labels.payment_method'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 

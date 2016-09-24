@@ -56,7 +56,6 @@ class OrderUpdateRequest extends FormRequest
             'city_name' => $city_id == 0 ? 'required' : '',
             'address'   => 'required',
             
-            'subscribe_period' => 'numeric|min:1|required_if:type,'.Order::getTypeIdByName('subscribe'),
             'payment_method'   => 'required|in:'.implode(',', array_keys(Order::getPaymentMethods())),
             
             'baskets'     => 'array',

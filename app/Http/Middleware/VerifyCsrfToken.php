@@ -33,6 +33,7 @@ class VerifyCsrfToken extends BaseVerifier
         'payment/check',
         'payment/cancel',
         'payment/aviso',
+        'profiles/basket-subscribes/delete',
     ];
     
     /**

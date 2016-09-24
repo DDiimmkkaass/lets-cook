@@ -8,11 +8,15 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Events\Frontend\BasketSubscribeDeleted;
+use App\Events\Frontend\BasketSubscribeUpdated;
+use App\Http\Requests\Frontend\BasketSubscribe\BasketSubscribeUpdateRequest;
 use App\Http\Requests\Frontend\User\UserPasswordUpdateRequest;
 use App\Http\Requests\Frontend\User\UserUpdateRequest;
 use App\Models\UserInfo;
 use App\Services\UserService;
 use Cartalyst\Sentry\Users\WrongPasswordException;
+use DB;
 use Exception;
 use FlashMessages;
 use Meta;
@@ -66,10 +70,75 @@ class ProfileController extends FrontendController
             'active_orders',
             $this->userService->getOrders($this->user->id, ['changed', 'paid', 'processed'], ['recipes'])
         );
-    
+        
         $this->data('data_tab', 'my-orders');
         
         return $this->render($this->module.'.orders_index');
+    }
+    
+    /**
+     * @param \App\Http\Requests\Frontend\BasketSubscribe\BasketSubscribeUpdateRequest $request
+     *
+     * @return array
+     */
+    public function updateSubscribe(BasketSubscribeUpdateRequest $request)
+    {
+        try {
+            $subscribe = $this->user->subscribe()->firstOrFail();
+            
+            DB::beginTransaction();
+            
+            $subscribe->fill($request->all());
+            $subscribe->save();
+    
+            $subscribe->additional_baskets()->sync($request->get('baskets', []));
+            
+            event(new BasketSubscribeUpdated($subscribe));
+            
+            DB::commit();
+            
+            return [
+                'status'  => 'success',
+                'message' => trans('front_messages.basket subscription successfully saved'),
+            ];
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return [
+                'status'  => 'error',
+                'message' => trans('front_messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
+     * @return array
+     */
+    public function deleteSubscribe()
+    {
+        try {
+            DB::beginTransaction();
+                
+            $subscribe = $this->user->subscribe()->firstOrFail();
+            
+            $subscribe->delete();
+            
+            event(new BasketSubscribeDeleted($this->user));
+            
+            DB::commit();
+            
+            return [
+                'status'  => 'success',
+                'message' => trans('front_messages.basket subscription successfully deleted'),
+            ];
+        } catch (Exception $e) {
+            DB::rollBack();
+            
+            return [
+                'status'  => 'error',
+                'message' => trans('front_messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
     }
     
     /**

@@ -13,6 +13,7 @@ use App\Http\Requests\Backend\Order\OrderRequest;
 use App\Http\Requests\Backend\Order\OrderStatusChangeRequest;
 use App\Models\Basket;
 use App\Models\BasketRecipe;
+use App\Models\BasketSubscribe;
 use App\Models\City;
 use App\Models\Group;
 use App\Models\Ingredient;
@@ -531,18 +532,6 @@ class OrderController extends BackendController
     private function _fillAdditionalTemplateData(Order $model)
     {
         $this->data('users', Group::clients()->first()->users()->active()->get());
-        
-        $types = [];
-        foreach (Order::getTypes() as $id => $type) {
-            $types[$id] = trans('labels.order_type_'.$type);
-        }
-        $this->data('types', $types);
-        
-        $subscribe_periods = [];
-        foreach (Order::getSubscribePeriods() as $subscribe_period) {
-            $subscribe_periods[$subscribe_period] = trans_choice('labels.subscribe_period_label', $subscribe_period);
-        }
-        $this->data('subscribe_periods', $subscribe_periods);
         
         $payment_methods = [];
         foreach (Order::getPaymentMethods() as $id => $payment_method) {

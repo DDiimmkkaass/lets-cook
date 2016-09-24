@@ -8,6 +8,7 @@ use App\Console\Commands\GenerateTmplOrders;
 use App\Console\Commands\ProcessPaidOrdersForCurrentWeek;
 use App\Console\Commands\ProcessTmplOrdersForCurrentWeek;
 use App\Console\Commands\RemoveUnsuccessfulOrdersForCurrentWeek;
+use App\Console\Commands\UpdateMainBasketForTmplOrders;
 use App\Console\Commands\UpdateSearchIndex;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -29,6 +30,7 @@ class Kernel extends ConsoleKernel
         
         // orders
         GenerateTmplOrders::class,
+        UpdateMainBasketForTmplOrders::class,
         ProcessTmplOrdersForCurrentWeek::class,
         ProcessPaidOrdersForCurrentWeek::class,
         RemoveUnsuccessfulOrdersForCurrentWeek::class,
@@ -47,9 +49,12 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('orders:generate-tmpl-orders')
             ->cron('0 0 * * 2');
+    
+        $schedule->command('orders:update-main-basket-form-tmp-orders')
+            ->cron('5 0 * * 2');
         
         $schedule->command('orders:process-tmp-orders-for-current-week')
-            ->cron('0 0 * * 2');
+            ->cron('10 0 * * 2');
         
         $schedule->command('orders:process-paid-orders-for-current-week')
             ->cron($this->_getProcessPaidOrdersTime());

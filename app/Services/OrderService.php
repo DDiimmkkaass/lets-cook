@@ -10,6 +10,7 @@ namespace App\Services;
 
 use App\Models\Basket;
 use App\Models\BasketRecipe;
+use App\Models\BasketSubscribe;
 use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\OrderBasket;
@@ -24,7 +25,6 @@ use DB;
 use Exception;
 use FlashMessages;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Sentry;
 
@@ -259,11 +259,6 @@ class OrderService
         
         $data['basket_id'] = $request->get('basket_id');
         
-        $data['subscribe_period'] = $request->get('subscribe_period', 0);
-        $data['type'] = empty($data['subscribe_period']) ?
-            Order::getTypeIdByName('single') :
-            Order::getTypeIdByName('subscribe');
-        
         $data['payment_method'] = $request->get('payment_method');
         
         $data['delivery_date'] = $request->get('delivery_date');
@@ -291,11 +286,6 @@ class OrderService
         $data = [];
         
         $data['basket_id'] = $request->get('basket_id');
-        
-        $data['subscribe_period'] = $request->get('subscribe_period', 0);
-        $data['type'] = empty($data['subscribe_period']) ?
-            Order::getTypeIdByName('single') :
-            Order::getTypeIdByName('subscribe');
         
         $data['payment_method'] = $request->get('payment_method');
         
@@ -330,42 +320,36 @@ class OrderService
     }
     
     /**
-     * @param \App\Models\Order $order
+     * @param \App\Models\BasketSubscribe $subscribe
      *
      * @return \App\Models\Order
      */
-    public function createTmpl(Order $order)
+    public function createTmpl(BasketSubscribe $subscribe)
     {
-        $tmpl = $order->replicate();
+        $tmpl = new Order(
+            [
+                'user_id'          => $subscribe->user_id,
+                'payment_method'   => $subscribe->payment_method,
+                'delivery_date'    => $this->_getDeliveryDateForTmplOrder($subscribe),
+                'delivery_time'    => $subscribe->delivery_time,
+                'full_name'        => $subscribe->user->full_name,
+                'email'            => $subscribe->user->email,
+                'phone'            => $subscribe->user->phone,
+                'additional_phone' => $subscribe->user->additional_phone,
+                'city_id'          => $subscribe->user->city_id,
+                'city_name'        => $subscribe->user->city_name,
+                'address'          => $subscribe->user->address,
+            ]
+        );
         
-        $tmpl->parent_id = $order->id;
         $tmpl->status = Order::getStatusIdByName('tmpl');
-        $tmpl->type = Order::getTypeIdByName('single');
-        $tmpl->subscribe_period = 0;
-        $tmpl->delivery_date = $this->_getDeliveryDateForTmplOrder($order);
         $tmpl->total = 0;
         
         $tmpl->save();
         
-        $order->load('recipes.recipe', 'ingredients', 'main_basket', 'additional_baskets');
-        $relations = $order->getRelations();
-        foreach ($relations as $relation_name => $relation) {
-            if (!$relation instanceof Collection) {
-                $relation = [$relation];
-            }
-            
-            foreach ($relation as $record) {
-                $tmpl_record = $record->replicate();
-                $tmpl_record->order_id = $tmpl->id;
-                
-                $tmpl_record->push();
-            }
-        }
+        $this->tmplAddMainBasket($tmpl, $subscribe);
         
-        $this->updatePrices($tmpl);
-        
-        $tmpl->total = $tmpl->getTotal();
-        $tmpl->save();
+        $this->tmplAddAdditionalBaskets($tmpl, $subscribe);
         
         $this->addSystemOrderComment($tmpl, trans('messages.auto generated tmpl order'), 'tmpl');
         
@@ -445,7 +429,7 @@ class OrderService
     public function saveRecipes(Order $model, $basket_id, $recipes = [], $recipes_count = 0)
     {
         $basket = WeeklyMenuBasket::with('recipes')->find($basket_id);
-    
+        
         $indexes = null;
         if ($recipes_count > 0) {
             $recipes_for_days = config('weekly_menu.recipes_for_days');
@@ -456,7 +440,7 @@ class OrderService
         $basket->recipes->each(
             function ($item, $index) use ($model, $recipes, $recipes_count, $indexes) {
                 $add = false;
-    
+                
                 $index += 1;
                 
                 if (isset($recipes[$item->id])) {
@@ -466,7 +450,7 @@ class OrderService
                 if (is_array($indexes) && in_array($index, $indexes)) {
                     $add = true;
                 }
-                    
+                
                 if (is_int($indexes) && ($index <= $indexes)) {
                     $add = true;
                 }
@@ -477,7 +461,7 @@ class OrderService
                         'name'             => $item->getRecipeName(),
                     ];
                     $recipe = new OrderRecipe($input);
-
+                    
                     $model->recipes()->save($recipe);
                 }
             }
@@ -541,6 +525,57 @@ class OrderService
     }
     
     /**
+     * @param Order           $tmpl
+     * @param BasketSubscribe $subscribe
+     */
+    public function tmplAddMainBasket(Order $tmpl, BasketSubscribe $subscribe)
+    {
+        $week = $tmpl->getDeliveryDate()->startOfWeek();
+        
+        if ($subscribe->delivery_date == 0) {
+            $week->addWeek();
+        }
+        
+        $basket = WeeklyMenuBasket::with('recipes')->joinWeeklyMenu()
+            ->where(['weekly_menus.year' => $week->year, 'weekly_menus.week' => $week->weekOfYear])
+            ->whereBasketId($subscribe->basket_id)
+            ->wherePortions($subscribe->portions)
+            ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
+            ->first();
+        
+        if ($basket) {
+            OrderBasket::create(
+                [
+                    'order_id'              => $tmpl->id,
+                    'weekly_menu_basket_id' => $basket->id,
+                    'name'                  => $basket->getName(),
+                ]
+            );
+            
+            $this->saveRecipes($tmpl, $basket->id, [], $subscribe->portions);
+        }
+        
+        return $basket;
+    }
+    
+    /**
+     * @param \App\Models\Order           $tmpl
+     * @param \App\Models\BasketSubscribe $subscribe
+     */
+    public function tmplAddAdditionalBaskets(Order $tmpl, BasketSubscribe $subscribe)
+    {
+        foreach ($subscribe->additional_baskets as $basket) {
+            OrderBasket::create(
+                [
+                    'order_id'  => $tmpl->id,
+                    'basket_id' => $basket->id,
+                    'name'      => $basket->getName(),
+                ]
+            );
+        }
+    }
+    
+    /**
      * @param \App\Models\Order $order
      */
     public function updatePrices(Order $order)
@@ -552,11 +587,40 @@ class OrderService
             $basket->price = $basket->basket->getPrice();
             $basket->save();
         }
+    }
+    
+    /**
+     * @param int $order_id
+     *
+     * @return Order|null
+     */
+    public function getOrder($order_id)
+    {
+        return Order::with('main_basket', 'additional_baskets', 'main_basket.weekly_menu_basket.weekly_menu')
+            ->notOfStatus(['archived', 'deleted'])
+            ->whereId($order_id)
+            ->first();
+    }
+    
+    /**
+     * @param $repeat_order
+     *
+     * @return WeeklyMenuBasket|null
+     */
+    public function getSameActiveBasket($repeat_order)
+    {
+        $active_week = active_week_menu_week();
         
-        foreach ($order->ingredients as $ingredient) {
-            $ingredient->price = $ingredient->ingredient->sale_price;
-            $ingredient->save();
-        }
+        $basket = WeeklyMenuBasket::with(
+            ['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients']
+        )->joinWeeklyMenu()
+            ->where(['weekly_menus.year' => $active_week->year, 'weekly_menus.week' => $active_week->weekOfYear])
+            ->whereBasketId($repeat_order->main_basket->weekly_menu_basket->basket_id)
+            ->wherePortions($repeat_order->main_basket->getPortions())
+            ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
+            ->first();
+        
+        return $basket;
     }
     
     /**
@@ -663,19 +727,40 @@ class OrderService
     }
     
     /**
-     * @param \App\Models\Order $parent_order
+     * @param \App\Models\BasketSubscribe $subscribe
      *
      * @return string
      */
-    private function _getDeliveryDateForTmplOrder(Order $parent_order)
+    private function _getDeliveryDateForTmplOrder(BasketSubscribe $subscribe)
     {
-        $latest_tmpl_order = Order::whereId($parent_order->id)->orWhere('parent_id', $parent_order->id)
-            ->orderBy('id', 'DESC')
+        $latest_tmpl_order = Order::ofStatus('tmpl')->whereUserId($subscribe->user_id)
+            ->orderBy('delivery_date', 'DESC')
             ->first();
         
-        $delivery_date = $latest_tmpl_order->getDeliveryDate();
+        if (!$latest_tmpl_order) {
+            $latest_tmpl_order = Order::joinOrderBaskets()
+                ->joinWeeklyMenuBasket()
+                ->whereUserId($subscribe->user_id)
+                ->where('weekly_menu_baskets.basket_id', $subscribe->basket_id)
+                ->orderBy('orders.updated_at', 'DESC')
+                ->first();
+        }
+    
+        if (!$latest_tmpl_order) {
+            $delivery_date = Carbon::now()->endOfWeek()->startOfDay();
+        } else {
+            $delivery_date = $latest_tmpl_order->getDeliveryDate();
+        }
+    
+        $delivery_date = $delivery_date->dayOfWeek > $subscribe->delivery_date ?
+            $delivery_date->subDay() :
+            (
+                $delivery_date->dayOfWeek < $subscribe->delivery_date ?
+                    $delivery_date->addDay() :
+                    $delivery_date
+            );
         
-        return $delivery_date->addWeeks($parent_order->subscribe_period)->format('d-m-Y');
+        return $delivery_date->addWeeks($subscribe->subscribe_period)->format('d-m-Y');
     }
     
     /**
@@ -706,39 +791,5 @@ class OrderService
                 }
             }
         }
-    }
-    
-    /**
-     * @param int $order_id
-     *
-     * @return Order|null
-     */
-    public function getOrder($order_id)
-    {
-        return Order::with('main_basket', 'additional_baskets', 'main_basket.weekly_menu_basket.weekly_menu')
-            ->notOfStatus(['archived', 'deleted'])
-            ->whereId($order_id)
-            ->first();
-    }
-    
-    /**
-     * @param $repeat_order
-     *
-     * @return WeeklyMenuBasket|null
-     */
-    public function getSameActiveBasket($repeat_order)
-    {
-        $active_week = active_week_menu_week();
-        
-        $basket = WeeklyMenuBasket::with(
-            ['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients']
-        )->joinWeeklyMenu()
-            ->where(['weekly_menus.year' => $active_week->year, 'weekly_menus.week' => $active_week->weekOfYear])
-            ->whereBasketId($repeat_order->main_basket->weekly_menu_basket->basket_id)
-            ->wherePortions($repeat_order->main_basket->getPortions())
-            ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
-            ->first();
-        
-        return $basket;
     }
 }

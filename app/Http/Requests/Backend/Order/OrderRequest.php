@@ -48,8 +48,6 @@ class OrderRequest extends FormRequest
         $rules = [
             'parent_id'        => 'exists:orders,id',
             'user_id'          => 'required|exists:users,id',
-            'type'             => 'required|in:'.implode(',', array_keys(Order::getTypes())),
-            'subscribe_period' => 'numeric|min:1|required_if:type,'.Order::getTypeIdByName('subscribe'),
             'status'           => 'required|in:'.implode(',', array_keys(Order::getStatuses())),
             'status_comment'   => ($this->request->get('status') != $this->request->get('old_status') && $order) ?
                 'required' :

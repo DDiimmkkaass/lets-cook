@@ -79,6 +79,14 @@ class User extends SentryUser implements FrontLink
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function subscribe()
+    {
+        return $this->hasOne(BasketSubscribe::class, 'user_id');
+    }
+    
+    /**
      * @param      $q
      */
     public function scopeJoinInfo($q)

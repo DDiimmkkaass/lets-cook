@@ -70,18 +70,20 @@
                         </div>
                     </div>
 
-                    <div class="order-edit__subscribe">
-                        <div class="order-edit__subscribe-title">Подписка:</div>
+                    @if (!$user->subscribe()->count())
+                        <div class="order-edit__subscribe">
+                            <div class="order-edit__subscribe-title">Подписка:</div>
 
-                        @foreach($subscribe_periods as $period => $label)
-                            <div class="order-edit__subscribe-checkbox square-red-checkbox">
-                                <input type="checkbox" id="order-subscribe-{!! $period !!}" name="subscribe_period"
-                                       value="{!! $period !!}"
-                                       @if ($period == $order->subscribe_period) checked @endif>
-                                <label for="order-subscribe-{!! $period !!}">{!! $label !!}</label>
-                            </div>
-                        @endforeach
-                    </div>
+                            @foreach($subscribe_periods as $period => $label)
+                                <div class="order-edit__subscribe-checkbox square-red-checkbox">
+                                    <input type="checkbox" id="order-subscribe-{!! $period !!}" name="subscribe_period"
+                                           value="{!! $period !!}"
+                                           @if ($period == $order->subscribe_period) checked @endif>
+                                    <label for="order-subscribe-{!! $period !!}">{!! $label !!}</label>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
 
                     <div class="order-edit__payment">
                         <div class="order-edit__payment-title">Оплата:</div>

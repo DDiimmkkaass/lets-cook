@@ -11,12 +11,14 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Requests\Frontend\Order\OrderCreateRequest;
 use App\Http\Requests\Frontend\Order\OrderUpdateRequest;
 use App\Models\Basket;
+use App\Models\BasketSubscribe;
 use App\Models\City;
 use App\Models\Order;
 use App\Models\WeeklyMenuBasket;
 use App\Services\AuthService;
 use App\Services\OrderService;
 use App\Services\PaymentService;
+use App\Services\SubscribeService;
 use App\Services\WeeklyMenuService;
 use DB;
 use Exception;
@@ -56,18 +58,25 @@ class OrderController extends FrontendController
     private $authService;
     
     /**
+     * @var \App\Services\SubscribeService
+     */
+    private $subscribeService;
+    
+    /**
      * OrderController constructor.
      *
      * @param \App\Services\OrderService      $orderService
      * @param \App\Services\WeeklyMenuService $weeklyMenuService
      * @param \App\Services\PaymentService    $paymentService
      * @param \App\Services\AuthService       $authService
+     * @param \App\Services\SubscribeService  $subscribeService
      */
     public function __construct(
         OrderService $orderService,
         WeeklyMenuService $weeklyMenuService,
         PaymentService $paymentService,
-        AuthService $authService
+        AuthService $authService,
+        SubscribeService $subscribeService
     ) {
         parent::__construct();
         
@@ -75,7 +84,8 @@ class OrderController extends FrontendController
         $this->weeklyMenuService = $weeklyMenuService;
         $this->paymentService = $paymentService;
         $this->authService = $authService;
-        
+        $this->subscribeService = $subscribeService;
+    
         $this->middleware('auth.check_email_exists', ['only' => ['store']]);
         $this->middleware('order.before_finalisation', ['only' => ['update']]);
     }
@@ -111,6 +121,8 @@ class OrderController extends FrontendController
     public function repeat($order_id)
     {
         $repeat_order = $this->orderService->getOrder($order_id);
+        
+        abort_if(!$repeat_order, 404);
         
         $basket = $this->orderService->getSameActiveBasket($repeat_order);
         
@@ -188,7 +200,11 @@ class OrderController extends FrontendController
     {
         $order = $this->orderService->getOrder($order_id);
         
-        abort_if(!$order->user_id == $this->user->id, 404);
+        if (!$order || $order->user_id != $this->user->id) {
+            FlashMessages::add('error', trans('front_messages.order not find'));
+            
+            return redirect()->route('profiles.orders.index');
+        }
         
         $weekly_menu = $order->main_basket->weekly_menu_basket->weekly_menu;
         
@@ -213,12 +229,12 @@ class OrderController extends FrontendController
     {
         $model = $this->orderService->getOrder($order_id);
         
-        abort_if($model->user_id != $this->user->id, 404);
+        abort_if(!$model || $model->user_id != $this->user->id, 404);
         
         try {
             DB::beginTransaction();
             
-            $input = $this->orderService->prepareEditFrontInputData($request);
+            $input = $this->orderService->prepareEditFrontInputData($request, $this->user);
     
             $model->fill($input);
             $model->save();
@@ -253,6 +269,34 @@ class OrderController extends FrontendController
     }
     
     /**
+     * @param int $order_id
+     *
+     * @return array
+     */
+    public function delete($order_id)
+    {
+        $model = $this->orderService->getOrder($order_id);
+    
+        abort_if($model->user_id != $this->user->id || !$model->isStatus('tmpl'), 404);
+    
+        try {
+            $model->status = Order::getStatusIdByName('deleted');
+            
+            $model->save();
+        
+            return [
+                'status'  => 'success',
+                'message' => trans('front_messages.order successfully canceled'),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('front_messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
      * fill additional template data
      *
      * @param int $year
@@ -274,7 +318,7 @@ class OrderController extends FrontendController
         $this->data('payment_methods', $payment_methods);
         
         $subscribe_periods = [];
-        foreach (Order::getSubscribePeriods() as $subscribe_period) {
+        foreach (BasketSubscribe::getSubscribePeriods() as $subscribe_period) {
             $subscribe_periods[$subscribe_period] = trans_choice(
                 'front_labels.subscribe_period_label',
                 $subscribe_period
@@ -298,6 +342,8 @@ class OrderController extends FrontendController
         $this->orderService->saveAdditionalBaskets($model, $request->get('baskets', []));
         
         $this->orderService->saveIngredients($model, $request->get('ingredients', []));
+    
+        $this->subscribeService->store($this->user, $request);
         
         $this->orderService->addSystemOrderComment($model, trans('front_messages.new order'));
     }
@@ -318,6 +364,8 @@ class OrderController extends FrontendController
         $this->orderService->saveMainBasket($model, $request->get('basket_id'), $request->get('recipes_count'));
         
         $this->orderService->saveAdditionalBaskets($model, $request->get('baskets', []));
+    
+        $this->subscribeService->store($this->user, $request);
         
         $this->orderService->addSystemOrderComment($model, trans('front_messages.user change the order'));
     }

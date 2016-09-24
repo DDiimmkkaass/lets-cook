@@ -7,7 +7,6 @@ use App\Events\Backend\TmplOrderSuccessfullyPaid;
 use App\Models\Order;
 use App\Services\OrderService;
 use App\Services\PaymentService;
-use Event;
 use Exception;
 
 /**
@@ -69,6 +68,7 @@ class ProcessTmplOrdersForCurrentWeek extends Command
                 $this->orderService->updatePrices($order);
                 
                 $order->total = $order->getTotal();
+                $order->save();
                 
                 $this->log('process order #'.$order->id, 'info', $order->toArray());
                 
@@ -86,7 +86,7 @@ class ProcessTmplOrdersForCurrentWeek extends Command
                     
                     $this->log('order #'.$order->id.' successfully paid, order status changed to "paid"', 'info');
                     
-                    Event::fire(new TmplOrderSuccessfullyPaid($order));
+                    event(new TmplOrderSuccessfullyPaid($order));
                     
                     continue;
                 }
@@ -105,7 +105,7 @@ class ProcessTmplOrdersForCurrentWeek extends Command
                 
                 $this->log('order #'.$order->id.' status changed to "changed"', 'info');
                 
-                Event::fire(new TmplOrderPaymentError($order, $result['message']));
+                event(new TmplOrderPaymentError($order, $result['message']));
             } catch (Exception $e) {
                 $message = $e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
                 

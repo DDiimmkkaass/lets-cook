@@ -22,10 +22,7 @@ class Order extends Model
      * @var array
      */
     protected $fillable = [
-        'parent_id',
         'user_id',
-        'type',
-        'subscribe_period',
         'status',
         'payment_method',
         'full_name',
@@ -40,19 +37,6 @@ class Order extends Model
         'address',
         'comment',
     ];
-    
-    /**
-     * @var array
-     */
-    protected static $types = [
-        1 => 'single',
-        2 => 'subscribe',
-    ];
-    
-    /**
-     * @var array
-     */
-    protected static $subscribe_periods = [1, 2];
     
     /**
      * @var array
@@ -210,17 +194,6 @@ class Order extends Model
     
     /**
      * @param        $query
-     * @param string $type
-     *
-     * @return mixed
-     */
-    public function scopeOfType($query, $type)
-    {
-        return $query->whereType(self::getTypeIdByName($type));
-    }
-    
-    /**
-     * @param        $query
      * @param string $status
      *
      * @return mixed
@@ -271,10 +244,10 @@ class Order extends Model
     public function scopeForWeek($query, $year, $week)
     {
         $dt = Carbon::create($year, 1, 1)->addWeeks($week)->startOfWeek();
-    
+        
         $to = clone($dt->endOfDay());
         $from = $dt->subDay()->startOfDay();
-    
+        
         return $query->where('delivery_date', '>=', $from)->where('delivery_date', '<=', $to);
     }
     
@@ -297,11 +270,16 @@ class Order extends Model
     }
     
     /**
-     * @return bool
+     * @param $query
      */
-    public function isSubscribe()
+    public function scopeJoinWeeklyMenuBasket($query)
     {
-        return $this->type == self::getTypeIdByName('subscribe');
+        return $query->leftJoin(
+            'weekly_menu_baskets',
+            'weekly_menu_baskets.id',
+            '=',
+            'order_baskets.weekly_menu_basket_id'
+        );
     }
     
     /**
@@ -310,7 +288,7 @@ class Order extends Model
     public function forCurrentWeek()
     {
         $dt = active_week();
-    
+        
         $to = $dt->endOfDay()->format('d-m-Y');
         $from = $dt->subDay()->startOfDay()->format('d-m-Y');
         
@@ -393,7 +371,7 @@ class Order extends Model
         $recipes = $this->recipes->count();
         
         $places += $this->main_basket->getPlaces($recipes);
-    
+        
         foreach ($this->additional_baskets as $basket) {
             $places += $basket->getPlaces();
         }
@@ -420,9 +398,11 @@ class Order extends Model
     {
         $list = [];
         
-        $this->additional_baskets->each(function ($item) use (&$list) {
-            $list[] = $item->getName();
-        });
+        $this->additional_baskets->each(
+            function ($item) use (&$list) {
+                $list[] = $item->getName();
+            }
+        );
         
         return implode($split, $list);
     }
@@ -475,9 +455,9 @@ class Order extends Model
     public function getFormattedDeliveryDate()
     {
         return $this->getDeliveryDate()->format('d').' '.
-            get_localized_date($this->delivery_date, 'd-m-Y', false, '', '%f').', '.
-            day_of_week($this->delivery_date, 'd-m-Y').', '.
-            $this->delivery_time;
+        get_localized_date($this->delivery_date, 'd-m-Y', false, '', '%f').', '.
+        day_of_week($this->delivery_date, 'd-m-Y').', '.
+        $this->delivery_time;
     }
     
     /**
@@ -513,22 +493,6 @@ class Order extends Model
     /**
      * @return array
      */
-    public static function getTypes()
-    {
-        return self::$types;
-    }
-    
-    /**
-     * @return array
-     */
-    public static function getSubscribePeriods()
-    {
-        return self::$subscribe_periods;
-    }
-    
-    /**
-     * @return array
-     */
     public static function getStatuses()
     {
         return self::$statuses;
@@ -540,22 +504,6 @@ class Order extends Model
     public static function getPaymentMethods()
     {
         return self::$payment_methods;
-    }
-    
-    /**
-     * @param string $type
-     *
-     * @return int|null
-     */
-    public static function getTypeIdByName($type)
-    {
-        foreach (self::$types as $id => $_type) {
-            if ($_type == $type) {
-                return $id;
-            }
-        }
-        
-        return null;
     }
     
     /**
@@ -588,20 +536,6 @@ class Order extends Model
         }
         
         return null;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getStringType()
-    {
-        foreach (self::$types as $id => $type) {
-            if ($id == $this->type) {
-                return $type;
-            }
-        }
-        
-        return '';
     }
     
     /**
