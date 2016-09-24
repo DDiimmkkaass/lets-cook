@@ -12,7 +12,7 @@ class PopulateVariablesTable5 extends Migration
      */
     public function up()
     {
-        //map marker latitude
+        //trial order
         $variable = [
             'key'         => 'trial_order_basket_id',
             'type'        => 'text',
