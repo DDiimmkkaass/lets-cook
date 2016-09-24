@@ -68,6 +68,7 @@ class Order extends Model
     protected static $editable_statuses_user = [
         'changed',
         'paid',
+        'processed',
         'tmpl',
     ];
     

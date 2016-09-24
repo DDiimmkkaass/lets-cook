@@ -38,4 +38,6 @@ return array(
     'basket subscription successfully saved' => 'Параметры подписки успешно обновлены',
     'basket subscription successfully deleted' => 'Подписка успешно удалена',
     'order not find' => 'Заказ не найден',
+    'order has un editable status' => 'Вы не можете оредактировать этот заказ',
+    'you can not edit already paid online orders' => 'Вы не можете редактировать уже оплаченый онлайн заказ',
 );

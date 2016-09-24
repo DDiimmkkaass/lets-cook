@@ -55,8 +55,7 @@ class Kernel extends HttpKernel
         'slug.set'                       => \App\Http\Middleware\SetSlug::class,
         'localizationRedirect'           => \Mcamara\LaravelLocalization\Middleware\LaravelLocalizationRedirectFilter::class,
         'localeSessionRedirect'          => \Mcamara\LaravelLocalization\Middleware\LocaleSessionRedirect::class,
-        'admin.order.editable'           => \App\Http\Middleware\EditableOrder::class,
         'admin.before_finalisation_date' => \App\Http\Middleware\BeforeFinalisationDate::class,
-        'order.before_finalisation'      => \App\Http\Middleware\OrderBeforeFinalisationDate::class,
+        'user.order.editable'            => \App\Http\Middleware\UserEditableOrder::class,
     ];
 }

@@ -87,7 +87,7 @@ class OrderController extends FrontendController
         $this->subscribeService = $subscribeService;
     
         $this->middleware('auth.check_email_exists', ['only' => ['store']]);
-        $this->middleware('order.before_finalisation', ['only' => ['update']]);
+        $this->middleware('user.order.editable', ['only' => ['update']]);
     }
     
     /**

@@ -11,6 +11,8 @@ Form.processFormSubmitError = (response, $form) ->
 
   if response.status == 404
     popUp(lang_error, lang_errorRequestError)
+  else if response.status == 405
+    popUp(lang_error, response.responseJSON.message)
   else if response.status == 422
     popUp(lang_error, lang_errorValidation + '<br />' + Form.getErrors(response))
   else
