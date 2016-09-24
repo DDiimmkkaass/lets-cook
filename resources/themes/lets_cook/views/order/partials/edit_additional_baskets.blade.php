@@ -1,5 +1,5 @@
 @if ($additional_baskets->count())
-    <div class="order-edit__add">
+    <div class="order-edit__add @if (after_week_closing($weekly_menu->year, $weekly_menu->week)) h-hidden @endif">
         <div class="order-edit__add-title">Добавьте к заказу</div>
 
         <ul class="order-edit__add-list">

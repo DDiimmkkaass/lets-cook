@@ -22,26 +22,22 @@
                         </div>
                     </div>
 
-                    @if (before_week_closing($weekly_menu->year, $weekly_menu->week))
-                        @include('order.partials.edit_additional_baskets')
-                    @endif
+                    @include('order.partials.edit_additional_baskets')
                 </div>
 
                 <div class="order-edit__right">
-                    @if (before_week_closing($weekly_menu->year, $weekly_menu->week))
-                        <div class="order-edit__select order-select">
-                            <select name="basket_id" id="order-select-name">
-                                @foreach($weekly_menu->baskets()->get() as $basket)
-                                    <option value="{!! $basket->id !!}"
-                                            data-price="{!! $basket->getPriceInOrder($recipes_count) !!}"
-                                            @if ($basket->id == $order->main_basket->weekly_menu_basket_id) selected @endif>
-                                        {!! $basket->getName() !!}
-                                        ({!! $basket->getPriceInOrder($recipes_count) !!} {!! $currency !!})
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    @endif
+                    <div class="order-edit__select order-select @if (after_week_closing($weekly_menu->year, $weekly_menu->week)) h-hidden @endif">
+                        <select name="basket_id" id="order-select-name">
+                            @foreach($weekly_menu->baskets()->get() as $basket)
+                                <option value="{!! $basket->id !!}"
+                                        data-price="{!! $basket->getPriceInOrder($recipes_count) !!}"
+                                        @if ($basket->id == $order->main_basket->weekly_menu_basket_id) selected @endif>
+                                    {!! $basket->getName() !!}
+                                    ({!! $basket->getPriceInOrder($recipes_count) !!} {!! $currency !!})
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
                     <div class="order-edit__delivery order-delivery">
                         <div class="order-delivery__title">Доставка:</div>
@@ -110,9 +106,9 @@
                                             {!! $city->name !!}
                                         </option>
                                     @endforeach
-                                        <option value="0" @if (!$order->city_id) selected @endif>
-                                            Другой
-                                        </option>
+                                    <option value="0" @if (!$order->city_id) selected @endif>
+                                        Другой
+                                    </option>
                                 </select>
                             </div>
 
@@ -144,7 +140,8 @@
                     <div class="order-edit__total">
                         <div class="order-edit__total-wrapper">
                             <div class="order-edit__total-title">Итого:</div>
-                            <div id="order_total_desktop" class="order-edit__total-value" data-total="{!! $order->total !!}">
+                            <div id="order_total_desktop" class="order-edit__total-value"
+                                 data-total="{!! $order->total !!}">
                                 {!! $order->total !!}<span>{!! $currency !!}</span>
                             </div>
                         </div>
