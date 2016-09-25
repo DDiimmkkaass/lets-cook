@@ -41,4 +41,9 @@ return array(
     'order has un editable status' => 'Вы не можете оредактировать этот заказ',
     'you can not edit already paid online orders' => 'Вы не можете редактировать уже оплаченый онлайн заказ',
     'you can not edit other users orders' => 'Вы не можете редактировать заказы других пользователей',
+    'you cannot add this coupon' => 'Вы не можете добавить этот купон',
+    'coupon successfully added' => 'Купон успешно добавлен',
+    'you cannot make this coupon default' => 'Вы не можете сделать етот купон активным',
+    'coupon successfully make default' => 'Купон успешно установлен как активный',
+    'coupon already default' => 'Этот купон уже установлен как активный',
 );

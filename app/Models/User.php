@@ -87,6 +87,14 @@ class User extends SentryUser implements FrontLink
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function coupons()
+    {
+        return $this->hasMany(UserCoupon::class);
+    }
+    
+    /**
      * @param      $q
      */
     public function scopeJoinInfo($q)

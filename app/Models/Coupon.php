@@ -40,6 +40,14 @@ class Coupon extends Model
     /**
      * @var array
      */
+    protected $dates = [
+        'started_at',
+        'expired_at',
+    ];
+    
+    /**
+     * @var array
+     */
     protected static $types = [
         'all',
         'main',
@@ -119,6 +127,22 @@ class Coupon extends Model
     public function getExpiredAtAttribute($value)
     {
         return empty($value) ? '' : Carbon::createFromFormat('Y-m-d H:i:s', $value)->endOfDay()->format('d-m-Y');
+    }
+    
+    /**
+     * @return string|Carbon
+     */
+    public function getStartedAt()
+    {
+        return empty($this->started_at) ? '' : Carbon::createFromFormat('d-m-Y', $this->started_at)->startOfDay();
+    }
+    
+    /**
+     * @return string|Carbon
+     */
+    public function getExpiredAt()
+    {
+        return empty($this->expired_at) ? '' : Carbon::createFromFormat('d-m-Y', $this->expired_at)->endOfDay();
     }
     
     /**

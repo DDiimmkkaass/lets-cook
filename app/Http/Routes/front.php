@@ -102,7 +102,7 @@ $router->group(
                     ['as' => 'order.update', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@update']
                 )
                     ->where('order_id', '[0-9]+');
-    
+                
                 $router->post(
                     '/{order_id}/delete',
                     ['as' => 'order.delete', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@delete']
@@ -155,6 +155,32 @@ $router->group(
         $router->post(
             'update/password',
             ['as' => 'profiles.update.password', 'uses' => 'Frontend\ProfileController@updatePassword']
+        );
+    }
+);
+
+// profiles
+$router->group(
+    [
+        'prefix'     => 'coupons',
+        'middleware' => 'ajax',
+    ],
+    function () use ($router) {
+        $router->group(
+            [
+                'middleware' => 'auth',
+            ],
+            function () use ($router) {
+                $router->post(
+                    '/',
+                    ['as' => 'coupons.store', 'uses' => 'Frontend\CouponController@store']
+                );
+                
+                $router->post(
+                    '/make-default',
+                    ['as' => 'coupons.make_default', 'uses' => 'Frontend\CouponController@makeDefault']
+                );
+            }
         );
     }
 );

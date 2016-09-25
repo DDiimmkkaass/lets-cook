@@ -20,4 +20,6 @@ return array(
   'login' => 'Войдите',
   'activate_profile_as_action' => 'Активировать профиль',
   'to' => 'до',
+  'main_short' => 'Осн.',
+  'additional_short' => 'Доп.',
 );

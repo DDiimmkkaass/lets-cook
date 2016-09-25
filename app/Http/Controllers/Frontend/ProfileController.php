@@ -90,7 +90,7 @@ class ProfileController extends FrontendController
             
             $subscribe->fill($request->all());
             $subscribe->save();
-    
+            
             $subscribe->additional_baskets()->sync($request->get('baskets', []));
             
             event(new BasketSubscribeUpdated($subscribe));
@@ -118,7 +118,7 @@ class ProfileController extends FrontendController
     {
         try {
             DB::beginTransaction();
-                
+            
             $subscribe = $this->user->subscribe()->firstOrFail();
             
             $subscribe->delete();
