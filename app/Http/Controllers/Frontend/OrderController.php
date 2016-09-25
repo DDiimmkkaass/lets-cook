@@ -16,6 +16,7 @@ use App\Models\City;
 use App\Models\Order;
 use App\Models\WeeklyMenuBasket;
 use App\Services\AuthService;
+use App\Services\CouponService;
 use App\Services\OrderService;
 use App\Services\PaymentService;
 use App\Services\SubscribeService;
@@ -63,6 +64,11 @@ class OrderController extends FrontendController
     private $subscribeService;
     
     /**
+     * @var \App\Services\CouponService
+     */
+    private $couponService;
+    
+    /**
      * OrderController constructor.
      *
      * @param \App\Services\OrderService      $orderService
@@ -70,13 +76,15 @@ class OrderController extends FrontendController
      * @param \App\Services\PaymentService    $paymentService
      * @param \App\Services\AuthService       $authService
      * @param \App\Services\SubscribeService  $subscribeService
+     * @param \App\Services\CouponService     $couponService
      */
     public function __construct(
         OrderService $orderService,
         WeeklyMenuService $weeklyMenuService,
         PaymentService $paymentService,
         AuthService $authService,
-        SubscribeService $subscribeService
+        SubscribeService $subscribeService,
+        CouponService $couponService
     ) {
         parent::__construct();
         
@@ -85,6 +93,7 @@ class OrderController extends FrontendController
         $this->paymentService = $paymentService;
         $this->authService = $authService;
         $this->subscribeService = $subscribeService;
+        $this->couponService = $couponService;
     
         $this->middleware('auth.check_email_exists', ['only' => ['store']]);
         $this->middleware('user.order.editable', ['only' => ['edit', 'update']]);
@@ -156,6 +165,15 @@ class OrderController extends FrontendController
             if (!$this->user) {
                 $this->user = $this->authService->quickRegister($request->all());
             }
+    
+            if ($request->get('coupon_code')) {
+                if (!$this->couponService->available($request->get('coupon_code'), $this->user)) {
+                    return [
+                        'status'  => 'error',
+                        'message' => trans('front_messages.coupon not available'),
+                    ];
+                }
+            }
             
             $input = $this->orderService->prepareFrontInputData($request, $this->user);
             
@@ -164,7 +182,10 @@ class OrderController extends FrontendController
             
             $this->_saveRelationships($model, $request);
             
-            $model->total = $model->getTotal();
+            list($subtotal, $total) = $this->orderService->getTotals($model);
+            
+            $model->subtotal = $subtotal;
+            $model->total = $total;
             
             $model->save();
             

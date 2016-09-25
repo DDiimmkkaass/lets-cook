@@ -9,7 +9,7 @@
                 </h3>
 
                 <div class="order-promocode__inputs">
-                    <input type="text" class="input-text-large" name="order-promocode__text"
+                    <input type="text" class="input-text-large" name="coupon_code"
                            placeholder="Промокод">
                     <input type="button" name="order-promocode__submit" value="Пересчитать">
                 </div>

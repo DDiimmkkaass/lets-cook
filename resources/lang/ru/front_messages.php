@@ -46,4 +46,5 @@ return array(
     'you cannot make this coupon default' => 'Вы не можете сделать етот купон активным',
     'coupon successfully make default' => 'Купон успешно установлен как активный',
     'coupon already default' => 'Этот купон уже установлен как активный',
+    'coupon not available' => 'Этот купон не действителен или Вы не можете его использовать',
 );

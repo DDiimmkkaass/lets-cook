@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Http\Requests\Frontend\UserCoupon\CouponCheckRequest;
 use App\Http\Requests\Frontend\UserCoupon\UserCouponCreateRequest;
 use App\Http\Requests\Frontend\UserCoupon\UserCouponMakeDefaultRequest;
 use App\Models\UserCoupon;
@@ -89,7 +90,7 @@ class CouponController extends FrontendController
     {
         try {
             $coupon = $this->user->coupons()->whereCouponId($request->get('coupon_id'))->first();
-        
+            
             if (!$coupon->available()) {
                 return [
                     'status'  => 'error',
@@ -103,12 +104,46 @@ class CouponController extends FrontendController
                     'message' => trans('front_messages.coupon already default'),
                 ];
             }
-    
+            
             $this->couponService->makeDefault($coupon);
-        
+            
             return [
                 'status'  => 'success',
                 'message' => trans('front_messages.coupon successfully make default'),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('front_messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
+     * @param \App\Http\Requests\Frontend\UserCoupon\CouponCheckRequest $request
+     *
+     * @return array
+     */
+    public function check(CouponCheckRequest $request)
+    {
+        try {
+            $coupon = $this->couponService->getCoupon($request->get('code'));
+    
+            if (!$this->couponService->available($coupon, $this->user)) {
+                return [
+                    'status'  => 'error',
+                    'message' => trans('front_messages.coupon not available'),
+                ];
+            }
+            
+            $main_discount = in_array($coupon->getStringType(), ['all', 'main']) ? $coupon->discount : 0;
+            $additional_discount = in_array($coupon->getStringType(), ['all', 'additional']) ? $coupon->discount : 0;
+            
+            return [
+                'status'              => 'success',
+                'main_discount'       => $main_discount,
+                'additional_discount' => $additional_discount,
+                'discount_type'       => $coupon->getStringDiscountType(),
             ];
         } catch (Exception $e) {
             return [

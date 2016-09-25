@@ -71,7 +71,7 @@
     {!! Form::label('count', trans('labels.number_of_uses'), ['class' => 'control-label col-xs-12 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-2 col-md-2">
-        {!! Form::text('count', old('count') ?: 1, ['class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+        {!! Form::text('count', null, ['class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
 
         {!! $errors->first('count', '<p class="help-block error">:message</p>') !!}
     </div>
@@ -85,7 +85,7 @@
     {!! Form::label('users_count', trans('labels.users_count'), ['class' => 'control-label col-xs-12 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-2 col-md-2">
-        {!! Form::text('users_count', old('users_count') ?: 1, ['class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
+        {!! Form::text('users_count', null, ['class' => 'form-control input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
 
         {!! $errors->first('users_count', '<p class="help-block error">:message</p>') !!}
     </div>

@@ -11,6 +11,7 @@ namespace App\Services;
 use App\Models\Basket;
 use App\Models\BasketRecipe;
 use App\Models\BasketSubscribe;
+use App\Models\Coupon;
 use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\OrderBasket;
@@ -156,6 +157,36 @@ class OrderService
     }
     
     /**
+     * @param Builder $list
+     * @param Request $request
+     */
+    private function _implodeFilters(&$list, $request)
+    {
+        $filters = $request->get('datatable_filters');
+        
+        if (count($filters)) {
+            foreach ($filters as $filter => $value) {
+                if ($value !== '' && $value !== 'null') {
+                    switch ($filter) {
+                        case 'delivery_date_from':
+                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
+                                $value = Carbon::createFromFormat('d-m-Y', $value)->startOfDay()->format('Y-m-d H:i:s');
+                                $list->where('orders.delivery_date', '>=', $value);
+                            }
+                            break;
+                        case 'delivery_date_to':
+                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
+                                $value = Carbon::createFromFormat('d-m-Y', $value)->endOfDay()->format('Y-m-d H:i:s');
+                                $list->where('orders.delivery_date', '<=', $value);
+                            }
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
      * @return array
      */
     public function getOrdersStatistic()
@@ -273,6 +304,10 @@ class OrderService
         
         $data['status'] = Order::getStatusIdByName('changed');
         
+        $data['coupon_id'] = $request->get('coupon_code') ?
+            Coupon::whereCode($request->get('coupon_code'))->first()->id :
+            null;
+        
         return $data;
     }
     
@@ -320,310 +355,6 @@ class OrderService
     }
     
     /**
-     * @param \App\Models\BasketSubscribe $subscribe
-     *
-     * @return \App\Models\Order
-     */
-    public function createTmpl(BasketSubscribe $subscribe)
-    {
-        $tmpl = new Order(
-            [
-                'user_id'          => $subscribe->user_id,
-                'payment_method'   => $subscribe->payment_method,
-                'delivery_date'    => $this->_getDeliveryDateForTmplOrder($subscribe),
-                'delivery_time'    => $subscribe->delivery_time,
-                'full_name'        => $subscribe->user->full_name,
-                'email'            => $subscribe->user->email,
-                'phone'            => $subscribe->user->phone,
-                'additional_phone' => $subscribe->user->additional_phone,
-                'city_id'          => $subscribe->user->city_id,
-                'city_name'        => $subscribe->user->city_name,
-                'address'          => $subscribe->user->address,
-            ]
-        );
-        
-        $tmpl->status = Order::getStatusIdByName('tmpl');
-        $tmpl->total = 0;
-        
-        $tmpl->save();
-        
-        $this->tmplAddMainBasket($tmpl, $subscribe);
-        
-        $this->tmplAddAdditionalBaskets($tmpl, $subscribe);
-        
-        $this->addSystemOrderComment($tmpl, trans('messages.auto generated tmpl order'), 'tmpl');
-        
-        return $tmpl;
-    }
-    
-    /**
-     * @param \App\Models\Order $model
-     * @param string            $comment
-     * @param bool              $status
-     */
-    public function addSystemOrderComment(Order $model, $comment, $status = false)
-    {
-        $comment = new OrderComment(
-            [
-                'comment' => $comment,
-                'status'  => $status,
-            ]
-        );
-        
-        $model->comments()->save($comment);
-    }
-    
-    /**
-     * @param \App\Models\Order $model
-     * @param string            $comment
-     * @param string            $status
-     */
-    public function addAdminOrderComment(Order $model, $comment, $status = '')
-    {
-        $comment = new OrderComment(
-            [
-                'user_id' => Sentry::getUser()->getId(),
-                'comment' => $comment,
-                'status'  => empty($status) ? $model->getStringStatus() : $status,
-            ]
-        );
-        
-        $model->comments()->save($comment);
-    }
-    
-    /**
-     * @param \App\Models\Order $model
-     * @param int               $weekly_menu_basket_id
-     * @param int               $days
-     *
-     * @return \App\Models\OrderBasket
-     */
-    public function saveMainBasket(Order $model, $weekly_menu_basket_id, $days)
-    {
-        $weekly_menu_basket = WeeklyMenuBasket::with('basket')->findOrFail($weekly_menu_basket_id);
-        
-        $main_basket = $model->main_basket()->first();
-        if (!$main_basket) {
-            $main_basket = new OrderBasket(
-                [
-                    'weekly_menu_basket_id' => $weekly_menu_basket_id,
-                ]
-            );
-        } else {
-            $main_basket->weekly_menu_basket_id = $weekly_menu_basket_id;
-        }
-        $main_basket->name = $weekly_menu_basket->getName();
-        $main_basket->price = $weekly_menu_basket->getPriceInOrder($days);
-        
-        $model->main_basket()->save($main_basket);
-        
-        return $main_basket;
-    }
-    
-    /**
-     * @param \App\Models\Order $model
-     * @param int               $basket_id
-     * @param array             $recipes
-     * @param int               $recipes_count
-     */
-    public function saveRecipes(Order $model, $basket_id, $recipes = [], $recipes_count = 0)
-    {
-        $basket = WeeklyMenuBasket::with('recipes')->find($basket_id);
-        
-        $indexes = null;
-        if ($recipes_count > 0) {
-            $recipes_for_days = config('weekly_menu.recipes_for_days');
-            
-            $indexes = isset($recipes_for_days[$recipes_count]) ? $recipes_for_days[$recipes_count] : (int) $recipes_count;
-        }
-        
-        $basket->recipes->each(
-            function ($item, $index) use ($model, $recipes, $recipes_count, $indexes) {
-                $add = false;
-                
-                $index += 1;
-                
-                if (isset($recipes[$item->id])) {
-                    $add = true;
-                }
-                
-                if (is_array($indexes) && in_array($index, $indexes)) {
-                    $add = true;
-                }
-                
-                if (is_int($indexes) && ($index <= $indexes)) {
-                    $add = true;
-                }
-                
-                if ($add) {
-                    $input = [
-                        'basket_recipe_id' => $item->id,
-                        'name'             => $item->getRecipeName(),
-                    ];
-                    $recipe = new OrderRecipe($input);
-                    
-                    $model->recipes()->save($recipe);
-                }
-            }
-        );
-    }
-    
-    /**
-     * @param \App\Models\Order $model
-     * @param array             $baskets
-     */
-    public function saveAdditionalBaskets(Order $model, $baskets)
-    {
-        foreach ($baskets as $basket_id) {
-            if (!$model->additional_baskets()->whereBasketId($basket_id)->count()) {
-                $basket = Basket::findOrFail($basket_id);
-                
-                $order_basket = new OrderBasket(
-                    [
-                        'basket_id' => $basket_id,
-                        'name'      => $basket->name,
-                    ]
-                );
-                $order_basket->price = $basket->getPrice();
-                
-                $model->additional_baskets()->save($order_basket);
-            }
-        }
-        
-        $model->additional_baskets()->whereNotIn('basket_id', $baskets)->delete();
-    }
-    
-    /**
-     * @param \App\Models\Order $model
-     * @param array             $ingredients
-     */
-    public function saveIngredients(Order $model, $ingredients)
-    {
-        foreach ($ingredients as $ingredient) {
-            list($basket_recipe_id, $recipe_ingredient_id) = explode('_', $ingredient);
-            
-            $basket_recipe = BasketRecipe::with('recipe.home_ingredients')->find($basket_recipe_id);
-            
-            if ($basket_recipe) {
-                $recipe_ingredient = $basket_recipe->recipe->home_ingredients->find($recipe_ingredient_id);
-                
-                if ($recipe_ingredient && $recipe_ingredient->ingredient->inSale()) {
-                    $ingredient = new OrderIngredient(
-                        [
-                            'basket_recipe_id' => $basket_recipe_id,
-                            'ingredient_id'    => $recipe_ingredient->ingredient_id,
-                            'name'             => $recipe_ingredient->ingredient->name,
-                            'count'            => $recipe_ingredient->count,
-                        ]
-                    );
-                    $ingredient->price = $recipe_ingredient->ingredient->sale_price;
-                    
-                    $model->ingredients()->save($ingredient);
-                }
-            }
-        }
-    }
-    
-    /**
-     * @param Order           $tmpl
-     * @param BasketSubscribe $subscribe
-     */
-    public function tmplAddMainBasket(Order $tmpl, BasketSubscribe $subscribe)
-    {
-        $week = $tmpl->getDeliveryDate()->startOfWeek();
-        
-        if ($subscribe->delivery_date == 0) {
-            $week->addWeek();
-        }
-        
-        $basket = WeeklyMenuBasket::with('recipes')->joinWeeklyMenu()
-            ->where(['weekly_menus.year' => $week->year, 'weekly_menus.week' => $week->weekOfYear])
-            ->whereBasketId($subscribe->basket_id)
-            ->wherePortions($subscribe->portions)
-            ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
-            ->first();
-        
-        if ($basket) {
-            OrderBasket::create(
-                [
-                    'order_id'              => $tmpl->id,
-                    'weekly_menu_basket_id' => $basket->id,
-                    'name'                  => $basket->getName(),
-                ]
-            );
-            
-            $this->saveRecipes($tmpl, $basket->id, [], $subscribe->portions);
-        }
-        
-        return $basket;
-    }
-    
-    /**
-     * @param \App\Models\Order           $tmpl
-     * @param \App\Models\BasketSubscribe $subscribe
-     */
-    public function tmplAddAdditionalBaskets(Order $tmpl, BasketSubscribe $subscribe)
-    {
-        foreach ($subscribe->additional_baskets as $basket) {
-            OrderBasket::create(
-                [
-                    'order_id'  => $tmpl->id,
-                    'basket_id' => $basket->id,
-                    'name'      => $basket->getName(),
-                ]
-            );
-        }
-    }
-    
-    /**
-     * @param \App\Models\Order $order
-     */
-    public function updatePrices(Order $order)
-    {
-        $order->main_basket->price = $order->main_basket->weekly_menu_basket->getPrice(null, $order->recipes->count());
-        $order->main_basket->save();
-        
-        foreach ($order->additional_baskets as $basket) {
-            $basket->price = $basket->basket->getPrice();
-            $basket->save();
-        }
-    }
-    
-    /**
-     * @param int $order_id
-     *
-     * @return Order|null
-     */
-    public function getOrder($order_id)
-    {
-        return Order::with('main_basket', 'additional_baskets', 'main_basket.weekly_menu_basket.weekly_menu')
-            ->notOfStatus(['archived', 'deleted'])
-            ->whereId($order_id)
-            ->first();
-    }
-    
-    /**
-     * @param $repeat_order
-     *
-     * @return WeeklyMenuBasket|null
-     */
-    public function getSameActiveBasket($repeat_order)
-    {
-        $active_week = active_week_menu_week();
-        
-        $basket = WeeklyMenuBasket::with(
-            ['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients']
-        )->joinWeeklyMenu()
-            ->where(['weekly_menus.year' => $active_week->year, 'weekly_menus.week' => $active_week->weekOfYear])
-            ->whereBasketId($repeat_order->main_basket->weekly_menu_basket->basket_id)
-            ->wherePortions($repeat_order->main_basket->getPortions())
-            ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
-            ->first();
-        
-        return $basket;
-    }
-    
-    /**
      * @param \App\Models\Order $model
      * @param array             $input
      */
@@ -666,6 +397,60 @@ class OrderService
                 );
             }
         }
+    }
+    
+    /**
+     * @param \App\Models\Order $model
+     * @param int               $weekly_menu_basket_id
+     * @param int               $days
+     *
+     * @return \App\Models\OrderBasket
+     */
+    public function saveMainBasket(Order $model, $weekly_menu_basket_id, $days)
+    {
+        $weekly_menu_basket = WeeklyMenuBasket::with('basket')->findOrFail($weekly_menu_basket_id);
+        
+        $main_basket = $model->main_basket()->first();
+        if (!$main_basket) {
+            $main_basket = new OrderBasket(
+                [
+                    'weekly_menu_basket_id' => $weekly_menu_basket_id,
+                ]
+            );
+        } else {
+            $main_basket->weekly_menu_basket_id = $weekly_menu_basket_id;
+        }
+        $main_basket->name = $weekly_menu_basket->getName();
+        $main_basket->price = $weekly_menu_basket->getPriceInOrder($days);
+        
+        $model->main_basket()->save($main_basket);
+        
+        return $main_basket;
+    }
+    
+    /**
+     * @param \App\Models\Order $model
+     * @param array             $baskets
+     */
+    public function saveAdditionalBaskets(Order $model, $baskets)
+    {
+        foreach ($baskets as $basket_id) {
+            if (!$model->additional_baskets()->whereBasketId($basket_id)->count()) {
+                $basket = Basket::findOrFail($basket_id);
+                
+                $order_basket = new OrderBasket(
+                    [
+                        'basket_id' => $basket_id,
+                        'name'      => $basket->name,
+                    ]
+                );
+                $order_basket->price = $basket->getPrice();
+                
+                $model->additional_baskets()->save($order_basket);
+            }
+        }
+        
+        $model->additional_baskets()->whereNotIn('basket_id', $baskets)->delete();
     }
     
     /**
@@ -727,6 +512,61 @@ class OrderService
     }
     
     /**
+     * @param \App\Models\Order $model
+     * @param string            $comment
+     * @param string            $status
+     */
+    public function addAdminOrderComment(Order $model, $comment, $status = '')
+    {
+        $comment = new OrderComment(
+            [
+                'user_id' => Sentry::getUser()->getId(),
+                'comment' => $comment,
+                'status'  => empty($status) ? $model->getStringStatus() : $status,
+            ]
+        );
+        
+        $model->comments()->save($comment);
+    }
+    
+    /**
+     * @param \App\Models\BasketSubscribe $subscribe
+     *
+     * @return \App\Models\Order
+     */
+    public function createTmpl(BasketSubscribe $subscribe)
+    {
+        $tmpl = new Order(
+            [
+                'user_id'          => $subscribe->user_id,
+                'payment_method'   => $subscribe->payment_method,
+                'delivery_date'    => $this->_getDeliveryDateForTmplOrder($subscribe),
+                'delivery_time'    => $subscribe->delivery_time,
+                'full_name'        => $subscribe->user->full_name,
+                'email'            => $subscribe->user->email,
+                'phone'            => $subscribe->user->phone,
+                'additional_phone' => $subscribe->user->additional_phone,
+                'city_id'          => $subscribe->user->city_id,
+                'city_name'        => $subscribe->user->city_name,
+                'address'          => $subscribe->user->address,
+            ]
+        );
+        
+        $tmpl->status = Order::getStatusIdByName('tmpl');
+        $tmpl->total = 0;
+        
+        $tmpl->save();
+        
+        $this->tmplAddMainBasket($tmpl, $subscribe);
+        
+        $this->tmplAddAdditionalBaskets($tmpl, $subscribe);
+        
+        $this->addSystemOrderComment($tmpl, trans('messages.auto generated tmpl order'), 'tmpl');
+        
+        return $tmpl;
+    }
+    
+    /**
      * @param \App\Models\BasketSubscribe $subscribe
      *
      * @return string
@@ -745,51 +585,249 @@ class OrderService
                 ->orderBy('orders.updated_at', 'DESC')
                 ->first();
         }
-    
+        
         if (!$latest_tmpl_order) {
             $delivery_date = Carbon::now()->endOfWeek()->startOfDay();
         } else {
             $delivery_date = $latest_tmpl_order->getDeliveryDate();
         }
-    
+        
         $delivery_date = $delivery_date->dayOfWeek > $subscribe->delivery_date ?
             $delivery_date->subDay() :
             (
-                $delivery_date->dayOfWeek < $subscribe->delivery_date ?
-                    $delivery_date->addDay() :
-                    $delivery_date
+            $delivery_date->dayOfWeek < $subscribe->delivery_date ?
+                $delivery_date->addDay() :
+                $delivery_date
             );
         
         return $delivery_date->addWeeks($subscribe->subscribe_period)->format('d-m-Y');
     }
     
     /**
-     * @param Builder $list
-     * @param Request $request
+     * @param Order           $tmpl
+     * @param BasketSubscribe $subscribe
      */
-    private function _implodeFilters(&$list, $request)
+    public function tmplAddMainBasket(Order $tmpl, BasketSubscribe $subscribe)
     {
-        $filters = $request->get('datatable_filters');
+        $week = $tmpl->getDeliveryDate()->startOfWeek();
         
-        if (count($filters)) {
-            foreach ($filters as $filter => $value) {
-                if ($value !== '' && $value !== 'null') {
-                    switch ($filter) {
-                        case 'delivery_date_from':
-                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
-                                $value = Carbon::createFromFormat('d-m-Y', $value)->startOfDay()->format('Y-m-d H:i:s');
-                                $list->where('orders.delivery_date', '>=', $value);
-                            }
-                            break;
-                        case 'delivery_date_to':
-                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
-                                $value = Carbon::createFromFormat('d-m-Y', $value)->endOfDay()->format('Y-m-d H:i:s');
-                                $list->where('orders.delivery_date', '<=', $value);
-                            }
-                            break;
-                    }
+        if ($subscribe->delivery_date == 0) {
+            $week->addWeek();
+        }
+        
+        $basket = WeeklyMenuBasket::with('recipes')->joinWeeklyMenu()
+            ->where(['weekly_menus.year' => $week->year, 'weekly_menus.week' => $week->weekOfYear])
+            ->whereBasketId($subscribe->basket_id)
+            ->wherePortions($subscribe->portions)
+            ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
+            ->first();
+        
+        if ($basket) {
+            OrderBasket::create(
+                [
+                    'order_id'              => $tmpl->id,
+                    'weekly_menu_basket_id' => $basket->id,
+                    'name'                  => $basket->getName(),
+                ]
+            );
+            
+            $this->saveRecipes($tmpl, $basket->id, [], $subscribe->portions);
+        }
+        
+        return $basket;
+    }
+    
+    /**
+     * @param \App\Models\Order $model
+     * @param int               $basket_id
+     * @param array             $recipes
+     * @param int               $recipes_count
+     */
+    public function saveRecipes(Order $model, $basket_id, $recipes = [], $recipes_count = 0)
+    {
+        $basket = WeeklyMenuBasket::with('recipes')->find($basket_id);
+        
+        $indexes = null;
+        if ($recipes_count > 0) {
+            $recipes_for_days = config('weekly_menu.recipes_for_days');
+            
+            $indexes = isset($recipes_for_days[$recipes_count]) ? $recipes_for_days[$recipes_count] : (int) $recipes_count;
+        }
+        
+        $basket->recipes->each(
+            function ($item, $index) use ($model, $recipes, $recipes_count, $indexes) {
+                $add = false;
+                
+                $index += 1;
+                
+                if (isset($recipes[$item->id])) {
+                    $add = true;
+                }
+                
+                if (is_array($indexes) && in_array($index, $indexes)) {
+                    $add = true;
+                }
+                
+                if (is_int($indexes) && ($index <= $indexes)) {
+                    $add = true;
+                }
+                
+                if ($add) {
+                    $input = [
+                        'basket_recipe_id' => $item->id,
+                        'name'             => $item->getRecipeName(),
+                    ];
+                    $recipe = new OrderRecipe($input);
+                    
+                    $model->recipes()->save($recipe);
+                }
+            }
+        );
+    }
+    
+    /**
+     * @param \App\Models\Order           $tmpl
+     * @param \App\Models\BasketSubscribe $subscribe
+     */
+    public function tmplAddAdditionalBaskets(Order $tmpl, BasketSubscribe $subscribe)
+    {
+        foreach ($subscribe->additional_baskets as $basket) {
+            OrderBasket::create(
+                [
+                    'order_id'  => $tmpl->id,
+                    'basket_id' => $basket->id,
+                    'name'      => $basket->getName(),
+                ]
+            );
+        }
+    }
+    
+    /**
+     * @param \App\Models\Order $model
+     * @param string            $comment
+     * @param bool              $status
+     */
+    public function addSystemOrderComment(Order $model, $comment, $status = false)
+    {
+        $comment = new OrderComment(
+            [
+                'comment' => $comment,
+                'status'  => $status,
+            ]
+        );
+        
+        $model->comments()->save($comment);
+    }
+    
+    /**
+     * @param \App\Models\Order $model
+     * @param array             $ingredients
+     */
+    public function saveIngredients(Order $model, $ingredients)
+    {
+        foreach ($ingredients as $ingredient) {
+            list($basket_recipe_id, $recipe_ingredient_id) = explode('_', $ingredient);
+            
+            $basket_recipe = BasketRecipe::with('recipe.home_ingredients')->find($basket_recipe_id);
+            
+            if ($basket_recipe) {
+                $recipe_ingredient = $basket_recipe->recipe->home_ingredients->find($recipe_ingredient_id);
+                
+                if ($recipe_ingredient && $recipe_ingredient->ingredient->inSale()) {
+                    $ingredient = new OrderIngredient(
+                        [
+                            'basket_recipe_id' => $basket_recipe_id,
+                            'ingredient_id'    => $recipe_ingredient->ingredient_id,
+                            'name'             => $recipe_ingredient->ingredient->name,
+                            'count'            => $recipe_ingredient->count,
+                        ]
+                    );
+                    $ingredient->price = $recipe_ingredient->ingredient->sale_price;
+                    
+                    $model->ingredients()->save($ingredient);
                 }
             }
         }
+    }
+    
+    /**
+     * @param \App\Models\Order $order
+     */
+    public function updatePrices(Order $order)
+    {
+        $order->main_basket->price = $order->main_basket->weekly_menu_basket->getPrice(null, $order->recipes->count());
+        $order->main_basket->save();
+        
+        foreach ($order->additional_baskets as $basket) {
+            $basket->price = $basket->basket->getPrice();
+            $basket->save();
+        }
+    }
+    
+    /**
+     * @param int $order_id
+     *
+     * @return Order|null
+     */
+    public function getOrder($order_id)
+    {
+        return Order::with('main_basket', 'additional_baskets', 'main_basket.weekly_menu_basket.weekly_menu')
+            ->notOfStatus(['archived', 'deleted'])
+            ->whereId($order_id)
+            ->first();
+    }
+    
+    /**
+     * @param $repeat_order
+     *
+     * @return WeeklyMenuBasket|null
+     */
+    public function getSameActiveBasket($repeat_order)
+    {
+        $active_week = active_week_menu_week();
+        
+        $basket = WeeklyMenuBasket::with(
+            ['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients']
+        )->joinWeeklyMenu()
+            ->where(['weekly_menus.year' => $active_week->year, 'weekly_menus.week' => $active_week->weekOfYear])
+            ->whereBasketId($repeat_order->main_basket->weekly_menu_basket->basket_id)
+            ->wherePortions($repeat_order->main_basket->getPortions())
+            ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
+            ->first();
+        
+        return $basket;
+    }
+    
+    /**
+     * @param \App\Models\Order $order
+     *
+     * @return array
+     */
+    public function getTotals(Order $order)
+    {
+        $subtotal = $total = 0;
+        
+        $ingredients_price = $order->ingredients()->get(['count', 'price'])->reduce(
+            function ($_subtotal, $item) {
+                return $_subtotal + $item->getPriceInOrder();
+            }
+        );
+        
+        $main_basket_price = $order->main_basket()->first()->price;
+        
+        $additional_baskets_price = $order->additional_baskets()->get()->sum('price');
+        
+        $subtotal += $ingredients_price + $main_basket_price + $additional_baskets_price;
+        
+        if ($order->coupon_id) {
+            $couponService = new CouponService();
+            
+            $total = $ingredients_price +
+                $couponService->calculateOrderTotal($order, $main_basket_price, $additional_baskets_price);
+        } else {
+            $total = $subtotal;
+        }
+        
+        return [$subtotal, $total];
     }
 }

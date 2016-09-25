@@ -32,16 +32,16 @@ function orderAddMore() {
         if ($checkbox.is(':checked')) {
             $checkbox.prop('checked', false);
             $checkbox.removeAttr('name');
-            updateOrderTotal($checkbox.data('price'), 'sub');
             $label.text($label.attr('data-add'));
             $that.removeAttr('data-active');
         } else {
             $checkbox.prop('checked', true);
             $checkbox.attr('name', $checkbox.data('name'));
-            updateOrderTotal($checkbox.data('price'));
             $label.text($label.attr('data-remove'));
             $that.attr('data-active', '');
         }
+
+        Order.calculateTotal();
     });
 }
 

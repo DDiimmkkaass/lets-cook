@@ -33,12 +33,7 @@ OrderEdit.save = ($form) ->
 
 $(document).on "ready", () ->
   $('.order-edit-form .order-add-item__checkbox [type="checkbox"]').on 'change', (e) ->
-    if $(this).is(":checked")
-      operation = 'add'
-    else
-      operation = 'sub'
-
-    updateOrderTotal($(this).data('price'), operation)
+    Order.calculateTotal()
 
   $('.order-edit-form').on 'click', '[name="order-submit"]', (e) ->
     e.preventDefault()

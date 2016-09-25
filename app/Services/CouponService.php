@@ -123,20 +123,6 @@ class CouponService
     }
     
     /**
-     * @param string|Coupon $coupon
-     *
-     * @return Coupon
-     */
-    public function getCoupon($coupon)
-    {
-        if (!($coupon instanceof Coupon)) {
-            $coupon = Coupon::whereCode($coupon)->first();
-        }
-        
-        return $coupon;
-    }
-    
-    /**
      * @param \App\Models\Coupon $coupon
      * @param \App\Models\User   $user
      *
@@ -159,6 +145,55 @@ class CouponService
         }
         
         if ($this->used($coupon, $user)) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * @param string|Coupon $coupon
+     *
+     * @return Coupon
+     */
+    public function getCoupon($coupon)
+    {
+        if (!($coupon instanceof Coupon)) {
+            $coupon = Coupon::whereCode($coupon)->first();
+        }
+        
+        return $coupon;
+    }
+    
+    /**
+     * @param string|Coupon         $coupon
+     * @param \App\Models\User|null $user
+     *
+     * @return bool
+     */
+    public function available($coupon, $user = null)
+    {
+        $coupon = $this->getCoupon($coupon);
+        
+        if (!$coupon) {
+            return false;
+        }
+        
+        $now = Carbon::now();
+        
+        if ($coupon->getStringUsersType() == 'new') {
+            if ($user && $user->orders()->count() > 0) {
+                return false;
+            }
+        }
+        
+        if ($coupon->getStringUsersType() == 'exists') {
+            if (!$user || $user->orders()->count() == 0) {
+                return false;
+            }
+        }
+        
+        if ($coupon->getStartedAt() > $now || $this->used($coupon, $user)) {
             return false;
         }
         
@@ -196,11 +231,11 @@ class CouponService
             $users = $orders->groupBy('user_id')->count();
             
             if ($user) {
-                $user_orders = $orders->where('user_id', $user->id)->count();
+                $orders->where('user_id', $user->id)->all();
                 
-                if ($user_orders) {
+                if ($orders->count()) {
                     if ($coupon->count > 0) {
-                        if ($user_orders >= $coupon->count) {
+                        if ($orders->count() >= $coupon->count) {
                             return true;
                         }
                     }
@@ -224,36 +259,48 @@ class CouponService
     }
     
     /**
-     * @param string|Coupon         $coupon
-     * @param \App\Models\User|null $user
-     *
-     * @return bool
-     */
-    public function available(Coupon $coupon, $user = null)
-    {
-        $coupon = $this->getCoupon($coupon);
-        
-        if (!$coupon) {
-            return false;
-        }
-        
-        $now = Carbon::now();
-        
-        if ($coupon->getStartedAt() > $now || $this->used($coupon, $user)) {
-            return false;
-        }
-        
-        return true;
-    }
-    
-    /**
      * @param UserCoupon $coupon
      */
     public function makeDefault(UserCoupon $coupon)
     {
         UserCoupon::whereUserId($coupon->user_id)->update(['default' => false]);
-    
+        
         $coupon->default = true;
         $coupon->save();
+    }
+    
+    /**
+     * @param \App\Models\Order $order
+     * @param int|float         $main_basket_price
+     * @param int|float         $additional_baskets_price
+     *
+     * @return int|float
+     */
+    public function calculateOrderTotal(Order $order, $main_basket_price, $additional_baskets_price)
+    {
+        $coupon = Coupon::find($order->coupon_id);
+        
+        if ($coupon) {
+            $type = $coupon->getStringType();
+            $discount_type = $coupon->getStringDiscountType();
+                
+            if ($type == 'all' || $type == 'main') {
+                $main_basket_price -= ($discount_type == 'absolute') ?
+                    $coupon->discount :
+                    $main_basket_price / 100 * $coupon->discount;
+    
+                $main_basket_price = $main_basket_price < 0 ? 0 : $main_basket_price;
+            }
+            
+            if ($type == 'all' || $type == 'additional') {
+                $additional_baskets_price -= ($discount_type == 'absolute') ?
+                    $coupon->discount :
+                    $additional_baskets_price / 100 * $coupon->discount;
+    
+                $additional_baskets_price = $additional_baskets_price < 0 ? 0 : $additional_baskets_price;
+            }
+        }
+        
+        return $main_basket_price + $additional_baskets_price;
     }
 }

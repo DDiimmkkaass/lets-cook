@@ -44,6 +44,8 @@ class OrderCreateRequest extends FormRequest
             'basket_id'   => 'required|exists:weekly_menu_baskets,id',
             'verify_call' => 'boolean',
             
+            'coupon_code' => 'exists:coupons,code',
+            
             'delivery_date' => [
                 'required',
                 'date_format:"d-m-Y"',

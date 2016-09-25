@@ -5,16 +5,69 @@ Order.calculateTotal = () ->
   $total_mobile = $('#order_total_mobile')
   total = parseInt($total.data('total'))
 
+  $discount = $('[name="coupon_code"]')
+  main_discount = parseInt $discount.data('main_discount')
+  additional_discount = parseInt $discount.data('additional_discount')
+  discount_type = parseInt $discount.data('discount_type')
+
+  # main basket
+  if main_discount > 0
+    if discount_type == 'absolute'
+      total = total - main_discount
+    else
+      total = total - (total / 100 * main_discount)
+
+  # ingredients
+  $('.order-ing__lists .checkbox-button input[type="checkbox"]').each () ->
+    if ($(this).is(':checked'))
+      total += parseInt $(this).data('price')
+
+  # additional baskets
+  _total = 0
   $('.order-add-more__list .checkbox-button input[type="checkbox"]').each () ->
     if ($(this).is(':checked'))
-      total += parseInt($(this).data('price'))
+      _total += parseInt($(this).data('price'))
 
-  $total.data('total', total);
+  if _total > 0
+    if additional_discount > 0
+      if discount_type == 'absolute'
+        _total = _total - additional_discount
+      else
+        _total = _total - (_total / 100 * additional_discount)
+
+  total = total + _total
+
+  if total < 0
+    total = 0
 
   total += '<span>' + currency + '</span>';
 
   $total.html(total);
   $total_mobile.html(total);
+
+Order.checkCoupon = (code) ->
+  $.ajax
+    url: '/coupons/check'
+    type: "post"
+    dataType: 'json'
+    data:
+      code: code
+    error: (response) =>
+      Form.processFormSubmitError(response)
+    success: (response) =>
+      if response.status == 'success'
+        $('[name="coupon_code"]').data('main_discount', response.main_discount)
+          .data('additional_discount', response.additional_discount)
+          .data('discount_type', response.discount_type)
+      else
+        $('[name="coupon_code"]').val('')
+          .data('main_discount', 0)
+          .data('additional_discount', 0)
+          .data('discount_type', '')
+
+        popUp(lang_error, response.message)
+
+      Order.calculateTotal();
 
 Order.save = ($form) ->
   $button = $(this)
@@ -54,6 +107,13 @@ Order.save = ($form) ->
 $(document).on "ready", () ->
   if $('.order-create-form').length
     Order.calculateTotal();
+
+  $(document).on 'click', '[name="order-promocode__submit"]', (e) ->
+    e.preventDefault()
+
+    Order.checkCoupon($('[name="coupon_code"]').val());
+
+    return false
 
   $('.order-create-form').on 'click', '[name="order-submit"]', (e) ->
     e.preventDefault()

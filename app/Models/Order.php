@@ -23,6 +23,7 @@ class Order extends Model
      */
     protected $fillable = [
         'user_id',
+        'coupon_id',
         'status',
         'payment_method',
         'full_name',
@@ -151,6 +152,14 @@ class Order extends Model
     /**
      * @param $value
      */
+    public function setSubtotalAttribute($value)
+    {
+        $this->attributes['subtotal'] = $value * 100;
+    }
+    
+    /**
+     * @param $value
+     */
     public function setTotalAttribute($value)
     {
         $this->attributes['total'] = $value * 100;
@@ -171,6 +180,16 @@ class Order extends Model
     {
         $this->attributes['delivery_date'] = Carbon::createFromFormat('d-m-Y', $value)
             ->startOfDay()->format('Y-m-d H:i:s');
+    }
+    
+    /**
+     * @param $value
+     *
+     * @return float
+     */
+    public function getSubtotalAttribute($value)
+    {
+        return $value / 100;
     }
     
     /**
@@ -340,26 +359,6 @@ class Order extends Model
     public function getPortions()
     {
         return $this->main_basket->getPortions();
-    }
-    
-    /**
-     * @return float
-     */
-    public function getTotal()
-    {
-        $total = 0;
-        
-        $total += $this->main_basket()->first()->price;
-        
-        $total += $this->additional_baskets()->get()->sum('price');
-        
-        $total += $this->ingredients()->get(['count', 'price'])->reduce(
-            function ($_total, $item) {
-                return $_total + $item->getPriceInOrder();
-            }
-        );
-        
-        return $total;
     }
     
     /**

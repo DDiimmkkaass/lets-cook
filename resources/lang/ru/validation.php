@@ -168,6 +168,8 @@ return array (
     'expired_at' => 'дата завершения',
     'users_count' => 'количество пользователей',
     'code' => 'код',
+    'coupon_code' => 'купон',
+    'coupon' => 'купон',
     'codes' => 'коды',
     'create_count' => 'количество',
     'prices' => 

@@ -182,6 +182,11 @@ $router->group(
                 );
             }
         );
+    
+        $router->post(
+            '/check',
+            ['as' => 'coupons.check', 'uses' => 'Frontend\CouponController@check']
+        );
     }
 );
 
