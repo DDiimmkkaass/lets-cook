@@ -149,10 +149,9 @@
                                                 data-main_discount="{!! $coupon->getMainDiscount() !!}"
                                                 data-additional_discount="{!! $coupon->getMainDiscount() !!}"
                                                 data-discount_type="{!! $coupon->getDiscountType() !!}"
-                                                @if ($order->coupon_id == $coupon->coupon_id || (!$order->coupon_id && $coupon->default))
+                                                @if ($order->coupon_id == $coupon->coupon_id)
                                                 data-selected
                                                 selected
-                                                @php($selected = true)
                                                 @endif>
                                             {!! $coupon->getName() !!}
                                         </option>
@@ -163,7 +162,7 @@
                                         data-main_discount="0"
                                         data-additional_discount="0"
                                         data-discount_type=""
-                                        @if (!$order->coupon_id && empty($selected)) selected @endif>
+                                        @if (!$order->coupon_id) selected @endif>
                                     Не используется
                                 </option>
                             </select>
@@ -175,7 +174,6 @@
                            data-main_discount="0"
                            data-additional_discount="0"
                            data-discount_type=""
-                           @if (!$order->coupon_id && isset($selected)) data-default @endif
                            placeholder="Введите сюда код">
 
                     <div class="order-edit__total">

@@ -170,27 +170,25 @@ class OrderController extends FrontendController
             
             if (!$this->user) {
                 $this->user = $this->authService->quickRegister($request->all());
-    
+                
                 if (variable('registration_coupon_discount')) {
                     $coupon = $this->couponService->giveRegistrationCoupon($this->user);
                 }
             }
             
-            if ($request->get('coupon_code')) {
-                if (!$this->couponService->available($request->get('coupon_code'), $this->user)) {
-                    return [
-                        'status'  => 'error',
-                        'message' => trans('front_messages.coupon not available'),
-                    ];
-                }
-    
-                $this->couponService->saveUserCoupon($this->user, $request->get('coupon_code'));
+            if (!$this->_validCoupon($request, null)) {
+                return [
+                    'status'  => 'error',
+                    'message' => trans('front_messages.coupon not available'),
+                ];
             }
             
             DB::beginTransaction();
             
             $input = $this->orderService->prepareFrontInputData($request, $this->user);
-            $input['coupon_id'] = isset($coupon) ? $coupon->id : $input['coupon_id'];
+            $input['coupon_id'] = empty($input['coupon_id']) ?
+                (isset($coupon) ? $coupon->id : null) :
+                $input['coupon_id'];
             
             $model = new Order($input);
             $model->save();
@@ -260,15 +258,11 @@ class OrderController extends FrontendController
         $model = $this->orderService->getOrder($order_id);
         
         try {
-            if ($request->get('coupon_code')) {
-                if (!$this->couponService->available($request->get('coupon_code'), $this->user)) {
-                    return [
-                        'status'  => 'error',
-                        'message' => trans('front_messages.coupon not available'),
-                    ];
-                }
-                
-                $this->couponService->saveUserCoupon($this->user, $request->get('coupon_code'));
+            if (!$this->_validCoupon($request, $model)) {
+                return [
+                    'status'  => 'error',
+                    'message' => trans('front_messages.coupon not available'),
+                ];
             }
             
             DB::beginTransaction();
@@ -410,5 +404,32 @@ class OrderController extends FrontendController
         $this->subscribeService->store($this->user, $request);
         
         $this->orderService->addSystemOrderComment($model, trans('front_messages.user change the order'));
+    }
+    
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Order|null   $order
+     *
+     * @return bool
+     */
+    private function _validCoupon(Request $request, $order)
+    {
+        if ($request->get('coupon_code')) {
+            if (!$this->couponService->available($request->get('coupon_code'), $this->user)) {
+                return false;
+            }
+            
+            $this->couponService->saveUserCoupon($this->user, $request->get('coupon_code'));
+        } else {
+            $coupon_id = $request->get('coupon_id');
+            
+            if ($coupon_id && (!$order || $coupon_id != $order->coupon_id)) {
+                if (!$this->couponService->availableById($coupon_id, $this->user)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
     }
 }

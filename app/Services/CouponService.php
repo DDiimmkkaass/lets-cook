@@ -205,6 +205,19 @@ class CouponService
     }
     
     /**
+     * @param int       $coupon_id
+     * @param null|User $user
+     *
+     * @return bool
+     */
+    public function availableById($coupon_id, $user = null)
+    {
+        $coupon = Coupon::find($coupon_id);
+        
+        return $this->available($coupon, $user);
+    }
+    
+    /**
      * @param string|Coupon         $coupon
      * @param \App\Models\User|null $user
      *
@@ -339,8 +352,6 @@ class CouponService
      * @param User   $user
      * @param Coupon $coupon
      * @param bool   $default
-     *
-     * @return \App\Models\Coupon
      */
     public function saveUserCoupon($user, $coupon, $default = false)
     {

@@ -307,7 +307,7 @@ class OrderService
         
         $data['coupon_id'] = $request->get('coupon_code') ?
             Coupon::whereCode($request->get('coupon_code'))->first()->id :
-            null;
+            (int) $request->get('coupon_id');
         
         return $data;
     }
