@@ -32,6 +32,16 @@ OrderEdit.save = ($form) ->
         popUp(lang_error, response.message)
 
 $(document).on "ready", () ->
+  if $('.order-edit-form').find('[data-default]').length
+    $option = $('.order-edit-form #order-edit-coupon-id').find('option:selected');
+
+    $('.order-edit-form [name="coupon_code"]')
+      .data('main_discount', $option.data('main_discount'))
+      .data('additional_discount', $option.data('additional_discount'))
+      .data('discount_type', $option.data('discount_type'))
+
+    Order.calculateTotal()
+
   $('.order-edit-form .order-add-item__checkbox [type="checkbox"]').on 'change', (e) ->
     Order.calculateTotal()
 
