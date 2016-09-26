@@ -301,6 +301,6 @@ class CouponService
             }
         }
         
-        return $main_basket_price + $additional_baskets_price;
+        return round($main_basket_price + $additional_baskets_price);
     }
 }

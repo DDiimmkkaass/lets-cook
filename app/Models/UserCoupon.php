@@ -73,11 +73,43 @@ class UserCoupon extends Model
     }
     
     /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->coupon->getStringType();
+    }
+    
+    /**
      * @return int|float
      */
     public function getDiscount()
     {
         return $this->coupon->discount;
+    }
+    
+    /**
+     * @return int|float
+     */
+    public function getMainDiscount()
+    {
+        return in_array($this->getType(), ['main', 'all']) ? $this->coupon->discount : 0;
+    }
+    
+    /**
+     * @return int|float
+     */
+    public function getAdditionalDiscount()
+    {
+        return in_array($this->coupon->getType(), ['additional', 'all']) ? $this->coupon->discount : 0;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getDiscountType()
+    {
+        return $this->coupon->getStringDiscountType();
     }
     
     /**

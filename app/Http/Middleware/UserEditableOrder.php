@@ -8,12 +8,11 @@
 
 namespace App\Http\Middleware;
 
-use App\Services\OrderService;
-use Carbon;
-use Sentry;
+use App\Models\Order;
 use Closure;
 use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Sentry;
 
 /**
  * Class UserEditableOrder
@@ -30,20 +29,13 @@ class UserEditableOrder
     protected $response;
     
     /**
-     * @var \App\Services\OrderService
-     */
-    private $orderService;
-    
-    /**
      * Create a new filter instance.
      *
-     * @param  ResponseFactory           $response
-     * @param \App\Services\OrderService $orderService
+     * @param  ResponseFactory $response
      */
-    public function __construct(ResponseFactory $response, OrderService $orderService)
+    public function __construct(ResponseFactory $response)
     {
         $this->response = $response;
-        $this->orderService = $orderService;
     }
     
     /**
@@ -58,7 +50,7 @@ class UserEditableOrder
     {
         $error = false;
         
-        $order = $this->orderService->getOrder($request->route('order_id', 0));
+        $order = Order::find($request->route('order_id', 0));
         $now = active_week();
         
         if (!$order) {
@@ -79,12 +71,12 @@ class UserEditableOrder
                 $message = trans('front_messages.you can not edit this order any more');
             } else {
                 $dt = active_week();
-    
+                
                 $to = $dt->endOfDay()->format('d-m-Y');
                 $from = $dt->subDay()->startOfDay()->format('d-m-Y');
-    
+                
                 $delivery_date = $request->get('delivery_date', null);
-    
+                
                 if ($delivery_date && ($delivery_date >= $from && $delivery_date <= $to)) {
                     $error = true;
                     $message = trans('front_messages.the orders for this week are no longer accepted');

@@ -29,6 +29,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer('recipe/partials/filters', '\App\Http\ViewComposers\RecipeComposer');
         view()->composer('layouts/profile', '\App\Http\ViewComposers\ProfileComposer');
         view()->composer('profile/layouts/orders', '\App\Http\ViewComposers\ProfileOrdersComposer');
+        view()->composer('order/edit', '\App\Http\ViewComposers\OrderEditComposer');
     }
     
     /**

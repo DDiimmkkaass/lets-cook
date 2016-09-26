@@ -331,6 +331,10 @@ class OrderService
         $data['city_name'] = empty($data['city_id']) ? $request->get('city_name') : '';
         $data['address'] = $request->get('address');
         $data['comment'] = $request->get('comment');
+    
+        $data['coupon_id'] = $request->get('coupon_code') ?
+            Coupon::whereCode($request->get('coupon_code'))->first()->id :
+            (int) $request->get('coupon_id');
         
         return $data;
     }
@@ -771,7 +775,7 @@ class OrderService
      */
     public function getOrder($order_id)
     {
-        return Order::with('main_basket', 'additional_baskets', 'main_basket.weekly_menu_basket.weekly_menu')
+        return Order::with('main_basket', 'additional_baskets', 'main_basket.weekly_menu_basket.weekly_menu', 'coupon')
             ->notOfStatus(['archived', 'deleted'])
             ->whereId($order_id)
             ->first();

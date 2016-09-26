@@ -137,11 +137,57 @@
                               class="order-edit__comment textarea-order-edit"
                               placeholder="Комментарии к заказу">{!! $order->comment !!}</textarea>
 
+                    <div class="order-edit__address-title">Скидочный купон:</div>
+
+                    @if ($user_coupons->count())
+                        <div class="order-edit__select order-select">
+                            <select name="coupon_id" id="order-edit-coupon-id">
+                                @foreach($user_coupons as $coupon)
+                                    @if ($coupon->available())
+                                        <option value="{!! $coupon->coupon_id !!}"
+                                                data-code="{!! $coupon->getCode() !!}"
+                                                data-main_discount="{!! $coupon->getMainDiscount() !!}"
+                                                data-additional_discount="{!! $coupon->getMainDiscount() !!}"
+                                                data-discount_type="{!! $coupon->getDiscountType() !!}"
+                                                @if ($order->coupon_id == $coupon->coupon_id)
+                                                data-selected
+                                                selected
+                                                @endif>
+                                            {!! $coupon->getName() !!}
+                                        </option>
+                                    @endif
+                                @endforeach
+                                <option value="0"
+                                        data-code=""
+                                        data-main_discount="0"
+                                        data-additional_discount="0"
+                                        data-discount_type=""
+                                        @if (!$order->coupon_id) selected @endif>
+                                    Не используется
+                                </option>
+                            </select>
+                        </div>
+                    @endif
+
+                    <input type="text" name="coupon_code"
+                           class="order-edit__kupon input-order-edit"
+                           data-main_discount="0"
+                           data-additional_discount="0"
+                           data-discount_type=""
+                           placeholder="Введите сюда код">
+
                     <div class="order-edit__total">
+                        <div class="order-edit__total-wrapper">
+                            <div class="order-edit__total-title">Ваша скидка:</div>
+                            <div id="order_discount" class="order-edit__total-value">
+                                {!! $order->getDiscount() !!}<span>руб</span>
+                            </div>
+                        </div>
+
                         <div class="order-edit__total-wrapper">
                             <div class="order-edit__total-title">Итого:</div>
                             <div id="order_total_desktop" class="order-edit__total-value"
-                                 data-total="{!! $order->total !!}">
+                                 data-total="{!! $order->main_basket->price !!}">
                                 {!! $order->total !!}<span>{!! $currency !!}</span>
                             </div>
                         </div>

@@ -158,8 +158,6 @@ class OrderController extends FrontendController
     public function store(OrderCreateRequest $request)
     {
         try {
-            DB::beginTransaction();
-            
             abort_if(!$this->weeklyMenuService->checkActiveWeeksBasket($request->get('basket_id', 0)), 404);
             
             if (!$this->user) {
@@ -174,6 +172,8 @@ class OrderController extends FrontendController
                     ];
                 }
             }
+    
+            DB::beginTransaction();
             
             $input = $this->orderService->prepareFrontInputData($request, $this->user);
             
@@ -245,16 +245,28 @@ class OrderController extends FrontendController
         $model = $this->orderService->getOrder($order_id);
         
         try {
+            if ($request->get('coupon_code')) {
+                if (!$this->couponService->available($request->get('coupon_code'), $this->user)) {
+                    return [
+                        'status'  => 'error',
+                        'message' => trans('front_messages.coupon not available'),
+                    ];
+                }
+            }
+            
             DB::beginTransaction();
             
             $input = $this->orderService->prepareEditFrontInputData($request);
-    
+            
             $model->fill($input);
             $model->save();
             
             $this->_saveEditRelationships($model, $request);
+    
+            list($subtotal, $total) = $this->orderService->getTotals($model);
             
-            $model->total = $model->getTotal();
+            $model->subtotal = $subtotal;
+            $model->total = $total;
             
             $model->save();
             

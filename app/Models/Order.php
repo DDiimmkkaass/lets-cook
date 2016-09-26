@@ -138,6 +138,14 @@ class Order extends Model
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function coupon()
+    {
+        return $this->belongsTo(Coupon::class);
+    }
+    
+    /**
      * @param int|string $value
      */
     public function setStatusAttribute($value)
@@ -171,6 +179,14 @@ class Order extends Model
     public function setCityIdAttribute($value)
     {
         $this->attributes['city_id'] = empty($value) ? null : (int) $value;
+    }
+    
+    /**
+     * @param int $value
+     */
+    public function setCouponIdAttribute($value)
+    {
+        $this->attributes['coupon_id'] = empty($value) ? null : (int) $value;
     }
     
     /**
@@ -466,6 +482,14 @@ class Order extends Model
     public function getCouponCode()
     {
         return empty($this->coupon_id) ? '-' : '+';
+    }
+    
+    /**
+     * @return int|float
+     */
+    public function getDiscount()
+    {
+        return $this->subtotal - $this->total;
     }
     
     /**

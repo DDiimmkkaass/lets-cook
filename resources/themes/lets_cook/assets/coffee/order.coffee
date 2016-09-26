@@ -3,47 +3,66 @@ Order = {};
 Order.calculateTotal = () ->
   $total = $('#order_total_desktop')
   $total_mobile = $('#order_total_mobile')
+  $order_discount = $('#order_discount')
   total = parseInt($total.data('total'))
+  order_discount = 0
 
   $discount = $('[name="coupon_code"]')
   main_discount = parseInt $discount.data('main_discount')
   additional_discount = parseInt $discount.data('additional_discount')
-  discount_type = parseInt $discount.data('discount_type')
-
+  discount_type = $discount.data('discount_type')
   # main basket
+
   if main_discount > 0
     if discount_type == 'absolute'
-      total = total - main_discount
+      order_discount = main_discount
+      total = total - order_discount
     else
-      total = total - (total / 100 * main_discount)
+      order_discount = (total / 100 * main_discount)
+      total = total - order_discount
 
   # ingredients
   $('.order-ing__lists .checkbox-button input[type="checkbox"]').each () ->
     if ($(this).is(':checked'))
       total += parseInt $(this).data('price')
 
-  # additional baskets
+  # additional baskets add
   _total = 0
   $('.order-add-more__list .checkbox-button input[type="checkbox"]').each () ->
+    if ($(this).is(':checked'))
+      _total += parseInt($(this).data('price'))
+
+  # additional baskets edit
+  $('.order-edit__add-list .order-add-item__checkbox input[type="checkbox"]').each () ->
     if ($(this).is(':checked'))
       _total += parseInt($(this).data('price'))
 
   if _total > 0
     if additional_discount > 0
       if discount_type == 'absolute'
-        _total = _total - additional_discount
+        _order_discount = additional_discount
+        _total = _total - _order_discount
       else
-        _total = _total - (_total / 100 * additional_discount)
+        _order_discount = (_total / 100 * additional_discount)
+        _total = _total - _order_discount
 
-  total = total + _total
+
+  total = Math.round(total + _total)
+  order_discount = Math.round(order_discount + _order_discount)
 
   if total < 0
     total = 0
 
+  if order_discount < 0 ||  isNaN(order_discount)
+    order_discount = 0
+
   total += '<span>' + currency + '</span>';
+  order_discount += '<span>' + currency + '</span>';
 
   $total.html(total);
   $total_mobile.html(total);
+
+  $order_discount.html(order_discount);
 
 Order.checkCoupon = (code) ->
   $.ajax
@@ -56,7 +75,8 @@ Order.checkCoupon = (code) ->
       Form.processFormSubmitError(response)
     success: (response) =>
       if response.status == 'success'
-        $('[name="coupon_code"]').data('main_discount', response.main_discount)
+        $('[name="coupon_code"]')
+          .data('main_discount', response.main_discount)
           .data('additional_discount', response.additional_discount)
           .data('discount_type', response.discount_type)
       else
