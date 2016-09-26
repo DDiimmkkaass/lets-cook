@@ -170,6 +170,10 @@ class OrderController extends FrontendController
             
             if (!$this->user) {
                 $this->user = $this->authService->quickRegister($request->all());
+    
+                if (variable('registration_coupon_discount')) {
+                    $coupon = $this->couponService->giveRegistrationCoupon($this->user);
+                }
             }
             
             if ($request->get('coupon_code')) {
@@ -184,6 +188,7 @@ class OrderController extends FrontendController
             DB::beginTransaction();
             
             $input = $this->orderService->prepareFrontInputData($request, $this->user);
+            $input['coupon_id'] = isset($coupon) ? $coupon->id : $input['coupon_id'];
             
             $model = new Order($input);
             $model->save();
@@ -211,6 +216,7 @@ class OrderController extends FrontendController
                 'html'    => isset($html) ? $html : '',
             ];
         } catch (Exception $e) {
+            dd('message: ' . $e->getMessage() . ', line: ' . $e->getLine() . ', file: ' . $e->getFile());
             DB::rollBack();
             
             return [

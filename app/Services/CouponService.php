@@ -85,6 +85,8 @@ class CouponService
     
     /**
      * @param array $input
+     *
+     * @return \App\Models\Coupon
      */
     public function create($input)
     {
@@ -106,6 +108,8 @@ class CouponService
                 $model->save();
             }
         }
+        
+        return $model;
     }
     
     /**
@@ -283,12 +287,12 @@ class CouponService
         if ($coupon) {
             $type = $coupon->getStringType();
             $discount_type = $coupon->getStringDiscountType();
-                
+            
             if ($type == 'all' || $type == 'main') {
                 $main_basket_price -= ($discount_type == 'absolute') ?
                     $coupon->discount :
                     $main_basket_price / 100 * $coupon->discount;
-    
+                
                 $main_basket_price = $main_basket_price < 0 ? 0 : $main_basket_price;
             }
             
@@ -296,11 +300,44 @@ class CouponService
                 $additional_baskets_price -= ($discount_type == 'absolute') ?
                     $coupon->discount :
                     $additional_baskets_price / 100 * $coupon->discount;
-    
+                
                 $additional_baskets_price = $additional_baskets_price < 0 ? 0 : $additional_baskets_price;
             }
         }
         
         return round($main_basket_price + $additional_baskets_price);
+    }
+    
+    /**
+     * @param \App\Models\User $user
+     *
+     * @return \App\Models\Coupon
+     */
+    public function giveRegistrationCoupon(User $user)
+    {
+        $coupon = $this->create(
+            [
+                'type'          => Coupon::getTypeIdByName('all'),
+                'name'          => trans('front_labels.registration_coupon'),
+                'description'   => trans('front_texts.registration_coupon_description'),
+                'discount'      => variable('registration_coupon_discount'),
+                'discount_type' => Coupon::getDiscountTypeIdByName('percentage'),
+                'count'         => 1,
+                'users_count'   => 1,
+                'users_type'    => Coupon::getUsersTypeIdByName('new'),
+                'started_at'    => Carbon::now()->format('d-m-Y'),
+                'create_count'  => 1,
+            ]
+        );
+        
+        UserCoupon::create(
+            [
+                'user_id'   => $user->id,
+                'coupon_id' => $coupon->id,
+                'default'   => true,
+            ]
+        );
+        
+        return $coupon;
     }
 }

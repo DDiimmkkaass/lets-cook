@@ -55,6 +55,7 @@ class Variable extends Eloquent
         3 => 'image',
         4 => 'weekday',
         5 => 'time',
+        6 => 'boolean'
     ];
 
     /**

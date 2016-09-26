@@ -12,4 +12,5 @@ return array (
   'congrats with register' => 'Поздравляем с регистрацией на сайте',
   'password_reset_success_subject' => 'Новые данные для входа в аккаунт',
   'password_restore_subject' => 'Востановление пароля',
+  'your discount coupon' => 'Ваш купон на скидку',
 );

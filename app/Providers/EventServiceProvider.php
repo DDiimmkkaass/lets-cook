@@ -37,6 +37,7 @@ class EventServiceProvider extends ServiceProvider
         
         'App\Events\Frontend\UserRegister' => [
             'App\Listeners\Events\Frontend\SendUserActivationEmail',
+            'App\Listeners\Events\Frontend\GiveRegistrationCoupon',
         ],
 
         'App\Events\Frontend\UserQuickRegister' => [

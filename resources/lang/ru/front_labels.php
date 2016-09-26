@@ -22,4 +22,5 @@ return array(
   'to' => 'до',
   'main_short' => 'Осн.',
   'additional_short' => 'Доп.',
+  'registration_coupon' => 'Купон на скидку при регистрации',
 );

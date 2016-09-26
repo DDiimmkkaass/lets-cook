@@ -47,4 +47,5 @@ return array(
     'coupon successfully make default' => 'Купон успешно установлен как активный',
     'coupon already default' => 'Этот купон уже установлен как активный',
     'coupon not available' => 'Этот купон не действителен или Вы не можете его использовать',
+    'tanks for registration on site :site_name, this is you registration coupon :discount' => 'Поздравляем с регистрацией на сайте :site_name, и дарим Вам скидочный купон на :discount%. Для того чтобы воспользоваться купоном просто введите код, указаный ниже при оформлении заказа.',
 );
