@@ -64,7 +64,7 @@ class UserCoupon extends Model
     {
         return
             (!$this->getExpiredAt() || $this->getExpiredAt() > Carbon::now()->format('Y-m-d H:i:s'))
-            &
+            &&
             $this->getAvailableCount() > 0;
     }
     
