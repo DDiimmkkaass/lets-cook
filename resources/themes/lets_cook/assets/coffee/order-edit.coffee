@@ -53,14 +53,20 @@ $(document).on "ready", () ->
       .data('additional_discount', $option.data('additional_discount'))
       .data('discount_type', $option.data('discount_type'))
 
-    if $option.attr('data-selected') == undefined
-      $('.order-edit-form [name="coupon_code"]').val($option.data('code'))
-    else
-      $('.order-edit-form [name="coupon_code"]').val('')
+    $coupon_code = $('.order-edit-form [name="coupon_code"]')
 
-    setTimeout () ->
-        Order.calculateTotal()
-      , 200
+    if $option.attr('data-selected') == undefined
+      $coupon_code.val($option.data('code'))
+    else
+      $coupon_code.val('')
+
+    $coupon_code.trigger('change')
+
+  $('.order-edit-form [name="coupon_code"]').on "change", () ->
+    code = $(this).val()
+
+    if code
+      Order.checkCoupon(code)
 
   $('.order-edit-form').on 'click', '[name="order-submit"]', (e) ->
     e.preventDefault()

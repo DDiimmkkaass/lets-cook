@@ -183,6 +183,8 @@ class OrderController extends FrontendController
                         'message' => trans('front_messages.coupon not available'),
                     ];
                 }
+    
+                $this->couponService->saveUserCoupon($this->user, $request->get('coupon_code'));
             }
             
             DB::beginTransaction();
@@ -216,7 +218,6 @@ class OrderController extends FrontendController
                 'html'    => isset($html) ? $html : '',
             ];
         } catch (Exception $e) {
-            dd('message: ' . $e->getMessage() . ', line: ' . $e->getLine() . ', file: ' . $e->getFile());
             DB::rollBack();
             
             return [
@@ -266,6 +267,8 @@ class OrderController extends FrontendController
                         'message' => trans('front_messages.coupon not available'),
                     ];
                 }
+                
+                $this->couponService->saveUserCoupon($this->user, $request->get('coupon_code'));
             }
             
             DB::beginTransaction();

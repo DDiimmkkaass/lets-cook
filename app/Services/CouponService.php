@@ -330,14 +330,30 @@ class CouponService
             ]
         );
         
-        UserCoupon::create(
-            [
-                'user_id'   => $user->id,
-                'coupon_id' => $coupon->id,
-                'default'   => true,
-            ]
-        );
+        $this->saveUserCoupon($user, $coupon, true);
         
         return $coupon;
+    }
+    
+    /**
+     * @param User   $user
+     * @param Coupon $coupon
+     * @param bool   $default
+     *
+     * @return \App\Models\Coupon
+     */
+    public function saveUserCoupon($user, $coupon, $default = false)
+    {
+        $coupon = $this->getCoupon($coupon);
+        
+        if (!UserCoupon::whereCouponId($coupon->id)->count()) {
+            UserCoupon::create(
+                [
+                    'user_id'   => $user->id,
+                    'coupon_id' => $coupon->id,
+                    'default'   => $default,
+                ]
+            );
+        }
     }
 }
