@@ -261,6 +261,17 @@ class Order extends Model
     }
     
     /**
+     * @param     $query
+     * @param int $user_id
+     *
+     * @return mixed
+     */
+    public function scopeOfUser($query, $user_id)
+    {
+        return $query->where('orders.user_id', $user_id);
+    }
+    
+    /**
      * @param $query
      *
      * @return mixed

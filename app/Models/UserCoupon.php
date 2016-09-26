@@ -10,6 +10,7 @@ namespace App\Models;
 
 use Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Sentry;
 
 /**
  * Class UserCoupon
@@ -21,7 +22,7 @@ class UserCoupon extends Model
     /**
      * @var array
      */
-    protected $with = ['coupon'];
+    protected $with = ['coupon', 'orders'];
     
     /**
      * @var array
@@ -49,11 +50,22 @@ class UserCoupon extends Model
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class, 'coupon_id', 'coupon_id')->ofUser(Sentry::getUser()->getId());
+    }
+    
+    /**
      * @return bool
      */
     public function available()
     {
-        return !$this->getExpiredAt() || $this->getExpiredAt() > Carbon::now()->format('Y-m-d H:i:s');
+        return
+            (!$this->getExpiredAt() || $this->getExpiredAt() > Carbon::now()->format('Y-m-d H:i:s'))
+            &
+            $this->getAvailableCount() > 0;
     }
     
     /**
@@ -78,6 +90,14 @@ class UserCoupon extends Model
     public function getType()
     {
         return $this->coupon->getStringType();
+    }
+    
+    /**
+     * @return int
+     */
+    public function getCouponsCount()
+    {
+        return $this->coupon->count;
     }
     
     /**
@@ -121,6 +141,16 @@ class UserCoupon extends Model
     }
     
     /**
+     * @return int
+     */
+    public function getAvailableCount()
+    {
+        $available_count = $this->getCouponsCount() - $this->orders->count();
+        
+        return $available_count < 0 ? 0 : $available_count;
+    }
+    
+    /**
      * @return string
      */
     public function getDiscountLabel()
@@ -135,7 +165,7 @@ class UserCoupon extends Model
                 $this->getDiscountTypeLabel().
                 '<br>';
         }
-    
+        
         if ($type == 'additional' || $type == 'all') {
             $label .= trans('front_labels.additional_short').': '.
                 $this->getDiscount().' '.

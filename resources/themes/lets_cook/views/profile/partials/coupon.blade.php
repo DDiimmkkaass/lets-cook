@@ -1,5 +1,5 @@
 <tr>
-    <td>{!! $coupon->getName() !!}</td>
+    <td>{!! $coupon->getName() !!} [{!! $coupon->getAvailableCount() !!}]</td>
     <td>{!! $coupon->getCode() !!}</td>
     <td>{!! $coupon->getDiscountLabel() !!}</td>
     <td>
@@ -13,7 +13,7 @@
         @if ($coupon->available())
             Доступен
         @else
-            Истек
+            Истек/Использован
         @endif
     </td>
     <td class="h-pointer make-coupon-default"

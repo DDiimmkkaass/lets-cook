@@ -13,6 +13,7 @@ use App\Events\Frontend\BasketSubscribeUpdated;
 use App\Http\Requests\Frontend\BasketSubscribe\BasketSubscribeUpdateRequest;
 use App\Http\Requests\Frontend\User\UserPasswordUpdateRequest;
 use App\Http\Requests\Frontend\User\UserUpdateRequest;
+use App\Models\UserCoupon;
 use App\Models\UserInfo;
 use App\Services\UserService;
 use Cartalyst\Sentry\Users\WrongPasswordException;
@@ -57,6 +58,8 @@ class ProfileController extends FrontendController
     public function index()
     {
         Meta::title($this->user->getFullName());
+        
+        $this->data('user_coupons', UserCoupon::with(['coupon', 'orders'])->whereUserId($this->user->id)->get());
         
         return $this->render($this->module.'.index');
     }

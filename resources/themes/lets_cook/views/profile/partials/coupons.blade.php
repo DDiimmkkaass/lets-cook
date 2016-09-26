@@ -1,5 +1,5 @@
 <section class="profile-main__coupons profile-coupons">
-    <table class="profile-coupons__table @if ($user->coupons()->count() == 0) h-hidden @endif">
+    <table class="profile-coupons__table @if ($user_coupons->count() == 0) h-hidden @endif">
         <caption>Ваши купоны</caption>
 
         <thead>
@@ -14,7 +14,7 @@
         </thead>
 
         <tbody>
-        @foreach($user->coupons as $coupon)
+        @foreach($user_coupons as $coupon)
             @include('profile.partials.coupon')
         @endforeach
         </tbody>
