@@ -43,7 +43,7 @@ class OrderService
      */
     public function table(Request $request)
     {
-        $list = Order::with('user', 'main_basket', 'additional_baskets')
+        $list = Order::with('user', 'main_basket', 'additional_baskets', 'coupon')
             ->select(
                 'id',
                 'full_name',
@@ -54,7 +54,7 @@ class OrderService
                 'payment_method',
                 'total',
                 'status',
-                DB::raw('4 as coupon'),
+                'coupon_id',
                 'delivery_date',
                 'delivery_time',
                 'city_id',
@@ -105,7 +105,7 @@ class OrderService
                 }
             )
             ->editColumn(
-                'coupon',
+                'coupon_id',
                 function ($model) {
                     return $model->getCouponCode();
                 }
@@ -148,6 +148,7 @@ class OrderService
             ->removeColumn('main_basket')
             ->removeColumn('additional_baskets')
             ->removeColumn('user_id')
+            ->removeColumn('coupon')
             ->removeColumn('additional_phone')
             ->removeColumn('payment_method')
             ->removeColumn('comment')
@@ -200,7 +201,7 @@ class OrderService
             'sum_with_discount'  => 0,
         ];
         
-        $orders = Order::notOfStatus(['archived', 'deleted'])->forCurrentWeek()->orderBy('delivery_date')->get();
+        $orders = Order::notOfStatus(['deleted'])->forCurrentWeek()->orderBy('delivery_date')->get();
         
         foreach ($orders as $order) {
             if (!isset($statistic['days'][$order->delivery_date])) {
@@ -214,11 +215,11 @@ class OrderService
             }
             
             $statistic['days'][$order->delivery_date]['count']++;
-            $statistic['days'][$order->delivery_date]['sum'] += $order->total;
+            $statistic['days'][$order->delivery_date]['sum'] += $order->subtotal;
             $statistic['days'][$order->delivery_date]['sum_with_discount'] += $order->total;
             
             $statistic['count']++;
-            $statistic['sum'] += $order->total;
+            $statistic['sum'] += $order->subtotal;
             $statistic['sum_with_discount'] += $order->total;
         }
         

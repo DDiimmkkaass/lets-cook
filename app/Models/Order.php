@@ -481,7 +481,7 @@ class Order extends Model
      */
     public function getCouponCode()
     {
-        return empty($this->coupon_id) ? '-' : '+';
+        return empty($this->coupon_id) ? '-' : $this->coupon->code;
     }
     
     /**

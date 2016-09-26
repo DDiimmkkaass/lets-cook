@@ -144,8 +144,11 @@ class OrderController extends BackendController
             $model->save();
             
             $this->orderService->saveRelationships($model, $input);
-            
-            $model->total = $model->getTotal();
+    
+            list($subtotal, $total) = $this->orderService->getTotals($model);
+    
+            $model->subtotal = $subtotal;
+            $model->total = $total;
             
             $model->save();
             
@@ -236,8 +239,11 @@ class OrderController extends BackendController
             $model->fill($input);
             
             $this->orderService->saveRelationships($model, $input);
-            
-            $model->total = $model->getTotal();
+    
+            list($subtotal, $total) = $this->orderService->getTotals($model);
+    
+            $model->subtotal = $subtotal;
+            $model->total = $total;
             
             $model->save();
             
