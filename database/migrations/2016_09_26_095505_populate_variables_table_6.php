@@ -12,7 +12,7 @@ class PopulateVariablesTable6 extends Migration
      */
     public function up()
     {
-        //trial order
+        //video on home
         $variable = [
             'key'         => 'video_on_home',
             'type'        => 'text',
