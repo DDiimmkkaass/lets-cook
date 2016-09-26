@@ -8,7 +8,8 @@
             <h2 class="let-cook__subTitle">просто и вкусно</h2>
 
             <div class="make-order--desktop">
-                <a href="{!! localize_route('baskets.index', 'current') !!}" class="choose-basket green-long-button">Выбрать корзину</a>
+                <a href="{!! localize_route('baskets.index', 'current') !!}" class="choose-basket green-long-button">Выбрать
+                    корзину</a>
 
                 @widget__trial_order('home')
             </div>
@@ -22,21 +23,23 @@
 
         @widget__banner('what_we_offer')
 
-        <section class="about-service">
-            <div class="about-service__title">
-                <div class="about-service__icon"></div>
-                <div class="about-service__text">Основатель о том, как работает сервис</div>
-            </div>
-
-            <div class="about-service__content">
-                <div class="about-service__close"></div>
-
-                <div class="about-service__video">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&showinfo=0&controls=0&enablejsapi=1"
-                            frameborder="0" allowfullscreen></iframe>
+        @if (variable('video_on_home'))
+            <section class="about-service">
+                <div class="about-service__title">
+                    <div class="about-service__icon"></div>
+                    <div class="about-service__text">Основатель о том, как работает сервис</div>
                 </div>
-            </div>
-        </section>
+
+                <div class="about-service__content">
+                    <div class="about-service__close"></div>
+
+                    <div class="about-service__video">
+                        <iframe src="https://www.youtube.com/embed/{!! variable('video_on_home') !!}?autoplay=0&showinfo=0&controls=0&enablejsapi=1"
+                                frameborder="0" allowfullscreen></iframe>
+                    </div>
+                </div>
+            </section>
+        @endif
 
         <section class="recipes-and-baskets">
             @widget__weekly_menu()
