@@ -50,13 +50,13 @@
             <div class="all-baskets__title georgia-title">Корзины</div>
 
             @if (count($active_baskets))
-            <ul class="all-baskets__list">
-                @foreach($active_baskets as $basket)
-                    <li>
-                        <a href="{!! localize_route('order.index', $basket->id) !!}">{!! $basket->name !!}</a>
-                    </li>
-                @endforeach
-            </ul>
+                <ul class="all-baskets__list">
+                    @foreach($active_baskets as $basket)
+                        <li>
+                            <a href="{!! localize_route('order.index', $basket->id) !!}">{!! $basket->name !!}</a>
+                        </li>
+                    @endforeach
+                </ul>
             @endif
         </section>
 
@@ -75,7 +75,7 @@
                     @if ($model->ingredients->count())
                         <ul class="order-ing__list">
                             @foreach($model->ingredients as $ingredient)
-                                <li>{!! $ingredient->ingredient->name !!}</li>
+                                <li>{!! $ingredient->ingredient->getTitle() !!}</li>
                             @endforeach
                         </ul>
                     @endif
@@ -87,7 +87,7 @@
                     @if ($model->home_ingredients->count())
                         <ul class="order-ing__list">
                             @foreach($model->home_ingredients as $ingredient)
-                                <li>{!! $ingredient->ingredient->name !!}</li>
+                                <li>{!! $ingredient->ingredient->getTitle() !!}</li>
                             @endforeach
                         </ul>
                     @endif
@@ -109,21 +109,21 @@
 
                 <ul class="cooking-steps__list">
                     @foreach($model->steps as $key => $step)
-                    <li class="cooking-steps__item cook-step">
-                        <div class="cook-step__left">
-                            <div class="cook-step__number">{!! $key + 1 !!}</div>
-                            <div class="cook-step__image"
-                                 style="background-image: url({!! thumb($step->image, 261, 146) !!});"></div>
-                        </div>
-
-                        <div class="cook-step__right">
-                            <div class="cook-step__title">{!! $step->name !!}</div>
-
-                            <div class="cook-step__desk">
-                                {!! $step->description !!}
+                        <li class="cooking-steps__item cook-step">
+                            <div class="cook-step__left">
+                                <div class="cook-step__number">{!! $key + 1 !!}</div>
+                                <div class="cook-step__image"
+                                     style="background-image: url({!! thumb($step->image, 261, 146) !!});"></div>
                             </div>
-                        </div>
-                    </li>
+
+                            <div class="cook-step__right">
+                                <div class="cook-step__title">{!! $step->name !!}</div>
+
+                                <div class="cook-step__desk">
+                                    {!! $step->description !!}
+                                </div>
+                            </div>
+                        </li>
                     @endforeach
                 </ul>
             </section>
