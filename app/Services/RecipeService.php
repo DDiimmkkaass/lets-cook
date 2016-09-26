@@ -527,7 +527,6 @@ class RecipeService
             ->joinBasketRecipes()
             ->where('basket_recipes.recipe_id', $model->id)
             ->whereNotNull('basket_recipes.weekly_menu_basket_id')
-            ->groupBy('weekly_menu_baskets.basket_id')
             ->get(['weekly_menu_baskets.id', 'baskets.name']);
     }
     
