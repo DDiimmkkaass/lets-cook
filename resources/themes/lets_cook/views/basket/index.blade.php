@@ -82,6 +82,7 @@
                                                     </h3>
                                                 </a>
                                             </li>
+                                            @break($key >= 4)
                                         @endforeach
                                     </ul>
                                 @endif
