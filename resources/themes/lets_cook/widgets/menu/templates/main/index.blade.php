@@ -1,4 +1,4 @@
-<nav class="header-main__nav header-nav {!! $model->class !!}" data-page="main">
+<nav class="header-main__nav header-nav{!! $model->class ? ' '.$model->class : '' !!}" data-page="main">
     @if ($model->visible_items->count())
         <ul class="header-nav__list">
             @foreach($model->visible_items as $item)

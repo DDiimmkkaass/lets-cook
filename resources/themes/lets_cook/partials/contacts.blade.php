@@ -1,10 +1,12 @@
 <div class="header-main__menu header-menu">
     <ul class="header-menu__mobile menu-mobile">
-        <li class="menu-mobile__item" data-item="basket"><a href="#"></a></li>
+        <li class="menu-mobile__item" data-item="basket">
+            <a href="{!! localize_route('baskets.index', 'current') !!}"></a>
+        </li>
         <li class="menu-mobile__item" data-item="phone">
             <a href="tel:{!! preg_replace('/\D/', '', variable('moscow_phone')) !!}"></a>
         </li>
-        <li class="menu-mobile__item" @if (!$user) data-item="profile" @endif>
+        <li class="menu-mobile__item" @if (!$user) data-item="profile" @else data-item="profile-index" @endif>
             <a href="{!! localize_route('profiles.index') !!}"></a>
         </li>
     </ul>

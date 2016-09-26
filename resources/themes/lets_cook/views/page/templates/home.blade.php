@@ -10,14 +10,14 @@
             <div class="make-order--desktop">
                 <a href="{!! localize_route('baskets.index', 'current') !!}" class="choose-basket green-long-button">Выбрать корзину</a>
 
-                <a href="#" class="demo-dinner">Заказать пробный ужин</a>
+                @widget__trial_order('home')
             </div>
         </section>
 
         <section class="make-order--mobile">
             <a href="{!! localize_route('baskets.index', 'current') !!}" class="choose-basket">Выбрать корзину</a>
 
-            <a href="#" class="demo-dinner">Заказать пробный ужин</a>
+            @widget__trial_order('home')
         </section>
 
         @widget__banner('what_we_offer')
