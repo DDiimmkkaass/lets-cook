@@ -94,7 +94,7 @@ class OrderController extends FrontendController
         $this->authService = $authService;
         $this->subscribeService = $subscribeService;
         $this->couponService = $couponService;
-    
+        
         $this->middleware('auth.check_email_exists', ['only' => ['store']]);
         $this->middleware('user.order.editable', ['only' => ['edit', 'update']]);
     }
@@ -129,7 +129,15 @@ class OrderController extends FrontendController
      */
     public function repeat($order_id)
     {
-        $repeat_order = $this->orderService->getOrder($order_id);
+        $repeat_order = Order::with(
+            'main_basket',
+            'additional_baskets',
+            'main_basket.weekly_menu_basket.weekly_menu',
+            'coupon'
+        )
+            ->notOfStatus(['deleted'])
+            ->whereId($order_id)
+            ->first();
         
         abort_if(!$repeat_order, 404);
         
@@ -163,7 +171,7 @@ class OrderController extends FrontendController
             if (!$this->user) {
                 $this->user = $this->authService->quickRegister($request->all());
             }
-    
+            
             if ($request->get('coupon_code')) {
                 if (!$this->couponService->available($request->get('coupon_code'), $this->user)) {
                     return [
@@ -172,7 +180,7 @@ class OrderController extends FrontendController
                     ];
                 }
             }
-    
+            
             DB::beginTransaction();
             
             $input = $this->orderService->prepareFrontInputData($request, $this->user);
@@ -262,7 +270,7 @@ class OrderController extends FrontendController
             $model->save();
             
             $this->_saveEditRelationships($model, $request);
-    
+            
             list($subtotal, $total) = $this->orderService->getTotals($model);
             
             $model->subtotal = $subtotal;
@@ -274,7 +282,7 @@ class OrderController extends FrontendController
             
             if ($model->paymentMethod('online') && $model->status == Order::getStatusIdByName('changed')) {
                 $provider = $this->paymentService->getProvider();
-    
+                
                 $html = $provider->getForm($model);
             }
             
@@ -301,14 +309,14 @@ class OrderController extends FrontendController
     public function delete($order_id)
     {
         $model = $this->orderService->getOrder($order_id);
-    
+        
         abort_if($model->user_id != $this->user->id || !$model->isStatus('tmpl'), 404);
-    
+        
         try {
             $model->status = Order::getStatusIdByName('deleted');
             
             $model->save();
-        
+            
             return [
                 'status'  => 'success',
                 'message' => trans('front_messages.order successfully canceled'),
@@ -367,7 +375,7 @@ class OrderController extends FrontendController
         $this->orderService->saveAdditionalBaskets($model, $request->get('baskets', []));
         
         $this->orderService->saveIngredients($model, $request->get('ingredients', []));
-    
+        
         $this->subscribeService->store($this->user, $request);
         
         $this->orderService->addSystemOrderComment($model, trans('front_messages.new order'));
@@ -382,14 +390,14 @@ class OrderController extends FrontendController
         if ($model->main_basket->weekly_menu_basket_id != $request->get('basket_id')) {
             $model->ingredients()->delete();
             $model->recipes()->delete();
-    
+            
             $this->orderService->saveRecipes($model, $request->get('basket_id'), [], $request->get('recipes_count'));
         }
         
         $this->orderService->saveMainBasket($model, $request->get('basket_id'), $request->get('recipes_count'));
         
         $this->orderService->saveAdditionalBaskets($model, $request->get('baskets', []));
-    
+        
         $this->subscribeService->store($this->user, $request);
         
         $this->orderService->addSystemOrderComment($model, trans('front_messages.user change the order'));
