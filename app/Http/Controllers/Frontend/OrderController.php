@@ -246,7 +246,7 @@ class OrderController extends FrontendController
         
         $this->data('weekly_menu', $weekly_menu);
         $this->data('data_tab', 'my-orders-edit');
-        $this->data('profile_css_class', 'order-edit');
+        $this->data('profile_css_class', 'profile-orders order-edit');
         
         $this->data('order', $order);
         
