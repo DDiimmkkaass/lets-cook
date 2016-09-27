@@ -32,7 +32,7 @@
             Заказав после, вы получите продукты меню следующей недели.
         </div>
 
-        <a href="{!! localize_route('baskets.index') !!}"
+        <a href="{!! localize_route('baskets.index', 'current') !!}"
            title="Подробнее про корзины"
            class="baskets-menu__details black-long-button">
             Подробнее про корзины
