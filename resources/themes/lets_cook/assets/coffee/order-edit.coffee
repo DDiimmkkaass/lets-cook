@@ -32,8 +32,13 @@ OrderEdit.save = ($form) ->
         popUp(lang_error, response.message)
 
 $(document).on "ready", () ->
-  $('.order-edit-form .order-add-item__checkbox [type="checkbox"]').on 'change', (e) ->
-    Order.calculateTotal()
+  $('.order-edit-form .order-add-item__checkbox [type="checkbox"]').on 'click', (e) ->
+    $checkbox = $(this)
+
+    if $checkbox.data('_disabled') == 'disabled'
+      e.preventDefault()
+    else
+      Order.calculateTotal()
 
   $('.order-edit-form #order-edit-coupon-id').on 'change', (e) ->
     $option = $(this).find('option:selected');

@@ -26,16 +26,29 @@
                 </div>
 
                 <div class="order-edit__right">
-                    <div class="order-edit__select order-select @if (after_week_closing($weekly_menu->year, $weekly_menu->week)) h-hidden @endif">
+                    <div class="order-edit__select order-select">
                         <select name="basket_id" id="order-select-name">
-                            @foreach($weekly_menu->baskets()->get() as $basket)
-                                <option value="{!! $basket->id !!}"
-                                        data-price="{!! $basket->getPriceInOrder($recipes_count) !!}"
-                                        @if ($basket->id == $order->main_basket->weekly_menu_basket_id) selected @endif>
-                                    {!! $basket->getName() !!}
-                                    ({!! $basket->getPriceInOrder($recipes_count) !!} {!! $currency !!})
-                                </option>
-                            @endforeach
+                            @if (after_week_closing($weekly_menu->year, $weekly_menu->week))
+                                @foreach($weekly_menu->baskets()->get() as $basket)
+                                    @if ($basket->id == $order->main_basket->weekly_menu_basket_id)
+                                        <option value="{!! $basket->id !!}"
+                                                data-price="{!! $basket->getPriceInOrder($recipes_count) !!}"
+                                                selected>
+                                            {!! $basket->getName() !!}
+                                            ({!! $basket->getPriceInOrder($recipes_count) !!} {!! $currency !!})
+                                        </option>
+                                    @endif
+                                @endforeach
+                            @else
+                                @foreach($weekly_menu->baskets()->get() as $basket)
+                                    <option value="{!! $basket->id !!}"
+                                            data-price="{!! $basket->getPriceInOrder($recipes_count) !!}"
+                                            @if ($basket->id == $order->main_basket->weekly_menu_basket_id) selected @endif>
+                                        {!! $basket->getName() !!}
+                                        ({!! $basket->getPriceInOrder($recipes_count) !!} {!! $currency !!})
+                                    </option>
+                                @endforeach
+                            @endif
                         </select>
                     </div>
 
