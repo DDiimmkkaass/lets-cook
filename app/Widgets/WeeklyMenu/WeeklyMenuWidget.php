@@ -33,11 +33,15 @@ class WeeklyMenuWidget extends Widget
         $menu = WeeklyMenu::with('baskets', 'baskets.recipes')->current()->first();
         if ($menu && $menu->baskets->count()) {
             $menu = $menu->baskets->random();
+        } else {
+            $menu = false;
         }
 
         $next_menu = WeeklyMenu::with('baskets', 'baskets.recipes')->next()->first();
         if ($next_menu && $next_menu->baskets->count()) {
             $next_menu = $next_menu->baskets->random();
+        } else {
+            $next_menu = false;
         }
         
         if (view()->exists('widgets.weekly_menu.templates.'.$template.'.index')) {
