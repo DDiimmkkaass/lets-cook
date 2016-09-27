@@ -2,7 +2,7 @@
     <div class="recipes-and-baskets__item baskets-menu">
         <h2 class="baskets-menu__title">наши корзины</h2>
 
-        @if ($menu->baskets->count())
+        @if (count($menu->baskets))
             <table class="baskets-menu__list">
                 <tbody>
 
