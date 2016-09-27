@@ -648,4 +648,5 @@ return array (
   'result' => 'Итог',
   'unit_short' => 'ЕД.',
   'recipes_count' => 'Количество рецептов',
+  'source' => 'Источник',
 );

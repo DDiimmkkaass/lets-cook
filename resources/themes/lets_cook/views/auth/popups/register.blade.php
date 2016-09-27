@@ -56,9 +56,9 @@
                                 <option value="" disabled selected hidden>Откуда вы о нас узнали? Выберите
                                     источник
                                 </option>
-                                <option value="1">От друзей</option>
-                                <option value="2">Из интернета</option>
-                                <option value="3">Другое..</option>
+                                @foreach(config('user.sources') as $source)
+                                    <option value="{!! $source !!}">{!! $source !!}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

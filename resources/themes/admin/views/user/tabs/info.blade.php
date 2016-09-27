@@ -124,6 +124,22 @@
         </div>
     </div>
 
+    <div class="form-group">
+        {!! Form::label('comment', trans('labels.comment'), ['class' => 'col-md-3 control-label']) !!}
+
+        <div class="col-md-9">
+            {!! Form::textarea('comment', null, ['rows' => '3', 'placeholder' => trans('labels.comment'), 'class' => 'form-control input-sm']) !!}
+        </div>
+    </div>
+
+    <div class="form-group">
+        {!! Form::label('source', trans('labels.source'), ['class' => 'col-md-3 control-label']) !!}
+
+        <div class="col-md-5">
+            {!! Form::text('source', null, ['placeholder' => trans('labels.source'), 'class' => 'form-control input-sm']) !!}
+        </div>
+    </div>
+
     @include('partials.tabs.fields')
 
 </div>
