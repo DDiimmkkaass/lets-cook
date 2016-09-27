@@ -94,8 +94,10 @@ class TagController extends BackendController
                 ->editColumn(
                     'category_id',
                     function ($model) {
-                        return link_to_route('admin.tag_category.edit', $model->category->name, $model->category_id)
-                            ->toHtml();
+                        if ($model->category_id) {
+                            return link_to_route('admin.tag_category.edit', $model->category->name, $model->category_id)
+                                ->toHtml();
+                        }
                     }
                 )
                 ->editColumn(
