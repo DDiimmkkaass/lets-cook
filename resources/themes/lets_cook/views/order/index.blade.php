@@ -20,9 +20,13 @@
 
             @include('order.partials.payment')
 
-            @if ($user && !$user->subscribe()->count())
+            @include('order.partials.user_info')
+
+            @if (!$user || ($user && !$user->subscribe()->count()))
                 @include('order.partials.subscribe')
             @endif
+
+            @include('order.partials.coupon')
 
             @include('order.partials.button')
 

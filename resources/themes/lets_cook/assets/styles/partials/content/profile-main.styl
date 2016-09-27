@@ -66,6 +66,26 @@
         fsh(18px, 1.25)
         color: $font-regular
 
+  &__buttons
+    padding: 20px 0
+    text-align: center
+    fs(0px)
+
+  &__buttons-link
+    display: block
+    margin: 0 auto
+
+    &:last-of-type
+      margin: 20px auto 0
+
+    +bp('1024')
+      display: inline-block
+
+      &:last-of-type
+        margin: 0 0 0 20px
+
+
+
 
 .profile-badges
   position: relative

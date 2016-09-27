@@ -29,7 +29,7 @@
       flex-direction: row
       justify-content: space-between
       align-items: flex-start
-      padding-top: 90px
+      padding: 90px 0 20px
 
   &__title
     @extend .georgia-title
@@ -44,16 +44,22 @@
 
   &__subTitle
     text-align: center
+    padding: 0 (20px * (310 / 720))
     fsh(20px * (310 / 720), 52 / 20)
 
     +bp('480')
+      padding: 0 (20px * (470 / 720))
       fs(20px * (470 / 720))
 
     +bp('768')
+      padding: 0 20px
       fs(20px)
 
     +bp('1024')
-      fsh(14px, 42 / 14)
+      margin-top: 15px
+      padding: 0
+      text-align: left
+      fsh(14px, 1.4)
 
   &__result
     margin-top: 20px * (310 / 720)
@@ -69,63 +75,103 @@
       padding: 30px 0
 
     +bp('1024')
-      margin-top: 0
-      padding: 20px 0
+      margin-top: 58px
+      padding: 0
       background: none
 
   &__result-wrapper
     margin: 0 auto
-    padding: 0 20px
-    max-width: 320px
+    padding: 0 (20px * (310 / 720))
     js-display: flex; display: flex
-    justify-content: space-between
     align-items: center
 
     +bp('480')
-      max-width: 480px
+      padding: 0 (20px * (470 / 720))
 
     +bp('768')
-      max-width: 700px
+      padding: 0 20px
 
     +bp('1024')
+      margin: 0
       padding: 0
 
+  &__count-title
+    margin-bottom: 10px * (310 / 720)
+    padding-left: 5px
+    font-family: $ptsans-bold
+    fsh(10px, 1)
+    color: $font-black-2
+    text-transform: uppercase
+
+    +bp('480')
+      margin-bottom: 10px * (470 / 720)
+
+    +bp('768')
+      margin-bottom: 10px
+      fs(14px)
+
+  &__count
+    &:not(:first-of-type)
+      margin-left: 30px
+
+      +bp('480')
+        margin-left: 40px
+
+      +bp('768')
+        margin-left: 80px
+
+
   &__count-list
-    margin: 0; padding: 0; list-style-type: none
+    margin: 0; padding: (10px * (310 / 720)) (5px * (310 / 720)); list-style-type: none
+    border: 1px solid $bg-gray-5
     fs(0px)
 
+    +bp('480')
+      padding: (10px * (470 / 720)) (5px * (470 / 720))
+
+    +bp('768')
+      padding: 10px 5px
+
   &__count-item
+    margin: 0 3px
     display: inline-block
 
     +bp('480')
-      margin-right: 50px * (470 / 720)
+      margin: 0 5px
 
     +bp('768')
-      margin-right: 50px
+      margin: 0 12px
 
     +bp('1024')
-      margin-right: 30px
+      size: 50px
+      border-width: 3px
+      font-family: $ptsans-narrow-regular
+      font-style: normal
+      font-weight: normal
+      fsh(30px, 44px)
 
-    &:not(:last-of-type)
-      margin-right: 50px * (310 / 720)
+    &[data-active] a, &:hover a
+      background-color: $bg-red-1
+      color: $font-yellow-2
 
-
-    span:nth-child(1)
-      vertical-align: middle
+    a
       display: inline-block
       size: 60px * (310 / 720)
       border-radius: 50%
-      background-color: $bg-red-1
+      background-color: transparent
+      border: 2px solid $bg-red-1
       text-align: center
-      color: $font-white-1
-      fsh(38px * (310 / 720), 60px * (310 / 720))
+      color: $font-red-3
+      fsh(38px * (310 / 720), 24px)
       font-family: $georgia
       font-style: italic
       font-weight: bold
+      cursor: pointer
+      text-decoration: none
 
       +bp('480')
         size: 60px * (470 / 720)
-        fsh(38px * (470 / 720), 60px * (470 / 720))
+        fsh(38px * (470 / 720), 34px)
 
       +bp('768')
         size: 60px
@@ -133,39 +179,52 @@
 
       +bp('1024')
         size: 50px
+        border-width: 3px
         font-family: $ptsans-narrow-regular
         font-style: normal
         font-weight: normal
-        fsh(30px, 50px)
-        color: $font-yellow-2
+        fsh(30px, 44px)
 
-    span:nth-child(2)
-      vertical-align: middle
-      margin-left: 5px
-      display: inline-block
-      fsh(25px * (310 / 720), 60px * (310 / 720))
+  &__left
 
-      +bp('480')
-        margin-left: 8px
-        fsh(25px * (470 / 720), 60px * (470 / 720))
-
-      +bp('768')
-        margin-left: 12px
-        fsh(25px, 60px)
-
-      +bp('1024')
-        fsh(14px, 50px)
-
-
+    +bp('1024')
+      max-width: 750px
 
   &__right
-    display: none
-    text-align: right
+    padding: 0 (20px * (310 / 720)) (20px * (310 / 720))
+    background: url("../images/yellow-bg.png") top left repeat;
+    fs(0px)
+
+    +bp('480')
+      padding: 0 (20px * (470 / 720)) (20px * (470 / 720))
+
+    +bp('768')
+      padding: 0 20px 20px
+
+    +bp('1024')
+      padding: 0
+      align-self: flex-end
+      background: none
+
+  &__price
+    display: inline-block
+    vertical-align: top
 
     +bp('1024')
       display: block
 
-  &__price
+  &__price-title
+    font-family: $ptsans-caption-regular
+    fsh(12px, 1.5)
+
+    +bp('480')
+      fs(14px)
+
+    +bp('768')
+      fs(20px)
+
+
+  &__price-value
     font-family: $ptsans-narrow-bold
     fsh(60px * (310 / 720), 1)
 
@@ -174,10 +233,6 @@
 
     +bp('768')
       fs(60px)
-
-    &[data-device='mobile']
-      +bp('1024')
-        display: none
 
     span
       font-family: $ptsans-narrow-regular
@@ -192,10 +247,64 @@
         fs(30px)
         margin-left: 12px
 
+  &__portion
+    display: inline-block
+    vertical-align: top
+    margin-left: 50px
+    color: $font-green-2
+
+    +bp('480')
+      margin-left: 100px
+
+    +bp('768')
+      margin-left: 200px
+
+    +bp('1024')
+      display: block
+      margin: 15px 0 0 0
+
+  &__portion-title
+    font-family: $ptsans-caption-regular
+    fsh(12px, 1.5)
+
+    +bp('480')
+      fs(14px)
+
+    +bp('768')
+      fs(20px)
+
+    +bp('1024')
+      line-height: 1.1
+
+  &__portion-value
+    font-family: $ptsans-narrow-bold
+    fsh(60px * (310 / 720), 1)
+
+    +bp('480')
+      fs(60px * (470 / 720))
+
+    +bp('768')
+      fs(60px)
+
+    +bp('1024')
+      fs(40px)
+
+    span
+      margin-left: 7px
+      font-family: $ptsans-narrow-regular
+      fsh(20px, 1.4)
+
+      +bp('1024')
+        font-family: $ptsans-regular
+
   &__make-order
 
     &[data-device='desktop']
+      display: none
       margin-top: 18px
+
+      +bp('1024')
+        display: inline-block
 
     &[data-device='mobile']
       background-color: $bg-green-1
@@ -207,12 +316,17 @@
     background: url('../images/yellow-bg.png') top center repeat
 
   &__item
+    display: none
     width: 33.3333333%
+    margin-bottom: 1px
+
+    &[data-active]
+      display: block
 
     +bp('1024')
       width: (976px / 5)
 
-      &:not(:last-of-type)
+      &:not(:nth-of-type(5n))
         margin-right: 1px
 
     &:nth-of-type(5n+1)
@@ -270,22 +384,35 @@
       padding: 5px 12px
       fs(14px)
 
-  &__desc
+  &__bottom
+    js-display: flex; display: flex;
+    flex-direction: column
     padding: (30px * (310 / 720)) (20px * (310 / 720))
+
+    +bp('480')
+      padding: (30px * (470 / 720)) (20px * (470 / 720))
+
+    +bp('768')
+      padding: 30px 20px
+
+    +bp('1024')
+      flex-direction: row
+      justify-content: space-between
+      padding: 50px 0
+
+  &__desc
     font-family: $ptsans-regular
     color: $font-black-1
     fsh(20px * (310 / 720), 1.35)
 
     +bp('480')
-      padding: (30px * (470 / 720)) (20px * (470 / 720))
       fs(20px * (470 / 720))
 
     +bp('768')
-      padding: 30px 20px
+
       fs(20px)
 
     +bp('1024')
-      padding: 50px 0
       width: (630 / 980) * 100%
       fs(14px)
 
@@ -304,10 +431,24 @@
         +bp('1024')
           margin: 0 0 35px
 
+  &__edit
+    margin-top: 10px
+    align-self: center
+
+    +bp('480')
+      margin-top: 15px
+
+    +bp('768')
+      margin-top: 40px
+
+    +bp('1024')
+      margin-top: 0
+      align-self: flex-end
 
 
 // ORDER INGRIDIENTS
 .order-ing
+  position: relative
   max-height: 120px * (310 / 720)
   background-color: $bg-orange-1
   overflow: hidden
@@ -351,12 +492,26 @@
     +bp('1024')
       flex-direction: row
       justify-content: space-between
+      max-height: 400px
+      padding-bottom: 100px
+      will-change: max-height
+      transition: max-height 1s
+
+      &::after
+        content: ''
+        absolute: bottom 100px left 0
+        size: 100% 70px
+        background: linear-gradient(to bottom, rgba(234,156,31,0) 0%, rgba(234,156,31,0.5) 31%, rgba(234,156,31,1) 100%)
+
+      &[data-active]
+        max-height: 3000px
 
   &__list-wrapper
     position: relative
     width: 100%
     margin-bottom: 20px * (310 / 720)
     padding: 0 (20px * (310 / 720))
+    overflow: hidden
 
     +bp('480')
       margin-bottom: 20px * (470 / 720)
@@ -367,6 +522,7 @@
       padding: 0 20px
 
     +bp('1024')
+      margin-bottom: 0
       width: 32%
       padding: 40px 0 0
 
@@ -431,14 +587,73 @@
         +bp('1024')
           width: 62%
 
+  &__show
+    display: none
+
+    +bp('1024')
+      display: inline-block
+      position: absolute
+      bottom: 20px; left: 50%
+      transform: translateX(-50%)
+
+      &[data-active]
+        span:nth-child(1)
+          display: none
+
+        span:nth-child(2)
+          display: inline-block
+
+      span
+        display: inline-block
+        vertical-align: middle
+
+        &:nth-child(1)
+          display: inline-block
+
+          &::after
+            margin-left: 25px
+            content: '+'
+            display: inline-block
+            vertical-align: middle
+            size: 25px
+            border: 1px solid $font-yellow-2
+            border-radius: 50%
+            font-family: $ptsans-regular
+            fsh(19px, 23px)
+            color: $font-yellow-2
+
+        &:nth-child(2)
+          display: none
+
+          &::after
+            margin-left: 25px
+            content: '-'
+            display: inline-block
+            vertical-align: middle
+            size: 25px
+            border-radius: 50%
+            border: 1px solid $font-yellow-2
+            font-family: $ptsans-regular
+            fsh(19px, 23px)
+            color: $font-yellow-2
+
+
+
 
 // ORDER ADD MORE
 .order-add-more
+  position: relative
   background-color: $bg-yellow-1
   overflow: hidden
 
-  +bp('1024')
-    padding-bottom: 40px
+  &::after
+    position: absolute
+    left: 0; bottom: 0
+    size: 100% 25px
+    background: linear-gradient(to right, rgba(29,81,55,1) 0%, rgba(6,91,20,1) 100%);
+
+    +bp('1024')
+      content: ''
 
   &__title
     text-align: center
@@ -464,6 +679,10 @@
     flex-wrap: wrap
     justify-content: flex-start
     max-width: 980px
+    background: url(../images/yellow-bg.png) top center repeat
+
+    +bp('1024')
+      background: none
 
   &__item
     width: 25%
@@ -643,29 +862,82 @@
     +bp('1024')
       background-color: transparent
       color: $font-black-1
-      text-transform: lowercase
+      text-transform: none
 
     span[data-device='mobile']
       display: inline-block
-      line-height: 120px * (310 / 720)
+      padding: 12px 0 5px
+      line-height: 1.4
       color: $font-black-1
-      text-transform: none
 
       +bp('480')
-        line-height: 120px * (470 / 720)
+        padding: 25px 0 10px
 
       +bp('768')
-        line-height: 120px
+        padding: 40px 0 15px
 
       +bp('1024')
         display: none
 
     span[data-device='desktop']
+      margin: 35px 0 20px
       display: none
-      line-height: 140px
+      line-height: 1.15
+      text-transform: none
 
       +bp('1024')
         display: inline-block
+
+
+  &__haveDone
+    padding: 0 (20px * (310 / 720))
+    background-color: $bg-yellow-1
+    text-align: center
+    font-family: $georgia
+    fsh(30px * (310 / 720), 1.25)
+    font-weight: 700
+    font-style: italic
+    color: $font-green-2
+
+    +bp('480')
+      padding: 0 (20px * (470 / 720))
+      fs(30px * (470 / 720))
+
+    +bp('768')
+      padding: 0 20px
+      fs(30px)
+
+    +bp('1024')
+      padding: 0
+      background: none
+
+
+  &__signIn
+    padding: 7px (20px * (310 / 720))
+    background-color: $bg-yellow-1
+    text-align: center
+    font-family: $ptsans-regular
+    fsh(14px, 1.25)
+    color: $font-black-2
+
+    +bp('480')
+      padding: 15px (20px * (470 / 720))
+
+    +bp('768')
+      padding: 25px 20px
+
+    +bp('1024')
+      margin: 25px 0 45px
+      padding: 0
+      background: none
+
+    a
+      color: $font-blue-1
+
+      &:hover
+        text-decoration: none
+
+
 
   &__wrapper
     background: url('../images/yellow-bg.png') top left repeat
@@ -687,30 +959,30 @@
       padding: 15px 9px 0
 
     &[data-order='2']
-      padding: 15px 9px 0
-
-    &[data-order='3']
       padding: 15px 9px 12px
+
+    //&[data-order='3']
+    //  padding: 15px 9px 12px
 
     +bp('480')
       &[data-order='1']
         padding: 15px 12px 0
 
       &[data-order='2']
-        padding: 15px 12px 0
-
-      &[data-order='3']
         padding: 15px 12px 15px
+
+    //&[data-order='3']
+    //  padding: 15px 12px 15px
 
     +bp('768')
       &[data-order='1']
         padding: 24px 20px 0
 
       &[data-order='2']
-        padding: 24px 20px 0
-
-      &[data-order='3']
         padding: 24px 20px 24px
+
+    //&[data-order='3']
+    //  padding: 24px 20px 24px
 
     +bp('1024')
       flex-direction: row
@@ -724,8 +996,8 @@
       &[data-order='2']
         padding: 14px 0
 
-      &[data-order='3']
-        padding: 14px 0
+  //&[data-order='3']
+  //  padding: 14px 0
 
   &__subTitle
     display: none
@@ -843,6 +1115,9 @@
         display: none
 
   &__comment
+    js-display: flex; display: flex
+    flex-direction: column
+    max-width: 980px
     padding: (15px * (310 / 720)) (20px * (310 / 720)) (30px * (310 / 720))
 
     +bp('480')
@@ -852,17 +1127,17 @@
       padding: 15px 20px 30px
 
     +bp('1024')
+      flex-direction: row
+      justify-content: space-between
       margin: 0 auto
       max-width: 980px
-      padding: 30px 0 40px
+      padding: 20px 0 40px
 
   &__comment-wrapper
-    max-width: 980px
+    width: 100%
 
     +bp('1024')
-      margin: 0 0 0 auto
-      width: 55.8%
-
+      width: (520 / 980) * 100%
 
   &__comment-title
 
@@ -905,11 +1180,10 @@
     +bp('768')
       margin-top: 30px
 
-    & > .square-checkbox__text
-      width: 100%
-
-      +bp('1024')
-        width: 70%
+    +bp('1024')
+      align-self: flex-end
+      margin-top: 0px
+      width: 410px
 
 
 // ORDER PAYMENT
@@ -961,10 +1235,13 @@
     position: relative
     z-index: 1
 
+    &:last-of-type
+      display: none
+
     +bp('1024')
       width: 31.5%
 
-      +bp('1024')
+      &:last-of-type
         display: inline-block
 
     span[data-device='mobile']
@@ -1014,13 +1291,82 @@
         +bp('1024')
           background-color: $bg-green-2
 
+
+// ORDER PERSONAL DATA
+.order-personal
+  background-color: $bg-yellow-1
+  padding: 0 (20px * (310 / 720)) (35px * (310 / 720))
+
+  +bp('480')
+    padding: 0 (20px * (310 / 720)) (35px * (470 / 720))
+
+  +bp('768')
+    padding: 0 20px 35px
+
+  &__title
+    text-align: center
+    text-transform: none
+    line-height: 120px * (310 / 720)
+    color: $font-black-2
+
+    +bp('480')
+      line-height: 120px * (470 / 720)
+
+    +bp('768')
+      line-height: 120px
+
+  &__main
+    margin: 0 auto
+    max-width: 510px
+
+  &__row
+    margin-top: 0
+    fs(0px)
+
+    +bp('480')
+      margin-top: 20px * (470 / 720)
+
+    +bp('768')
+      margin-top: 20px
+
+    +bp('1024')
+      margin-top: 0
+
+    &:not(:first-of-type)
+      margin-top: 18px
+
+  &__label
+    display: block
+    font-family: $ptsans-bold
+    color: $font-black-2
+    fsh(20px, 1.4)
+
+    +bp('1024')
+      display: inline-block
+      vertical-align: middle
+      width: (160 / 510) * 100%
+
+  &__input
+    display: block
+    width: 100%
+    margin: 5px 0 0 0
+
+    +bp('1024')
+      display: inline-block
+      margin: 0
+      vertical-align: middle
+      width: (350 / 510) * 100%
+
 // ORDER SUBSCRIBE
 .order-subscribe
-  js-display: flex; display: flex
-  flex-direction: column
+  display: inline-block
+  vertical-align: middle
+  width: 100%
   padding-bottom: 20px * (310px / 720px)
   background-color: $bg-green-2
-  color: $base-bg-color
+  color: $font-black-2
+  width: 100%
+  border-right: 1px solid $bg-gray-6
 
   +bp('480')
     padding-bottom: 20px * (470px / 720px)
@@ -1029,16 +1375,25 @@
     padding-bottom: 20px
 
   +bp('1024')
-    flex-direction: row
-    justify-content: center
-    align-items: center
-    padding-bottom: 0
-    background: linear-gradient(to right, rgba(29,81,55,1) 0%, rgba(65,130,62,1) 100%);    color: $font-yellow-2
+    width: 50%
+    padding: 75px 0 85px 40px
+    background-color: transparent
+  //background: linear-gradient(to right, rgba(29,81,55,1) 0%, rgba(65,130,62,1) 100%);    color: $font-yellow-2
+
+  &__wrapper
+
+    +bp('1024')
+      margin: 0 140px 0 auto
+      width: 400px
 
   &__title
     margin: 0
     font-weight: normal
     text-align: center
+    font-family: $ptsans-caption-bold
+
+    +bp('1024')
+      text-align: left
 
     span[data-device='mobile']
       display: inline-block
@@ -1061,6 +1416,7 @@
 
       +bp('1024')
         display: inline-block
+        fs(18px,)
 
   &__list
     margin: 0 auto; padding: 0 (20px * (310 / 720)); list-style-type: none
@@ -1077,8 +1433,9 @@
 
     +bp('1024')
       margin: 0
-      padding: 0 35px
-      justify-content: center
+      padding: 0
+      padding: 0
+      justify-content: flex-start
       width: auto
 
   &__item
@@ -1093,13 +1450,17 @@
 
     +bp('1024')
       size: auto
-      line-height: 80px
+      line-height: 45px
       padding: 0
       border: none
+
+      &:nth-of-type(2)
+        margin-left: 50px
 
     span[data-device='mobile']
       display: inline-block
       text-decoration: underline
+      color: $font-yellow-1
 
       +bp('1024')
         display: none
@@ -1118,7 +1479,6 @@
       display: none
 
       &:checked + label
-        color: $font-black-1
 
         &:before
           content: ''
@@ -1128,9 +1488,7 @@
 
         span
           text-decoration: none
-
-        +bp('1024')
-          color: $font-yellow-1
+          color: $font-black-2
 
     label
       display: inline-block
@@ -1162,7 +1520,7 @@
           border: 1px solid $bg-black-1
 
       &::after
-        absolute: top 46.5% left 5px
+        absolute: top 42.25% left 5px
         size: 10px
         background-color: transparent
 
@@ -1174,9 +1532,9 @@
   &__terms
     display: none
     font-family: $ptsans-regular
-    fsh(14px, 80px)
-    color: $font-yellow-1
-    
+    fsh(14px, 40px)
+    color: $font-black-2
+
     &:hover
       text-decoration: none
 
@@ -1184,221 +1542,126 @@
       display: inline-block
 
 
-// ORDER SUBMIT
-.order-submit
-  margin-bottom: 120px * (310 / 720)
-  background-color: $bg-yellow-1
+
+// ORDER PROMOCODE
+.order-promocode
+  display: inline-block
+  vertical-align: middle
+  width: 100%
+  padding: (30px * (310 / 720)) 0 (50px * (310 / 720))
 
   +bp('480')
-    margin-bottom: 120px * (480 / 720)
+    padding: (30px * (470 / 720)) 0 (50px * (470 / 720))
 
   +bp('768')
-    margin-bottom: 120px
+    padding: 30px 0 50px
 
   +bp('1024')
-    margin-bottom: 0px
-    background: linear-gradient(to right, rgba(29,81,55,1) 0%, rgba(101,177,69,1) 100%);
+    margin-left: -10px
+    width: 50%
+
+  &[data-fullscreen]
+    +bp('1024')
+      width: 100%
+
+      .order-promocode__wrapper
+        margin: 0 auto
 
   &__wrapper
-    margin: 0 auto
-    js-display: flex; display: flex
-    flex-direction: column
-    max-width: 980px
-
-    +bp('1024')
-      flex-direction: row
-      justify-content: space-between
-      align-items: center
-      padding: 50px 0
-
-  &__left
-    js-display: flex; display: flex
-    flex-direction: column
-    align-items: center
-    width: 100%
-    padding: 20px * (310 / 720)
-    background: url('../images/yellow-bg.png') top left repeat
+    padding: 0 (20px * (310 / 720))
 
     +bp('480')
-      padding: 20px * (310 / 720)
+      padding: 0 (20px * (470 / 720))
 
     +bp('768')
-      padding: 20px
+      padding: 0 20px
 
     +bp('1024')
-      padding: 0
-      width: (420 / 989) * 100%
-      background: none
-
-  &__right
-    text-align: center
-    padding: 20px * (310 / 720)
-
-    +bp('480')
-      padding: 20px * (310 / 720)
-
-    +bp('768')
-      padding: 20px
-
-    +bp('1024')
-      padding: 0
-
-    button[name='order-submit']
-      @extend .green-large-button;
-      margin: 0 auto
-      width: 100%
-      max-width: 480px
-
-      +bp('1024')
-        display: block
-        size 193px 48px
-        background-color: $bg-black-1
-        border-radius: 7px
-        text-align: center
-        fsh(13px, 48px)
-        text-transform: uppercase
-        text-decoration: none
-        color: $font-yellow-2
-        cursor: pointer
-        border: none; outline: none
-        font-family: $ptsans-caption-regular
-
-
-    span[data-device='mobile']
-      display: inline-block
-      text-decoration: underline
-
-      +bp('1024')
-        display: none
-
-    span[data-device='desktop']
-      display: none
-
-      +bp('1024')
-        display: inline-block
-
-  &__price
-
-    &[data-device='mobile']
-      display: inline-block
-      margin-top: 20px * (310 / 720)
-
-      +bp('480')
-        margin-top: 20px * (470 / 720)
-
-      +bp('768')
-        margin-top: 20px
-
-      +bp('1024')
-        display: none
-
-    &[data-device='desktop']
-      display: none
-      font-family: $ptsans-narrow-bold
-      fsh(60px, 80px)
-
-      +bp('1024')
-        display: block
-
-      span
-        margin-left: 10px
-        font-family: $ptsans-narrow-regular
-        fs(30px)
-
-.order-promocode
-  js-display: flex; display: flex
-  justify-content: center
-  align-items: center
-
-  +bp('1024')
-    flex-direction: column
+      margin: 0 0 0 50px
+      padding: 0 20px
+      width: 450px
 
   &__title
-    display: inline-block
-    vertical-align: top
+    text-align: center
     margin: 0
     font-weight: normal
 
+    +bp('1024')
+      text-align: left
+
     span[data-device='mobile']
-      display: inline-block
-      font-family: $ptsans-narrow-regular
-      fsh(40px * (310 / 720), 80px * (310 / 720))
+      @extend .georgia-title
+      text-transform: none
+      line-height: 120px * (310 / 720)
 
       +bp('480')
-        fsh(40px * (470 / 720), 80px * (470 / 720))
+        line-height: 120px * (470 / 720)
 
       +bp('768')
-        fsh(40px, 80px)
+        line-height: 120px
 
       +bp('1024')
         display: none
 
     span[data-device='desktop']
       display: none
-      fsh(14px, 1.25)
-      color: $font-white-1
+      font-family: $ptsans-caption-bold
+      fsh(18px, 1.25)
+      color: $font-black-2
 
       +bp('1024')
         display: inline-block
 
 
   &__inputs
+    margin-top: 20px * (310 / 720)
     display: inline-block
+    width: 100%
     vertical-align: top
     font-size: 0
 
+    +bp('480')
+      margin-top: 20px * (470 / 720)
+
+    +bp('480')
+      margin-top: 20px
+
     +bp('1024')
-      margin: 14px 0 0 -14px
+      margin-top: 14px
 
     input[name='coupon_code']
       display: inline-block
-      margin: 0 (25px * (310 / 720))
-      width: 200px * (310 / 720)
+      vertical-align: top
+      width: calc(100% - 85px)
 
       &::-webkit-input-placeholder
-        color: transparent
+        color: $font-gray-1
 
       &::-moz-placeholder
-        color: transparent
+        color: $font-gray-1
 
       &:-ms-input-placeholder
-        color: transparent
+        color: $font-gray-1
 
       &:-moz-placeholder
-        color: transparent
+        color: $font-gray-1
 
       &::placeholder
-        color: transparent
+        color: $font-gray-1
 
       +bp('480')
-        margin: 0 (25px * (470 / 720))
-        width: 200px * (470 / 720)
+        width: calc(100% - 130px)
 
       +bp('768')
-        margin: 0 25px
-        width: 200px
+        width: calc(100% - 200px)
 
       +bp('1024')
-        margin: 0
         size: 250px 48px
 
-        &::-webkit-input-placeholder
-          color: $font-gray-1
-
-        &::-moz-placeholder
-          color: $font-gray-1
-
-        &:-ms-input-placeholder
-          color: $font-gray-1
-
-        &:-moz-placeholder
-          color: $font-gray-1
-
-        &::placeholder
-          color: $font-gray-1
-
     input[name='order-promocode__submit']
-      size: (200px * (310 / 720)) (80px * (310 / 720))
+      display: inline-block
+      vertical-align: top
+      size: 85px (80px * (310 / 720))
       background: $bg-black-1
       outline: none
       appearance: none
@@ -1412,7 +1675,7 @@
         text-decoration: underline
 
       +bp('480')
-        size: (200px * (470 / 720)) (80px * (470 / 720))
+        size: 130px (80px * (470 / 720))
         fsh(32px * (470 / 720), 80px * (470 / 720))
 
       +bp('768')
@@ -1426,6 +1689,180 @@
         border-top-right-radius: 5px
         border-bottom-right-radius: 5px
         color: $font-yellow-1
+
+  &__select
+
+    +bp('1024')
+      width: 400px
+
+
+// ORDER SUBMIT
+.order-submit
+  margin-bottom: 120px * (310 / 720)
+  padding: 0 (20px * (310 / 720))
+  background-color: $bg-yellow-1
+  color: $font-black-1
+
+  +bp('480')
+    margin-bottom: 120px * (480 / 720)
+    padding: 0 (20px * (470 / 720))
+
+  +bp('768')
+    margin-bottom: 120px
+    padding: 0 20px
+
+  +bp('1024')
+    margin-bottom: 0px
+    padding: 0
+    background: linear-gradient(to right, rgba(101,177,69,1) 0%, rgba(29,81,55,1) 100%);
+    color: $font-white-1
+
+  &__wrapper
+    margin: 0 auto
+    max-width: 980px
+    text-align: center
+
+    +bp('1024')
+      padding: 50px 0
+
+  &__content
+    js-display: flex; display: flex
+    flex-direction: column
+
+    +bp('1024')
+      flex-direction: row
+      justify-content: space-between
+
+  &__common
+    width: 100%
+
+    +bp('1024')
+      width: (700 / 980) * 100%
+
+  &__common-title
+    text-transform: none
+    line-height: 120px * (310 / 720)
+    text-align: center
+
+    +bp('480')
+      line-height: 120px * (470 / 720)
+
+    +bp('768')
+      line-height: 120px
+
+    +bp('1024')
+      line-height: 1.4
+      text-align: left
+
+
+  &__list
+    margin: 0; padding: 0; list-style-type: none
+    fs(0px)
+    text-align: left
+
+    +bp('480')
+      text-align: left
+
+    +bp('1024')
+      margin-top: 20px
+
+  &__item
+    position: relative
+
+    +bp('480')
+      display: inline-block
+
+    &:not(:last-of-type)
+
+      +bp('480')
+        margin-right: 40px
+
+      &::after
+        absolute: top 50% right -20px
+        transform: translateY(-50%);
+        size: 1px 25px
+        background-color: rgba(0,0,0,0.3);
+
+        +bp('480')
+          content: ''
+
+        +bp('768')
+          height: 30px
+
+        +bp('1024')
+          background-color: rgba(255,255,255,0.3)
+
+  &__subTitle
+    display: inline-block
+    font-family: $ptsans-bold
+    fsh(16px, 3)
+
+    +bp('768')
+      fs(20px)
+
+  &__subList
+    margin: 0 0 0 25px; padding: 0; list-style-type: none
+    display: inline-block
+    fs(0px)
+
+  &__subItem
+    display: inline-block
+    font-family: $ptsans-regular
+    fs(14px)
+
+    +bp('768')
+      fs(17px)
+
+    &:not(:last-of-type)
+      margin-right: 24px
+
+    span
+      margin-right: 5px
+      font-family: $ptsans-bold
+
+  &__button
+    @extend .green-large-button;
+    margin: (30px * (310 / 720)) 0
+    max-width: 480px
+
+    +bp('480')
+      margin: (30px * (470 / 720)) 0
+
+    +bp('768')
+      margin: 30px 0
+
+    +bp('1024')
+      margin: 55px 0 0
+      display: inline-block
+      size 312px 73px
+      background-color: $bg-black-1
+      border-radius: 7px
+      text-align: center
+      fsh(18px, 76px)
+      text-transform: uppercase
+      text-decoration: none
+      color: $font-yellow-2
+      cursor: pointer
+      border: none; outline: none
+      font-family: $ptsans-caption-regular
+
+  &__price
+    @extend .georgia-title
+    margin: 10px 0
+    text-align: center
+
+    span
+      margin-left: 10px
+
+    +bp('1024')
+      margin: 0
+      text-align: left
+      font-family: $ptsans-narrow-bold
+      fsh(60px, 1.15)
+
+      span
+        font-family: $ptsans-narrow-regular
+        fs(30px)
 
 
 

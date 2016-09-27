@@ -4,7 +4,7 @@
     <ul class="order-add-more__list">
         @foreach($additional_baskets as $key => $_basket)
             <li class="order-add-more__item more-item"
-                @if ($selected_baskets->contains($_basket->id)) data-active @endif>
+                @if ($selected_baskets->contains('basket_id', $_basket->id)) data-active @endif>
                 <div class="more-item__img"
                      style="background-image: url({!! thumb($_basket->getImage(), 220, 146) !!});">
                 </div>
@@ -32,17 +32,18 @@
                             <input type="checkbox"
                                    id="f-order-add-more-{!! $_basket->id !!}"
                                    data-name="baskets[{!! $key !!}]"
-                                   @if ($selected_baskets->contains($_basket->id))
+                                   @if ($selected_baskets->contains('basket_id', $_basket->id))
                                     name="baskets[{!! $key !!}]"
                                     checked="checked"
                                    @endif
                                    data-price="{!! $_basket->getPrice() !!}"
                                    value="{!! $_basket->id !!}"
                                    class="checkbox-button"
+                                   data-basket_name="{!! $_basket->getName() !!}"
                                    data-id="{!! $_basket->id !!}">
                             <label for="f-order-add-more-{!! $_basket->id !!}" data-add="Добавить"
                                    data-remove="Убрать">
-                                @if ($selected_baskets->contains($_basket->id)) Убрать @else Добавить @endif
+                                @if ($selected_baskets->contains('basket_id', $_basket->id)) Убрать @else Добавить @endif
                             </label>
                         </div>
                     </div>

@@ -241,7 +241,7 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
      */
     public function getUrl()
     {
-        return localize_route('baskets.show', $this->id);
+        return localize_route('order.index', $this->id);
     }
     
     /**

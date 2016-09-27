@@ -60,7 +60,10 @@ class OrderCreateRequest extends FormRequest
             'city_name' => $city_id == 0 ? 'required' : '',
             'address'   => 'required',
             
-            'payment_method'   => 'required|in:'.implode(',', array_keys(Order::getPaymentMethods())),
+            'payment_method' => 'required|in:'.implode(',', array_keys(Order::getPaymentMethods())),
+            
+            'recipes'   => 'required|array',
+            'recipes.*' => 'exists:basket_recipes,id',
             
             'baskets'     => 'array',
             'ingredients' => 'array',
@@ -85,7 +88,9 @@ class OrderCreateRequest extends FormRequest
     public function messages()
     {
         return [
-            'terms.accepted' => trans('validation.terms accepted'),
+            'recipes.required' => trans('validation.you must add at least one recipe'),
+            'recipes.*.exists' => trans('validation.selected recipe not exist'),
+            'terms.accepted'   => trans('validation.terms accepted'),
         ];
     }
 }

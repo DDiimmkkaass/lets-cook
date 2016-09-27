@@ -194,4 +194,5 @@ return array (
   'terms accepted' => 'Вы должны принять "Условия доставки"',
   'min_recipes_count' => 'Вы должны выбрать не менее :count рецептов',
   'max_recipes_count' => 'Вы можете выбрать не более :count рецептов',
+  'selected recipe not exist' => 'Выбранный рецепт не существует',
 );

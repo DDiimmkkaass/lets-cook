@@ -4,6 +4,10 @@ Order.calculateTotal = () ->
   $total = $('#order_total_desktop')
   $total_mobile = $('#order_total_mobile')
   $order_discount = $('#order_discount')
+  $per_portion_total = $('#per_portion_total')
+
+  recipes = parseInt $('.order-main__item').length
+
   total = parseInt($total.data('total'))
   order_discount = 0
 
@@ -20,6 +24,9 @@ Order.calculateTotal = () ->
     else
       order_discount = (total / 100 * main_discount)
       total = total - order_discount
+
+  $total_mobile.html(Math.round(total));
+  $per_portion_total.html(Math.round(total / recipes) + '<span>' + currency + '</span>');
 
   # ingredients
   $('.order-ing__lists .checkbox-button input[type="checkbox"]').each () ->
@@ -53,14 +60,13 @@ Order.calculateTotal = () ->
   if total < 0
     total = 0
 
-  if order_discount < 0 ||  isNaN(order_discount)
+  if order_discount < 0 || isNaN(order_discount)
     order_discount = 0
 
   total += '<span>' + currency + '</span>';
   order_discount += '<span>' + currency + '</span>';
 
   $total.html(total);
-  $total_mobile.html(total);
 
   $order_discount.html(order_discount);
 
@@ -80,6 +86,9 @@ Order.checkCoupon = (code) ->
           .data('additional_discount', response.additional_discount)
           .data('discount_type', response.discount_type)
       else
+        $('.order-create-form #order-create-coupon-id').val('').find('option:selected').removeAttr('selected')
+        $('.order-create-form #order-create-coupon-id [data-last]').attr('selected', 'selected')
+
         $('[name="coupon_code"]').val('')
           .data('main_discount', 0)
           .data('additional_discount', 0)
@@ -89,8 +98,7 @@ Order.checkCoupon = (code) ->
 
       Order.calculateTotal();
 
-Order.save = ($form) ->
-  $button = $(this)
+Order.save = ($button, $form) ->
   data = Form.getFormData($form)
 
   $.ajax
@@ -119,7 +127,7 @@ Order.save = ($form) ->
             $('#payment_form').find('form').submit()
           else
             setTimeout () ->
-              window.location.href = '/'
+                window.location.href = '/'
             , 1500
         else
           popUp(lang_error, response.message)
@@ -128,6 +136,17 @@ $(document).on "ready", () ->
   if $('.order-create-form').length
     Order.calculateTotal();
 
+  $('.order-main__count-item').on "click", (e) ->
+    e.stopPropagation()
+
+    price = $(this).find('[type="radio"]').data('price')
+    
+    $('#order_total_desktop').data('total', price)
+
+    $('#portions_count_result').text($(this).find('label').text())
+
+    Order.calculateTotal()
+
   $(document).on 'click', '[name="order-promocode__submit"]', (e) ->
     e.preventDefault()
 
@@ -135,9 +154,36 @@ $(document).on "ready", () ->
 
     return false
 
+  $('.order-create-form #order-create-coupon-id').on 'change', (e) ->
+    $option = $(this).find('option:selected');
+
+    $('.order-create-form [name="coupon_code"]')
+    .data('main_discount', $option.data('main_discount'))
+    .data('additional_discount', $option.data('additional_discount'))
+    .data('discount_type', $option.data('discount_type'))
+
+    $('.order-create-form [name="coupon_code"]').val($option.data('code')).trigger('change')
+
+  $('.order-create-form [name="coupon_code"]').on "change", () ->
+    code = $(this).val()
+
+    if code
+      Order.checkCoupon(code)
+    else
+      $(this)
+      .data('main_discount', 0)
+      .data('additional_discount', 0)
+      .data('discount_type', '')
+
+      $('.order-create-form #order-create-coupon-id option:selected').removeAttr('selected')
+      $('.order-create-form #order-create-coupon-id').val('')
+      $('.order-create-form #order-create-coupon-id [data-last]').attr('selected', 'selected')
+
+      Order.calculateTotal()
+
   $('.order-create-form').on 'click', '[name="order-submit"]', (e) ->
     e.preventDefault()
 
-    Order.save($(this).closest('form'));
+    Order.save($(this), $(this).closest('form'));
 
     return false

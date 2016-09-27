@@ -283,6 +283,9 @@ class OrderService
     public function prepareFrontInputData(Request $request, $user = null)
     {
         $data = [];
+    
+        $data['recipes'] = $request->get('recipes', []);
+        $data['recipes_count'] = $request->get('recipes_count', 0);
         
         $data['user_id'] = $user ? $user->id : null;
         $data['full_name'] = $request->get('full_name');
@@ -650,44 +653,55 @@ class OrderService
      */
     public function saveRecipes(Order $model, $basket_id, $recipes = [], $recipes_count = 0)
     {
-        $basket = WeeklyMenuBasket::with('recipes')->find($basket_id);
-        
-        $indexes = null;
-        if ($recipes_count > 0) {
-            $recipes_for_days = config('weekly_menu.recipes_for_days');
+        if (empty($recipes)) {
+            $basket = WeeklyMenuBasket::with('recipes')->find($basket_id);
             
-            $indexes = isset($recipes_for_days[$recipes_count]) ? $recipes_for_days[$recipes_count] : (int) $recipes_count;
-        }
+            $indexes = null;
+            if ($recipes_count > 0) {
+                $recipes_for_days = config('weekly_menu.recipes_for_days');
         
-        $basket->recipes->each(
-            function ($item, $index) use ($model, $recipes, $recipes_count, $indexes) {
-                $add = false;
-                
-                $index += 1;
-                
-                if (isset($recipes[$item->id])) {
-                    $add = true;
-                }
-                
-                if (is_array($indexes) && in_array($index, $indexes)) {
-                    $add = true;
-                }
-                
-                if (is_int($indexes) && ($index <= $indexes)) {
-                    $add = true;
-                }
-                
-                if ($add) {
-                    $input = [
-                        'basket_recipe_id' => $item->id,
-                        'name'             => $item->getRecipeName(),
-                    ];
-                    $recipe = new OrderRecipe($input);
-                    
-                    $model->recipes()->save($recipe);
-                }
+                $indexes = isset($recipes_for_days[$recipes_count]) ? $recipes_for_days[$recipes_count] : (int) $recipes_count;
             }
-        );
+    
+            $basket->recipes->each(
+                function ($item, $index) use ($model, $recipes, $recipes_count, $indexes) {
+                    $add = false;
+            
+                    $index += 1;
+            
+                    if (isset($recipes[$item->id])) {
+                        $add = true;
+                    }
+            
+                    if (is_array($indexes) && in_array($index, $indexes)) {
+                        $add = true;
+                    }
+            
+                    if (is_int($indexes) && ($index <= $indexes)) {
+                        $add = true;
+                    }
+            
+                    if ($add) {
+                        $input = [
+                            'basket_recipe_id' => $item->id,
+                            'name'             => $item->getRecipeName(),
+                        ];
+                        $recipe = new OrderRecipe($input);
+                
+                        $model->recipes()->save($recipe);
+                    }
+                }
+            );
+        } else {
+            foreach ($recipes as $recipe_id) {
+                $input = [
+                    'basket_recipe_id' => $recipe_id,
+                ];
+                $recipe = new OrderRecipe($input);
+    
+                $model->recipes()->save($recipe);
+            }
+        }
     }
     
     /**

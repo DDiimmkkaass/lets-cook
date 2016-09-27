@@ -111,10 +111,10 @@
 
                         <div class="subscribe-table__functional">
                             @if ($order->main_basket)
-                                <div data-href="{!! localize_route('order.edit', $order->id) !!}"
+                                <a href="{!! localize_route('order.edit', $order->id) !!}"
                                      class="subscribe-table__change h-margin-right-20">
                                     Изменить
-                                </div>
+                                </a>
                             @endif
 
                             <div title="Отменить заказ на эту неделю" class="subscribe-table__delete delete-tmpl-order"

@@ -1,6 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
+
     <main class="main profile-orders{!! isset($profile_css_class) ? ' '.$profile_css_class : '' !!}">
         <h1 class="profile-orders__title static-georgia-title">Личный кабинет</h1>
 

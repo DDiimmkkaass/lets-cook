@@ -1,41 +1,21 @@
 <section class="order__address-and-date order-addr-date">
-    <h2 class="order-addr-date__title">
-        <span class="georgia-title" data-device="mobile">Доставка</span>
-        <span class="georgia-title" data-device="desktop">адрес и время доставки</span>
-    </h2>
+    <div class="order-addr-date__header">
+        <h2 class="order-addr-date__title">
+            <span class="georgia-title" data-device="mobile">Доставка</span>
+            <span class="georgia-title" data-device="desktop">Детали доставки</span>
+        </h2>
 
-    <div class="order-addr-date__wrapper">
-        <div class="order-addr-date__inner" data-order="1">
-            <div class="order-addr-date__subTitle">Ваши данные</div>
+        @if (!$user)
+            <div class="order-addr-date__haveDone">Уже заказывали у нас?</div>
 
-            <div class="order-addr-date__date-select" data-select="personal">
-                <label for="f-select-address">Имя</label>
-                <input type="text" id="f-select-full-name" class="order-addr-date__input input-text-small"
-                       name="full_name" placeholder="Укажите имя"
-                       value="{!! empty($repeat_order) ? ($user ? $user->getFullName() : '') : $repeat_order->full_name !!}"
-                       required>
+            <div class="order-addr-date__signIn">
+                <a href="#">Авторизируйтесь</a>, и мы заполним детали доставки автоматически
             </div>
-
-            <div class="order-addr-date__date-select" data-select="personal">
-                <label for="f-select-address">E-mail</label>
-                <input type="text" id="f-select-email" class="order-addr-date__input input-text-small" name="email"
-                       placeholder="Укажите e-mail"
-                       value="{!! empty($repeat_order) ? ($user ? $user->email : '') : $repeat_order->email !!}"
-                       required>
-            </div>
-
-            <div class="order-addr-date__date-select" data-select="personal">
-                <label for="f-select-address">Телефон</label>
-                <input type="text" id="f-select-phone" class="order-addr-date__input input-text-small" name="phone"
-                       placeholder="Укажите телефон"
-                       value="{!! empty($repeat_order) ? ($user ? $user->phone : '') : $repeat_order->phone !!}"
-                       required>
-            </div>
-        </div>
+        @endif
     </div>
 
     <div class="order-addr-date__wrapper">
-        <div class="order-addr-date__inner" data-order="2">
+        <div class="order-addr-date__inner" data-order="1">
             <div class="order-addr-date__subTitle">Дата и время</div>
 
             <div class="order-addr-date__date-select main-select" data-select="date-time">
@@ -64,7 +44,7 @@
     </div>
 
     <div class="order-addr-date__wrapper">
-        <div class="order-addr-date__inner" data-order="3">
+        <div class="order-addr-date__inner" data-order="2">
             <div class="order-addr-date__subTitle">Адрес</div>
 
             <div class="order-addr-date__date-select main-select" data-select="city">
@@ -109,27 +89,18 @@
             <input type="text" class="order-addr-date__input input-text-small" name="comment"
                    placeholder="Комментарий" value="{!! empty($repeat_order) ? '' : $repeat_order->comment !!}">
 
-            <div class="order-addr-date__terms square-checkbox">
-                <div class="square-checkbox__wrapper">
-                    <input type="checkbox" name="verify_call" id="f-addr-date__call-me" value="1">
-                    <label for="f-addr-date__call-me"></label>
-                </div>
+        </div>
 
-                <label class="square-checkbox__text" for="f-addr-date__call-me">
-                    Перезвоните мне, чтобы уточнить некоторые детали
-                </label>
+        <div class="order-addr-date__terms square-checkbox">
+            <div class="square-checkbox__wrapper">
+                <input type="checkbox" name="terms" id="f-addr-date__terms" value="true">
+                <label for="f-addr-date__terms"></label>
             </div>
 
-            <div class="order-addr-date__terms square-checkbox">
-                <div class="square-checkbox__wrapper">
-                    <input type="checkbox" name="terms" id="f-addr-date__terms" value="1">
-                    <label for="f-addr-date__terms"></label>
-                </div>
-
-                <label class="square-checkbox__text" for="f-addr-date__terms">
-                    <a href="{!! localize_url('/pages/dostavka-i-oplata') !!}" target="_blank">Условия
-                        доставки</a> знаю и принимаю, гарантирую присутствие дома кого-либо для получения заказа</label>
-            </div>
+            <label class="square-checkbox__text" for="f-addr-date__terms">
+                <a href="{!! localize_url('/pages/dostavka-i-oplata') !!}" target="_blank">Условия доставки</a> знаю и
+                принимаю, гарантирую присутствие дома кого-либо для получения заказа
+            </label>
         </div>
     </div>
 </section>

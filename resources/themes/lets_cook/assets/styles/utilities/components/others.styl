@@ -3,6 +3,7 @@
 
 .georgia-title
   margin: 0
+  padding: 0 (20px * (310 / 720))
   font-family: $georgia
   fsh(50px * (310 / 720), 1)
   font-weight: 700
@@ -10,10 +11,15 @@
   text-transform: lowercase
 
   +bp('480')
+    padding: 0 (20px * (470 / 720))
     fs(50px * (470 / 720))
 
   +bp('768')
+    padding: 0 20px
     fs(50px)
+
+  +bp('1024')
+    padding: 0
 
 .ptsans-narrow-regular-tittle
   display: inline-block

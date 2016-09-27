@@ -13,10 +13,10 @@ use Illuminate\View\View;
 use Sentry;
 
 /**
- * Class OrderEditComposer
+ * Class UserCouponsComposer
  * @package App\Http\ViewComposers
  */
-class OrderEditComposer
+class UserCouponsComposer
 {
     /**
      * @var User
@@ -38,6 +38,12 @@ class OrderEditComposer
      */
     public function compose(View $view)
     {
-        $view->with('user_coupons', $this->user->coupons()->get());
+        if ($this->user) {
+            $user_coupons = $this->user->coupons()->get();
+        } else {
+            $user_coupons = [];
+        }
+        
+        $view->with('user_coupons', $user_coupons);
     }
 }

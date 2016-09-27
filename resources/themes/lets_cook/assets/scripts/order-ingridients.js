@@ -6,7 +6,19 @@ function orderIngredients() {
         $title = $orderIng.find('.order-ing__title'),
         $lists = $orderIng.find('.order-ing__list-wrapper'),
         $addList = $lists.eq(2),
-        $addListItems = $addList.find('.order-ing__list li .checkbox-button input[type="checkbox"]');
+        $addListItems = $addList.find('.order-ing__list li .checkbox-button input[type="checkbox"]'),
+        $showButton = $orderIng.find('.order-ing__show'),
+        $listMain = $orderIng.find('.order-ing__lists');
+
+    $showButton.on('click', function() {
+        if ($showButton.is('[data-active]')) {
+            $showButton.removeAttr('data-active');
+            $listMain.removeAttr('data-active');
+        } else {
+            $showButton.attr('data-active', '');
+            $listMain.attr('data-active', '');
+        }
+    });
 
     $title.on('click', function(e) {
         let orderHeight = parseInt($title.css('line-height'), 10),

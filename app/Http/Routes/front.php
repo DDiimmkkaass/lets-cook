@@ -140,20 +140,20 @@ $router->group(
         );
         
         $router->get(
-            'edit',
+            '/edit',
             ['as' => 'profiles.edit', 'uses' => 'Frontend\ProfileController@edit']
         );
         $router->post(
-            'update',
+            '/update',
             ['as' => 'profiles.update', 'uses' => 'Frontend\ProfileController@update']
         );
         
         $router->get(
-            'edit/password',
+            '/edit/password',
             ['as' => 'profiles.edit.password', 'uses' => 'Frontend\ProfileController@editPassword']
         );
         $router->post(
-            'update/password',
+            '/update/password',
             ['as' => 'profiles.update.password', 'uses' => 'Frontend\ProfileController@updatePassword']
         );
     }

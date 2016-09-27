@@ -68,6 +68,10 @@ $(function() {
         subscribeNews();
     }
 
+    if ($('main[class="main profile-main"]').length) {
+        profileOrders();
+    }
+
     if ($('main[class="main profile-orders"]').length) {
         profileOrders();
     }
@@ -117,6 +121,8 @@ $(window).load(function() {
 
     if ($('main[class="main order"]').length) {
         makeOrderDaysSize();
+
+        countList();
     }
 
     if ($('main[class="main baskets"]').length) {

@@ -11,7 +11,9 @@
             <ul class="order-ing__list">
                 @foreach($basket->recipes as $recipe)
                     @foreach($recipe->recipe->ingredients as $ingredient)
-                        <li>{!! $ingredient->ingredient->getTitle() !!}</li>
+                        <li class="recipe-{!! $recipe->id !!}-ingredient">
+                            {!! $ingredient->ingredient->getTitle() !!}
+                        </li>
                     @endforeach
                 @endforeach
             </ul>
@@ -22,7 +24,7 @@
 
             <ul class="order-ing__list">
                 @foreach($basket->recipes as $recipe)
-                    <li>{!! $recipe->recipe->home_equipment !!}</li>
+                    <li class="recipe-{!! $recipe->id !!}-ingredient">{!! $recipe->recipe->home_equipment !!}</li>
                 @endforeach
             </ul>
         </div>
@@ -35,7 +37,7 @@
                 @foreach($basket->recipes as $recipe)
                     @foreach($recipe->recipe->home_ingredients as $ingredient)
                         @if ($ingredient->ingredient->inSale())
-                            <li>
+                            <li class="recipe-{!! $recipe->id !!}-ingredient">
                                 <span>{!! $ingredient->ingredient->getTitle() !!}</span>
 
                                 <div class="checkbox-button">
@@ -59,5 +61,10 @@
                 @endforeach
             </ul>
         </div>
+    </div>
+
+    <div class="order-ing__show black-short-button">
+        <span>Развернуть</span>
+        <span>Свернуть</span>
     </div>
 </section>

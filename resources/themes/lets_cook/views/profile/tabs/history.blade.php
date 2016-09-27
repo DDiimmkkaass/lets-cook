@@ -17,7 +17,7 @@
 
                 <div class="subscribe-table__functional">
                     <div class="subscribe-table__change">
-                        <a href="{!! localize_route('order.repeat', $order->id) !!}">Повторить</a>
+                        <div data-href="{!! localize_route('order.repeat', $order->id) !!}">Повторить</div>
                     </div>
                 </div>
             </li>

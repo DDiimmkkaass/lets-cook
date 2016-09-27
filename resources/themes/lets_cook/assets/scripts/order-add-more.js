@@ -34,11 +34,17 @@ function orderAddMore() {
             $checkbox.removeAttr('name');
             $label.text($label.attr('data-add'));
             $that.removeAttr('data-active');
+            //remove
+            $('.additional-basket-item-' + $checkbox.data('id')).remove()
         } else {
             $checkbox.prop('checked', true);
             $checkbox.attr('name', $checkbox.data('name'));
             $label.text($label.attr('data-remove'));
             $that.attr('data-active', '');
+            //add
+            let html = '<li class="order-submit__item additional-basket-item-' + $checkbox.data('id') + '">' +
+                '<div class="order-submit__subTitle">' + $checkbox.data('basket_name') + '</div></li>';
+            $('.order-submit__list').append(html);
         }
 
         Order.calculateTotal();

@@ -108,13 +108,18 @@ class OrderController extends FrontendController
     {
         abort_if(!$this->weeklyMenuService->checkActiveWeeksBasket($basket_id), 404);
         
+        $trial = request('trial', false);
+        
         $basket = WeeklyMenuBasket::with(
             ['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients']
         )->joinWeeklyMenu()
             ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
             ->find($basket_id);
-        
+    
+        $this->data('trial', $trial);
         $this->data('basket', $basket);
+        $this->data('same_basket', $this->weeklyMenuService->getSameBasket($basket));
+        $this->data('recipes_count', $trial ? 1 : 5);
         $this->data('selected_baskets', collect());
         
         $this->_fillAdditionalTemplateData($basket->year, $basket->week);
@@ -131,6 +136,7 @@ class OrderController extends FrontendController
     {
         $repeat_order = Order::with(
             'main_basket',
+            'recipes',
             'additional_baskets',
             'main_basket.weekly_menu_basket.weekly_menu',
             'coupon'
@@ -150,8 +156,10 @@ class OrderController extends FrontendController
         }
         
         $this->data('basket', $basket);
+        $this->data('same_basket', null);
+        $this->data('recipes_count', $repeat_order->recipes->count());
         $this->data('repeat_order', $repeat_order);
-        $this->data('selected_baskets', $repeat_order->additional_baskets->pluck('basket_id'));
+        $this->data('selected_baskets', $repeat_order->additional_baskets);
         
         $this->_fillAdditionalTemplateData($basket->year, $basket->week);
         
@@ -371,7 +379,7 @@ class OrderController extends FrontendController
      */
     private function _saveRelationships(Order $model, Request $request)
     {
-        $this->orderService->saveRecipes($model, $request->get('basket_id'));
+        $this->orderService->saveRecipes($model, $request->get('basket_id'), $request->get('recipes'));
         
         $this->orderService->saveMainBasket($model, $request->get('basket_id'), $model->recipes->count());
         

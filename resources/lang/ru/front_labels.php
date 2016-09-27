@@ -20,6 +20,7 @@ return array(
   'login' => 'Войдите',
   'activate_profile_as_action' => 'Активировать профиль',
   'to' => 'до',
+  'code' => 'Код',
   'main_short' => 'Осн.',
   'additional_short' => 'Доп.',
   'registration_coupon' => 'Купон на скидку при регистрации',

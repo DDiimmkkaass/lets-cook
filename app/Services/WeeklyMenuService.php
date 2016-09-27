@@ -74,7 +74,7 @@ class WeeklyMenuService
             $weekly_menu_basket->prices = Basket::whereId($weekly_menu_basket->basket_id)
                 ->first()
                 ->getPrice($weekly_menu_basket->portions);
-    
+            
             $model->baskets()->save($weekly_menu_basket);
         }
         
@@ -146,6 +146,20 @@ class WeeklyMenuService
         $delivery_dates[] = clone ($dt->endOfWeek()->addDay()->startOfDay());
         
         return $delivery_dates;
+    }
+    
+    /**
+     * @param WeeklyMenuBasket $basket
+     *
+     * @return WeeklyMenuBasket|null
+     */
+    public function getSameBasket(WeeklyMenuBasket $basket)
+    {
+        return WeeklyMenuBasket::joinWeeklyMenu()
+            ->where('weekly_menus.year', $basket->year)
+            ->where('weekly_menus.week', $basket->week)
+            ->where('weekly_menu_baskets.portions', $basket->portions == 2 ? 4 : 2)
+            ->first(['weekly_menu_baskets.id', 'weekly_menu_baskets.portions']);
     }
     
     /**

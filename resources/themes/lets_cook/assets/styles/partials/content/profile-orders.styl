@@ -10,12 +10,15 @@
     +bp('1024')
       color: $font-white-1
 
+  &__user
+    background: url('../images/yellow-bg.png') top left repeat
+
+    +bp('1024')
+      background-image: url('../images/transparent-bg.png')
+
+
 
 .profile-orders-user
-  background: url('../images/yellow-bg.png') top left repeat
-
-  +bp('1024')
-    background-image: url('../images/transparent-bg.png')
 
   &__wrapper
     margin: 0 auto
@@ -939,6 +942,7 @@
     font-family: $ptsans-regular
     fsh(16px, 1.25)
     text-decoration: underline
+    color: $font-black-2
     cursor: pointer
 
     &:hover

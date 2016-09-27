@@ -1,34 +1,42 @@
 <section class="order__submit order-submit">
     <div class="order-submit__wrapper">
-        <div class="order-submit__left">
-            <div class="order-submit__promocode order-promocode">
-                <h3 class="order-promocode__title">
-                    <span data-device="mobile">Промокод</span>
-                    <span data-device="desktop">
-                        Промокод можно получить в купонных сервисах или следите за акция на нашем сайте.</span>
-                </h3>
+        <div class="order-submit__content">
+            <div class="order-submit__common">
+                <div class="order-submit__common-title georgia-title">У вас в заказе:</div>
 
-                <div class="order-promocode__inputs">
-                    <input type="text" class="input-text-large" name="coupon_code"
-                           placeholder="Промокод">
-                    <input type="button" name="order-promocode__submit" value="Пересчитать">
-                </div>
+                <ul class="order-submit__list">
+                    <li class="order-submit__item">
+                        <div class="order-submit__subTitle">{!! $basket->getName() !!}</div>
+
+                        <ul class="order-submit__subList">
+                            <li id="portions_count_result" class="order-submit__subItem">
+                                <span>{!! $recipes_count !!}</span>
+                                @choice('front_labels.count_of_dinners', $recipes_count)
+                            </li>
+                            <li class="order-submit__subItem">
+                                <span>{!! $basket->portions !!}</span
+                                >@choice('front_labels.count_of_portions', $basket->portions)
+                            </li>
+                        </ul>
+                    </li>
+
+                    @if ($selected_baskets->count())
+                        @foreach($selected_baskets as $_basket)
+                            <li class="order-submit__item">
+                                <div class="order-submit__subTitle">{!! $_basket->getName() !!}</div>
+                            </li>
+                        @endforeach
+                    @endif
+                </ul>
             </div>
 
-            <div id="order_total_mobile" class="order-submit__price georgia-title" data-device="mobile">
-                {!! $basket->getPriceInOrder() !!}<span>{!! $currency !!}</span>
+            <div data-total="{!! $basket->getPriceInOrder($recipes_count) !!}"
+                 id="order_total_desktop"
+                 class="order-submit__price">
+                {!! $basket->getPriceInOrder($recipes_count) !!}<span>{!! $currency !!}</span>
             </div>
         </div>
 
-        <div class="order-submit__right">
-            <div id="order_total_desktop" data-total="{!! $basket->getPriceInOrder() !!}" class="order-submit__price" data-device="desktop">
-                {!! $basket->getPriceInOrder() !!}<span>{!! $currency !!}</span>
-            </div>
-
-            <button type="submit" name="order-submit">
-                <span data-device="mobile">Заказать</span>
-                <span data-device="desktop">Оформить заказ</span>
-            </button>
-        </div>
+        <button class="order-submit__button" type="submit" name="order-submit">Заказать</button>
     </div>
 </section>

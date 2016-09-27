@@ -229,7 +229,7 @@
   &__text
     margin-left: 20px * (310 / 720)
     font-family: $ptsans-regular
-    fsh(27px * (310 / 720), 1.3)
+    fsh(27px * (310 / 720), 1.45)
     cursor: pointer
 
     +bp('480')
@@ -346,6 +346,44 @@
 
 
 
+.large-select
+  position: relative
+  width: 100%
+  margin-top: 10px
+  background: $base-bg-color url('../images/arrow-down.png') center right no-repeat
+  background-size: contain
+
+  &__wrapper
+    display: inline-block
+    position: relative
+    size: 100% (80px * (310 / 720))
+    padding: 0 10px
+    border: 1px solid $font-black-1
+    outline: none
+    text-align: center
+    background-color: transparent
+    color: $font-gray-1
+    font-family: $ptsans-caption-regular
+    fsh(25px * (310 / 720), 80px * (310 / 720))
+    appearance: none
+    cursor: pointer
+
+    +bp('480')
+      padding: 0 15px
+      height: 80px * (470 / 720)
+      fsh(25px * (470 / 720), 80px * (470 / 720))
+
+    +bp('768')
+      padding: 0 20px
+      height: 80px
+      fsh(25px, 80px)
+
+    +bp('1024')
+      padding: 0 35px 0 14px
+      text-align: left
+      height: 48px
+      fsh(14px, 48px)
+
 .order-select
   position: relative
   background: $base-bg-color
@@ -414,6 +452,52 @@
     &:hover
       text-decoration: none
 
+
+
+
+.order-count-radio
+  input[type='radio']
+    display: none
+
+    &:checked + label
+      background-color: $bg-red-3
+      color: $font-yellow-4
+      text-decoration: none
+      cursor: default
+
+  label
+    display: inline-block
+    size: 60px * (310 / 720)
+    border-radius: 50%
+    background-color: transparent
+    border: 2px solid $bg-red-1
+    text-align: center
+    color: $font-red-3
+    fsh(38px * (310 / 720), 24px)
+    font-family: $georgia
+    font-style: italic
+    font-weight: bold
+    cursor: pointer
+
+    &:hover
+      background-color: $bg-red-1
+      color: $font-yellow-2
+
+    +bp('480')
+      size: 60px * (470 / 720)
+      fsh(38px * (470 / 720), 34px)
+
+    +bp('768')
+      size: 60px
+      fsh(38px, 60px)
+
+    +bp('1024')
+      size: 50px
+      border-width: 3px
+      font-family: $ptsans-narrow-regular
+      font-style: normal
+      font-weight: normal
+      fsh(30px, 44px)
 
 
 // SUBSCRIBE FORM

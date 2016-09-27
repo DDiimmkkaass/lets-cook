@@ -1,6 +1,6 @@
 $(document).on 'ready', () ->
   $(document).on 'click', '.subscribe-table__change', () ->
-    window.location.href = $(this).data('href')
+    window.location.href = $(this).find('div').data('href')
 
   $(document).on 'click', '.basket-subscribes-form .delete-tmpl-order', () ->
     $.ajax
