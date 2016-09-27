@@ -24,4 +24,7 @@ return array(
   'main_short' => 'Осн.',
   'additional_short' => 'Доп.',
   'registration_coupon' => 'Купон на скидку при регистрации',
+  'profile_editing' => 'Редактирование профиля',
+  'gender_female' => 'Женский',
+  'gender_male' => 'Мужской',
 );

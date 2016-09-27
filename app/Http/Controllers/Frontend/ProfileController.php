@@ -13,6 +13,7 @@ use App\Events\Frontend\BasketSubscribeUpdated;
 use App\Http\Requests\Frontend\BasketSubscribe\BasketSubscribeUpdateRequest;
 use App\Http\Requests\Frontend\User\UserPasswordUpdateRequest;
 use App\Http\Requests\Frontend\User\UserUpdateRequest;
+use App\Models\City;
 use App\Models\UserCoupon;
 use App\Models\UserInfo;
 use App\Services\UserService;
@@ -77,6 +78,7 @@ class ProfileController extends FrontendController
         );
         
         $this->data('data_tab', 'my-orders');
+        $this->data('profile_css_class', 'profile-orders');
         
         return $this->render($this->module.'.orders_index');
     }
@@ -151,6 +153,9 @@ class ProfileController extends FrontendController
      */
     public function edit()
     {
+        $this->data('profile_css_class', 'profile-edit');
+        $this->data('page_title', trans('front_labels.profile_editing'));
+        
         $this->fillAdditionalTemplateData();
         
         return $this->render($this->module.'.edit');
@@ -168,16 +173,24 @@ class ProfileController extends FrontendController
         try {
             $input = $this->userService->prepareInput($request);
             
+            DB::beginTransaction();
+            
             $this->userService->update($model, $input);
             
-            FlashMessages::add('success', trans('messages.changes successfully saved'));
+            DB::commit();
             
-            return redirect()->route('profiles.index');
+            return [
+                'status'  => 'success',
+                'message' => trans('front_messages.changes successfully saved'),
+            ];
         } catch (Exception $e) {
-            FlashMessages::add('error', trans('messages.an error has occurred, try_later'));
+            DB::rollBack();
+    
+            return [
+                'status'  => 'error',
+                'message' => trans('front_messages.an error has occurred, please reload the page and try again'),
+            ];
         }
-        
-        return redirect()->route('profiles.edit');
     }
     
     /**
@@ -221,9 +234,11 @@ class ProfileController extends FrontendController
     {
         $genders = [];
         foreach (UserInfo::$genders as $gender) {
-            $genders[$gender] = trans('labels.'.$gender);
+            $genders[$gender] = trans('front_labels.gender_'.$gender);
         }
         $this->data('genders', $genders);
+    
+        $this->data('cities', City::positionSorted()->nameSorted()->get());
     }
     
     /**

@@ -70,14 +70,14 @@ class AuthService
     public function quickRegister($data)
     {
         $input = [
-            'email'     => $data['email'],
-            'phone'     => $data['phone'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
             'full_name' => $data['full_name'],
-            'password'  => str_random(config('auth.passwords.min_length')),
+            'password' => str_random(config('auth.passwords.min_length')),
         ];
         
         $user = $this->register($input);
-    
+        
         event(new UserQuickRegister($user, $input));
         
         $user->activated = true;
@@ -95,7 +95,9 @@ class AuthService
      */
     public function prepareRegisterInput(UserRegisterRequest $request)
     {
-        $input = $request->only(['full_name', 'email', 'phone', 'additional_phone', 'gender', 'birthday', 'password']);
+        $input = $request->only(
+            ['full_name', 'email', 'phone', 'additional_phone', 'gender', 'birthday', 'password', 'source']
+        );
         
         $input['activated'] = false;
         $input['ip_address'] = !empty($input['ip_address']) ? $input['ip_address'] : Request::getClientIp();

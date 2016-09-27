@@ -1,0 +1,58 @@
+
+/* ----- PROFILE EDIT ----- */
+
+.profile-edit-section
+  background-color: $bg-yellow-2
+  padding: 25px (20px * (310 / 720)) 70px
+
+  +bp('480')
+    padding: 25px (20px * (470 / 720)) 70px
+
+  +bp('768')
+    padding: 25px 20px 70px
+
+  +bp('1024')
+    padding: 25px 0 70px
+
+  &__title
+    @extend .georgia-title
+    background: url('../images/yellow-bg.png') left top repeat
+    text-transform: none
+    text-align: center
+    line-height: 1.5
+
+  &__main
+    padding: 28px 0
+
+  &__buttons
+    margin: 0 auto
+    max-width: 510px
+    fs(0px)
+    text-align: center
+
+    +bp('1024')
+      text-align: right
+
+  &__save
+    @extend .black-short-button
+    display: block
+    width: auto
+    padding: 0 40px
+
+    +bp('1024')
+      display: inline-block
+
+  &__cancel
+    @extend .black-short-button
+    display: block
+    width: auto
+    margin-top: 20px
+    padding: 0 40px
+
+    +bp('1024')
+      display: inline-block
+      margin: 0 0 0 25px
+
+
+
+/* ----- end PROFILE EDIT ----- */

@@ -41,12 +41,6 @@ class UserService
     {
         $input = $request->all();
         
-        $input['avatar'] = $request->file('avatar_new') ?
-            ImageUploader::upload($request->file('avatar_new'), 'user') :
-            $input['avatar_old'];
-        
-        $input['birthday'] = Carbon::now()->format('d-m-Y');
-        
         return $input;
     }
     

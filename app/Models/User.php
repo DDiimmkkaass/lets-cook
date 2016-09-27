@@ -231,6 +231,30 @@ class User extends SentryUser implements FrontLink
     }
     
     /**
+     * @return string
+     */
+    public function getCommentAttribute()
+    {
+        if (empty($this->info->comment)) {
+            return '';
+        }
+        
+        return $this->info->comment;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getSourceAttribute()
+    {
+        if (empty($this->info->source)) {
+            return '';
+        }
+        
+        return $this->info->source;
+    }
+    
+    /**
      * @return mixed
      */
     public function getFullName()

@@ -73,6 +73,10 @@ $(function() {
         profileOrders();
     }
 
+    if ($('main[class="main profile-edit"]').length) {
+        profileEdit();
+    }
+
     if ($('main[class="main profile-orders"]').length) {
         profileOrders();
     }

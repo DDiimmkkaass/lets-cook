@@ -2,8 +2,10 @@
 
 @section('content')
 
-    <main class="main profile-orders{!! isset($profile_css_class) ? ' '.$profile_css_class : '' !!}">
-        <h1 class="profile-orders__title static-georgia-title">Личный кабинет</h1>
+    <main class="main{!! isset($profile_css_class) ? ' '.$profile_css_class : '' !!}">
+        <h1 class="profile-orders__title static-georgia-title">
+            @if (isset($page_title)) {!! $page_title !!} @else Личный кабинет @endif
+        </h1>
 
         <section class="profile-orders__user profile-orders-user">
             <div class="profile-orders-user__wrapper">
@@ -19,6 +21,10 @@
                     <li class="profile-orders-user__item" data-item="name">
                         <a href="{!! localize_route('profiles.index') !!}"
                            class="profile-orders-user__link">{!! $user->getFullName() !!}</a>
+                    </li>
+
+                    <li class="profile-orders-user__item" data-item="my-orders">
+                        <a href="{!! localize_route('profiles.orders.index') !!}" class="profile-orders-user__link">Мои заказы</a>
                     </li>
 
                     <li class="profile-orders-user__item" data-item="orders">

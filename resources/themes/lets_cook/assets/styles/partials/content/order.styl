@@ -1614,6 +1614,20 @@
     &:not(:first-of-type)
       margin-top: 18px
 
+    &[data-row='another-city']
+      display: none
+
+      &[data-active]
+        display: block
+
+    &[data-row='comment']
+
+      textarea
+        text-align: left
+
+      label
+        vertical-align: top
+
   &__label
     display: block
     font-family: $ptsans-bold
@@ -1635,6 +1649,17 @@
       margin: 0
       vertical-align: middle
       width: (350 / 510) * 100%
+
+  &__radio-item
+    &:not(:first-of-type)
+      margin-left: 30px
+
+  &__select
+    margin: 0
+    background: $base-bg-color
+
+    +bp('1024')
+      background: #fff url(../images/arrow-down.png) center right no-repeat;
 
 // ORDER SUBSCRIBE
 .order-subscribe

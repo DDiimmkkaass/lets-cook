@@ -148,6 +148,8 @@
     text-transform: none
 
 
+
+// TEXTAREA
 .textarea-order-edit
   display: block
   size: 100% auto
@@ -178,6 +180,55 @@
 
   &::placeholder
     color: $font-gray-3
+
+
+.textarea-small
+  margin: 0 auto
+  size: auto
+  padding: 10px 15px
+  border: 1px solid $font-black-1
+  outline: none
+  text-align: center
+  color: $font-black-1
+  font-family: $ptsans-caption-regular
+  fsh(40px * (310 / 720), 1.4)
+  resize: none
+
+  &::-webkit-input-placeholder
+    color: $font-gray-1
+
+  &::-moz-placeholder
+    color: $font-gray-1
+
+  &:-ms-input-placeholder
+    color: $font-gray-1
+
+  &:-moz-placeholder
+    color: $font-gray-1
+
+  &::placeholder
+    color: $font-gray-1
+
+  +bp('480')
+    padding: 15px 15px
+    size: auto
+    fs(40px * (470 / 720))
+
+  +bp('768')
+    padding: 25px 20px
+    size: auto
+    fs(40px)
+
+  +bp('1024')
+    text-align: left
+    padding: 5px 20px
+    size: auto
+    fs(14px)
+
+  &[data-error]
+    border-color: $bg-red-2
+    box-shadow: 0px 0px 10px 0px $bg-red-2
+
 
 // CHECKBOX
 .square-checkbox
@@ -499,6 +550,39 @@
       font-weight: normal
       fsh(30px, 44px)
 
+
+
+.profile-radio
+  display: inline-block
+
+  input[type='radio']
+    display: none
+
+    &:checked + label::after
+      content: ''
+
+  label
+    position: relative
+    display: inline-block
+    vertical-align: middle
+    padding-left: 25px
+    cursor: pointer
+    font-family: $ptsans-regular
+    fsh(14px, 1.4)
+
+    &::before
+      absolute: top 0 left 0
+      content: ''
+      size: 17px
+      border: 2px solid #0a2229
+      border-radius: 50%
+      background-color: #fff
+
+    &::after
+      absolute: top 5px left 5px
+      size: 7px
+      background-color: $bg-green-1
+      border-radius: 50%
 
 // SUBSCRIBE FORM
 .subscribe-form

@@ -18,7 +18,7 @@ use Sentry;
  */
 class UserUpdateRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -27,12 +27,17 @@ class UserUpdateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'email'  => 'required|email|unique:users,email,' . Sentry::getUser()->getId() . ',id',
-            'phone'  => 'string|regex:/^\+[0-9]+$/|max:17|min:' . config('user.min_phone_length'),
-            'name'   => 'required',
-            'gender' => 'in:' . implode(',', UserInfo::$genders),
+            'email'            => 'required|email|unique:users,email,'.Sentry::getUser()->getId().',id',
+            'full_name'        => 'required',
+            'birthday'         => 'date_format:d-m-Y',
+            'phone'            => 'required|string|regex:/^\+[0-9]+$/|max:17|min:'.config('user.min_phone_length'),
+            'additional_phone' => 'string|regex:/^\+[0-9]+$/|max:17|min:'.config('user.min_phone_length'),
+            'gender'           => 'required|in:'.implode(',', UserInfo::$genders),
+            'city_id'          => 'required_without:city_name|exists:cities,id',
+            'city_name'        => 'required_without:city_id',
+            'address'          => 'required',
         ];
-
+        
         return $rules;
     }
 }

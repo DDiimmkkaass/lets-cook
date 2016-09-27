@@ -86,8 +86,9 @@
                 <span data-device="mobile">Комментарий:</span>
             </div>
 
+            @php($comment = empty($repeat_order) ? ($user ? $user->comment : '') : $repeat_order->comment)
             <input type="text" class="order-addr-date__input input-text-small" name="comment"
-                   placeholder="Комментарий" value="{!! empty($repeat_order) ? '' : $repeat_order->comment !!}">
+                   placeholder="Комментарий" value="{!! $comment !!}">
 
         </div>
 

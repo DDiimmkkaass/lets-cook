@@ -41,6 +41,8 @@ class UserInfo extends Eloquent
         'city_id',
         'city_name',
         'address',
+        'comment',
+        'source',
     ];
 
     /**
