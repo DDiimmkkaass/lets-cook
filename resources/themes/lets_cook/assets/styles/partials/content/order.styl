@@ -446,6 +446,285 @@
       align-self: flex-end
 
 
+
+// ORDER POP UP
+.order-pop-up
+  fixed: top 0 left 0
+  size: 100%
+  z-index: 9999
+  visibility: hidden; opacity: 0
+  will-change: visibility, opacity
+  transition: all 0.5s
+
+  &[data-active]
+    visibility: visible; opacity: 1
+
+  &__bg-layout
+    absolute: top 0 left 0
+    z-index: 1
+    size: 100%
+    background-color: rgba(0,0,0,0.8)
+
+  &__wrapper
+    absolute: top 50% left 50%
+    z-index: 2
+    transform: translate(-50%, -50%)
+    size: 90% auto
+    max-width: 1170px
+    max-height: 90%
+    padding: 35px 0 50px
+    background-color: $base-bg-color
+    overflow: auto
+
+  &__title
+    @extend .georgia-title
+    text-transform: none
+    text-align: center
+
+    +bp('1024')
+      padding: 0 25px
+      text-align: left
+      font-family: $ptsans-narrow-bold
+      font-style: normal
+      fs(48px)
+
+  &__list
+    margin: 50px 0 0; padding: 0 (25px * (310 / 720)); list-style-type: none
+    fs(0px)
+    js-display: flex; display: flex;
+    flex-direction: column
+    flex-wrap: wrap
+    align-items: center
+
+    +bp('480')
+      padding: 0 (25px * (470 / 720))
+
+    +bp('768')
+      padding: 0 25px
+      flex-direction: row
+      justify-content: flex-start
+
+  &__item
+    margin-bottom: 30px
+
+    &:not(:first-of-type)
+      margin-left: 6px
+
+.order-pop-up-bottom
+  js-display: flex; display: flex
+  flex-direction: column
+  background-color: $bg-black-1
+  padding: 9px (24px * (310 / 720))
+
+  +bp('480')
+    padding: 9px (24px * (470 / 720))
+
+  +bp('768')
+    padding: 9px 24px
+
+  +bp('1024')
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+
+  &__left
+    color: $font-white-1
+    fs(0px)
+    text-align: center
+
+    +bp('1024')
+      text-align: left
+
+  &__info
+    display: block
+    font-family: $ptsans-bold
+    fsh(16px, 1.4)
+
+    +bp('1024')
+      display: inline-block
+
+    &:not(:first-of-type)
+
+      +bp('1024')
+        margin-left: 30px
+
+    span
+      font-family: $ptsans-regular
+      margin-left: 7px
+      fs(14px)
+
+  &__right
+    margin-top: 10px
+    fs(0px)
+
+    +bp('1024')
+      margin-top: 0px
+      text-align: left
+
+  &__cancel
+    display: block
+    margin: 0 auto
+
+    +bp('1024')
+      display: inline-block
+
+  &__save
+    display: block
+    margin: 10px auto 0
+
+    +bp('1024')
+      display: inline-block
+      margin: 0 0 0 24px
+
+.order-day-item
+  color: $font-black-1
+  width: 270px
+  position: relative
+
+  &__img
+    size: 270px 180px
+    background: $bg-green-1 center center / cover no-repeat
+
+  &__content
+    padding: 10px 12px 20px
+    background-color: $bg-gray-7
+
+  &__change
+    absolute: top 0 left 0
+    size: 100%
+    visibility: hidden; opacity: 0
+    will-change: visibility, opacity
+    transition: all 0.3s
+
+    &[data-active]
+      visibility: visible; opacity: 1
+
+  &__title
+    font-family: $ptsans-bold
+    fsh(16px, 1.25)
+
+  &__desc
+    margin: 12px 0
+    font-family: $ptsans-regular
+    fsh(14px, 1.25)
+
+  &__basket
+    absolute: top 15px right 15px
+    size: 131px 37px
+    background-color: $bg-green-1
+    text-align: center
+    font-family: $ptsans-regular
+    text-transform: uppercase
+    color: $font-white-1
+    fsh(13px, 37px)
+    visibility: hidden; opacity: 0
+    will-change: visibility, opacity
+    transition: all 0.5s
+
+  &__buttons
+    js-display: flex; display: flex;
+    justify-content: space-between
+
+    &[data-active]
+
+      .order-day-item__add-remove
+        width: 48%
+
+      .order-day-item__edit
+        display: inline-block
+        width: 48%
+
+  &__add-remove
+    width: 100%
+
+    input[type='checkbox']
+      display: none
+
+      &:checked + label
+
+        &::before
+          content: none
+
+        span:nth-child(1)
+          display: none
+
+        span:nth-child(2)
+          display: inline
+
+        & + .order-day-item__basket
+          visibility: visible; opacity: 1
+
+    label
+      position: relative
+      width: 100%
+
+      &::before
+        content: '+'
+        absolute: top 50% left 15px
+        transform: translateY(-50%)
+        size: 26px
+        border: 1px solid $font-yellow-2
+        border-radius: 50%
+        text-align: center
+        fsh(19px, 24px)
+
+      span:nth-child(1)
+        display: inline
+
+      span:nth-child(2)
+        display: none
+
+
+  &__edit
+    display: none
+
+
+.order-day-change
+  padding: 34px
+  background-color: rgba(0,0,0,0.85)
+
+  &__title
+    font-family: $ptsans-bold
+    color: $font-white-1
+    text-transform: uppercase
+    fsh(14px, 1.15)
+
+  &__list
+    margin: 20px 0 0; padding: 0; list-style-type: none
+    fs(0px)
+
+  &__item
+    display: inline-block
+    margin-bottom: 35px
+    vertical-align: top
+
+    &:not(:nth-of-type(3n))
+      margin-right: 22px
+
+    input[type='radio']
+      display: none
+
+      &:checked + label
+        background-color: $bg-red-2
+        color: $font-white-1
+
+    label
+      display: inline-block
+      size: 51px
+      border: 3px solid $bg-red-2
+      border-radius: 50%
+      font-family: $ptsans-narrow-regular
+      fsh(30px, 45px)
+      text-align: center
+      color: $font-white-1
+      cursor: pointer
+
+
+
+
+
+
+
 // ORDER INGRIDIENTS
 .order-ing
   position: relative
@@ -971,8 +1250,8 @@
       &[data-order='2']
         padding: 15px 12px 15px
 
-    //&[data-order='3']
-    //  padding: 15px 12px 15px
+      //&[data-order='3']
+      //  padding: 15px 12px 15px
 
     +bp('768')
       &[data-order='1']
@@ -981,8 +1260,8 @@
       &[data-order='2']
         padding: 24px 20px 24px
 
-    //&[data-order='3']
-    //  padding: 24px 20px 24px
+      //&[data-order='3']
+      //  padding: 24px 20px 24px
 
     +bp('1024')
       flex-direction: row
@@ -996,8 +1275,8 @@
       &[data-order='2']
         padding: 14px 0
 
-  //&[data-order='3']
-  //  padding: 14px 0
+      //&[data-order='3']
+      //  padding: 14px 0
 
   &__subTitle
     display: none
@@ -1378,7 +1657,7 @@
     width: 50%
     padding: 75px 0 85px 40px
     background-color: transparent
-  //background: linear-gradient(to right, rgba(29,81,55,1) 0%, rgba(65,130,62,1) 100%);    color: $font-yellow-2
+    //background: linear-gradient(to right, rgba(29,81,55,1) 0%, rgba(65,130,62,1) 100%);    color: $font-yellow-2
 
   &__wrapper
 
@@ -1534,7 +1813,7 @@
     font-family: $ptsans-regular
     fsh(14px, 40px)
     color: $font-black-2
-
+    
     &:hover
       text-decoration: none
 

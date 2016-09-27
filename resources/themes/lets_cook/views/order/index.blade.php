@@ -3,6 +3,8 @@
 @section('content')
 
     <main class="main order">
+        @include('order.partials.popup')
+
         <form action="{!! localize_route('order.store') !!}" method="post" class="order-create-form">
             {!! csrf_field() !!}
 

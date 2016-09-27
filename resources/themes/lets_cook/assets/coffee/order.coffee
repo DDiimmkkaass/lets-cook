@@ -1,5 +1,78 @@
 Order = {};
 
+Order.generated_recipes = 100;
+
+Order.updateRecipes = () ->
+  $recipes = $('.order__pop-up .order-day-item__buttons[data-active]');
+
+  if $recipes.length
+    $order = $('.main.order')
+    $mainList = $order.find('.order-main__list')
+    $mainItems = $mainList.find('.order-main__item')
+    $mainItemsItems = $('.order-ing__list li')
+
+    $mainItems.removeAttr 'data-active'
+    $mainItems.find('[type="checkbox"]').prop 'checked', false
+    $mainItemsItems.addClass 'h-hidden'
+
+    $mainItemsItems.find('[type="checkbox"]').each ->
+      $(this).prop('checked', false).removeAttr 'name'
+
+    $mainItemsItems.find('label').each ->
+      $(this).text $(this).data('add')
+
+    $recipes.each () ->
+      _index = $(this).data('index')
+      _count = $(this).find('.order-day-item__edit').data('count')
+
+      $mainItems.each (index) ->
+        if index == _index
+          $(this).attr('data-active', '').find('[type="checkbox"]').prop 'checked', true
+
+          $('.recipe-' + $(this).find('[type=checkbox]').val() + '-ingredient').each ->
+            $(this).removeClass 'h-hidden'
+
+          if _count > 0
+            i = 1
+            while i < _count
+              Order.generated_recipes++
+
+              $recipe = $(this).clone()
+              $recipe.find('[type="checkbox"]').attr('name', 'recipes[' + Order.generated_recipes + ']')
+
+              $recipe.insertAfter($(this))
+
+              i++
+
+  price = parseInt($('#popup_total_price').text())
+
+  $('#order_total_desktop').data('total', price)
+
+  $('#portions_count_result').text(parseInt($('#total_dinners').text()))
+
+  Order.calculateTotal()
+
+Order.calculateDinners = () ->
+  $total_dinners = $('#total_dinners');
+  $total_price = $('#popup_total_price')
+
+  total_dinners = 0;
+  total_price = 0;
+
+  $('.order-day-item__buttons[data-active]').each () ->
+    total_dinners += $(this).find('.order-day-item__edit').data('count');
+
+  $total_dinners.text(total_dinners)
+
+  if total_dinners > 7
+    total_price = 0
+  else
+    $price = $('.basket-price-' + total_dinners);
+
+    total_price = $price.val()
+
+  $total_price.text(total_price)
+
 Order.calculateTotal = () ->
   $total = $('#order_total_desktop')
   $total_mobile = $('#order_total_mobile')

@@ -117,12 +117,9 @@ Order.addRecipe = (recipe_id) ->
       processError response, null
     success: (response) =>
       if response.status is 'success'
-        unless $('.order-recipes-table #recipe_' + recipe_id).length
-          $('.order-recipes-table').append response.html
+        $('.order-recipes-table').append response.html
 
-          fixCustomInputs($('.order-recipes-table tr:last-child'))
-        else
-          message.show lang_recipeAlreadyAddedToList, 'warning'
+        fixCustomInputs($('.order-recipes-table tr:last-child'))
       else
         message.show response.message, response.status
 

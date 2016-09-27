@@ -394,10 +394,8 @@ class OrderService
         $data = isset($input['new']) ? $input['new'] : [];
         foreach ($data as $recipe) {
             try {
-                if (!$model->recipes()->where('basket_recipe_id', $recipe['basket_recipe_id'])->first()) {
-                    $recipe = new OrderRecipe($recipe);
-                    $model->recipes()->save($recipe);
-                }
+                $recipe = new OrderRecipe($recipe);
+                $model->recipes()->save($recipe);
             } catch (Exception $e) {
                 FlashMessages::add(
                     "error",
