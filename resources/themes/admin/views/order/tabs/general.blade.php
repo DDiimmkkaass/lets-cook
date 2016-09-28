@@ -16,6 +16,7 @@
                 </option>
             @endforeach
         </select>
+        <input type="hidden" id="old_user" value="{!! $model->user_id !!}">
 
         {!! $errors->first('user_id', '<p class="help-block error">:message</p>') !!}
     </div>

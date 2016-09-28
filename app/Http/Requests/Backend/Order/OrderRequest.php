@@ -46,17 +46,17 @@ class OrderRequest extends FormRequest
         $weekly_menu = $this->weeklyMenuService->getWeeklyMenuByBasketId($this->request->get('basket_id', 0));
         
         $rules = [
-            'parent_id'        => 'exists:orders,id',
-            'user_id'          => 'required|exists:users,id',
-            'status'           => 'required|in:'.implode(',', array_keys(Order::getStatuses())),
-            'status_comment'   => ($this->request->get('status') != $this->request->get('old_status') && $order) ?
+            'parent_id'      => 'exists:orders,id',
+            'user_id'        => 'required|exists:users,id',
+            'status'         => 'required|in:'.implode(',', array_keys(Order::getStatuses())),
+            'status_comment' => ($this->request->get('status') != $this->request->get('old_status') && $order) ?
                 'required' :
                 '',
-            'payment_method'   => 'required|in:'.implode(',', array_keys(Order::getPaymentMethods())),
-            'full_name'        => 'required',
-            'email'            => 'required|email',
-            'phone'            => 'required',
-            'verify_call'      => 'boolean',
+            'payment_method' => 'required|in:'.implode(',', array_keys(Order::getPaymentMethods())),
+            'full_name'      => 'required',
+            'email'          => 'required|email',
+            'phone'          => 'required',
+            'verify_call'    => 'boolean',
             
             'delivery_date' => ['required', 'date_format:"d-m-Y"'],
             'delivery_time' => 'required',
@@ -84,6 +84,9 @@ class OrderRequest extends FormRequest
             'ingredients.old.*.count'         => 'required|numeric|min:1',
             'ingredients.new.*.ingredient_id' => 'required|exists:ingredients,id',
             'ingredients.new.*.count'         => 'required|numeric|min:1',
+            
+            'coupon_id'   => 'exists:coupons,id',
+            'coupon_code' => 'exists:coupons,code',
         ];
         
         if ($this->request->get('delivery_date') != $this->request->get('old_delivery_date')) {

@@ -13,15 +13,16 @@ use App\Http\Requests\Backend\Order\OrderRequest;
 use App\Http\Requests\Backend\Order\OrderStatusChangeRequest;
 use App\Models\Basket;
 use App\Models\BasketRecipe;
-use App\Models\BasketSubscribe;
 use App\Models\City;
 use App\Models\Group;
 use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\OrderComment;
 use App\Models\RecipeIngredient;
+use App\Models\User;
 use App\Models\WeeklyMenu;
 use App\Models\WeeklyMenuBasket;
+use App\Services\CouponService;
 use App\Services\OrderService;
 use DB;
 use Exception;
@@ -68,17 +69,24 @@ class OrderController extends BackendController
     private $orderService;
     
     /**
+     * @var \App\Services\CouponService
+     */
+    private $couponService;
+    
+    /**
      * @param \Illuminate\Contracts\Routing\ResponseFactory $response
      * @param \App\Services\OrderService                    $orderService
+     * @param \App\Services\CouponService                   $couponService
      */
-    public function __construct(ResponseFactory $response, OrderService $orderService)
+    public function __construct(ResponseFactory $response, OrderService $orderService, CouponService $couponService)
     {
         parent::__construct($response);
         
         $this->orderService = $orderService;
-        
+        $this->couponService = $couponService;
+    
         Meta::title(trans('labels.orders'));
-        
+    
         $this->breadcrumbs(trans('labels.orders'), route('admin.'.$this->module.'.index'));
     }
     
@@ -135,18 +143,26 @@ class OrderController extends BackendController
      */
     public function store(OrderRequest $request)
     {
-        DB::beginTransaction();
-        
         try {
+            $user = User::find($request->get('user_id'));
+            
+            DB::beginTransaction();
+            
+            if (!$this->_validCoupon($request, $user, null)) {
+                FlashMessages::add('error', trans('front_messages.coupon not available'));
+        
+                return redirect()->back();
+            }
+            
             $input = $this->orderService->prepareInputData($request);
             
             $model = new Order($input);
             $model->save();
             
             $this->orderService->saveRelationships($model, $input);
-    
+            
             list($subtotal, $total) = $this->orderService->getTotals($model);
-    
+            
             $model->subtotal = $subtotal;
             $model->total = $total;
             
@@ -201,7 +217,9 @@ class OrderController extends BackendController
                 'ingredients.recipe',
                 'main_basket',
                 'additional_baskets',
-                'comments'
+                'comments',
+                'user',
+                'user.coupons'
             )->findOrFail($id);
             
             $this->data('page_title', trans('labels.order').': #'.$model->id);
@@ -229,19 +247,25 @@ class OrderController extends BackendController
      */
     public function update($id, OrderRequest $request)
     {
-        DB::beginTransaction();
-        
         try {
-            $model = Order::findOrFail($id);
+            $model = Order::with('user')->findOrFail($id);
+    
+            DB::beginTransaction();
+            
+            if (!$this->_validCoupon($request, $model->user, $model)) {
+                FlashMessages::add('error', trans('front_messages.coupon not available'));
+    
+                return redirect()->back();
+            }
             
             $input = $this->orderService->prepareInputData($request);
             
             $model->fill($input);
             
             $this->orderService->saveRelationships($model, $input);
-    
+            
             list($subtotal, $total) = $this->orderService->getTotals($model);
-    
+            
             $model->subtotal = $subtotal;
             $model->total = $total;
             
@@ -338,7 +362,7 @@ class OrderController extends BackendController
     {
         try {
             $html = '';
-    
+            
             $baskets = WeeklyMenuBasket::where('weekly_menu_id', $weekly_menu_id)->get();
             
             $baskets->sortBy(
@@ -562,7 +586,7 @@ class OrderController extends BackendController
             $cities[$city->id] = $city->name;
         }
         $this->data('cities', $cities);
-    
+        
         $recipes = $model->recipes()->joinBasketRecipe()->joinRecipe()
             ->get(
                 [
@@ -581,12 +605,12 @@ class OrderController extends BackendController
             $weekly_menus[$weekly_menu->id] = $weekly_menu->getName();
         }
         $this->data('weekly_menus', $weekly_menus);
-    
+        
         if ($model->main_basket) {
             $basket_id = $model->main_basket->weekly_menu_basket->id;
             $weekly_menu_id = $model->main_basket->weekly_menu_basket->weekly_menu_id;
             $recipes_count = count($recipes);
-    
+            
             $baskets = [
                 $basket_id => $model->main_basket->weekly_menu_basket->getName().' ('.
                     trans('labels.portions_lowercase').' '.$model->main_basket->weekly_menu_basket->portions.')',
@@ -595,22 +619,60 @@ class OrderController extends BackendController
             $basket_id = null;
             $weekly_menu_id = null;
             $recipes_count = 0;
-    
+            
             $baskets = [];
         }
         $this->data('basket_id', $basket_id);
         $this->data('weekly_menu_id', $weekly_menu_id);
         $this->data('recipes_count', $recipes_count);
         $this->data('baskets', $baskets);
-    
+        
         $this->data('additional_baskets', Basket::additional()->positionSorted()->get());
         
         $this->data('selected_baskets', $model->additional_baskets->keyBy('basket_id')->toArray());
         
+        $user_coupons = ['' => trans('labels.not_set')];
+        if ($model->exists) {
+            foreach ($model->user->coupons as $coupon) {
+                if ($coupon->available() || $coupon->coupon_id == $model->coupon_id) {
+                    $user_coupons[$coupon->coupon_id] = $coupon->getName();
+                }
+            }
+        }
+        $this->data('user_coupons', $user_coupons);
+        
         JavaScript::put(
             [
-                'recipes_for_days'  => config('weekly_menu.recipes_for_days'),
+                'recipes_for_days' => config('weekly_menu.recipes_for_days'),
             ]
         );
+    }
+    
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\User         $user
+     * @param \App\Models\Order|null   $order
+     *
+     * @return bool
+     */
+    private function _validCoupon(Request $request, User $user, $order)
+    {
+        if ($request->get('coupon_code')) {
+            if (!$this->couponService->available($request->get('coupon_code'), $user)) {
+                return false;
+            }
+            
+            $this->couponService->saveUserCoupon($user, $request->get('coupon_code'));
+        } else {
+            $coupon_id = $request->get('coupon_id');
+            
+            if ($coupon_id && (!$order || $coupon_id != $order->coupon_id)) {
+                if (!$this->couponService->availableById($coupon_id, $user)) {
+                    return false;
+                }
+            }
+        }
+        
+        return true;
     }
 }

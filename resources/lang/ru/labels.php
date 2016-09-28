@@ -648,4 +648,6 @@ return array (
   'unit_short' => 'ЕД.',
   'recipes_count' => 'Количество рецептов',
   'source' => 'Источник',
+  'tab_discount_coupons' => 'Скидочные купоны',
+  'coupon_code' => 'Код',
 );

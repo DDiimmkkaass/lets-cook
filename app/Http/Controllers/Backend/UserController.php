@@ -14,6 +14,7 @@ use App\Http\Requests\Backend\User\UserUpdateRequest;
 use App\Models\City;
 use App\Models\Field;
 use App\Models\User;
+use App\Models\UserCoupon;
 use App\Models\UserInfo;
 use App\Traits\Controllers\AjaxFieldsChangerTrait;
 use App\Traits\Controllers\ProcessFieldsTrait;
@@ -444,6 +445,40 @@ class UserController extends BackendController
         print json_encode($arr);
 
         exit;
+    }
+    
+    /**
+     * @param int $user_id
+     *
+     * @return array
+     */
+    public function coupons($user_id)
+    {
+        try {
+            $coupons = UserCoupon::whereUserId($user_id)->get();
+    
+            $html = view('partials.selects.option', ['item' => ['id' => '', 'name' => trans('labels.please_select')]])
+                ->render();
+    
+            $coupons->each(
+                function ($item, $index) use (&$html) {
+                    return $html .= view(
+                        'partials.selects.option',
+                        ['item' => ['id' => $item->coupon_id, 'name' => $item->getName()], 'selected' => $item->default]
+                    )->render();
+                }
+            );
+        
+            return [
+                'status'  => 'success',
+                'html' => $html,
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
     }
 
     /**

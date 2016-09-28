@@ -357,7 +357,7 @@ class CouponService
     {
         $coupon = $this->getCoupon($coupon);
         
-        if (!UserCoupon::whereCouponId($coupon->id)->count()) {
+        if (!UserCoupon::whereUserId($user->id)->whereCouponId($coupon->id)->count()) {
             UserCoupon::create(
                 [
                     'user_id'   => $user->id,

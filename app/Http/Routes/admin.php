@@ -10,6 +10,14 @@ $router->group(
                 $router->any('/home', 'Backend\BackendController@getIndex');
                 
                 // users
+                $router->get(
+                    'user/{id}/coupons',
+                    [
+                        'middleware' => ['ajax'],
+                        'as'         => 'admin.user.coupons',
+                        'uses'       => 'Backend\UserController@coupons',
+                    ]
+                );
                 $router->post(
                     'user/{id}/ajax_field',
                     [

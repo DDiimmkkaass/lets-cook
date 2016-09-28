@@ -270,6 +270,9 @@ class OrderService
         $data = $request->all();
         
         $data['city_id'] = empty($data['city']) ? $data['city_id'] : null;
+        $data['coupon_id'] = $request->get('coupon_code') ?
+            Coupon::whereCode($request->get('coupon_code'))->first()->id :
+            (int) $request->get('coupon_id');
         
         return $data;
     }

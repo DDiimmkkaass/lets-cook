@@ -5,9 +5,12 @@
                     {!! $attribute !!}="{!! $value !!}"
                 @endforeach
             @endif
-    >
+        @if (!empty($selected)) selected @endif>
         {!! $item['name'] !!}
     </option>
 @else
-    <option value="{!! $item->id !!}">{!! $item->name !!}</option>
+    <option value="{!! $item->id !!}"
+            @if (!empty($selected)) selected @endif>
+        {!! $item->name !!}
+    </option>
 @endif

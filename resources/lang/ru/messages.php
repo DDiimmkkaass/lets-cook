@@ -154,4 +154,5 @@ return array (
   'this action is not allowed any more' => 'Это действие недоступно',
   'changed from orders list' => 'Изменен менеджером из списка заказов',
   'unsupported payment provider: :provider' => 'Неподдерживаемый провайдер оплаты :provider',
+  'coupon not available' => 'Этот купон не действителен или не можете быть применен к этому пользователю',
 );

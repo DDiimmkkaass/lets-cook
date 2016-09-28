@@ -170,6 +170,30 @@ Order.checkBasketChange = () ->
     $('.basket-' + old_basket_id + '-ingredient').each () ->
       Order.deleteIngredient($(this).find('.destroy'))
 
+Order.getUserCoupons = (user_id) ->
+  $coupon_select = $('.coupon-select')
+
+  if user_id
+    $.ajax
+      url: '/admin/user/' + user_id + '/coupons'
+      type: 'GET'
+      dataType: 'json'
+      error: (response) =>
+        processError response, null
+      success: (response) =>
+        if response.status is 'success'
+          $coupon_select.html response.html
+        else
+          message.show response.message, response.status
+  else
+    $('.coupon-select').find('option').each (index, item) ->
+      if index > 0
+        $(this).remove()
+
+  setTimeout () ->
+      fixCustomInputs($coupon_select.closest('.tab-pane'))
+    , 1000
+
 $(document).on "ready", () ->
   $('.orders-table').on 'click', '.change-status', (e) ->
     e.preventDefault()
@@ -207,7 +231,9 @@ $(document).on "ready", () ->
 
   #user select
   $('#user_id').on "select2:select", () ->
-    if $(this).val()
+    user_id = $(this).val()
+
+    if user_id
       $option = $(this).find('option:selected')
 
       $('#full_name').val $option.data('full_name')
@@ -221,6 +247,8 @@ $(document).on "ready", () ->
       $('#phone').val ''
 
       $('#order_user_link').attr 'href', '#'
+
+    Order.getUserCoupons(user_id)
 
   #subscribe period
   Order.processSubscribePeriod()
@@ -236,6 +264,10 @@ $(document).on "ready", () ->
 
   #comments
   Order.processStatus()
+
+  #user coupons
+  if $('#old_user').val() != $('#user_id').val()
+    Order.getUserCoupons($('#user_id').val())
 
   $('.order-status-select').on "change", () ->
     Order.processStatus()

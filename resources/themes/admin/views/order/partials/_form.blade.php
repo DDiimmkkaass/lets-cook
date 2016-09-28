@@ -24,6 +24,10 @@
                 <li>
                     <a aria-expanded="false" href="#ingredients" data-toggle="tab">@lang('labels.tab_ingredients')</a>
                 </li>
+
+                <li>
+                    <a aria-expanded="false" href="#coupons" data-toggle="tab">@lang('labels.tab_discount_coupons')</a>
+                </li>
             </ul>
 
             <div class="tab-content">
@@ -45,6 +49,10 @@
 
                 <div class="tab-pane" id="ingredients">
                     @include('order.tabs.ingredients')
+                </div>
+
+                <div class="tab-pane" id="coupons">
+                    @include('order.tabs.coupons')
                 </div>
             </div>
         </div>

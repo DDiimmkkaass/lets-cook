@@ -169,6 +169,7 @@ return array (
     'users_count' => 'количество пользователей',
     'code' => 'код',
     'coupon_code' => 'купон',
+    'coupon_id' => 'купон',
     'coupon' => 'купон',
     'codes' => 'коды',
     'create_count' => 'количество',
