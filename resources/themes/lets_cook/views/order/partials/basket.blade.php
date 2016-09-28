@@ -34,7 +34,7 @@
                                                    @if (
                                                     ($_recipes_count >= 7 && $i == $recipes_count)
                                                     ||
-                                                    ($_recipes_count < $recipes_count && $i == $_recipes_count)
+                                                    ($_recipes_count <= $recipes_count && $i == $_recipes_count)
                                                     )
                                                    checked
                                                @endif
