@@ -112,7 +112,7 @@
                         <div class="subscribe-table__functional">
                             @if ($order->main_basket)
                                 <a href="{!! localize_route('order.edit', $order->id) !!}"
-                                     class="subscribe-table__change h-margin-right-20">
+                                   class="subscribe-table__change h-margin-right-20">
                                     Изменить
                                 </a>
                             @endif
@@ -125,6 +125,14 @@
                     </li>
                 @endforeach
             </ul>
+
+            <div class="profile-subscribe__submit">
+                <div data-show="Показать все"
+                     data-hide="Скрыть"
+                     class="profile-subscribe__submit-wrapper h-subscribes-form-show-all">
+                    Показать все
+                </div>
+            </div>
         @endif
 
         <div class="profile-subscribe__submit">

@@ -32,6 +32,9 @@ function profileTabs() {
             $prevOrders.attr('data-active', 'false');
 
         } else {
+            if ($(this).is('[data-tab="subscribe"]')) {
+                BasketSubscribe.initPage();
+            }
 
             $parent.outerHeight($that.outerHeight() + $main.outerHeight());
 

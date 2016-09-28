@@ -1,4 +1,40 @@
+BasketSubscribe = {}
+
+BasketSubscribe.tableHeight = 0
+
+BasketSubscribe.initPage = () ->
+  $table = $('.subscribe-table')
+  $rows = $table.find('.subscribe-table__row')
+
+  height = 0
+
+  $rows.each (index, item) ->
+    if index <= 1
+      height += parseInt($(this).outerHeight())
+
+  BasketSubscribe.tableHeight = height
+
+  $table.css('height', height + 'px').removeClass('full')
+  $('.h-subscribes-form-show-all').text($('.h-subscribes-form-show-all').data('show'))
+
 $(document).on 'ready', () ->
+  $(document).on 'click', '.h-subscribes-form-show-all', () ->
+    $table = $('.subscribe-table')
+
+    if $table.hasClass('full')
+      $table.css('height', BasketSubscribe.tableHeight + 'px').removeClass('full')
+      $(this).text($(this).data('show'))
+    else
+      $table.css('height', 'auto').addClass('full')
+      $(this).text($(this).data('hide'))
+
+    $('.profile-orders-content__tabs-item').css('height', 'auto');
+    $parent = $table.closest('.profile-orders-content__tabs-item')
+    $tab = $parent.find('.profile-orders-content__tabs-title')
+    $main = $parent.find('.profile-orders-content__main')
+
+    $parent.outerHeight($tab.outerHeight() + $main.outerHeight())
+
   $(document).on 'click', '.subscribe-table__change', () ->
     window.location.href = $(this).find('div').data('href')
 
