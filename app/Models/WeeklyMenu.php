@@ -60,12 +60,12 @@ class WeeklyMenu extends Model
      */
     public function getDeliveryDates()
     {
-        $dt = Carbon::create($this->year, 1, 1, 0)->addWeek($this->week);
+        $dt = Carbon::create($this->year, 1, 1, 0)->addWeek($this->week)->startOfWeek();
         
-        $dates = [
-            clone $dt->endOfWeek(),
-            $dt->addDay(),
-        ];
+        $dates = array_reverse([
+            clone $dt,
+            $dt->subDay(),
+        ]);
         
         foreach ($dates as $key => $date) {
             $dates[$key] = $date->format('d').' '.get_localized_date($date->format('Y-m-d'), 'Y-m-d', false, '', '%f');
