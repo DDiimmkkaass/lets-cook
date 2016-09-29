@@ -351,10 +351,12 @@ class PackagingService
             ->get();
         
         foreach ($_recipes as $recipe) {
-            $name = $recipe->recipe->getName();
-            
-            $recipes[$recipe->recipe_id] = $recipe->toArray();
-            $recipes[$recipe->recipe_id]['name'] = $name;
+            if (!empty($recipe->recipe)) {
+                $name = $recipe->recipe->getName();
+    
+                $recipes[$recipe->recipe_id] = $recipe->toArray();
+                $recipes[$recipe->recipe_id]['name'] = $name;
+            }
         }
         
         unset($_recipes);
