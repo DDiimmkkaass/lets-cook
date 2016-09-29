@@ -114,6 +114,12 @@ class PackagingService
             
             unset($recipes[$key]);
         }
+    
+        foreach ($baskets as $key => $basket) {
+            $recipes = collect($basket['recipes'])->sortBy('position');
+
+            $baskets[$key]['recipes'] = $recipes;
+        }
         
         return $baskets;
     }
