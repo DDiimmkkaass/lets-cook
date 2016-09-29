@@ -287,7 +287,7 @@ class PackagingService
         $data = $this->usersForWeek($year, $week);
         
         return Excel::create(
-            $this->_getFileName($year, $week, 'packaging_recipes'),
+            $this->_getFileName($year, $week, 'packaging_users'),
             function ($excel) use ($data, $year, $week) {
                 $excel->sheet(
                     trans('labels.users'),
