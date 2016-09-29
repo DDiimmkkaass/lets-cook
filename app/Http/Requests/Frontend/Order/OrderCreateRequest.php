@@ -5,7 +5,6 @@ namespace App\Http\Requests\Frontend\Order;
 use App\Http\Requests\FormRequest;
 use App\Models\Order;
 use App\Services\WeeklyMenuService;
-use Sentry;
 
 /**
  * Class OrderCreateRequest
@@ -46,6 +45,10 @@ class OrderCreateRequest extends FormRequest
             
             'coupon_code' => 'exists:coupons,code',
             
+            'full_name' => 'required',
+            'email'     => 'required|email',
+            'phone'     => 'required',
+            
             'delivery_date' => [
                 'required',
                 'date_format:"d-m-Y"',
@@ -72,12 +75,6 @@ class OrderCreateRequest extends FormRequest
             
             'terms' => 'accepted',
         ];
-        
-        if (!Sentry::check()) {
-            $rules['full_name'] = 'required';
-            $rules['email'] = 'required|email';
-            $rules['phone'] = 'required';
-        }
         
         return $rules;
     }
