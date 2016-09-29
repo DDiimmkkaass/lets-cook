@@ -84,9 +84,9 @@ class OrderController extends BackendController
         
         $this->orderService = $orderService;
         $this->couponService = $couponService;
-    
+        
         Meta::title(trans('labels.orders'));
-    
+        
         $this->breadcrumbs(trans('labels.orders'), route('admin.'.$this->module.'.index'));
     }
     
@@ -150,7 +150,7 @@ class OrderController extends BackendController
             
             if (!$this->_validCoupon($request, $user, null)) {
                 FlashMessages::add('error', trans('front_messages.coupon not available'));
-        
+                
                 return redirect()->back();
             }
             
@@ -249,12 +249,12 @@ class OrderController extends BackendController
     {
         try {
             $model = Order::with('user')->findOrFail($id);
-    
+            
             DB::beginTransaction();
             
             if (!$this->_validCoupon($request, $model->user, $model)) {
                 FlashMessages::add('error', trans('front_messages.coupon not available'));
-    
+                
                 return redirect()->back();
             }
             
@@ -587,7 +587,7 @@ class OrderController extends BackendController
         }
         $this->data('cities', $cities);
         
-        $recipes = $model->recipes()->joinBasketRecipe()->joinRecipe()
+        $recipes = $model->recipes()->with('recipe', 'recipe.recipe', 'recipe.weekly_menu_basket')->joinBasketRecipe()->joinRecipe()
             ->get(
                 [
                     'order_recipes.id',
@@ -598,6 +598,11 @@ class OrderController extends BackendController
                     'recipes.portions',
                 ]
             );
+        $recipes = $recipes->sortBy(
+            function ($item) {
+                return $item->recipe->getName();
+            }
+        );
         $this->data('recipes', $recipes);
         
         $weekly_menus = ['' => trans('labels.please_select')];
