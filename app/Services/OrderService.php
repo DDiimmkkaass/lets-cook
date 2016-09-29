@@ -285,17 +285,17 @@ class OrderService
      *
      * @return array
      */
-    public function prepareFrontInputData(Request $request, $user = null)
+    public function prepareFrontInputData(Request $request, User $user)
     {
         $data = [];
     
         $data['recipes'] = $request->get('recipes', []);
         $data['recipes_count'] = $request->get('recipes_count', 0);
         
-        $data['user_id'] = $user ? $user->id : null;
-        $data['full_name'] = $request->get('full_name');
-        $data['email'] = $request->get('email');
-        $data['phone'] = $request->get('phone');
+        $data['user_id'] = $user->id;
+        $data['full_name'] = $user->getFullName();
+        $data['email'] = $user->email;
+        $data['phone'] = $user->phone;
         
         $data['basket_id'] = $request->get('basket_id');
         
