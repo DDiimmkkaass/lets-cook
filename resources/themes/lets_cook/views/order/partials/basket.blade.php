@@ -50,7 +50,7 @@
 
                         <div class="order-main__count">
                             <div class="order-main__count-title">Порций</div>
-                            <ul class="order-main__count-list">
+                            <ul class="order-main__count-list order-portions-count">
                                 @if ($basket->portions == 2)
                                     <li class="order-main__count-item" data-active>
                                         <a href="{!! $basket->getUrl() !!}">2</a>

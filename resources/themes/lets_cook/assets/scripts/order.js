@@ -112,6 +112,8 @@ function countList() {
         }
 
         makeOrderDaysSize();
+
+        Order.calculateTotal();
     }
 
     (function init() {

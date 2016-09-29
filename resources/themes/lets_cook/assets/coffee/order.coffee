@@ -48,7 +48,11 @@ Order.updateRecipes = () ->
 
   $('#order_total_desktop').data('total', price)
 
-  $('#portions_count_result').text(parseInt($('#total_dinners').text()))
+  total_dinners = parseInt($('#total_dinners').text())
+  $('#portions_count_result').text(total_dinners)
+
+  $('.order-main__count-item [type="checkbox"]').prop('checked', false).removeAttr('checked')
+  $('#order-count-radio-' + total_dinners).prop('checked', true).attr('checked', '')
 
   Order.calculateTotal()
 
@@ -79,7 +83,8 @@ Order.calculateTotal = () ->
   $order_discount = $('#order_discount')
   $per_portion_total = $('#per_portion_total')
 
-  recipes = parseInt $('.order-main__item').length
+  recipes = parseInt $('.order-main__item[data-active]').length
+  portions = parseInt $('.order-portions-count [data-active] a').text()
 
   total = parseInt($total.data('total'))
   order_discount = 0
@@ -99,7 +104,12 @@ Order.calculateTotal = () ->
       total = total - order_discount
 
   $total_mobile.html(Math.round(total));
-  $per_portion_total.html(Math.round(total / recipes) + '<span>' + currency + '</span>');
+
+  if recipes > 0
+    per_portions = Math.round(total / recipes / portions)
+  else
+    per_portions = 0
+  $per_portion_total.html(per_portions + '<span>' + currency + '</span>');
 
   # ingredients
   $('.order-ing__lists .checkbox-button input[type="checkbox"]').each () ->
@@ -206,19 +216,16 @@ Order.save = ($button, $form) ->
           popUp(lang_error, response.message)
 
 $(document).on "ready", () ->
-  if $('.order-create-form').length
-    Order.calculateTotal();
-
   $('.order-main__count-item').on "click", (e) ->
-    e.stopPropagation()
-
     price = $(this).find('[type="radio"]').data('price')
     
     $('#order_total_desktop').data('total', price)
 
     $('#portions_count_result').text($(this).find('label').text())
 
-    Order.calculateTotal()
+    setTimeout () ->
+        Order.calculateTotal()
+      , 1000
 
   $(document).on 'click', '[name="order-promocode__submit"]', (e) ->
     e.preventDefault()

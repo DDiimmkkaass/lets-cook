@@ -117,14 +117,6 @@ class Recipe extends Model implements FrontLink, MetaGettable
         return $this->media()->of('file');
     }
     
-    
-    public function getImageAttribute($value)
-    {
-        return '';
-    }
-    
-    
-    
     /**
      * @param $query
      *
