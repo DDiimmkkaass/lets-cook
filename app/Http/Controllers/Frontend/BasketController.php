@@ -34,7 +34,9 @@ class BasketController extends FrontendController
         $menu = WeeklyMenu::with('baskets', 'baskets.recipes')->{$week}()->first();
         
         if ($menu) {
-            $baskets = $menu->baskets;
+            $baskets = $menu->baskets->sortBy(function ($item) {
+                return $item->basket->position . ' ' . $item->getName();
+            });
         }
         
         $this->data('baskets', $baskets);
