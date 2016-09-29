@@ -228,21 +228,23 @@ class OrderService
             ->get();
         
         foreach ($recipes as $recipe) {
-            if (!isset($statistic['baskets'][$recipe->recipe->weekly_menu_basket_id])) {
-                $statistic['baskets'][$recipe->recipe->weekly_menu_basket_id] = [
-                    'name'    => $recipe->recipe->weekly_menu_basket->basket->name,
-                    'recipes' => [],
-                ];
+            if (isset($recipe->recipe->weekly_menu_basket_id)) {
+                if (!isset($statistic['baskets'][$recipe->recipe->weekly_menu_basket_id])) {
+                    $statistic['baskets'][$recipe->recipe->weekly_menu_basket_id] = [
+                        'name'    => $recipe->recipe->weekly_menu_basket->basket->name,
+                        'recipes' => [],
+                    ];
+                }
+    
+                if (!isset($statistic['baskets'][$recipe->recipe->weekly_menu_basket_id]['recipes'][$recipe->recipe->id])) {
+                    $statistic['baskets'][$recipe->recipe->weekly_menu_basket_id]['recipes'][$recipe->recipe->id] = [
+                        'recipe' => $recipe->recipe,
+                        'count'  => 0,
+                    ];
+                }
+    
+                $statistic['baskets'][$recipe->recipe->weekly_menu_basket_id]['recipes'][$recipe->recipe->id]['count']++;
             }
-            
-            if (!isset($statistic['baskets'][$recipe->recipe->weekly_menu_basket_id]['recipes'][$recipe->recipe->id])) {
-                $statistic['baskets'][$recipe->recipe->weekly_menu_basket_id]['recipes'][$recipe->recipe->id] = [
-                    'recipe' => $recipe->recipe,
-                    'count'  => 0,
-                ];
-            }
-            
-            $statistic['baskets'][$recipe->recipe->weekly_menu_basket_id]['recipes'][$recipe->recipe->id]['count']++;
         }
         
         $statistic['additional_baskets'] = OrderBasket::additional()
