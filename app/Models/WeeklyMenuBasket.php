@@ -10,6 +10,7 @@ namespace App\Models;
 
 use App\Contracts\FrontLink;
 use App\Contracts\MetaGettable;
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -127,6 +128,22 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
             'basket_recipes.weekly_menu_basket_id',
             '=',
             'weekly_menu_baskets.id'
+        );
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeNotEmpty($query)
+    {
+        return $query->whereExists(
+            function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('basket_recipes')
+                    ->whereRaw('basket_recipes.weekly_menu_basket_id = weekly_menu_baskets.id');
+            }
         );
     }
     

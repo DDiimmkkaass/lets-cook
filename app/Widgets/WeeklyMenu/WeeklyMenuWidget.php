@@ -9,7 +9,7 @@
 namespace App\Widgets\WeeklyMenu;
 
 use App\Models\WeeklyMenu;
-use DB;
+use Illuminate\Support\Collection;
 use Pingpong\Widget\Widget;
 
 /**
@@ -33,37 +33,23 @@ class WeeklyMenuWidget extends Widget
     {
         $active_week = active_week_menu_week();
         
-        $menus = WeeklyMenu::joinWeeklyMenuBaskets()->joinBasketRecipes()
-            ->with('baskets', 'baskets.recipes')
-            ->active()
-            ->whereExists(
-                function ($query) {
-                    $query->select(DB::raw(1))
-                        ->from('basket_recipes')
-                        ->whereRaw('basket_recipes.weekly_menu_basket_id = weekly_menu_baskets.id')
-                        ->whereRaw('weekly_menu_baskets.weekly_menu_id = weekly_menus.id');
-                }
-            )
-            ->select('weekly_menus.*')
-            ->groupBy('weekly_menus.id')
-            ->take(2)
-            ->get();
+        $menus = WeeklyMenu::active()->get();
         
         $menu = false;
         $next_menu = false;
         
         foreach ($menus as $_menu) {
             if ($_menu->week == $active_week->weekOfYear) {
-                if ($_menu->baskets->count()) {
-                    $menu = $_menu->baskets->random();
-                } else {
-                    $menu = false;
+                $baskets = $this->_getBaskets($_menu);
+                
+                if ($baskets->count()) {
+                    $menu = $baskets->random();
                 }
             } else {
-                if ($_menu->baskets->count()) {
-                    $next_menu = $_menu->baskets->random();
-                } else {
-                    $next_menu = false;
+                $baskets = $this->_getBaskets($_menu);
+                
+                if ($baskets->count()) {
+                    $next_menu = $baskets->random();
                 }
             }
         }
@@ -76,5 +62,15 @@ class WeeklyMenuWidget extends Widget
             ->with('menu', $menu)
             ->with('next_menu', $next_menu)
             ->render();
+    }
+    
+    /**
+     * @param \App\Models\WeeklyMenu $_menu
+     *
+     * @return Collection
+     */
+    private function _getBaskets(WeeklyMenu $_menu)
+    {
+        return $_menu->baskets()->joinBasketRecipes()->with('recipes')->notEmpty()->get(['weekly_menu_baskets.*']);
     }
 }
