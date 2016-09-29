@@ -148,9 +148,11 @@ class PackagingService
             }
             
             foreach ($order->recipes as $recipe) {
-                $users[$order->user_id]['recipes'][] = [
-                    'name' => $recipe->recipe->getName(),
-                ];
+                if (!empty($recipe->recipe)) {
+                    $users[$order->user_id]['recipes'][] = [
+                        'name' => $recipe->recipe->getName(),
+                    ];
+                }
             }
             
             foreach ($order->ingredients()->orderBy('basket_recipe_id')->get() as $ingredient) {
