@@ -114,12 +114,13 @@ class Purchase extends Model
     {
         $dt = active_week();
         
-        return $query->where('year', '>', $dt->year)->orWhere(
-            function ($query) use ($dt) {
-                $query->where('year', '=', $dt->year)
-                    ->where('week', '>', $dt->weekOfYear);
-            }
-        );
+        return $query->where('year', '>', $dt->year)
+            ->orWhere(
+                function ($query) use ($dt) {
+                    $query->where('year', '=', $dt->year)
+                        ->where('week', '>=', $dt->weekOfYear);
+                }
+            );
     }
     
     /**

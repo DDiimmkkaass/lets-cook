@@ -443,7 +443,7 @@ $router->group(
                     ['prefix' => 'purchase'],
                     function ($router) {
                         $router->post(
-                            'purchase/{id}/ajax_field',
+                            '{id}/ajax_field',
                             [
                                 'middleware' => ['ajax'],
                                 'as'         => 'admin.purchase.ajax_field',
@@ -451,7 +451,7 @@ $router->group(
                             ]
                         );
                         $router->post(
-                            'purchase/{id}/set-ingredient-price',
+                            '{id}/set-ingredient-price',
                             [
                                 'middleware' => ['ajax'],
                                 'as'         => 'admin.purchase.set_ingredient_price',
