@@ -43,6 +43,19 @@
         @php($i = 0)
         @php($supplier_id = 0)
         @foreach($list as $ingredient)
+            @if (($i > 0 && $ingredient['supplier_id'] != $supplier_id))
+                <tr>
+                    <th></th><th></th><th></th><th></th><th></th><th></th>
+                    <th style="text-align: center">
+                        {!! $supplier_name !!} @lang('labels.result')
+                    </th>
+
+                    @for ($_i = 0; $_i < $baskets_count; $_i++)
+                        <th></th>
+                    @endfor
+                </tr>
+            @endif
+
             <tr>
                 <td>{!! $ingredient['name'] !!}</td>
                 <td style="text-align: center">@if ($ingredient['in_stock']) @lang('labels.yes') @endif</td>
@@ -61,14 +74,14 @@
                 @endforeach
             </tr>
 
-            @if (($i > 0 && $ingredient['supplier_id'] != $supplier_id) || $ingredients_count - 1 == $i)
+            @if ($ingredients_count - 1 == $i)
                 <tr>
                     <th></th><th></th><th></th><th></th><th></th><th></th>
                     <th style="text-align: center">
                         {!! $ingredient['supplier_name'] !!} @lang('labels.result')
                     </th>
 
-                    @for ($i = 0; $i < $baskets_count; $i++)
+                    @for ($_i = 0; $_i < $baskets_count; $_i++)
                         <th></th>
                     @endfor
                 </tr>
@@ -76,6 +89,7 @@
 
             @php($i++)
             @php($supplier_id = $ingredient['supplier_id'])
+            @php($supplier_name = $ingredient['supplier_name'])
         @endforeach
 
         </tbody>
