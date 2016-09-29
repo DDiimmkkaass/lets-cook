@@ -6,6 +6,7 @@
         <li class="menu-mobile__item" data-item="phone">
             <a href="tel:{!! preg_replace('/\D/', '', variable('moscow_phone')) !!}"></a>
         </li>
+
         <li class="menu-mobile__item" @if (!$user) data-item="profile" @else data-item="profile-index" @endif>
             <a href="{!! localize_route('profiles.index') !!}"></a>
         </li>
@@ -17,8 +18,14 @@
                 Москва {!! variable('moscow_phone') !!}
             </a>
         </li>
-        <li class="menu-desktop__item" @if (!$user) data-item="profile" @endif>
-            <a href="{!! localize_route('profiles.index') !!}">Личный кабинет</a>
-        </li>
+        @if (!$user)
+            <li class="menu-desktop__item" data-item="profile">
+                <a href="{!! localize_route('profiles.index') !!}">Личный кабинет</a>
+            </li>
+        @else
+            <li class="menu-desktop__item" data-item="profile-index">
+                <a href="{!! localize_route('profiles.index') !!}">Здраствуйте, {!! $user->getFullName() !!}</a>
+            </li>
+        @endif
     </ul>
 </div>
