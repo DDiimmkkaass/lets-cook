@@ -155,4 +155,5 @@ return array (
   'changed from orders list' => 'Изменен менеджером из списка заказов',
   'unsupported payment provider: :provider' => 'Неподдерживаемый провайдер оплаты :provider',
   'coupon not available' => 'Этот купон не действителен или не можете быть применен к этому пользователю',
+  'you cannot set same count of portions for child model' => 'Вы не можете указать тоже количество порций что и у родительского рецепта',
 );

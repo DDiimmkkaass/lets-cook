@@ -138,7 +138,7 @@ class RecipeController extends BackendController
      *
      * @param RecipeRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(RecipeRequest $request)
     {
@@ -149,17 +149,28 @@ class RecipeController extends BackendController
             if ($bind && $parent_id) {
                 $parent_model = Recipe::findOrFail($parent_id);
     
-                $model = Recipe::whereBindId($parent_model->bind_id)
-                    ->wherePortions($request->get('portions'))
-                    ->where('id', '<>', $parent_model->id)
-                    ->first();
+                if ($parent_model->bind_id) {
+                    $model = Recipe::whereBindId($parent_model->bind_id)
+                        ->wherePortions($request->get('portions'))
+                        ->where('id', '<>', $parent_model->id)
+                        ->first();
+    
+                    if ($model) {
+                        FlashMessages::add(
+                            'error',
+                            trans('messages.this recipe with the same number of portions is already exists')
+                        );
+        
+                        return redirect()->back()->withInput();
+                    }
+                }
                 
-                if ($model) {
+                if ($parent_model->portions == $request->get('portions')) {
                     FlashMessages::add(
                         'error',
-                        trans('messages.this recipe with the same number of portions is already exists')
+                        trans('messages.you cannot set same count of portions for child model')
                     );
-
+    
                     return redirect()->back()->withInput();
                 }
             }
