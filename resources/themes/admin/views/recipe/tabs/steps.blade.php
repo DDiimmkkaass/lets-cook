@@ -54,16 +54,16 @@
             @foreach($model->steps as $step)
                 <tr class="duplication-row">
                     <td>
-                        <div class="form-group required @if ($errors->has('steps.old.' .$step->id. '.image')) has-error @endif">
-                            {!! Form::imageInput('steps[old][' .$step->id. '][image]', $step->image, ['width' => 100, 'height' => 100, 'required' => true]) !!}
+                        <div class="form-group @if ($errors->has('steps.old.' .$step->id. '.image')) has-error @endif">
+                            {!! Form::imageInput('steps[old][' .$step->id. '][image]', $step->image, ['width' => 100, 'height' => 100]) !!}
 
                             {!! $errors->first('steps.old.' .$step->id. '.image', '<p class="help-block error">:message</p>') !!}
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
-                            <div class="form-group required @if ($errors->has('steps.old.' .$step->id. '.name')) has-error @endif">
-                                {!! Form::text('steps[old][' . $step->id . '][name]', $step->name, ['id' => 'steps.old.' . $step->id . '.name', 'placeholder' => trans('labels.name'), 'class' => 'form-control input-sm', 'required' => true]) !!}
+                            <div class="form-group @if ($errors->has('steps.old.' .$step->id. '.name')) has-error @endif">
+                                {!! Form::text('steps[old][' . $step->id . '][name]', $step->name, ['id' => 'steps.old.' . $step->id . '.name', 'placeholder' => trans('labels.name'), 'class' => 'form-control input-sm']) !!}
 
                                 {!! $errors->first('steps.old.' .$step->id. '.name', '<p class="help-block error">:message</p>') !!}
                             </div>
@@ -95,16 +95,16 @@
                 @if ($step_key !== 'replaseme')
                     <tr class="duplication-row">
                         <td>
-                            <div class="form-group required @if ($errors->has('steps.new.' .$step_key. '.image')) has-error @endif">
-                                {!! Form::imageInput('steps[new][' .$step_key. '][image]', $step['image'], ['width' => 100, 'height' => 100, 'required' => true]) !!}
+                            <div class="form-group @if ($errors->has('steps.new.' .$step_key. '.image')) has-error @endif">
+                                {!! Form::imageInput('steps[new][' .$step_key. '][image]', $step['image'], ['width' => 100, 'height' => 100]) !!}
 
                                 {!! $errors->first('steps.new.' .$step_key. '.image', '<p class="help-block error">:message</p>') !!}
                             </div>
                         </td>
                         <td>
                             <div class="form-group">
-                                <div class="form-group required @if ($errors->has('steps.new.' .$step_key. '.name')) has-error @endif">
-                                    {!! Form::text('steps[new][' . $step_key . '][name]', $step['name'], ['id' => 'steps.new.' . $step_key . '.name', 'placeholder' => trans('labels.name'), 'class' => 'form-control input-sm', 'required' => true]) !!}
+                                <div class="form-group @if ($errors->has('steps.new.' .$step_key. '.name')) has-error @endif">
+                                    {!! Form::text('steps[new][' . $step_key . '][name]', $step['name'], ['id' => 'steps.new.' . $step_key . '.name', 'placeholder' => trans('labels.name'), 'class' => 'form-control input-sm']) !!}
 
                                     {!! $errors->first('steps.new.' .$step_key. '.name', '<p class="help-block error">:message</p>') !!}
                                 </div>
@@ -135,14 +135,14 @@
             @foreach($model->steps as $step)
                 <tr class="duplication-row">
                     <td>
-                        <div class="form-group required">
-                            {!! Form::imageInput('steps[new][' .$step->id. '][image]', $step->image, ['width' => 100, 'height' => 100, 'required' => true]) !!}
+                        <div class="form-group">
+                            {!! Form::imageInput('steps[new][' .$step->id. '][image]', $step->image, ['width' => 100, 'height' => 100]) !!}
                         </div>
                     </td>
                     <td>
                         <div class="form-group">
-                            <div class="form-group required">
-                                {!! Form::text('steps[new][' . $step->id . '][name]', $step->name, ['id' => 'steps.new.' . $step->id . '.name', 'placeholder' => trans('labels.name'), 'class' => 'form-control input-sm', 'required' => true]) !!}
+                            <div class="form-group">
+                                {!! Form::text('steps[new][' . $step->id . '][name]', $step->name, ['id' => 'steps.new.' . $step->id . '.name', 'placeholder' => trans('labels.name'), 'class' => 'form-control input-sm']) !!}
                             </div>
 
                             <div class="form-group required">

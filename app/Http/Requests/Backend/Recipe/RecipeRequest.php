@@ -83,7 +83,6 @@ class RecipeRequest extends FormRequest
         return [
             'name'         => 'required',
             'image'        => ['regex:'.$this->image_regex],
-            'recipe'       => 'required',
             'portions'     => 'required|numeric|in:'.implode(',', config('recipe.available_portions')),
             'cooking_time' => 'required|numeric|min:0',
             'status'       => 'required|boolean',
@@ -99,14 +98,12 @@ class RecipeRequest extends FormRequest
             'tags'             => 'array',
             'files'            => 'array',
             
-            'steps.old.*.name'        => 'required',
             'steps.old.*.description' => 'required',
-            'steps.old.*.image'       => ['required', 'regex:'.$this->image_regex],
+            'steps.old.*.image'       => 'regex:'.$this->image_regex,
             'steps.old.*.position'    => 'required|numeric|min:0',
             
-            'steps.new.*.name'        => 'required',
             'steps.new.*.description' => 'required',
-            'steps.new.*.image'       => ['required', 'regex:'.$this->image_regex],
+            'steps.new.*.image'       => 'regex:'.$this->image_regex,
             'steps.new.*.position'    => 'required|numeric|min:0',
             
             'steps.remove' => 'array',
