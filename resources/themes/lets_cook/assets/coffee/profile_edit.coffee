@@ -6,8 +6,6 @@ $(document).on "ready", () ->
     $form = $button.closest('form')
     data = Form.getFormData($form)
 
-    console.log(data)
-
     $.ajax
       url: $form.attr('action')
       type: "post"
