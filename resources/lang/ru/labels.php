@@ -558,7 +558,7 @@ return array (
   'categories_&_ingredients' => 'Категории и ингредиенты',
   'recipe_orders' => 'Заказов',
   'total' => 'Всего',
-  'package_&_ingredient' => 'Пакети и ингредиенты',
+  'package_&_ingredient' => 'Пакеты и ингредиенты',
   'city_short' => 'г.',
   'time' => 'Время',
   'additional_ingredients' => 'Дополнительные ингредиенты',
