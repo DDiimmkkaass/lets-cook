@@ -5,10 +5,9 @@ namespace App\Exceptions;
 use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Illuminate\Foundation\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Foundation\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -23,7 +22,7 @@ class Handler extends ExceptionHandler
         ModelNotFoundException::class,
         ValidationException::class,
     ];
-
+    
     /**
      * Report or log an exception.
      *
@@ -35,9 +34,35 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
+        if ($e->getCode() != 404) {
+            $_request = request()->all();
+    
+            $debugSetting = config('app.debug');
+            
+            config('app.debug', true);
+            if (ExceptionHandler::isHttpException($e)) {
+                $content = ExceptionHandler::toIlluminateResponse(ExceptionHandler::renderHttpException($e), $e);
+            } else {
+                $content = ExceptionHandler::toIlluminateResponse(ExceptionHandler::convertExceptionToResponse($e), $e);
+            }
+    
+            config('app.debug', $debugSetting);
+    
+            $content = (!isset($content->original)) ? $e->getMessage() : $content->original;
+            
+            admin_notify(
+                'message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile(),
+                [
+                    'url'     => request()->fullUrl(),
+                    'request' => $_request,
+                    'content' => $content,
+                ]
+            );
+        }
+        
         return parent::report($e);
     }
-
+    
     /**
      * Render an exception into an HTTP response.
      *
@@ -50,13 +75,13 @@ class Handler extends ExceptionHandler
     {
         if ($this->isHttpException($e) && env('HANDLE_ERROR', true)) {
             $statusCode = $e->getStatusCode();
-
+            
             switch ($statusCode) {
                 case 404:
                     return redirect(route('not_found'), 301);
             }
         }
-
+        
         return parent::render($request, $e);
     }
 }

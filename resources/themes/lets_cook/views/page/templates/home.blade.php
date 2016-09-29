@@ -60,7 +60,7 @@
             <h2 class="spec-review__title">диетолог о «Давай готовить!»</h2>
 
             <div class="spec-review__main">
-                <div class="spec-review__img" style="background-image: url('images/spec-review-1.jpg')"></div>
+                <div class="spec-review__img" style="background-image: url('/assets/themes/lets_cook/images/spec-review-1.jpg')"></div>
 
                 <div class="spec-review__comment">
                     <div class="spec-review__inner">
