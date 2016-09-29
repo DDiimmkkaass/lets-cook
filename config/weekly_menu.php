@@ -9,7 +9,9 @@
 return [
     
     'default_portions_count' => 2,
-    
+
+    'default_recipes_count' => 5,
+
     'menu_days' => 7,
     
     'recipes_for_days' => [

@@ -119,7 +119,7 @@ class OrderController extends FrontendController
         $this->data('trial', $trial);
         $this->data('basket', $basket);
         $this->data('same_basket', $this->weeklyMenuService->getSameBasket($basket));
-        $this->data('recipes_count', $trial ? 1 : 5);
+        $this->data('recipes_count', $trial ? 1 : config('weekly_menu.default_recipes_count'));
         $this->data('selected_baskets', collect());
         
         $this->_fillAdditionalTemplateData($basket->year, $basket->week);

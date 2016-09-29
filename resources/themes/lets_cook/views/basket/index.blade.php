@@ -35,7 +35,7 @@
                                             </ul>
 
                                             <div class="baskets-main-item__price" data-device="mobile">
-                                                {!! $basket->getPriceInOrder() !!}
+                                                {!! $basket->getPriceInOrder(config('weekly_menu.default_recipes_count')) !!}
                                                 <span>{!! $currency !!}</span>
                                             </div>
                                         </div>
@@ -44,7 +44,7 @@
 
                                 <div class="baskets-main-item__right">
                                     <div class="baskets-main-item__price" data-device="desktop">
-                                        {!! $basket->getPriceInOrder() !!}
+                                        {!! $basket->getPriceInOrder(config('weekly_menu.default_recipes_count')) !!}
                                         <span>{!! $currency !!}</span>
                                     </div>
                                     @if (empty($next))
