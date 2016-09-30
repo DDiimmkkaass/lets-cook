@@ -397,7 +397,7 @@ class Order extends Model
         
         $recipes = $this->recipes->count();
         
-        $places += $this->main_basket->getPlaces($recipes);
+        $places += $recipes > 0 ? $this->main_basket->getPlaces($recipes) : 0;
         
         foreach ($this->additional_baskets as $basket) {
             $places += $basket->getPlaces();
