@@ -1,17 +1,16 @@
 Pace.disablePage = () ->
   width = $('html').outerWidth()
-  height = $('html').outerHeight()
-  
-  $('.ajax-overlay').addClass('active').css('width', width).css('height', width)
+  height = $('.main-sidebar').outerHeight()
+
+  $('.ajax-overlay').addClass('active').css('width', width).css('height', height)
 
 Pace.enablePage = () ->
   $('.ajax-overlay').removeClass('active').css('width', 0).css('height', 0)
 
-$(document).ready ->
-  $(document).ajaxStart () ->
-    Pace.restart()
-    Pace.disablePage()
+$(document).ajaxStart () ->
+  Pace.restart()
+  Pace.disablePage()
 
-  $(document).ajaxStop () ->
-    Pace.stop()
-    Pace.enablePage()
+$(document).ajaxStop () ->
+  Pace.stop()
+  Pace.enablePage()
