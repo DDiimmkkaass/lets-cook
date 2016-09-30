@@ -66,6 +66,8 @@
             @yield('main')
         </div>
 
+        <div class="ajax-overlay"></div>
+
         @include('partials.messages', [ 'messages' => $messages ])
 
         @include('partials.modal')

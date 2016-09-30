@@ -622,3 +622,17 @@ table.dataTable
 .breadcrumb
   .warning-labels
     display: none
+
+//ajax overlay - block page
+.ajax-overlay
+  width: 0
+  height: 0
+  z-index: -1
+  position: absolute
+  left: 0
+  top: 0
+  opacity: 0
+  &.active
+    z-index: 1000
+    opacity: .3
+    background: #fff

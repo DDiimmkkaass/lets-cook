@@ -12,8 +12,6 @@ Packaging.getTab = ($tab) ->
     error: (response) =>
       processError response, null
     success: (response) =>
-      console.log(response)
-
       if response.status is 'success'
         $content_tab.html response.html
       else
