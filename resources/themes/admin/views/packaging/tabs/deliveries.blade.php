@@ -47,10 +47,11 @@
                     </th>
                 </tr>
 
-                @foreach($orders as $key => $order)
+                @php($i = 1)
+                @foreach($orders as $order)
                     <tr>
                         <td class="text-center">
-                            {!! $key + 1 !!}
+                            {!! $i !!}
                         </td>
                         <td>
                             {!! $order->getUserFullName() !!}
@@ -87,6 +88,7 @@
                             @endif
                         </td>
                     </tr>
+                    @php($i++)
                 @endforeach
 
                 <tr><td colspan="9"></td></tr>

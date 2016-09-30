@@ -177,6 +177,10 @@ class PackagingService
                 ];
             }
         }
+    
+        foreach ($users as $key => $user) {
+            $users[$key]['recipes'] = collect($user['recipes'])->sortBy('name');
+        }
         
         return $users;
     }
@@ -204,6 +208,10 @@ class PackagingService
             }
             
             $days[$order->delivery_date][] = $order;
+        }
+        
+        foreach ($days as $key => $day) {
+            $days[$key] = collect($day)->sortBy('full_name');
         }
         
         return $days;

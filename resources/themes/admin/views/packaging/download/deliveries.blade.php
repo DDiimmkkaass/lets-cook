@@ -43,11 +43,12 @@
                     </th>
                 </tr>
 
-                @foreach($orders as $key => $order)
-                    @php($background = $key % 2 == 0 ? ' background-color: #dddddd; ' : '')
+                @php($i = 1)
+                @foreach($orders as $order)
+                    @php($background = $i % 2 == 0 ? ' background-color: #dddddd; ' : '')
                     <tr>
                         <td style="text-align: center; {!! $background !!}">
-                            {!! $key + 1 !!}
+                            {!! $i !!}
                         </td>
                         <td style="{!! $background !!}">
                             {!! $order->getUserFullName() !!}
@@ -88,6 +89,7 @@
 
                         </td>
                     </tr>
+                    @php($i++)
                 @endforeach
 
                 <tr><td colspan="10"></td></tr>
