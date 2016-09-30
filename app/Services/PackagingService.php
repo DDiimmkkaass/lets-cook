@@ -64,11 +64,7 @@ class PackagingService
         
         $recipes = new Collection($recipes);
         
-        $recipes = $recipes->sortByDesc(
-            function ($recipe) {
-                return (int) $recipe['recipes_count'];
-            }
-        );
+        $recipes = $recipes->sortBy('name');
         
         return $recipes;
     }
@@ -114,10 +110,14 @@ class PackagingService
             
             unset($recipes[$key]);
         }
-    
+        
         foreach ($baskets as $key => $basket) {
-            $recipes = collect($basket['recipes'])->sortBy('position');
-
+            $recipes = collect($basket['recipes'])->sortBy(
+                function ($item) {
+                    return $item['position'].' '.$item['name'];
+                }
+            );
+            
             $baskets[$key]['recipes'] = $recipes;
         }
         
@@ -247,7 +247,8 @@ class PackagingService
             function ($excel) use ($data, $year, $week) {
                 foreach ($data as $recipe) {
                     $sheet = get_excel_sheet_name($recipe['name']);
-            
+                    $sheet = str_limit($sheet, 26, '').'...-'.$recipe['portions'];
+                    
                     $excel->sheet(
                         $sheet,
                         function ($sheet) use ($recipe) {
@@ -361,7 +362,7 @@ class PackagingService
         foreach ($_recipes as $recipe) {
             if (!empty($recipe->recipe)) {
                 $name = $recipe->recipe->getName();
-    
+                
                 $recipes[$recipe->recipe_id] = $recipe->toArray();
                 $recipes[$recipe->recipe_id]['name'] = $name;
             }
@@ -647,7 +648,7 @@ class PackagingService
         if (before_week_closing($year, $week)) {
             $status = 'paid';
         }
-    
+        
         return Order::ofStatus($status)->with($with)->forWeek($year, $week)->get();
     }
     

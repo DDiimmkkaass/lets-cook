@@ -22,7 +22,7 @@
 
         <tr>
             <th>@lang('labels.category')</th>
-            <th>@lang('labels.package_&_ingredient')</th>
+            <th style="width: {!! strlen($recipe['name']) * config('recipe.title_to_with_multiplier') !!}px">@lang('labels.package_&_ingredient')</th>
             <th style="text-align: center;">@lang('labels.count')</th>
             <th style="text-align: center;">@lang('labels.unit')</th>
         </tr>

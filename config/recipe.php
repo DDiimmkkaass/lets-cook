@@ -13,5 +13,7 @@ return [
     'allowed_file_extension' => ['pdf', 'xls', 'xlsx'],
     
     'per_page' => 10,
+    
+    'title_to_with_multiplier' => 0.7
 
 ];
