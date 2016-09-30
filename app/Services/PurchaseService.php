@@ -17,7 +17,6 @@ use App\Models\OrderRecipe;
 use App\Models\Purchase;
 use App\Models\RecipeIngredient;
 use App\Models\Supplier;
-use App\Models\WeeklyMenu;
 use DB;
 use Excel;
 use Illuminate\Support\Collection;
@@ -113,7 +112,9 @@ class PurchaseService
             ->where('year', $list['year'])
             ->where('week', $list['week'])
             ->orderBy('suppliers.priority')
+            ->orderBy('suppliers.name')
             ->orderBy('categories.position')
+            ->orderBy('categories.name')
             ->orderBy('ingredients.name')
             ->get(['purchases.*'])
             ->keyBy(
@@ -121,6 +122,8 @@ class PurchaseService
                     return $item->ingredient_id.'_'.$item->type;
                 }
             );
+        
+        $ordered = $this->_getOrderedIngredientsList($year, $week);
         
         foreach ($purchases as $key => $ingredient) {
             $_ingredient = $ingredient->ingredient;
@@ -152,6 +155,8 @@ class PurchaseService
                     ];
                 }
                 
+                $ingredient->count = isset($ordered[$key]) ? $ordered[$key]['count'] : $ingredient->count;
+                
                 $list['suppliers'][$_ingredient->supplier_id]['categories'][$_ingredient->category_id]['ingredients'][$key] = $ingredient;
             }
         }
@@ -181,40 +186,34 @@ class PurchaseService
         
         $baskets = $this->_basketsForReport($year, $week, $pre_report);
         
+        $ordered = $this->_getOrderedIngredientsList($year, $week, $supplier_id);
+        
         if ($pre_report) {
-            $list = $this->preGenerate($year, $week);
-            
-            $list = $this->_prepareToDownload($list, $supplier_id);
+            $list = $ordered;
         } else {
             $list = $this->_getPurchaseFor($year, $week, $supplier_id);
         }
         
+        $data = [
+            'year'          => $year,
+            'week'          => $week,
+            'list'          => $list,
+            'ordered'       => $ordered,
+            'supplier_name' => $supplier_name,
+            'pre_report'    => $pre_report,
+            'baskets'       => $baskets,
+            'sheet_name'    => $sheet_name,
+            'view'          => $view,
+        ];
+        
         return Excel::create(
             $file_name,
-            function ($excel) use ($year, $week, $list, $view, $sheet_name, $supplier_name, $pre_report, $baskets) {
+            function ($excel) use ($data) {
                 $excel->sheet(
-                    get_excel_sheet_name($sheet_name),
-                    function ($sheet) use (
-                        $year,
-                        $week,
-                        $list,
-                        $view,
-                        $sheet_name,
-                        $supplier_name,
-                        $pre_report,
-                        $baskets
-                    ) {
-                        $sheet->loadView('views.purchase.partials.'.$view)
-                            ->with(
-                                [
-                                    'year'          => $year,
-                                    'week'          => $week,
-                                    'list'          => $list,
-                                    'supplier_name' => $supplier_name,
-                                    'pre_report'    => $pre_report,
-                                    'baskets'       => $baskets,
-                                ]
-                            );
+                    get_excel_sheet_name($data['sheet_name']),
+                    function ($sheet) use ($data) {
+                        $sheet->loadView('views.purchase.partials.'.$data['view'])
+                            ->with($data);
                     }
                 );
             }
@@ -592,7 +591,9 @@ class PurchaseService
         
         return $list
             ->orderBy('suppliers.priority')
+            ->orderBy('suppliers.name')
             ->orderBy('categories.position')
+            ->orderBy('categories.name')
             ->orderBy('ingredients.name')
             ->get(['purchases.*']);
     }
@@ -665,7 +666,7 @@ class PurchaseService
     private function _basketsForReport($year, $week, $pre_report = false)
     {
         $baskets = [];
-    
+        
         $orders = $this->_getOrders($year, $week, $pre_report);
         
         $_order_baskets = OrderBasket::with('weekly_menu_basket', 'weekly_menu_basket.recipes')
@@ -702,17 +703,17 @@ class PurchaseService
                 $count = $this->_getAdditionalBasketOrdersCount($basket->id, $year, $week, $pre_report);
                 
                 $baskets[$basket->id] = [
-                    'name'        => $recipe->getName(),
-                    'count'       => $count,
+                    'name'  => $recipe->getName(),
+                    'count' => $count,
                 ];
-    
+                
                 foreach ($recipe->recipe->ingredients as $ingredient) {
                     if (!isset($baskets[$basket->id]['ingredients'][$ingredient->ingredient_id])) {
                         $baskets[$basket->id]['ingredients'][$ingredient->ingredient_id] = $ingredient->count;
                     }
                 }
             }
-    
+            
             unset($_order_baskets[$key]);
         }
         
@@ -755,5 +756,21 @@ class PurchaseService
         }
         
         return $orders->forWeek($year, $week)->get(['id'])->pluck('id');
+    }
+    
+    /**
+     * @param int  $year
+     * @param int  $week
+     * @param bool $supplier_id
+     *
+     * @return array
+     */
+    private function _getOrderedIngredientsList($year, $week, $supplier_id = false)
+    {
+        $list = $this->preGenerate($year, $week);
+        
+        $list = $this->_prepareToDownload($list, $supplier_id);
+        
+        return $list;
     }
 }

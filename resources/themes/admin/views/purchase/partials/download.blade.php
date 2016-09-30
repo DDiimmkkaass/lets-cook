@@ -46,7 +46,13 @@
                 <td style="text-align: center">@if ($ingredient->in_stock) @lang('labels.yes') @endif</td>
                 <td style="background-color: #dddddd; text-align: center;">{!! $ingredient->getUnitName() !!}</td>
                 <td style="background-color: #dddddd; text-align: center;">{!! $ingredient->price !!}</td>
-                <td style="text-align: right;">{!! $ingredient->count !!}</td>
+                <td style="text-align: right;">
+                    @if (isset($ordered[$ingredient->ingredient_id.'_'.$ingredient->type]))
+                        {!!  $ordered[$ingredient->ingredient_id.'_'.$ingredient->type]['count']  !!}
+                    @else
+                        {!! $ingredient->count !!}
+                    @endif
+                </td>
                 <td style="background-color: #dddddd; text-align: center;">{!! $ingredient->ingredient->category->name !!}</td>
                 <td style="background-color: #dddddd; text-align: center;">{!! $ingredient->ingredient->supplier->name !!}</td>
 
@@ -61,7 +67,12 @@
 
             @if ($ingredients_count - 1 == $key || $ingredient->ingredient->supplier_id != $list[$key + 1]->ingredient->supplier_id)
                 <tr>
-                    <th></th><th></th><th></th><th></th><th></th><th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                     <th style="text-align: center">
                         {!! $ingredient->ingredient->supplier->name !!} @lang('labels.result')
                     </th>
