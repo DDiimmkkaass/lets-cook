@@ -587,7 +587,11 @@ class OrderController extends BackendController
         }
         $this->data('cities', $cities);
         
-        $recipes = $model->recipes()->with('recipe', 'recipe.recipe', 'recipe.weekly_menu_basket')->joinBasketRecipe()->joinRecipe()
+        $recipes = $model->recipes()
+            ->joinBasketRecipe()
+            ->joinRecipe()
+            ->with('recipe', 'recipe.recipe', 'recipe.weekly_menu_basket')
+            ->existInWeeklyMenu()
             ->get(
                 [
                     'order_recipes.id',

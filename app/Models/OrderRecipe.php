@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use DB;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -106,5 +107,16 @@ class OrderRecipe extends Model
     public function scopeDateSorted($query, $order = 'ASC')
     {
         return $query->orderBy('created_at', $order);
+    }
+    
+    public function scopeExistInWeeklyMenu($query)
+    {
+        return $query->whereExists(
+            function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('basket_recipes')
+                    ->whereRaw('basket_recipes.id = order_recipes.basket_recipe_id');
+            }
+        );
     }
 }
