@@ -50,12 +50,13 @@ class OrderController extends BackendController
      * @var array
      */
     public $accessMap = [
-        'index'  => 'order.read',
-        'show'   => 'order.read',
-        'create' => 'order.write',
-        'store'  => 'order.write',
-        'edit'   => 'order.read',
-        'update' => 'order.write',
+        'index'   => 'order.read',
+        'history' => 'order.read',
+        'show'    => 'order.read',
+        'create'  => 'order.write',
+        'store'   => 'order.write',
+        'edit'    => 'order.read',
+        'update'  => 'order.write',
     ];
     
     /**
@@ -101,13 +102,35 @@ class OrderController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            return $this->orderService->table($request);
+            return $this->orderService->tableIndex($request);
         }
         
         $this->data('statistic', $this->orderService->getOrdersStatistic());
         
         $this->data('page_title', trans('labels.orders'));
         $this->breadcrumbs(trans('labels.orders_list'));
+        
+        return $this->render('views.'.$this->module.'.index');
+    }
+    
+    /**
+     * Display a listing of the resource.
+     * GET /order
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|\Bllim\Datatables\json|\Illuminate\Contracts\View\View
+     */
+    public function history(Request $request)
+    {
+        if ($request->get('draw')) {
+            return $this->orderService->tableHistory($request);
+        }
+        
+        $this->data('history', true);
+        
+        $this->data('page_title', trans('labels.orders_history'));
+        $this->breadcrumbs(trans('labels.orders_history'));
         
         return $this->render('views.'.$this->module.'.index');
     }

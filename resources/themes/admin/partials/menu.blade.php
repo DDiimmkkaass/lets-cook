@@ -166,7 +166,7 @@
                 </li>
             @endif
             @if ($user->hasAccess('order.read'))
-                <li class="{!! active_class('admin.order*') !!}">
+                <li class="{!! active_class('admin.order*', 'active', ['admin.order.history*']) !!}">
                     <a href="{!! route('admin.order.index') !!}">
                         <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                         <span>@lang('labels.orders')</span>
@@ -177,6 +177,12 @@
                                 <i class="fa fa-plus"></i>
                             </small>
                         @endif
+                    </a>
+                </li>
+                <li class="{!! active_class('admin.order.history') !!}">
+                    <a href="{!! route('admin.order.history') !!}">
+                        <i class="fa fa-history" aria-hidden="true"></i>
+                        <span>@lang('labels.orders_history')</span>
                     </a>
                 </li>
             @endif

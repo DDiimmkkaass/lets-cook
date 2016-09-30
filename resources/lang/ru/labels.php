@@ -650,4 +650,5 @@ return array (
   'source' => 'Источник',
   'tab_discount_coupons' => 'Скидочные купоны',
   'coupon_code' => 'Код',
+  'orders_history' => 'История заказов',
 );

@@ -71,7 +71,7 @@ $router->group(
                     ]
                 );
                 $router->resource('news', 'Backend\NewsController');
-    
+                
                 // articles
                 $router->post(
                     'article/{id}/ajax_field',
@@ -436,6 +436,10 @@ $router->group(
                         'uses'       => 'Backend\OrderController@storeComment',
                     ]
                 );
+                $router->get(
+                    'order/history',
+                    ['as' => 'admin.order.history', 'uses' => 'Backend\OrderController@history']
+                );
                 $router->resource('order', 'Backend\OrderController', ['except' => ['destroy']]);
                 
                 //purchase
@@ -463,7 +467,7 @@ $router->group(
                             'index',
                             ['as' => 'admin.purchase.index', 'uses' => 'Backend\PurchaseController@index']
                         );
-    
+                        
                         $router->get(
                             'show/{year}/{week}',
                             ['as' => 'admin.purchase.show', 'uses' => 'Backend\PurchaseController@show']
@@ -473,7 +477,7 @@ $router->group(
                             'edit/{year}/{week}',
                             ['as' => 'admin.purchase.edit', 'uses' => 'Backend\PurchaseController@edit']
                         );
-    
+                        
                         $router->get(
                             'generate/{year}/{week}',
                             ['as' => 'admin.purchase.generate', 'uses' => 'Backend\PurchaseController@generate']
@@ -488,10 +492,13 @@ $router->group(
                             '{year}/{week}/download/{supplier_id?}',
                             ['as' => 'admin.purchase.download', 'uses' => 'Backend\PurchaseController@download']
                         );
-    
+                        
                         $router->get(
                             '{year}/{week}/download-pre-report/{supplier_id?}',
-                            ['as' => 'admin.purchase.download_pre_report', 'uses' => 'Backend\PurchaseController@downloadPreReport']
+                            [
+                                'as'   => 'admin.purchase.download_pre_report',
+                                'uses' => 'Backend\PurchaseController@downloadPreReport',
+                            ]
                         );
                     }
                 );

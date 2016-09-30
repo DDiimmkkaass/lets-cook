@@ -41,7 +41,32 @@ class OrderService
      *
      * @return array|\Bllim\Datatables\json
      */
-    public function table(Request $request)
+    public function tableIndex(Request $request)
+    {
+        $table = $this->table($request, ['changed', 'paid', 'processed', 'tmpl']);
+        
+        return $table->make();
+    }
+    
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|\Bllim\Datatables\json
+     */
+    public function tableHistory(Request $request)
+    {
+        $table = $this->table($request, ['deleted', 'archived']);
+        
+        return $table->make();
+    }
+    
+    /**
+     * @param \Illuminate\Http\Request $request
+     * @param array                    $statuses
+     *
+     * @return \Datatables
+     */
+    public function table(Request $request, $statuses)
     {
         $list = Order::with('user', 'main_basket', 'additional_baskets', 'coupon')
             ->select(
@@ -60,7 +85,8 @@ class OrderService
                 'city_id',
                 'address',
                 'comment'
-            );
+            )
+            ->ofStatus($statuses);
         
         $this->_implodeFilters($list, $request);
         
@@ -153,8 +179,7 @@ class OrderService
             ->removeColumn('payment_method')
             ->removeColumn('comment')
             ->removeColumn('city_id')
-            ->removeColumn('delivery_time')
-            ->make();
+            ->removeColumn('delivery_time');
     }
     
     /**
