@@ -34,9 +34,11 @@
 
             <ul class="order-ing__list">
                 @php($i = 0)
+                @php($viewed = [])
                 @foreach($basket->recipes as $recipe)
                     @foreach($recipe->recipe->home_ingredients as $ingredient)
-                        @if ($ingredient->ingredient->inSale())
+                        @if ($ingredient->ingredient->inSale() && !in_array($ingredient->ingredient_id, $viewed))
+                            @php($viewed[] = $ingredient->ingredient_id)
                             <li class="recipe-{!! $recipe->id !!}-ingredient">
                                 <span>{!! $ingredient->ingredient->getTitle() !!}</span>
 
