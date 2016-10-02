@@ -43,7 +43,7 @@ class SendUserActivationEmail implements ShouldQueue
             ['user' => serialize($event->user), 'password' => $event->input['password']],
             function ($message) use ($event) {
                 $message->to($event->user->email, $event->user->getFullName())
-                    ->subject(trans('subjects.profile activation').' '.config('app.name'));
+                    ->subject(trans('front_subjects.profile activation').' '.config('app.name'));
             }
         );
     }

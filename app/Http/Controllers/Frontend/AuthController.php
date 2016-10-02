@@ -209,7 +209,7 @@ class AuthController extends FrontendController
                     ['email' => $email, 'token' => $user->getResetPasswordCode()],
                     function ($message) use ($user) {
                         $message->to($user->email, $user->getFullName())
-                            ->subject(trans('subjects.password_restore_subject'));
+                            ->subject(trans('front_subjects.password_restore_subject'));
                     }
                 );
                 
@@ -254,7 +254,7 @@ class AuthController extends FrontendController
                             $user = User::find($user->id);
                             
                             $message->to($user->email, $user->getFullName())
-                                ->subject(trans('subjects.password_reset_success_subject'));
+                                ->subject(trans('front_subjects.password_reset_success_subject'));
                         }
                     );
                     

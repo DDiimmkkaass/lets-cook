@@ -46,7 +46,7 @@ class SendUserEmailAboutPaymentErrorOnTmplOrder implements ShouldQueue
             ],
             function ($message) use ($event) {
                 $message->to($event->order->email, $event->order->getUserFullName())
-                    ->subject(trans('subjects.tmpl_order_payment_error'));
+                    ->subject(trans('front_subjects.tmpl_order_payment_error'));
             }
         );
     }

@@ -53,7 +53,7 @@ class GiveRegistrationCoupon implements ShouldQueue
                 ['coupon' => serialize($coupon)],
                 function ($message) use ($event) {
                     $message->to($event->user->email, $event->user->getFullName())
-                        ->subject(trans('subjects.your discount coupon'));
+                        ->subject(trans('front_subjects.your discount coupon'));
                 }
             );
         }

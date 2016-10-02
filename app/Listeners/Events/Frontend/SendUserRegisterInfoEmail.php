@@ -34,7 +34,7 @@ class SendUserRegisterInfoEmail implements ShouldQueue
             ['user' => serialize($event->user), 'password' => $event->input['password']],
             function ($message) use ($event) {
                 $message->to($event->user->email, $event->user->getFullName())
-                    ->subject(trans('subjects.congrats with register').' '.config('app.name'));
+                    ->subject(trans('front_subjects.congrats with register').' '.config('app.name'));
             }
         );
     }

@@ -32,7 +32,7 @@ class FeedbackController extends FrontendController
                     'user_message' => $request->get('message'),
                 ],
                 function ($message) {
-                    $message->to(config('app.email'), config('app.name'))->subject(trans('subjects.new_feedback'));
+                    $message->to(config('app.email'), config('app.name'))->subject(trans('front_subjects.new_feedback'));
                 }
             );
 

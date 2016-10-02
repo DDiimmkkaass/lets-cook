@@ -47,7 +47,7 @@ class SendAdminEmailAboutNewComment implements ShouldQueue
                 $message->to(
                     config('app.email'),
                     config('app.name')
-                )->subject(trans('subjects.new_comment'));
+                )->subject(trans('front_subjects.new_comment'));
             }
         );
     }
