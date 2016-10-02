@@ -2,6 +2,30 @@ Order = {};
 
 Order.generated_recipes = 100;
 
+Order.selectRecipeInPopup = (indexes) ->
+  $popupList = $('.order-pop-up__list')
+  $popupListItems = $popupList.find('.order-pop-up__item')
+
+  $popupListItems.each (index) ->
+    if $.inArray(index, indexes) != -1
+      $(this).attr('data-active', '')
+      $(this).find('[type="checkbox"]').prop('checked', true)
+    else
+      $(this).removeAttr('data-active', '')
+      $(this).find('[type="checkbox"]').prop('checked', false)
+
+  dinners = parseInt(indexes.length)
+
+  $price = $('.basket-price-' + dinners)
+
+  if $price.length
+    price = parseInt($price.val())
+  else
+    price = 0
+
+  $('#total_dinners').text(dinners)
+  $('#popup_total_price').text(price)
+
 Order.updateRecipes = () ->
   $recipes = $('.order__pop-up .order-day-item__buttons[data-active]');
 
@@ -75,7 +99,10 @@ Order.calculateDinners = () ->
   else
     $price = $('.basket-price-' + total_dinners);
 
-    total_price = $price.val()
+    if $price.length
+      total_price = parseInt($price.val())
+    else
+      total_price = 0
 
   $total_price.text(total_price)
 
@@ -220,7 +247,7 @@ Order.save = ($button, $form) ->
 $(document).on "ready", () ->
   $('.order-main__count-item').on "click", (e) ->
     price = $(this).find('[type="radio"]').data('price')
-    
+
     $('#order_total_desktop').data('total', price)
 
     $('#portions_count_result').text($(this).find('label').text())

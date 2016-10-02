@@ -43,9 +43,13 @@ function countList() {
         $controlsList = $order.find('.order-main__count-list');
 
     function findChanges($element) {
-        let $mainList = $order.find('.order-main__list'),
-            $mainItems = $mainList.find('.order-main__item'),
-            $mainItemsItems = $('.order-ing__list li');
+        let $mainList = $order.find('.order-main__list');
+
+        $mainList.find('.order-main__item.cloned').remove();
+
+        let $mainItems = $mainList.find('.order-main__item'),
+            $mainItemsItems = $('.order-ing__list li'),
+            indexes = [];
 
         $mainItems.removeAttr('data-active');
 
@@ -69,6 +73,8 @@ function countList() {
                         $('.recipe-' + $(this).find('[type=checkbox]').val() + '-ingredient').each(function () {
                             $(this).removeClass('h-hidden')
                         });
+
+                        indexes.push(index);
                     }
                 });
 
@@ -76,11 +82,13 @@ function countList() {
 
             case 3:
                 $mainItems.each(function (index) {
-                    if (index === 0 || index === 2 || index === 4) {
+                    if (index === 0 || index === 3 || index === 4) {
                         $(this).attr('data-active', '').find('[type="checkbox"]').prop('checked', true);
                         $('.recipe-' + $(this).find('[type=checkbox]').val() + '-ingredient').each(function () {
                             $(this).removeClass('h-hidden')
                         });
+
+                        indexes.push(index);
                     }
                 });
 
@@ -93,6 +101,8 @@ function countList() {
                         $('.recipe-' + $(this).find('[type=checkbox]').val() + '-ingredient').each(function () {
                             $(this).removeClass('h-hidden')
                         });
+
+                        indexes.push(index);
                     }
                 });
 
@@ -105,6 +115,8 @@ function countList() {
                         $('.recipe-' + $(this).find('[type=checkbox]').val() + '-ingredient').each(function () {
                             $(this).removeClass('h-hidden')
                         });
+
+                        indexes.push(index);
                     }
                 });
 
@@ -112,6 +124,8 @@ function countList() {
         }
 
         makeOrderDaysSize();
+
+        Order.selectRecipeInPopup(indexes);
 
         Order.calculateTotal();
     }
