@@ -62,3 +62,26 @@ $(document).on "ready", () ->
         popUp(lang_success, response.message)
 
     return false
+
+  $(document).on 'submit', '.restore__form', (e) ->
+    e.preventDefault()
+
+    $form = $(this)
+    data = Form.getFormData($form)
+
+    $.ajax
+      url: $form.attr('action')
+      type: "post"
+      dataType: 'json'
+      data: data
+      success: (response) =>
+        $('.restore__close').click()
+
+        if response.status == 'success'
+          popUp(lang_success, response.message)
+
+          $form.find('[name="email"]').val('')
+        else
+          popUp(lang_error, response.message)
+
+    return false

@@ -11,7 +11,7 @@
                 <input type="submit" name="sign-in__submit" class="black-long-button" value="Войти">
             </form>
 
-            <a class="sign-in__reg-button green-long-button">регистрация <span>нового пользователя</span></a>
+            <a class="sign-in__restore-button">Забыли пароль?</a>
         </div>
 
         <div class="sign-in__close"></div>

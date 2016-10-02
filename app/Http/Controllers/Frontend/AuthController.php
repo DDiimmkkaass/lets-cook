@@ -244,7 +244,7 @@ class AuthController extends FrontendController
             $user = Sentry::findUserByLogin($email);
             
             if ($user->checkResetPasswordCode($token)) {
-                $password = str_random(6);
+                $password = str_random(config('auth.passwords.min_length'));
                 
                 if ($user->attemptResetPassword($token, $password)) {
                     Mail::queue(

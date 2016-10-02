@@ -816,6 +816,12 @@
       +bp('1024')
         display: inline
 
+  &__restore-button
+    display: inline-block
+    margin-top: 25px
+    width: 100%
+    text-align: right
+    cursor pointer
 
 .sign-out
   @extend .pop-up
@@ -985,5 +991,19 @@
 
     label
       fsh(14px, 1.25)
+
+.restore
+  @extend .pop-up
+
+  &__form
+    js-display: flex; display: flex
+    flex-direction: column
+
+  input[name='email']
+    width: 100%
+
+  input[name='restore__submit']
+    margin-top: 15px
+    width: 100%
 
 /* ----- end FORMS ----- */

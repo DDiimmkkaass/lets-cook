@@ -27,4 +27,5 @@ return array(
   'profile_editing' => 'Редактирование профиля',
   'gender_female' => 'Женский',
   'gender_male' => 'Мужской',
+  'reset_password' => 'Сбросить пароль',
 );

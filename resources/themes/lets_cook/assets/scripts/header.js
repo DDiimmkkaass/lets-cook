@@ -11,7 +11,10 @@ function headerActions() {
         $regButton = $signInPopUp.find('.sign-in__reg-button'),
         $signOutPopUp = $header.find('.header__sign-out'),
         $signOutClose = $signOutPopUp.find('.sign-out__close-layout, .sign-out__close'),
-        $regBirthday = $signOutPopUp.find('input[name="sign-out__birthday"]');
+        $regBirthday = $signOutPopUp.find('input[name="sign-out__birthday"]'),
+        $restoreButton = $signInPopUp.find('.sign-in__restore-button'),
+        $restorePopUp = $header.find('.header__restore'),
+        $restoreClose = $restorePopUp.find('.restore__close-layout, .restore__close');
 
     // REGISTRATION BIRTHDAY DATEPICKER
     datePicker($regBirthday);
@@ -38,6 +41,14 @@ function headerActions() {
         $signOutPopUp.attr('data-active', '');
     });
 
+    // RESTORE CLICK
+    $restoreButton.on('click', function(e) {
+        e.preventDefault();
+
+        $signInPopUp.removeAttr('data-active');
+        $restorePopUp.attr('data-active', '');
+    });
+
     // CLOSE SIGN IN
     $signInClose.on('click', function() {
         $signInPopUp.removeAttr('data-active', '');
@@ -46,6 +57,11 @@ function headerActions() {
     // CLOSE SIGN OUT
     $signOutClose.on('click', function() {
         $signOutPopUp.removeAttr('data-active');
+    });
+
+    // CLOSE RESTORE OUT
+    $restoreClose.on('click', function() {
+        $restorePopUp.removeAttr('data-active');
     });
 }
 

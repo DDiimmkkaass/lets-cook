@@ -49,4 +49,6 @@ return array(
     'coupon not available' => 'Этот купон не действителен или Вы не можете его использовать',
     'tanks for registration on site :site_name, this is you registration coupon :discount' => 'Поздравляем с регистрацией на сайте :site_name, и дарим Вам скидочный купон на :discount%. Для того чтобы воспользоваться купоном просто введите код, указаный ниже при оформлении заказа.',
     'changes successfully saved' => 'Изменения успешно сохранены',
+    'password reset email with reset :link' => 'Для сброса пароля перейдите по ссылке :link',
+    'congratulations, you have successfully reset your password' => 'Поздравляем! Вы успешно сбросили Ваш пароль.',
 );

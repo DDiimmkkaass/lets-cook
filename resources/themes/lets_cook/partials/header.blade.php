@@ -18,4 +18,6 @@
     @include('views.auth.popups.login')
 
     @include('views.auth.popups.register')
+
+    @include('views.auth.popups.restore')
 </header>
