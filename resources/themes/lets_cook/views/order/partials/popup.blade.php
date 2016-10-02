@@ -10,8 +10,6 @@
                     <div class="order-day-item__content">
                         <div class="order-day-item__title">@choice('front_labels.day_with_number', $key + 1): {!! $recipe->getRecipeName() !!}</div>
 
-                        <div class="order-day-item__desc">{!! $recipe->description !!}</div>
-
                         <div class="order-day-item__buttons" data-index="{!! $key !!}">
                             <div class="order-day-item__add-remove">
                                 <input type="checkbox"

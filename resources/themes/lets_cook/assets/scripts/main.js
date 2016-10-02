@@ -34,7 +34,6 @@ $(function() {
         orderIngredients();
         orderAddMore();
         orderSubscribe();
-        orderPopUp();
     }
 
     if ($('main[class="main baskets"]').length) {
@@ -128,6 +127,8 @@ $(window).load(function() {
         makeOrderDaysSize();
 
         countList();
+
+        orderPopUp();
     }
 
     if ($('main[class="main baskets"]').length) {

@@ -5,10 +5,11 @@ Order.generated_recipes = 100;
 Order.updateRecipes = () ->
   $recipes = $('.order__pop-up .order-day-item__buttons[data-active]');
 
+  $('.order-main__item.cloned').remove()
+
   if $recipes.length
     $order = $('.main.order')
-    $mainList = $order.find('.order-main__list')
-    $mainItems = $mainList.find('.order-main__item')
+    $mainItems = $order.find('.order-main__item')
     $mainItemsItems = $('.order-ing__list li')
 
     $mainItems.removeAttr 'data-active'
@@ -27,6 +28,7 @@ Order.updateRecipes = () ->
 
       $mainItems.each (index) ->
         if index == _index
+
           $(this).attr('data-active', '').find('[type="checkbox"]').prop 'checked', true
 
           $('.recipe-' + $(this).find('[type=checkbox]').val() + '-ingredient').each ->
@@ -35,14 +37,14 @@ Order.updateRecipes = () ->
           if _count > 0
             i = 1
             while i < _count
-              Order.generated_recipes++
-
               $recipe = $(this).clone()
-              $recipe.find('[type="checkbox"]').attr('name', 'recipes[' + Order.generated_recipes + ']')
+              $recipe.addClass('cloned').find('[type="checkbox"]').attr('name', 'recipes[' + Order.generated_recipes + ']')
+
 
               $recipe.insertAfter($(this))
 
               i++
+              Order.generated_recipes++
 
   price = parseInt($('#popup_total_price').text())
 

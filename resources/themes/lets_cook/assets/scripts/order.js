@@ -134,7 +134,8 @@ function orderPopUp() {
         $popUpBgLayout = $popUp.find('.order-pop-up__bg-layout'),
         $popUpCancel = $popUp.find('.order-pop-up-bottom__cancel'),
         $popUpSave = $popUp.find('.order-pop-up-bottom__save'),
-        $list = $popUp.find('.order-pop-up__list');
+        $list = $popUp.find('.order-pop-up__list'),
+        $allTitles = $list.find('.order-day-item__title');
 
     $editButton.on('click', function () {
         $popUp.attr('data-active', '');
@@ -197,6 +198,23 @@ function orderPopUp() {
 
         Order.calculateDinners();
     });
+
+    $(window).on('resize', function() {
+        (function titlesHeight() {
+            let maxHeight = 0;
+
+            $allTitles.each(function() {
+                let $that = $(this),
+                    thatHeight = $that.outerHeight();
+
+                if (thatHeight > maxHeight) {
+                    maxHeight = thatHeight;
+                }
+            });
+
+            $allTitles.height(maxHeight);
+        }());
+    }).resize();
 }
 
 /* ----- end ORDER ----- */

@@ -622,6 +622,7 @@
     transition: all 0.5s
 
   &__buttons
+    margin-top: 15px
     js-display: flex; display: flex;
     justify-content: space-between
 
@@ -1065,6 +1066,8 @@
 
   &__title
     margin: 0
+    height 40px
+    overflow hidden
 
     &[data-device='mobile']
       font-family: $ptsans-narrow-bold
@@ -1086,7 +1089,7 @@
       color: $font-black-1
 
   &__desc
-    height: 55px
+    height: 65px
     font-family: $ptsans-regular
     fsh(14px, 1.25)
     overflow: hidden
@@ -1513,9 +1516,6 @@
     width: 48.5%
     position: relative
     z-index: 1
-
-    &:last-of-type
-      display: none
 
     +bp('1024')
       width: 31.5%
