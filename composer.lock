@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "84589ff55aa859c60a7597e19b1c593e",
-    "content-hash": "1cd0d8e9a9ab8b5c9c7f717349ef0e66",
+    "hash": "fec26234b494b95e30707ca1ac8d3432",
+    "content-hash": "33707e421054285c5e4e46cfd8e9a138",
     "packages": [
         {
             "name": "artem328/laravel-yandex-kassa",
@@ -121,28 +121,28 @@
         },
         {
             "name": "barryvdh/laravel-debugbar",
-            "version": "V2.2.3",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-debugbar.git",
-                "reference": "ecd1ce5c4a827e2f6a8fb41bcf67713beb1c1cbd"
+                "reference": "0c87981df959c7c1943abe227baf607c92f204f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/ecd1ce5c4a827e2f6a8fb41bcf67713beb1c1cbd",
-                "reference": "ecd1ce5c4a827e2f6a8fb41bcf67713beb1c1cbd",
+                "url": "https://api.github.com/repos/barryvdh/laravel-debugbar/zipball/0c87981df959c7c1943abe227baf607c92f204f9",
+                "reference": "0c87981df959c7c1943abe227baf607c92f204f9",
                 "shasum": ""
             },
             "require": {
                 "illuminate/support": "5.1.*|5.2.*|5.3.*",
-                "maximebf/debugbar": "~1.11.0|~1.12.0",
+                "maximebf/debugbar": "~1.13.0",
                 "php": ">=5.5.9",
                 "symfony/finder": "~2.7|~3.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.3-dev"
                 }
             },
             "autoload": {
@@ -171,7 +171,7 @@
                 "profiler",
                 "webprofiler"
             ],
-            "time": "2016-07-29 15:00:36"
+            "time": "2016-09-15 14:05:56"
         },
         {
             "name": "barryvdh/laravel-elfinder",
@@ -1997,16 +1997,16 @@
         },
         {
             "name": "maximebf/debugbar",
-            "version": "v1.12.0",
+            "version": "v1.13.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/maximebf/php-debugbar.git",
-                "reference": "e634fbd32cd6bc3fa0e8c972b52d4bf49bab3988"
+                "reference": "5f49a5ed6cfde81d31d89378806670d77462526e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/e634fbd32cd6bc3fa0e8c972b52d4bf49bab3988",
-                "reference": "e634fbd32cd6bc3fa0e8c972b52d4bf49bab3988",
+                "url": "https://api.github.com/repos/maximebf/php-debugbar/zipball/5f49a5ed6cfde81d31d89378806670d77462526e",
+                "reference": "5f49a5ed6cfde81d31d89378806670d77462526e",
                 "shasum": ""
             },
             "require": {
@@ -2025,7 +2025,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.12-dev"
+                    "dev-master": "1.13-dev"
                 }
             },
             "autoload": {
@@ -2054,20 +2054,20 @@
                 "debug",
                 "debugbar"
             ],
-            "time": "2016-05-15 13:11:34"
+            "time": "2016-09-15 14:01:59"
         },
         {
             "name": "mcamara/laravel-localization",
-            "version": "1.1.7",
+            "version": "1.1.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mcamara/laravel-localization.git",
-                "reference": "ff6d398d8437d0169f1d3b97e4244552a5abcced"
+                "reference": "cbf2c144bfa95f41392721a41beacce13338afb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mcamara/laravel-localization/zipball/ff6d398d8437d0169f1d3b97e4244552a5abcced",
-                "reference": "ff6d398d8437d0169f1d3b97e4244552a5abcced",
+                "url": "https://api.github.com/repos/mcamara/laravel-localization/zipball/cbf2c144bfa95f41392721a41beacce13338afb5",
+                "reference": "cbf2c144bfa95f41392721a41beacce13338afb5",
                 "shasum": ""
             },
             "require": {
@@ -2102,7 +2102,7 @@
                 "localization",
                 "php"
             ],
-            "time": "2016-08-25 18:28:07"
+            "time": "2016-09-28 06:12:40"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
@@ -4164,12 +4164,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/barryvdh/laravel-translation-manager.git",
-                "reference": "ba626684f7e421341f2a09e836bb5644b816d050"
+                "reference": "05921dff9b2af33b67c9ed3839a82a1258190d46"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/barryvdh/laravel-translation-manager/zipball/ba626684f7e421341f2a09e836bb5644b816d050",
-                "reference": "ba626684f7e421341f2a09e836bb5644b816d050",
+                "url": "https://api.github.com/repos/barryvdh/laravel-translation-manager/zipball/05921dff9b2af33b67c9ed3839a82a1258190d46",
+                "reference": "05921dff9b2af33b67c9ed3839a82a1258190d46",
                 "shasum": ""
             },
             "require": {
@@ -4205,7 +4205,7 @@
                 "translations",
                 "translator"
             ],
-            "time": "2016-08-31 08:17:56"
+            "time": "2016-09-28 11:18:49"
         },
         {
             "name": "barryvdh/reflection-docblock",
@@ -4524,16 +4524,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "3.1.0",
+            "version": "3.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "9270140b940ff02e58ec577c237274e92cd40cdd"
+                "reference": "8331b5efe816ae05461b7ca1e721c01b46bafb3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/9270140b940ff02e58ec577c237274e92cd40cdd",
-                "reference": "9270140b940ff02e58ec577c237274e92cd40cdd",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/8331b5efe816ae05461b7ca1e721c01b46bafb3e",
+                "reference": "8331b5efe816ae05461b7ca1e721c01b46bafb3e",
                 "shasum": ""
             },
             "require": {
@@ -4565,7 +4565,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2016-06-10 09:48:41"
+            "time": "2016-09-30 07:12:33"
         },
         {
             "name": "phpdocumentor/type-resolver",

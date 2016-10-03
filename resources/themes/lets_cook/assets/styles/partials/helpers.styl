@@ -1,7 +1,7 @@
 .h-hidden
-  display none!important
+  display none !important
 
-.order-edit__address-input+.order-edit__address-input
+.order-edit__address-input + .order-edit__address-input
   margin-top 20px
 
 .h-button-danger
@@ -11,19 +11,51 @@
 .h-margin-right-20
   margin-right 20px
 
+.h-margin-left-20
+  margin-left 20px
+
 .h-pointer
   cursor pointer
+
+.h-block
+  display: block
+
+.h-flex
+  display: flex
+
+.h-center
+  text-align center
 
 // subscribe table
 .subscribe-table
   overflow hidden
   transition height 1s
+  .subscribe-table__functional
+    +bp('1024')
+      width: 40% !important
+
+.subscribe-table + .profile-contacts
+  padding-top 0 !important
+
+.h-card-form
+  .h-number-label
+    line-height 20px !important
+  small
+    font-size 12px
 
 .h-subscribes-form-show-all
   font-size 14px
   cursor pointer
   height 30px
   line-height 30px
+
+.h-no-user-cards
+  display inline-block !important
+  margin 30px auto !important
+
+.subscribe-table__row.h-no-user-cards
+  background none !important
+  background-color none !important
 
 //404
 .h-404
@@ -51,3 +83,39 @@
     margin-bottom 15px
   .black-long-button
     margin-top 30px
+
+//user cards
+.h-no-user-cards
+  margin-bottom 40px
+  margin-top 40px
+
+.subscribe-table
+  .h-card-number-col
+    span
+      display inline-block
+    .card-cvv
+      text-decoration 13px !important
+      text-transform lowercase
+      margin-left 10px
+      text-decoration dashed
+      cursor pointer
+
+.h-dates
+  .h-half-input
+    width 45%
+
+.h-half-input + .h-half-input
+  float right
+
+.h-card-form-section__save,
+.h-card-form-section__cancel
+  display inline-block
+  padding: 0 40px
+  width: auto
+
+.h-card-form-section__cancel
+  margin-left 25px
+
+//card connect form
+#payment_connect_form
+  display none

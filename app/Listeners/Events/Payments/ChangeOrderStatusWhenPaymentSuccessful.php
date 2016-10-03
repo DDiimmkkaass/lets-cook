@@ -8,6 +8,7 @@
 
 namespace App\Listeners\Events\Payments;
 
+use App\Events\Backend\TmplOrderSuccessfullyPaid;
 use App\Models\Order;
 use App\Services\OrderService;
 use App\Services\PaymentService;
@@ -50,19 +51,27 @@ class ChangeOrderStatusWhenPaymentSuccessful
      */
     public function handle(BeforePaymentAvisoResponse $event)
     {
-        $order = Order::find($event->request->get('orderNumber'));
+        if (!$event->request->get('cardConnect', false)) {
+            $order = Order::find($event->request->get('orderNumber'));
+    
+            if ($event->request->isValidHash()) {
+                $status = $order->status;
+                
+                $order->status = $this->_getStatus($order);
+                $order->save();
         
-        if ($event->request->isValidHash()) {
-            $order->status = $this->_getStatus($order);
-            $order->save();
-            
-            $this->orderService->addSystemOrderComment($order, trans('payments.success_payment'));
-            
-            $this->paymentService->storeTransaction($order->id, $event->request->all(), 'success');
-        } else {
-            $this->orderService->addSystemOrderComment($order, trans('payments.invalid_has'));
-            
-            $this->paymentService->storeTransaction($order->id, $event->request->all(), 'error');
+                $this->orderService->addSystemOrderComment($order, trans('payments.success_payment'));
+        
+                $this->paymentService->storeTransaction($order->id, $event->request->all(), 'success');
+                
+                if ($status == 'tmpl') {
+                    event(new TmplOrderSuccessfullyPaid($order));
+                }
+            } else {
+                $this->orderService->addSystemOrderComment($order, trans('payments.invalid_has'));
+        
+                $this->paymentService->storeTransaction($order->id, $event->request->all(), 'error');
+            }
         }
     }
     

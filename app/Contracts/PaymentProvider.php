@@ -8,6 +8,7 @@
 
 namespace App\Contracts;
 
+use App\Models\Card;
 use App\Models\Order;
 
 /**
@@ -19,6 +20,14 @@ interface PaymentProvider
     
     /**
      * @param \App\Models\Order $order
+     * @param \App\Models\Card  $card
+     *
+     * @return array|bool|\SimpleXMLElement
+     */
+    public function pay(Order $order, Card $card);
+    
+    /**
+     * @param \App\Models\Order $order
      *
      * @return mixed
      */
@@ -27,9 +36,23 @@ interface PaymentProvider
     /**
      * @param array $data
      *
+     * @return mixed
+     */
+    public function getConnectForm($data);
+    
+    /**
+     * @param array $data
+     *
      * @return bool
      */
     public function validPayment($data);
+    
+    /**
+     * @param array $data
+     *
+     * @return bool
+     */
+    public function validCardConnectPayment($data);
     
     /**
      * @return array

@@ -4,7 +4,6 @@
 
     <section class="profile-edit__section profile-edit-section">
         {!! Form::model($user, ['route' => 'profiles.update', 'method' => 'post', 'class' => 'profile-edit-form']) !!}
-        {!! csrf_field() !!}
 
         <div class="profile-edit-section__title">Личные данные</div>
 

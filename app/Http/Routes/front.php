@@ -130,6 +130,46 @@ $router->group(
             ['as' => 'profiles.orders.index', 'uses' => 'Frontend\ProfileController@ordersIndex']
         );
         
+        $router->group(
+            [
+                'prefix' => 'cards'
+            ],
+            function () use ($router) {
+                $router->get(
+                    '/',
+                    ['as' => 'profiles.cards.index', 'uses' => 'Frontend\CardController@index']
+                );
+    
+                $router->get(
+                    '/create',
+                    ['as' => 'profiles.cards.create', 'uses' => 'Frontend\CardController@create']
+                );
+                $router->post(
+                    '/',
+                    ['as' => 'profiles.cards.store', 'uses' => 'Frontend\CardController@store']
+                );
+                
+                $router->get(
+                    '/{card_id}/edit',
+                    ['as' => 'profiles.cards.edit', 'uses' => 'Frontend\CardController@edit']
+                )->where('card_id', '[0-9]+');
+                $router->post(
+                    '/{card_id}',
+                    ['as' => 'profiles.cards.update', 'uses' => 'Frontend\CardController@update']
+                )->where('card_id', '[0-9]+');
+    
+                $router->post(
+                    '/{card_id}/connect',
+                    ['as' => 'profiles.cards.connect', 'uses' => 'Frontend\CardController@connect']
+                )->where('card_id', '[0-9]+');
+    
+                $router->post(
+                    '/{card_id}/delete',
+                    ['as' => 'profiles.cards.delete', 'uses' => 'Frontend\CardController@delete']
+                )->where('card_id', '[0-9]+');
+            }
+        );
+        
         $router->post(
             '/basket-subscribes',
             ['as' => 'profiles.basket_subscribes.update', 'uses' => 'Frontend\ProfileController@updateSubscribe']
@@ -182,7 +222,7 @@ $router->group(
                 );
             }
         );
-    
+        
         $router->post(
             '/check',
             ['as' => 'coupons.check', 'uses' => 'Frontend\CouponController@check']

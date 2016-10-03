@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Card;
 use App\Models\Order;
+use App\Observers\CardObserver;
 use App\Observers\OrderObserver;
 use App\Validators\AppValidator;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
@@ -73,5 +75,6 @@ class AppServiceProvider extends ServiceProvider
     private function _registerModelsObservers()
     {
         Order::observe(OrderObserver::class);
+        Card::observe(CardObserver::class);
     }
 }

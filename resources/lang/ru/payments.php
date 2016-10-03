@@ -17,4 +17,10 @@ return array (
   'wrong user id' => 'Неверный id пользователя',
   'user not find' => 'Пользователь не найден, заблокирован или не активиен',
   'cancel order' => 'Отмена платежа (недостаточно кредитных средств)',
+  'empty card number' => 'Номер карты не указан',
+  'card not find' => 'Карта не найдена',
+  'card already connected' => 'Карта уже подключена',
+  'wrong payment amount' => 'Неверная сумма платежа',
+  'wrong card number' => 'Неверный формат іd карты',
+  'user is not granted access' => 'Пользователь не подтвердил доступ',
 );

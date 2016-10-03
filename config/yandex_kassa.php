@@ -15,8 +15,8 @@ return [
     | значение этой опции в false
     |
     */
-    'test_mode' => env('YANDEX_KASSA_TEST_MODE', true),
-
+    'test_mode'     => env('YANDEX_KASSA_TEST_MODE', true),
+    
     /*
     |--------------------------------------------------------------------------
     | Yandex Money shop parameters
@@ -34,9 +34,9 @@ return [
     | @see https://money.yandex.ru/joinups
     |
     */
-    'shop_id' => env('YANDEX_KASSA_SHOP_ID', null),
-    'sc_id' => env('YANDEX_KASSA_SC_ID', null),
-
+    'shop_id'       => env('YANDEX_KASSA_SHOP_ID', null),
+    'sc_id'         => env('YANDEX_KASSA_SC_ID', null),
+    
     /*
     |--------------------------------------------------------------------------
     | Shop Password
@@ -51,7 +51,7 @@ return [
     |
     */
     'shop_password' => env('YANDEX_KASSA_SHOP_PASSWORD', ''),
-
+    
     /*
     |--------------------------------------------------------------------------
     | Payment types
@@ -70,12 +70,21 @@ return [
     |
     */
     'payment_types' => [
-        'PC', 'AC', 'MC', 'GP',
-        'WM', 'SB', 'MP', 'AB',
-        'MA', 'PB', 'QW', 'KV',
-        'QP'
+        'PC',
+        'AC',
+        'MC',
+        'GP',
+        'WM',
+        'SB',
+        'MP',
+        'AB',
+        'MA',
+        'PB',
+        'QW',
+        'KV',
+        'QP',
     ],
-
+    
     /*
     |--------------------------------------------------------------------------
     | Routes settings
@@ -83,15 +92,37 @@ return [
     |--------------------------------------------------------------------------
     |
     */
-    'route' => [
-        'checkOrder' => [
+    'route'         => [
+        'checkOrder'   => [
             'url' => '/payment/check',
         ],
-        'cancelOrder' => [
-            'url' => '/payment/cancel'
+        'cancelOrder'  => [
+            'url' => '/payment/cancel',
         ],
         'paymentAviso' => [
             'url' => '/payment/aviso',
-        ]
+        ],
+    ],
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Routes settings
+    | Настройки путей
+    |--------------------------------------------------------------------------
+    |
+    */
+    
+    'currency' => 'RUB',
+    
+    'mws' => [
+        'pay' => [
+            'url'           => 'https://penelope.yamoney.ru/webservice/mws/api/repeatCardPayment',
+            'test_mode_url' => 'https://penelope-demo.yamoney.ru:8083/webservice/mws/api/repeatCardPayment',
+        ],
+        
+        'confirm' => [
+            'url'           => 'https://penelope.yamoney.ru/webservice/mws/api/confirmPayment',
+            'test_mode_url' => 'https://penelope-demo.yamoney.ru:8083/webservice/mws/api/confirmPayment',
+        ],
     ],
 ];

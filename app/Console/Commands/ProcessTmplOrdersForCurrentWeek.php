@@ -3,7 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Events\Backend\TmplOrderPaymentError;
-use App\Events\Backend\TmplOrderSuccessfullyPaid;
+use App\Exceptions\UnsupportedPaymentMethod;
+use App\Models\Card;
 use App\Models\Order;
 use App\Services\OrderService;
 use App\Services\PaymentService;
@@ -67,49 +68,56 @@ class ProcessTmplOrdersForCurrentWeek extends Command
             try {
                 $this->orderService->updatePrices($order);
                 
-                $order->total = $order->getTotal();
+                list($subtotal, $total) = $this->orderService->getTotals($order);
+                
+                $order->subtotal = $subtotal;
+                $order->total = $total;
+                
                 $order->save();
                 
                 $this->log('process order #'.$order->id, 'info', $order->toArray());
                 
-                $result = $this->paymentService->automaticallyPay($order);
+                $card = Card::ofUser($order->user_id)->default()->first();
                 
-                if ($result === true) {
-                    $order->status = 'paid';
-                    $order->save();
+                if ($card) {
+                    $result = $this->paymentService->automaticallyPay($order, $card);
                     
-                    $this->orderService->addSystemOrderComment(
-                        $order,
-                        trans('messages.order successfully auto paid'),
-                        'paid'
+                    if ($result === true) {
+                        continue;
+                    }
+                    
+                    $admin_message = trans(
+                        'messages.order auto paid failed, payment system error #:error',
+                        ['error' => isset($result['error']) ? $result['error'] : '']
                     );
-                    
-                    $this->log('order #'.$order->id.' successfully paid, order status changed to "paid"', 'info');
-                    
-                    event(new TmplOrderSuccessfullyPaid($order));
-                    
-                    continue;
+                } else {
+                    $message = trans('messages.no selected default cards user message');
+                    $admin_message = trans('messages.no selected default cards admin message');
                 }
-                
-                $message = 'order #'.$order->id.' online paid error: '.$result['message'];
-                $this->log($message, 'error');
-                
-                $order->status = 'changed';
-                $order->save();
-    
-                $this->orderService->addSystemOrderComment(
-                    $order,
-                    trans('messages.order auto paid failed').': '.$result['message'],
-                    'changed'
-                );
-                
-                $this->log('order #'.$order->id.' status changed to "changed"', 'info');
-                
-                event(new TmplOrderPaymentError($order, $result['message']));
+            } catch (UnsupportedPaymentMethod $e) {
+                $message = $admin_message = $e->getMessage();
             } catch (Exception $e) {
-                $message = $e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
-                
-                admin_notify($this->description.' error: '.$message);
+                $admin_message = $e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
+            }
+            
+            $admin_message = trans(
+                'messages.order #:order_id auto paid failed, error: :error',
+                ['order_id' => $order->id, 'error' => $admin_message]
+            );
+            
+            $this->log('order #'.$order->id.' online paid error: '.$admin_message, 'error');
+            
+            $order->status = 'changed';
+            $order->save();
+    
+            $this->log('order #'.$order->id.' status changed to "changed"', 'info');
+    
+            $this->orderService->addSystemOrderComment($order, $admin_message, 'changed');
+    
+            admin_notify($this->description.' error: '.$admin_message);
+            
+            if (!empty($message)) {
+                event(new TmplOrderPaymentError($order, $message));
             }
         }
         

@@ -9,9 +9,12 @@
 namespace App\Services;
 
 use App\Contracts\PaymentProvider;
+use App\Exceptions\UnsupportedPaymentMethod;
 use App\Exceptions\UnsupportedPaymentProvider;
+use App\Models\Card;
 use App\Models\Order;
 use App\Models\PaymentTransaction;
+use Exception;
 
 /**
  * Class PaymentService
@@ -38,21 +41,23 @@ class PaymentService
     }
     
     /**
-     * @param \App\Models\Order $order
+     * @param \App\Models\Order  $order
+     * @param \App\Models\Card $card
      *
      * @return array|bool
+     * @throws \App\Exceptions\UnsupportedPaymentMethod
      */
-    public function automaticallyPay(Order $order)
+    public function automaticallyPay(Order $order, Card $card)
     {
         if (!$order->canBePaidOnline()) {
-            return [
-                'status'  => 'warning',
-                'message' => trans('messages.order no online payment').': '.
-                    trans('labels.payment_method_'.$order->getStringPaymentMethod()),
-            ];
+            throw new UnsupportedPaymentMethod(trans('messages.order no online payment').': '.
+                trans('labels.payment_method_'.$order->getStringPaymentMethod()));
         }
         
-        //TODO: implement online payment
+        $provider = $this->getProvider();
+    
+        $provider->pay($order, $card);
+        
         return true;
     }
     

@@ -49,6 +49,13 @@ return array(
     'coupon not available' => 'Этот купон не действителен или Вы не можете его использовать',
     'tanks for registration on site :site_name, this is you registration coupon :discount' => 'Поздравляем с регистрацией на сайте :site_name, и дарим Вам скидочный купон на :discount%. Для того чтобы воспользоваться купоном просто введите код, указаный ниже при оформлении заказа.',
     'changes successfully saved' => 'Изменения успешно сохранены',
+    'card successfully saved' => 'Карта успешно сохранена',
+    'card not found' => 'Карта не найдена',
+    'card successfully updated' => 'Данные карты успешно обновлены',
+    'you cannot delete a default card' => 'Вы не можете удалить карту выбранную по умолчанию',
+    'card successfully deleted' => 'Карта успешно удалена',
     'password reset email with reset :link' => 'Для сброса пароля перейдите по ссылке :link',
     'congratulations, you have successfully reset your password' => 'Поздравляем! Вы успешно сбросили Ваш пароль.',
+    'card already connected' => 'Карта уже подключена',
+    'server error' => 'Ошибка сервера',
 );

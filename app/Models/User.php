@@ -95,6 +95,14 @@ class User extends SentryUser implements FrontLink
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function cards()
+    {
+        return $this->hasMany(Card::class);
+    }
+    
+    /**
      * @param      $q
      */
     public function scopeJoinInfo($q)

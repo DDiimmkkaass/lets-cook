@@ -52,12 +52,14 @@ class EventServiceProvider extends ServiceProvider
 
         'Artem328\LaravelYandexKassa\Events\BeforeCheckOrderResponse' => [
             'App\Listeners\Events\Payments\CheckOrderRequisites',
+            'App\Listeners\Events\Payments\CheckCardCreateRequisites',
         ],
         'Artem328\LaravelYandexKassa\Events\BeforeCancelOrderResponse' => [
             'App\Listeners\Events\Payments\CancelOrder',
         ],
         'Artem328\LaravelYandexKassa\Events\BeforePaymentAvisoResponse' => [
             'App\Listeners\Events\Payments\ChangeOrderStatusWhenPaymentSuccessful',
+            'App\Listeners\Events\Payments\SaveUserCard',
         ],
         
         'App\Events\Frontend\BasketSubscribeUpdated' => [

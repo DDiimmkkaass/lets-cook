@@ -156,4 +156,8 @@ return array (
   'unsupported payment provider: :provider' => 'Неподдерживаемый провайдер оплаты :provider',
   'coupon not available' => 'Этот купон не действителен или не можете быть применен к этому пользователю',
   'you cannot set same count of portions for child model' => 'Вы не можете указать тоже количество порций что и у родительского рецепта',
+  'no selected default cards user message' => 'У Вас отсутствует, выбранная по умолчанию, карта для автоматической оплаты',
+  'no selected default cards admin message' => 'У пользователя отсутствует, выбранная по умолчанию, карта для автоматической оплаты',
+  'order auto paid failed, payment system error #:error' => 'Ошибка платежной системы #:error',
+  'order #:order_id auto paid failed, error: :error' => 'Ошибка автооплаты заказа #:order_id, ошибка: :error',
 );

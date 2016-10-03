@@ -48,36 +48,43 @@ class CheckOrderRequisites
      */
     public function handle(BeforeCheckOrderResponse $event)
     {
-        $provider = $this->paymentService->getProvider();
-        
-        if (!$provider->validPayment($event->request->all())) {
-            $event->responseParameters['code'] = 100;
-            $event->responseParameters['message'] = implode(', ', $provider->getErrors());
-            $event->responseParameters['techMessage'] = trans('payments.validation_fails');
+        if (!$event->request->get('cardConnect', false)) {
+            $provider = $this->paymentService->getProvider();
+            
+            if (!$provider->validPayment($event->request->all())) {
+                $event->responseParameters['code'] = 100;
+                $event->responseParameters['message'] = implode(', ', $provider->getErrors());
+                $event->responseParameters['techMessage'] = trans('payments.validation_fails');
+                
+                $order = Order::find($event->request->get('orderNumber'));
+                
+                if ($order) {
+                    $this->paymentService->storeTransaction(
+                        $order->id,
+                        $event->request->all(),
+                        'error',
+                        'checkPayment'
+                    );
+                    
+                    $this->orderService->addSystemOrderComment(
+                        $order,
+                        trans('payments.validation_fails').': '.implode(', ', $provider->getErrors())
+                    );
+                }
+                
+                return $event->responseParameters;
+            }
             
             $order = Order::find($event->request->get('orderNumber'));
             
             if ($order) {
-                $this->paymentService->storeTransaction($order->id, $event->request->all(), 'error', 'checkPayment');
-                
-                $this->orderService->addSystemOrderComment(
-                    $order,
-                    trans('payments.validation_fails').': '.implode(', ', $provider->getErrors())
+                $this->paymentService->storeTransaction(
+                    $event->request->get('orderNumber'),
+                    $event->request->all(),
+                    'success',
+                    'checkPayment'
                 );
             }
-            
-            return $event->responseParameters;
-        }
-    
-        $order = Order::find($event->request->get('orderNumber'));
-        
-        if ($order) {
-            $this->paymentService->storeTransaction(
-                $event->request->get('orderNumber'),
-                $event->request->all(),
-                'success',
-                'checkPayment'
-            );
         }
         
         return null;
