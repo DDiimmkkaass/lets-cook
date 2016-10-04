@@ -72,6 +72,14 @@ class Coupon extends Model
     ];
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+    
+    /**
      * @param float $value
      */
     public function setDiscountAttribute($value)

@@ -160,4 +160,5 @@ return array (
   'no selected default cards admin message' => 'У пользователя отсутствует, выбранная по умолчанию, карта для автоматической оплаты',
   'order auto paid failed, payment system error #:error' => 'Ошибка платежной системы #:error',
   'order #:order_id auto paid failed, error: :error' => 'Ошибка автооплаты заказа #:order_id, ошибка: :error',
+  'you can not delete this coupon as it is used in orders' => 'Вы не можете удалить этот купон, так как он уже используется в заказе',
 );

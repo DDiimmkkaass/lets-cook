@@ -208,11 +208,15 @@ class CouponController extends BackendController
     public function destroy($id)
     {
         try {
-            $model = Coupon::findOrFail($id);
+            $model = Coupon::with('orders')->findOrFail($id);
             
-            $model->delete();
-            
-            FlashMessages::add('success', trans("messages.destroy_ok"));
+            if ($model->orders->count()) {
+                FlashMessages::add('warning', trans("messages.you can not delete this coupon as it is used in orders"));
+            } else {
+                $model->delete();
+    
+                FlashMessages::add('success', trans("messages.destroy_ok"));
+            }
         } catch (ModelNotFoundException $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
         } catch (Exception $e) {
