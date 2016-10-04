@@ -11,30 +11,30 @@
             <div class="clearfix"></div>
         </div>
 
-        @if ($booklet)
-            <div class="col-sm-6 margin-bottom-20">
-                <form action="{!! route('admin.packaging.update_booklet') !!}" class="form-horizontal booklet-form"
-                      method="post">
-                    {!! csrf_field() !!}
-                    <div class="form-group">
-                        <div class="col-sm-2">
-                            <label for="link" class="control-label">@lang('labels.link')</label>
-                        </div>
-                        <div class="col-sm-6">
-                            <input class="form-control input-sm" type="text" name="link" id="link"
-                                   value="{!! $booklet->link !!}">
-                            <input type="hidden" name="year" value="{!! $year !!}">
-                            <input type="hidden" name="week" value="{!! $week !!}">
-                        </div>
-                        <div class="col-sm-2">
+        <div class="col-sm-6 margin-bottom-20">
+            <form action="{!! route('admin.packaging.update_booklet') !!}" class="form-horizontal booklet-form"
+                  method="post">
+                {!! csrf_field() !!}
+                <div class="form-group">
+                    <div class="col-sm-2">
+                        <label for="link" class="control-label">@lang('labels.link')</label>
+                    </div>
+                    <div class="col-sm-6">
+                        <input class="form-control input-sm" type="text" name="link" id="link"
+                               value="{!! isset($booklet->link) ? $booklet->link : '' !!}">
+                        <input type="hidden" name="year" value="{!! $year !!}">
+                        <input type="hidden" name="week" value="{!! $week !!}">
+                    </div>
+                    <div class="col-sm-2">
+                        @if (!past_week($year, $week))
                             <button type="submit" class="btn btn-sm btn-default btn-flat">
                                 @lang('labels.save')
                             </button>
-                        </div>
+                        @endif
                     </div>
-                </form>
-            </div>
-        @endif
+                </div>
+            </form>
+        </div>
 
         <table class="table table-bordered booklet-packaging">
             <tbody>

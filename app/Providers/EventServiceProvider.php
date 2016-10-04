@@ -25,7 +25,6 @@ class EventServiceProvider extends ServiceProvider
 
         'App\Events\Backend\WeeklyMenuSaved' => [
             'App\Listeners\Events\Backend\UpdatePurchase',
-            'App\Listeners\Events\Backend\CreateBooklet',
         ],
 
         'App\Events\Backend\TmplOrderSuccessfullyPaid' => [

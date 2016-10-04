@@ -234,7 +234,16 @@ class PackagingController extends BackendController
     public function updateBooklet(BookletUpdateRequest $request)
     {
         try {
-            $booklet = Booklet::forWeek($request->get('year'), $request->get('week'))->firstOrFail();
+            $booklet = Booklet::forWeek($request->get('year'), $request->get('week'))->first();
+            
+            if (!$booklet) {
+                $booklet = new Booklet(
+                    [
+                        'year' => $request->get('year'),
+                        'week' => $request->get('week'),
+                    ]
+                );
+            }
             
             $booklet->link = $request->link;
             $booklet->save();
