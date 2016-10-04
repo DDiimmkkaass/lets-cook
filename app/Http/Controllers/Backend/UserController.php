@@ -455,17 +455,24 @@ class UserController extends BackendController
     public function coupons($user_id)
     {
         try {
+            $user = User::with('orders')->find($user_id);
             $coupons = UserCoupon::whereUserId($user_id)->get();
     
             $html = view('partials.selects.option', ['item' => ['id' => '', 'name' => trans('labels.please_select')]])
                 ->render();
     
             $coupons->each(
-                function ($item, $index) use (&$html) {
-                    return $html .= view(
-                        'partials.selects.option',
-                        ['item' => ['id' => $item->coupon_id, 'name' => $item->getName()], 'selected' => $item->default]
-                    )->render();
+                function ($item, $index) use (&$html, $user) {
+                    if ($item->available($user)) {
+                        $_coupon = view(
+                            'partials.selects.option',
+                            ['item' => ['id' => $item->coupon_id, 'name' => $item->getName()], 'selected' => $item->default]
+                        )->render();
+                    } else {
+                        $_coupon = '';
+                    }
+                    
+                    return $html .= $_coupon;
                 }
             );
         

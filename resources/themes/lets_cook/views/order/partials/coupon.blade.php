@@ -11,7 +11,7 @@
             <div class="order-promocode__select large-select">
                 <select class="large-select__wrapper" name="coupon_id" id="order-create-coupon-id">
                     @foreach($user_coupons as $coupon)
-                        @if ($coupon->available())
+                        @if ($coupon->available($user))
                             <option value="{!! $coupon->coupon_id !!}"
                                     @if ($coupon->default)
                                         selected

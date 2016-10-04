@@ -91,7 +91,7 @@ class CouponController extends FrontendController
         try {
             $coupon = $this->user->coupons()->whereCouponId($request->get('coupon_id'))->first();
             
-            if (!$coupon->available()) {
+            if (!$coupon->available($this->user)) {
                 return [
                     'status'  => 'error',
                     'message' => trans('front_messages.you cannot make this coupon default'),

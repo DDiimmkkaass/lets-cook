@@ -10,7 +10,7 @@
         @endif
     </td>
     <td>
-        @if ($coupon->available())
+        @if ($coupon->available($user))
             Доступен
         @else
             Истек/Использован

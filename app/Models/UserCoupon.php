@@ -58,14 +58,37 @@ class UserCoupon extends Model
     }
     
     /**
+     * @param User|null $user
+     *
      * @return bool
      */
-    public function available()
+    public function available($user = null)
     {
-        return
-            (!$this->getExpiredAt() || $this->getExpiredAt() > Carbon::now()->format('Y-m-d H:i:s'))
-            &&
-            $this->getAvailableCount() > 0;
+        if (($this->getExpiredAt() && $this->getExpiredAt() < Carbon::now()->format('Y-m-d H:i:s'))) {
+            return false;
+        }
+    
+        if (($this->getStartedAt() && $this->getStartedAt() > Carbon::now()->format('Y-m-d H:i:s'))) {
+            return false;
+        }
+        
+        if ($this->getAvailableCount() <= 0) {
+            return false;
+        }
+            
+        if ($this->getType() == 'new') {
+            if ($user && $user->orders->count() > 0) {
+                return false;
+            }
+        }
+    
+        if ($this->getType() == 'exists') {
+            if (!$user || $user->orders->count() == 0) {
+                return false;
+            }
+        }
+        
+        return true;
     }
     
     /**
@@ -130,6 +153,14 @@ class UserCoupon extends Model
     public function getDiscountType()
     {
         return $this->coupon->getStringDiscountType();
+    }
+    
+    /**
+     * @return string
+     */
+    public function getStartedAt()
+    {
+        return $this->coupon->getStartedAt();
     }
     
     /**

@@ -156,7 +156,7 @@
                         <div class="order-edit__select order-select">
                             <select name="coupon_id" id="order-edit-coupon-id">
                                 @foreach($user_coupons as $coupon)
-                                    @if ($coupon->available() || $order->coupon_id == $coupon->coupon_id)
+                                    @if ($coupon->available($user) || $order->coupon_id == $coupon->coupon_id)
                                         <option value="{!! $coupon->coupon_id !!}"
                                                 data-code="{!! $coupon->getCode() !!}"
                                                 data-main_discount="{!! $coupon->getMainDiscount() !!}"

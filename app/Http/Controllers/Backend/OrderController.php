@@ -244,7 +244,8 @@ class OrderController extends BackendController
                 'additional_baskets',
                 'comments',
                 'user',
-                'user.coupons'
+                'user.coupons',
+                'user.orders'
             )->findOrFail($id);
             
             $this->data('page_title', trans('labels.order').': #'.$model->id);
@@ -720,7 +721,7 @@ class OrderController extends BackendController
         $user_coupons = ['' => trans('labels.not_set')];
         if ($model->exists) {
             foreach ($model->user->coupons as $coupon) {
-                if ($coupon->available() || $coupon->coupon_id == $model->coupon_id) {
+                if ($coupon->available($model->user) || $coupon->coupon_id == $model->coupon_id) {
                     $user_coupons[$coupon->coupon_id] = $coupon->getName();
                 }
             }
