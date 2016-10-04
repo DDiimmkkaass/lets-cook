@@ -2,7 +2,7 @@
         width="{!! $width !!}"
         height="{!! $height !!}"
         class="margin-bottom-5 image_input_thumbnail {!! isset($image_class) ? $image_class : '' !!}"
-        src="{!! $image ? $image : 'http://www.placehold.it/' . $width . 'x' . $height . '/EFEFEF/AAAAAA&text=no+image' !!}"
+        src="{!! $image ? thumb($image, $width, $height) : 'http://www.placehold.it/' . $width . 'x' . $height . '/EFEFEF/AAAAAA&text=no+image' !!}"
         data-default="{!! 'http://www.placehold.it/' . $width . 'x' . $height . '/EFEFEF/AAAAAA&text=no+image' !!}"
 />
 
