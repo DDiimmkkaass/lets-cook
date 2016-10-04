@@ -34,7 +34,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        if ($e->getCode() != 404) {
+        if (!in_array((int) $e->getCode(), [404, 422])) {
             $_request = request()->all();
     
             $debugSetting = config('app.debug');
