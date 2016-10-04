@@ -331,6 +331,7 @@ class OrderService
         $data['full_name'] = $user->getFullName();
         $data['email'] = $user->email;
         $data['phone'] = $user->phone;
+        $data['additional_phone'] = $user->additional_phone;
         
         $data['basket_id'] = $request->get('basket_id');
         

@@ -652,4 +652,6 @@ return array (
   'coupon_code' => 'Код',
   'orders_history' => 'История заказов',
   'create_count' => 'Количество для создания',
+  'main_phone_short' => 'Осн.',
+  'additional_phone_short' => 'Доп.',
 );

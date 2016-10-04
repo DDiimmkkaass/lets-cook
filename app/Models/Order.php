@@ -465,7 +465,12 @@ class Order extends Model
      */
     public function getPhones($delimiter = '<br>')
     {
-        return $this->phone.(empty($this->additional_phone) ? '' : $delimiter).$this->additional_phone;
+        return $this->phone.'('.trans('labels.main_phone_short').')'.
+            (
+                empty($this->additional_phone) ?
+                '' :
+                $delimiter.$this->additional_phone.'('.trans('labels.additional_phone_short').')'
+            );
     }
     
     /**

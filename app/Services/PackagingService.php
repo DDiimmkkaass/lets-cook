@@ -211,7 +211,7 @@ class PackagingService
         }
         
         foreach ($days as $key => $day) {
-            $days[$key] = collect($day)->sortBy('full_name');
+            $days[$key] = collect($day)->sortByDesc('delivery_time');
         }
         
         return $days;
