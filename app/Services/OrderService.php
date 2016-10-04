@@ -790,23 +790,25 @@ class OrderService
         foreach ($ingredients as $ingredient) {
             list($basket_recipe_id, $recipe_ingredient_id) = explode('_', $ingredient);
             
-            $basket_recipe = BasketRecipe::with('recipe.home_ingredients')->find($basket_recipe_id);
+            if ($basket_recipe_id) {
+                $basket_recipe = BasketRecipe::with('recipe.home_ingredients')->find($basket_recipe_id);
+    
+                if ($basket_recipe) {
+                    $recipe_ingredient = $basket_recipe->recipe->home_ingredients->find($recipe_ingredient_id);
+        
+                    if ($recipe_ingredient && $recipe_ingredient->ingredient->inSale()) {
+                        $ingredient = new OrderIngredient(
+                            [
+                                'basket_recipe_id' => $basket_recipe_id,
+                                'ingredient_id'    => $recipe_ingredient->ingredient_id,
+                                'name'             => $recipe_ingredient->ingredient->name,
+                                'count'            => $recipe_ingredient->count,
+                            ]
+                        );
+                        $ingredient->price = $recipe_ingredient->ingredient->sale_price;
             
-            if ($basket_recipe) {
-                $recipe_ingredient = $basket_recipe->recipe->home_ingredients->find($recipe_ingredient_id);
-                
-                if ($recipe_ingredient && $recipe_ingredient->ingredient->inSale()) {
-                    $ingredient = new OrderIngredient(
-                        [
-                            'basket_recipe_id' => $basket_recipe_id,
-                            'ingredient_id'    => $recipe_ingredient->ingredient_id,
-                            'name'             => $recipe_ingredient->ingredient->name,
-                            'count'            => $recipe_ingredient->count,
-                        ]
-                    );
-                    $ingredient->price = $recipe_ingredient->ingredient->sale_price;
-                    
-                    $model->ingredients()->save($ingredient);
+                        $model->ingredients()->save($ingredient);
+                    }
                 }
             }
         }
