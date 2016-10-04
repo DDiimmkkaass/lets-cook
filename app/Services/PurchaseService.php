@@ -457,11 +457,15 @@ class PurchaseService
             }
         }
         
-        foreach ($ingredients as $type => $_ingredients) {
-            Purchase::where('week', $list['week'])->where('year', $list['year'])
-                ->whereType($type)
-                ->whereNotIn('ingredient_id', $_ingredients)
-                ->delete();
+        if (empty($ingredients)) {
+            Purchase::where('week', $list['week'])->where('year', $list['year'])->delete();
+        }  else {
+            foreach ($ingredients as $type => $_ingredients) {
+                Purchase::where('week', $list['week'])->where('year', $list['year'])
+                    ->whereType($type)
+                    ->whereNotIn('ingredient_id', $_ingredients)
+                    ->delete();
+            }
         }
     }
     
