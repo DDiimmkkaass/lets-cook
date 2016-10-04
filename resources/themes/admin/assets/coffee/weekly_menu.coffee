@@ -39,23 +39,51 @@ WeeklyMenu.removeBasket = ($button) ->
   $content_block = $button.closest('.tab-pane')
   $tab = $('[href="#' + $content_block.attr('id') + '"]').closest('li')
 
-  $tab.remove()
-  $content_block.remove()
+  id = $button.data('id')
 
-  checkLastBasketTabInList()
+  $.ajax
+    url: '/admin/order/weekly-menu-basket/' + id + '/count'
+    type: 'GET'
+    dataType: 'json'
+    error: (response) =>
+      processError response, null
+    success: (response) =>
+      if response.status == 'success'
+        $tab.remove()
+        $content_block.remove()
+
+        checkLastBasketTabInList()
+      else
+        message.show response.message, response.status
 
 WeeklyMenu.removeRecipe = ($button) ->
-  if $button.hasClass('exist')
-    id = $button.data("id")
-    if id
-      name = $button.data("name")
-      $button.closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
-
   $basket = $button.closest('.tab-pane')
 
-  $button.closest(".recipe-block").remove()
+  if $button.hasClass('exist')
+    id = $button.data("id")
 
-  updateBasketInternalPrice($basket)
+    if id
+      $.ajax
+        url: '/admin/order/basket-recipe/' + id + '/count'
+        type: 'GET'
+        dataType: 'json'
+        error: (response) =>
+          processError response, null
+        success: (response) =>
+          if response.status == 'success'
+            name = $button.data("name")
+
+            $button.closest("form").append "<input type=\"hidden\" name=\"" + name + "\" value=\"" + id + "\" />"
+
+            $button.closest(".recipe-block").remove()
+
+            updateBasketInternalPrice($basket)
+          else
+            message.show response.message, response.status
+  else
+    $button.closest(".recipe-block").remove()
+
+    updateBasketInternalPrice($basket)
 
 WeeklyMenu.addBasket = ($form, closure) ->
   closure = closure || false

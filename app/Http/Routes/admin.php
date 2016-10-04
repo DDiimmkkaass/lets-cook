@@ -440,6 +440,22 @@ $router->group(
                     'order/history',
                     ['as' => 'admin.order.history', 'uses' => 'Backend\OrderController@history']
                 );
+                $router->get(
+                    'order/basket-recipe/{basket_recipe_id}/count',
+                    [
+                        'middleware' => ['ajax'],
+                        'as'         => 'admin.order.basket_recipe_orders_count',
+                        'uses'       => 'Backend\OrderController@basketRecipesOrdersCount',
+                    ]
+                )->where('recipe_id', '[0-9]+');
+                $router->get(
+                    'order/weekly-menu-basket/{weekly_menu_basket_id}/count',
+                    [
+                        'middleware' => ['ajax'],
+                        'as'         => 'admin.order.weekly_menu_basket_orders_count',
+                        'uses'       => 'Backend\OrderController@weeklyMenuBasketOrdersCount',
+                    ]
+                )->where('weekly_menu_basket_id', '[0-9]+');
                 $router->resource('order', 'Backend\OrderController', ['except' => ['destroy']]);
                 
                 //purchase

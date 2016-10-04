@@ -17,7 +17,9 @@ use App\Models\City;
 use App\Models\Group;
 use App\Models\Ingredient;
 use App\Models\Order;
+use App\Models\OrderBasket;
 use App\Models\OrderComment;
+use App\Models\OrderRecipe;
 use App\Models\RecipeIngredient;
 use App\Models\User;
 use App\Models\WeeklyMenu;
@@ -569,6 +571,58 @@ class OrderController extends BackendController
                     ->with(compact('basket_recipe', 'model'))
                     ->render(),
             ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
+     * @param int $basket_recipe_id
+     *
+     * @return array
+     */
+    public function basketRecipesOrdersCount($basket_recipe_id)
+    {
+        try {
+            $orders = OrderRecipe::where('basket_recipe_id', $basket_recipe_id)->count();
+            
+            if ($orders > 0) {
+                return [
+                    'status' => 'warning',
+                    'message' => trans('messages.you can not delete this recipe as it is used in order'),
+                ];
+            } else {
+                return ['status' => 'success'];
+            }
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
+     * @param int $weekly_menu_basket_id
+     *
+     * @return array
+     */
+    public function weeklyMenuBasketOrdersCount($weekly_menu_basket_id)
+    {
+        try {
+            $orders = OrderBasket::where('weekly_menu_basket_id', $weekly_menu_basket_id)->count();
+            
+            if ($orders > 0) {
+                return [
+                    'status' => 'warning',
+                    'message' => trans('messages.you can not delete this basket as it is used in order'),
+                ];
+            } else {
+                return ['status' => 'success'];
+            }
         } catch (Exception $e) {
             return [
                 'status'  => 'error',
