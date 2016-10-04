@@ -25,11 +25,8 @@ class CardUpdateRequest extends FormRequest
      */
     public function rules()
     {
-        $card_id = $this->route('card_id');
-        $user_id = Sentry::getUser()->getId();
-        
         $rules = [
-            'name'    => 'required|unique:cards,name,'.$card_id.',id,user_id,'.$user_id,
+            'name'    => 'required',
             'number'  => 'numeric|regex:/^[0-9]{0,16}$/',
             'default' => 'required|boolean',
         ];
