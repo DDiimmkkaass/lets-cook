@@ -163,4 +163,5 @@ return array (
   'you can not delete this coupon as it is used in orders' => 'Вы не можете удалить этот купон, так как он уже используется в заказе',
   'you can not delete this recipe as it is used in order' => 'Вы не можете удалить этот рецепт, так как он уже используется в заказе',
   'you can not delete this basket as it is used in order' => 'Вы не можете удалить эту корзину, так как она уже используется в заказе',
+  'no recipes' => 'Еще нет заказанных рецептов',
 );

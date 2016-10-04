@@ -8,9 +8,10 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Http\Requests\Backend\Booklet\BookletUpdateRequest;
+use App\Models\Booklet;
 use App\Models\Purchase;
 use App\Services\PackagingService;
-use Carbon;
 use Datatables;
 use Exception;
 use FlashMessages;
@@ -34,21 +35,22 @@ class PackagingController extends BackendController
      * @var array
      */
     public $accessMap = [
-        'index'    => 'packaging.read',
-        'show'     => 'packaging.read',
-        'current'  => 'packaging.read',
-        'download' => 'packaging.read',
+        'index'         => 'packaging.read',
+        'show'          => 'packaging.read',
+        'current'       => 'packaging.read',
+        'download'      => 'packaging.read',
+        'updateBooklet' => 'packaging.booklet.write',
     ];
     
     /**
      * @var array
      */
-    protected $tabs = ['repackaging', 'recipes', 'users', 'deliveries'];
+    protected $tabs = ['repackaging', 'recipes', 'booklet', 'users', 'deliveries'];
     
     /**
      * @var array
      */
-    protected $downloads = ['repackaging', 'recipes', 'stickers', 'users', 'deliveries'];
+    protected $downloads = ['repackaging', 'recipes', 'booklet', 'stickers', 'users', 'deliveries'];
     
     /**
      * @var \App\Services\PackagingService
@@ -135,9 +137,9 @@ class PackagingController extends BackendController
         
         $this->data('year', $year);
         $this->data('week', $week);
-    
+        
         $page_title = $this->_getPageTitle($year, $week);
-    
+        
         $this->data('page_title', $page_title);
         $this->breadcrumbs($page_title);
         
@@ -179,8 +181,15 @@ class PackagingController extends BackendController
             
             $list = $this->packagingService->{$tab.'ForWeek'}($year, $week);
             
+            if ($tab == 'booklet') {
+                $booklet = Booklet::forWeek($year, $week)->first();
+            }
+            
             $html = view('views.'.$this->module.'.tabs.'.$tab)
-                ->with('list', $list)->with('year', $year)->with('week', $week)
+                ->with('list', $list)
+                ->with('year', $year)
+                ->with('week', $week)
+                ->with('booklet', isset($booklet) ? $booklet : null)
                 ->render();
             
             return [
@@ -218,6 +227,31 @@ class PackagingController extends BackendController
     }
     
     /**
+     * @param \App\Http\Requests\Backend\Booklet\BookletUpdateRequest $request
+     *
+     * @return array
+     */
+    public function updateBooklet(BookletUpdateRequest $request)
+    {
+        try {
+            $booklet = Booklet::forWeek($request->get('year'), $request->get('week'))->firstOrFail();
+            
+            $booklet->link = $request->link;
+            $booklet->save();
+            
+            return [
+                'status'  => 'success',
+                'message' => trans('messages.changes successfully saved'),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
+    }
+    
+    /**
      * @param int  $year
      * @param int  $week
      * @param bool $current
@@ -231,7 +265,7 @@ class PackagingController extends BackendController
         } else {
             $title = trans('labels.list_of_packaging').': '.trans('labels.w_label').$week.', '.$year;
         }
-    
+        
         if (before_finalisation($year, $week)) {
             $title .= '<span class="label label-danger warning-labels">'.
                 trans('labels.this_is_not_final_version').

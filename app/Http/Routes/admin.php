@@ -554,6 +554,14 @@ $router->group(
                                 'uses' => 'Backend\PackagingController@download',
                             ]
                         );
+    
+                        $router->post(
+                            'update_booklet',
+                            [
+                                'as'   => 'admin.packaging.update_booklet',
+                                'uses' => 'Backend\PackagingController@updateBooklet',
+                            ]
+                        );
                     }
                 );
                 

@@ -17,6 +17,22 @@ Packaging.getTab = ($tab) ->
       else
         message.show response.message, response.status
 
+Packaging.updateBooklet = ($form) ->
+  data = getFormData($form)
+
+  $.ajax
+    url: $form.attr('action')
+    type: 'POST'
+    data: data
+    dataType: 'json'
+    error: (response) =>
+      processError response, null
+    success: (response) =>
+      unless response.status is 'success'
+        $form.find('[name="link"]').val('')
+
+      message.show response.message, response.status
+
 $(document).on 'ready', () ->
   if $('.packaging-tabs').length
     $tab = $('.packaging-tabs li.active a')
@@ -27,3 +43,12 @@ $(document).on 'ready', () ->
     $tab = $(e.target)
 
     Packaging.getTab($tab)
+
+  $(document).on 'submit', '.booklet-form', (e) ->
+    e.preventDefault()
+
+    console.log($(this))
+
+    Packaging.updateBooklet($(this))
+
+    return false

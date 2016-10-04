@@ -94,6 +94,7 @@ return array (
     'purchase.write',
     
     'packaging.read',
+    'packaging.booklet.write',
     
     'tagcategory.create',
     'tagcategory.read',

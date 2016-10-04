@@ -654,4 +654,7 @@ return array (
   'create_count' => 'Количество для создания',
   'main_phone_short' => 'Осн.',
   'additional_phone_short' => 'Доп.',
+  'tab_packaging_booklet' => 'Буклет',
+  'booklet' => 'Буклет',
+  'download_xlsx_file_with_booklet' => 'Скачать буклет',
 );

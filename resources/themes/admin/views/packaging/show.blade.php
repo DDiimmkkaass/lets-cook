@@ -17,6 +17,11 @@
                            data-toggle="tab">@lang('labels.tab_packaging_recipes')</a>
                     </li>
                     <li>
+                        <a aria-expanded="false" href="#booklet" class="ajax-tab"
+                           data-href="{!! route('admin.packaging.tab', ['booklet', $year, $week]) !!}"
+                           data-toggle="tab">@lang('labels.tab_packaging_booklet')</a>
+                    </li>
+                    <li>
                         <a aria-expanded="false" href="#users" class="ajax-tab"
                            data-href="{!! route('admin.packaging.tab', ['users', $year, $week]) !!}"
                            data-toggle="tab">@lang('labels.tab_packaging_users')</a>
@@ -32,6 +37,8 @@
                     <div class="tab-pane active" id="repacking"></div>
 
                     <div class="tab-pane" id="recipes"></div>
+
+                    <div class="tab-pane" id="booklet"></div>
 
                     <div class="tab-pane" id="users"></div>
 

@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Models\Booklet;
 use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\OrderBasket;
@@ -130,6 +131,64 @@ class PackagingService
      *
      * @return array
      */
+    public function bookletForWeek($year, $week)
+    {
+        $orders = $this->_getOrders($year, $week)->pluck('id');
+        
+        $recipes = $this->_getOrderedRecipes($orders);
+        
+        $baskets = [];
+        $binds = [];
+        
+        $recipes = collect($recipes)->sortBy(
+            function ($item) {
+                return $item['basket_position'].' '.$item['basket_name'];
+            }
+        );
+        
+        foreach ($recipes as $key => $recipe) {
+            if (empty($recipe['bind_id']) || !isset($binds[$recipe['bind_id']])) {
+                if (!isset($baskets[$recipe['basket_id']])) {
+                    $baskets[$recipe['basket_id']] = [];
+                }
+                
+                if (!isset($baskets[$recipe['basket_id']][$recipe['recipe_id']])) {
+                    $baskets[$recipe['basket_id']][$recipe['recipe_id']] = [
+                        'name'          => str_limit($recipe['name'], mb_strlen($recipe['name']) - 2, ''),
+                        'position'      => $recipe['position'],
+                        'recipes_count' => $recipe['recipes_count'],
+                    ];
+                } else {
+                    $baskets[$recipe['basket_id']][$recipe['recipe_id']]['recipes_count'] += $recipe['recipes_count'];
+                }
+                
+                $binds[$recipe['bind_id']] = $recipe['recipe_id'];
+            } else {
+                $recipe_id = $binds[$recipe['bind_id']];
+                
+                $baskets[$recipe['basket_id']][$recipe_id]['recipes_count'] += $recipe['recipes_count'];
+            }
+        }
+        
+        foreach ($baskets as $key => $basket) {
+            $recipes = collect($basket)->sortBy(
+                function ($item) {
+                    return $item['position'].' '.$item['name'];
+                }
+            );
+            
+            $baskets[$key] = $recipes;
+        }
+        
+        return $baskets;
+    }
+    
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return array
+     */
     public function usersForWeek($year, $week)
     {
         $users = [];
@@ -177,7 +236,7 @@ class PackagingService
                 ];
             }
         }
-    
+        
         foreach ($users as $key => $user) {
             $users[$key]['recipes'] = collect($user['recipes'])->sortBy('name');
         }
@@ -297,6 +356,33 @@ class PackagingService
      *
      * @return mixed
      */
+    public function downloadBooklet($year, $week)
+    {
+        $list = $this->bookletForWeek($year, $week);
+        
+        $booklet = Booklet::forWeek($year, $week)->first();
+        
+        return Excel::create(
+            $this->_getFileName($year, $week, 'packaging_booklet'),
+            function ($excel) use ($list, $booklet) {
+                $excel->sheet(
+                    trans('labels.booklet'),
+                    function ($sheet) use ($list, $booklet) {
+                        $sheet->loadView('views.packaging.download.booklet')
+                            ->with('list', $list)
+                            ->with('booklet', $booklet);
+                    }
+                );
+            }
+        )->download('xls');
+    }
+    
+    /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return mixed
+     */
     public function downloadUsers($year, $week)
     {
         $data = $this->usersForWeek($year, $week);
@@ -356,8 +442,10 @@ class PackagingService
                 DB::raw('weekly_menu_baskets.basket_id as basket_id'),
                 DB::raw('baskets.type as basket_type'),
                 DB::raw('baskets.name as basket_name'),
+                DB::raw('baskets.position as basket_position'),
                 DB::raw('order_recipes.basket_recipe_id as basket_recipe_id'),
                 'recipes.name',
+                'recipes.bind_id',
                 'basket_recipes.recipe_id',
                 'basket_recipes.position',
                 DB::raw('weekly_menu_baskets.portions as portions'),
@@ -394,7 +482,9 @@ class PackagingService
                 if (!isset($recipes[$recipe->recipe_id])) {
                     $recipes[$recipe->recipe_id] = [
                         'basket_id'        => $basket->basket_id,
+                        'bind_id'          => $recipe->recipe->bind_id,
                         'basket_type'      => $basket->basket->type,
+                        'basket_position'  => $basket->basket->position,
                         'basket_name'      => $basket->getName(),
                         'basket_recipe_id' => $recipe->id,
                         'recipe_id'        => $recipe->recipe_id,
