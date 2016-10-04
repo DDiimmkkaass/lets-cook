@@ -65,7 +65,7 @@
                         <td style="text-align: center; {!! $background !!}">
                             {!! $i !!}
                         </td>
-                        <td style="width: 30px; {!! $background !!}">
+                        <td style="width: 40px; {!! $background !!}">
                             {!! $order->getUserFullName() !!}
                             [{!! $order->user->id !!}]
                             ({!! $order->user->orders()->finished()->count() !!})
