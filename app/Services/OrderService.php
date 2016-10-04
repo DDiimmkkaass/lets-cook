@@ -732,12 +732,17 @@ class OrderService
             );
         } else {
             foreach ($recipes as $recipe_id) {
-                $input = [
-                    'basket_recipe_id' => $recipe_id,
-                ];
-                $recipe = new OrderRecipe($input);
-                
-                $model->recipes()->save($recipe);
+                if ($recipe_id) {
+                    $basket_recipe = BasketRecipe::find($recipe_id);
+                    
+                    $input = [
+                        'basket_recipe_id' => $recipe_id,
+                        'name'             => $basket_recipe->getName(),
+                    ];
+                    $recipe = new OrderRecipe($input);
+                    
+                    $model->recipes()->save($recipe);
+                }
             }
         }
     }
