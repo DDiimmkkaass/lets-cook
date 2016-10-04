@@ -154,7 +154,7 @@ class PackagingService
                 
                 if (!isset($baskets[$recipe['basket_id']][$recipe['recipe_id']])) {
                     $baskets[$recipe['basket_id']][$recipe['recipe_id']] = [
-                        'name'          => str_limit($recipe['name'], mb_strlen($recipe['name']) - 2, ''),
+                        'name'          => str_limit($recipe['name'], mb_strlen($recipe['name']) - 2, '.pdf'),
                         'position'      => $recipe['position'],
                         'recipes_count' => $recipe['recipes_count'],
                     ];
