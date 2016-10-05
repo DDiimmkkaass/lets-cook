@@ -42,7 +42,7 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         'App\Events\Frontend\UserQuickRegister' => [
-            'App\Listeners\Events\Frontend\SendUserRegisterInfoEmail',
+            'App\Listeners\Events\Frontend\SendUserActivationEmail',
             'App\Listeners\Events\Frontend\AddToClientsGroup',
         ],
 

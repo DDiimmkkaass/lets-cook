@@ -70,20 +70,19 @@ class AuthService
     public function quickRegister($data)
     {
         $input = [
-            'email' => $data['email'],
-            'phone' => $data['phone'],
+            'email'     => $data['email'],
+            'phone'     => $data['phone'],
             'full_name' => $data['full_name'],
-            'password' => str_random(config('auth.passwords.min_length')),
+            'password'  => str_random(config('auth.passwords.min_length')),
+            'city_id'   => $data['city_id'],
+            'city_name' => $data['city_name'],
+            'address'   => $data['address'],
+            'comment'   => $data['comment'],
         ];
         
         $user = $this->register($input);
         
         event(new UserQuickRegister($user, $input));
-        
-        $user->activated = true;
-        $user->save();
-        
-        Sentry::login($user);
         
         return $user;
     }

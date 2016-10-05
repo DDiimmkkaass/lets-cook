@@ -208,20 +208,16 @@ class ProfileController extends FrontendController
      */
     public function updatePassword(UserPasswordUpdateRequest $request)
     {
-        $model = $this->_getUser();
-        
         try {
-            Sentry::findUserByCredentials(['email' => $model->email, 'password' => $request->get('old_password')]);
+            $model = Sentry::findUserById($this->user->id);
             
             $this->userService->updatePassword($model, $request->get('password'));
             
-            FlashMessages::add('success', trans('messages.changes successfully saved'));
+            FlashMessages::add('success', trans('front_messages.password successfully saved'));
             
             return redirect()->route('profiles.index');
-        } catch (WrongPasswordException $e) {
-            FlashMessages::add('error', trans('messages.you have entered a wrong password'));
         } catch (Exception $e) {
-            FlashMessages::add('error', trans('messages.an error has occurred, try_later'));
+            FlashMessages::add('error', trans('front_messages.an error has occurred, please reload the page and try again'));
         }
         
         return redirect()->back();

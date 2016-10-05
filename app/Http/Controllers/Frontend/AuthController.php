@@ -174,7 +174,9 @@ class AuthController extends FrontendController
                     trans('front_messages.congratulations, you have successfully activate your account')
                 );
                 
-                return redirect()->home();
+                Sentry::login($user);
+                
+                return redirect()->route('profiles.edit.password');
             } else {
                 $error = trans('front_messages.user activation failed, wrong activation code');
             }

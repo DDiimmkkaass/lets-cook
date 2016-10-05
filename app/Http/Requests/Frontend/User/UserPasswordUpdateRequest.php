@@ -27,7 +27,6 @@ class UserPasswordUpdateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'old_password' => 'required',
             'password' => 'required|confirmed:password_confirmation|min:'.
                 config('auth.passwords.min_length'),
             'password_confirmation' => 'required',

@@ -58,4 +58,5 @@ return array(
     'congratulations, you have successfully reset your password' => 'Поздравляем! Вы успешно сбросили Ваш пароль.',
     'card already connected' => 'Карта уже подключена',
     'server error' => 'Ошибка сервера',
+    'password successfully saved' => 'Пароль успешно сохранен',
 );

@@ -23,24 +23,15 @@ class SendUserActivationEmail implements ShouldQueue
     use InteractsWithQueue;
 
     /**
-     * Create the event handler.
-     *
-     * @return \App\Listeners\Events\FrontEnd\SendUserActivationEmail
-     */
-    public function __construct()
-    {
-    }
-
-    /**
      * Handle the event.
      *
-     * @param \App\Events\FrontEnd\UserRegister $event
+     * @param \App\Events\FrontEnd\UserRegister|\App\Events\Frontend\UserQuickRegister $event
      */
-    public function handle(UserRegister $event)
+    public function handle($event)
     {
         Mail::queue(
             'emails.auth.activation',
-            ['user' => serialize($event->user), 'password' => $event->input['password']],
+            ['user' => serialize($event->user)],
             function ($message) use ($event) {
                 $message->to($event->user->email, $event->user->getFullName())
                     ->subject(trans('front_subjects.profile activation').' '.config('app.name'));
