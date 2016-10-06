@@ -24,6 +24,11 @@ class Thumb
      * @var null
      */
     private $img = null;
+    
+    /**
+     * @var null
+     */
+    private $cached_img = null;
 
     /**
      * @var null
@@ -42,21 +47,20 @@ class Thumb
      *
      * Create table method
      */
-    public static function create($path)
+    public function create($path)
     {
-
         if (strpos($path, public_path()) === false) {
             $path = public_path($path);
         }
 
         $ins = new static;
-
-        if (file_exists($path)) {
+        
+        if (File::exists($path)) {
             $ins->oldPath = $path;
             $img = Image::make($path);
             $ins->img = $img;
         }
-
+        
         return $ins;
     }
 
@@ -65,15 +69,18 @@ class Thumb
      * @param $w
      * @param $h
      *
-     * @return $this
+     * @return \App\Classes\Thumb|string
      *
      * Quick method to resize image
      */
-    public static function thumb($path, $w, $h)
+    public function thumb($path, $w, $h)
     {
-
+        if ($this->cached($path, $w, $h)) {
+            return $this;
+        }
+    
         $img = self::create($path);
-
+    
         return $img->resize($w, $h);
     }
 
@@ -85,12 +92,9 @@ class Thumb
      *
      * Quick method to create a square image
      */
-    public static function square($path, $s)
+    public function square($path, $s)
     {
-
-        $img = self::create($path);
-
-        return $img->resize($s, $s);
+        return $this->thumb($path, $s, $s);
     }
 
     /**
@@ -103,7 +107,6 @@ class Thumb
      */
     public function resize($w, $h)
     {
-
         if ($this->img) {
             $this->img->fit($w, $h);
             $this->postfix = "_{$w}x{$h}";
@@ -119,36 +122,69 @@ class Thumb
      */
     public function link()
     {
-
+        if ($this->cached_img) {
+            return $this->cached_img;
+        }
+        
         if ($this->img) {
-            if (file_exists($this->getNewFilePath())) {
-                return $this->getUrl();
+            $file = $this->getNewFilePath();
+            
+            if (File::exists(public_path($file))) {
+                return $file;
             } else {
-                if ($this->save()) {
-                    return $this->getUrl();
-                }
+                return $this->save($file);
             }
         }
 
-        return false;
+        return '';
     }
-
+    
     /**
-     * @return bool|string
+     * @param string|null $file
+     * @return bool|string Save modified image
      *
      * Save modified image
      */
-    public function save()
+    public function save($file = null)
     {
-
         if ($this->img) {
-            $file = $this->getNewFilePath();
-
+            $file = $file ? $file : $this->getNewFilePath();
+            
             if ($this->img->save($file)) {
                 return $file;
             }
         }
 
+        return false;
+    }
+    
+    /**
+     * @param $path
+     * @param $w
+     * @param $h
+     *
+     * @return bool
+     */
+    public function cached($path, $w, $h)
+    {
+        if (strpos($path, public_path()) === false) {
+            $path = public_path($path);
+        }
+        
+        $path_info = pathinfo($path);
+        
+        
+        $file_name = md5($path);
+        $path = substr($file_name, 0, 2).'/'.substr($file_name, 2, 2);
+        
+        $path = 'thumbs/'.$path.'/'.$file_name."_{$w}x{$h}".'.'.$path_info['extension'];
+        
+        if (File::exists(public_path($path))) {
+            $this->cached_img = $path;
+            
+            return true;
+        }
+        
         return false;
     }
 
@@ -159,35 +195,20 @@ class Thumb
      */
     private function getNewFilePath()
     {
-
         if ($this->img) {
             $path_info = pathinfo($this->oldPath);
+            
 
-            $file_name = md5($path_info['filename']);
+            $file_name = md5($this->oldPath);
             $path = substr($file_name, 0, 2).'/'.substr($file_name, 2, 2);
 
-            $path = public_path('thumbs/'.$path);
+            $path = 'thumbs/'.$path;
 
-            if (!File::exists($path)) {
-                @File::makeDirectory($path, 0755, true);
+            if (!File::exists(public_path($path))) {
+                @File::makeDirectory(public_path($path), 0755, true);
             }
 
             return $path.'/'.$file_name.$this->postfix.'.'.$path_info['extension'];
-        }
-
-        return '';
-    }
-
-    /**
-     * @return mixed|string
-     *
-     * return url to new file
-     */
-    private function getUrl()
-    {
-
-        if ($file = $this->getNewFilePath()) {
-            return str_replace(public_path().'/', '', $file);
         }
 
         return '';
