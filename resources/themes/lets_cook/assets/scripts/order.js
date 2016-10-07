@@ -40,7 +40,7 @@ function order() {
 
 function countList() {
     let $order = $('.main.order'),
-        $controlsList = $order.find('.order-main__count-list');
+        $controlsList = $order.find('.order-main__count-list.recipes');
 
     function findChanges($element) {
         let $mainList = $order.find('.order-main__list');
@@ -70,7 +70,7 @@ function countList() {
                 $mainItems.each(function (index) {
                     if (index === 0) {
                         $(this).attr('data-active', '').find('[type="checkbox"]').prop('checked', true);
-                        $('.recipe-' + $(this).find('[type=checkbox]').val() + '-ingredient').each(function () {
+                        $('.recipe-' + $(this).find('[type=checkbox]').data('recipe_id') + '-ingredient').each(function () {
                             $(this).removeClass('h-hidden')
                         });
 
@@ -84,7 +84,7 @@ function countList() {
                 $mainItems.each(function (index) {
                     if (index === 0 || index === 3 || index === 4) {
                         $(this).attr('data-active', '').find('[type="checkbox"]').prop('checked', true);
-                        $('.recipe-' + $(this).find('[type=checkbox]').val() + '-ingredient').each(function () {
+                        $('.recipe-' + $(this).find('[type=checkbox]').data('recipe_id') + '-ingredient').each(function () {
                             $(this).removeClass('h-hidden')
                         });
 
@@ -98,7 +98,7 @@ function countList() {
                 $mainItems.each(function (index) {
                     if (index === 0 || index === 1 || index === 3 || index === 4) {
                         $(this).attr('data-active', '').find('[type="checkbox"]').prop('checked', true);
-                        $('.recipe-' + $(this).find('[type=checkbox]').val() + '-ingredient').each(function () {
+                        $('.recipe-' + $(this).find('[type=checkbox]').data('recipe_id') + '-ingredient').each(function () {
                             $(this).removeClass('h-hidden')
                         });
 
@@ -112,7 +112,7 @@ function countList() {
                 $mainItems.each(function (index) {
                     if (index < data_count) {
                         $(this).attr('data-active', '').find('[type="checkbox"]').prop('checked', true);
-                        $('.recipe-' + $(this).find('[type=checkbox]').val() + '-ingredient').each(function () {
+                        $('.recipe-' + $(this).find('[type=checkbox]').data('recipe_id') + '-ingredient').each(function () {
                             $(this).removeClass('h-hidden')
                         });
 

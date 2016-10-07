@@ -14,13 +14,12 @@
                     <div class="order-main__result-wrapper">
                         <div class="order-main__count">
                             <div class="order-main__count-title">Ужинов</div>
-                            <ul class="order-main__count-list">
+                            <ul class="order-main__count-list recipes">
                                 @if (!empty($trial))
                                     <li class="order-main__count-item order-count-radio">
                                         <input type="radio" id="order-count-radio-1" name="recipes_count"
                                                checked
                                                value="1"
-                                               data-price="{!! $basket->getPriceInOrder(1) !!}"
                                                data-count="1">
                                         <label for="order-count-radio-1">1</label>
                                     </li>
@@ -31,16 +30,15 @@
                                                name="recipes_count"
                                                @if (!empty($trial))
                                                @else
-                                                   @if (
-                                                    ($_recipes_count < $recipes_count && $i == $_recipes_count)
-                                                    ||
-                                                    ($i == $recipes_count)
-                                                    )
-                                                       checked
-                                                   @endif
+                                               @if (
+                                                ($_recipes_count < $recipes_count && $i == $_recipes_count)
+                                                ||
+                                                ($i == $recipes_count)
+                                                )
+                                               checked
+                                               @endif
                                                @endif
                                                value="{!! $i !!}"
-                                               data-price="{!! $basket->getPriceInOrder($i) !!}"
                                                data-count="{!! $i !!}">
                                         <label for="order-count-radio-{!! $i !!}">{!! $i !!}</label>
                                     </li>
@@ -51,26 +49,24 @@
                         <div class="order-main__count">
                             <div class="order-main__count-title">Порций</div>
                             <ul class="order-main__count-list order-portions-count">
-                                @if ($basket->portions == 2)
-                                    <li class="order-main__count-item" data-active>
-                                        <a href="{!! $basket->getUrl() !!}">2</a>
-                                    </li>
-                                @endif
-                                @if ($same_basket && $same_basket->portions == 2)
-                                    <li class="order-main__count-item">
-                                        <a href="{!! $same_basket->getUrl() !!}">2</a>
-                                    </li>
-                                @endif
-                                @if ($basket->portions == 4)
-                                    <li class="order-main__count-item" data-active>
-                                        <a href="{!! $basket->getUrl() !!}">4</a>
-                                    </li>
-                                @endif
-                                @if ($same_basket && $same_basket->portions == 4)
-                                    <li class="order-main__count-item">
-                                        <a href="{!! $same_basket->getUrl() !!}">4</a>
-                                    </li>
-                                @endif
+                                @foreach(config('recipe.available_portions') as $portions)
+                                    @if ($basket->portions == $portions || ($same_basket && $same_basket->portions == $portions))
+                                        <li class="order-main__count-item order-portions-count-radio">
+                                            <input type="radio" id="order-portions-count-radio-{!! $portions !!}"
+                                                   name="portions"
+                                                   @if ($basket->portions == $portions)
+                                                   checked
+                                                   data-basket_id="{!! $basket->id !!}"
+                                                   @endif
+                                                   @if ($same_basket && $same_basket->portions == $portions)
+                                                   data-basket_id="{!! $same_basket->id !!}"
+                                                   @endif
+                                                   value="{!! $portions !!}"
+                                                   data-count="{!! $portions !!}">
+                                            <label for="order-portions-count-radio-{!! $portions !!}">{!! $portions !!}</label>
+                                        </li>
+                                    @endif
+                                @endforeach
                             </ul>
                         </div>
                     </div>
@@ -83,6 +79,16 @@
                     <div id="order_total_mobile" class="order-main__price-value">
                         {!! $basket->getPriceInOrder($recipes_count) !!}<span>{!! $currency !!}</span>
                     </div>
+                    @foreach($basket->prices as $dinners => $price)
+                        <input type="hidden" class="basket-{!! $basket->portions !!}-price-{!! $dinners !!}"
+                               value="{!! $price !!}">
+                    @endforeach
+                    @if ($same_basket)
+                        @foreach($same_basket->prices as $dinners => $price)
+                            <input type="hidden" class="basket-{!! $same_basket->portions !!}-price-{!! $dinners !!}"
+                                   value="{!! $price !!}">
+                        @endforeach
+                    @endif
                 </div>
 
                 <div class="order-main__portion">
@@ -103,19 +109,18 @@
             Заказать в один клик
         </a>
 
-
         <ul class="order-main__list">
-            @foreach($basket->recipes as $key => $recipe)
+            @foreach($basket->recipes->keyBy('position') as $key => $recipe)
                 <li class="order-main__item">
                     <a target="_blank" href="{!! $recipe->recipe->getUrl() !!}" class="order-main__link">
                         <div class="order-main__img"
                              style="background-image: url({!! thumb($recipe->getRecipeImage(), 195, 130) !!});">
                         </div>
                         <h3 class="order-main__item-title">
-                            @choice('front_labels.day_with_number', $key + 1): {!! $recipe->getRecipeName() !!}
+                            @choice('front_labels.day_with_number', $key): {!! $recipe->getRecipeName() !!}
                         </h3>
                     </a>
-                    <input class="h-hidden" type="checkbox" name="recipes[{!! $key !!}]" value="{!! $recipe->id !!}">
+                    <input class="h-hidden" type="checkbox" data-recipe_id="{!! $recipe->id !!}" name="recipes[{!! $key !!}]" value="{!! $key !!}">
                 </li>
             @endforeach
         </ul>

@@ -47,7 +47,7 @@
                                            id="f-order-ing-{!! $recipe->id !!}_{!! $ingredient->id !!}"
                                            data-name="ingredients[{!! $i !!}]"
                                            data-price="{!! $ingredient->getPriceInOrder() !!}"
-                                           value="{!! $recipe->id !!}_{!! $ingredient->id !!}"
+                                           value="{!! $recipe->id !!}_{!! $ingredient->ingredient_id !!}"
                                            class="checkbox-button"
                                            data-id="{!! $recipe->id !!}_{!! $ingredient->id !!}">
                                     <label for="f-order-ing-{!! $recipe->id !!}_{!! $ingredient->id !!}"

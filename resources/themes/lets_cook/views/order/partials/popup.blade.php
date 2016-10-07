@@ -3,12 +3,12 @@
         <div class="order-pop-up__title">{!! $basket->getName() !!}</div>
 
         <ul class="order-pop-up__list">
-            @foreach($basket->recipes as $key => $recipe)
+            @foreach($basket->recipes->keyBy('position') as $key => $recipe)
                 <li class="order-pop-up__item order-day-item">
                     <div class="order-day-item__img" style="background-image: url({!! thumb($recipe->getRecipeImage(), 270, 180) !!})"></div>
 
                     <div class="order-day-item__content">
-                        <div class="order-day-item__title">@choice('front_labels.day_with_number', $key + 1): {!! $recipe->getRecipeName() !!}</div>
+                        <div class="order-day-item__title">@choice('front_labels.day_with_number', $key): {!! $recipe->getRecipeName() !!}</div>
 
                         <div class="order-day-item__buttons" data-index="{!! $key !!}">
                             <div class="order-day-item__add-remove">
@@ -75,9 +75,6 @@
                 <div class="order-pop-up-bottom__info">Ужинов:<span id="total_dinners">0</span></div>
 
                 <div class="order-pop-up-bottom__info">Общая стоимость:<span id="popup_total_price">0</span> {!! $currency !!}</div>
-                @foreach($basket->prices as $dinners => $price)
-                    <input type="hidden" class="basket-price-{!! $dinners !!}" value="{!! $price !!}">
-                @endforeach
             </div>
 
             <div class="order-pop-up-bottom__right">

@@ -13,7 +13,8 @@
                                     <option value="{!! $basket->basket_id !!}"
                                             @if ($basket->basket_id == $subscribe->basket_id) selected @endif>
                                         {!! $basket->getName() !!}
-                                        ({!! $basket->getPriceInOrder($subscribe->recipes) !!} {!! $currency !!})
+                                        ({!! $basket->portions !!} @choice('front_labels.count_of_portions', $basket->portions)
+                                        {!! $basket->getPriceInOrder($subscribe->recipes) !!} {!! $currency !!})
                                     </option>
                                 @endforeach
                             </select>

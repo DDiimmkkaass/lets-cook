@@ -21,19 +21,6 @@
 
                                     <div class="baskets-main-item__result">
                                         <div class="baskets-main-item__result-wrapper">
-                                            <ul class="baskets-main-item__count-list">
-                                                <li class="baskets-main-item__count-item">
-                                                    <span>{!! $basket->getRecipesCount() !!}</span>
-                                                    <span>
-                                                        @choice('front_labels.count_of_dinners', $basket->getRecipesCount())
-                                                    </span>
-                                                </li>
-                                                <li class="baskets-main-item__count-item">
-                                                    <span>{!! $basket->portions !!}</span>
-                                                    <span>@choice('front_labels.count_of_portions', $basket->portions)</span>
-                                                </li>
-                                            </ul>
-
                                             <div class="baskets-main-item__price" data-device="mobile">
                                                 {!! $basket->getPriceInOrder(config('weekly_menu.default_recipes_count')) !!}
                                                 <span>{!! $currency !!}</span>
@@ -70,19 +57,18 @@
 
                                 @if ($basket->getRecipesCount())
                                     <ul class="baskets-main-item__list">
-                                        @foreach($basket->recipes as $key => $recipe)
+                                        @foreach($basket->recipes->keyBy('position')->take(5) as $key => $recipe)
                                             <li class="baskets-main-item__item">
                                                 <a href="{!! $recipe->recipe->getUrl() !!}"
                                                    class="baskets-main-item__link">
                                                     <div class="baskets-main-item__img"
                                                          style="background-image: url({!! thumb($recipe->getRecipeImage(), 195, 134) !!});"></div>
                                                     <h3 class="baskets-main-item__item-title">
-                                                        @choice('front_labels.day_with_number', $key + 1)
+                                                        @choice('front_labels.day_with_number', $key)
                                                         : {!! $recipe->getRecipeName() !!}
                                                     </h3>
                                                 </a>
                                             </li>
-                                            @break($key >= 4)
                                         @endforeach
                                     </ul>
                                 @endif

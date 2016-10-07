@@ -65,6 +65,13 @@ $(document).on "ready", () ->
     else
       Order.calculateTotal()
 
+  $('.order-edit-form [name="basket_id"]').on "change", () ->
+    $option = $(this).find('option:selected')
+
+    $('#order_total_desktop').data('total', $option.data('price'))
+
+    Order.calculateTotal()
+
   $('.order-edit-form').on 'click', '[name="order-submit"]', (e) ->
     e.preventDefault()
 

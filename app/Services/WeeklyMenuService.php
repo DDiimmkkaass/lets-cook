@@ -160,7 +160,7 @@ class WeeklyMenuService
             ->where('weekly_menus.week', $basket->week)
             ->where('weekly_menu_baskets.portions', $basket->portions == 2 ? 4 : 2)
             ->where('weekly_menu_baskets.basket_id', $basket->basket_id)
-            ->first(['weekly_menu_baskets.id', 'weekly_menu_baskets.portions']);
+            ->first(['weekly_menu_baskets.id', 'weekly_menu_baskets.portions', 'weekly_menu_baskets.prices']);
     }
     
     /**

@@ -6,7 +6,6 @@
         <form action="{!! localize_route('order.update', $order->id) !!}" method="post" class="order-edit-form">
             {!! csrf_field() !!}
             @php($recipes_count = $order->recipes->count())
-            <input type="hidden" name="recipes_count" id="recipes_count" value="{!! $recipes_count !!}">
 
             <div class="order-edit__wrapper">
                 <div class="order-edit__left">
@@ -35,7 +34,8 @@
                                                 data-price="{!! $basket->getPriceInOrder($recipes_count) !!}"
                                                 selected>
                                             {!! $basket->getName() !!}
-                                            ({!! $basket->getPriceInOrder($recipes_count) !!} {!! $currency !!})
+                                            ({!! $basket->portions !!} @choice('front_labels.count_of_portions', $basket->portions)
+                                            {!! $basket->getPriceInOrder($recipes_count) !!} {!! $currency !!})
                                         </option>
                                     @endif
                                 @endforeach
@@ -45,7 +45,8 @@
                                             data-price="{!! $basket->getPriceInOrder($recipes_count) !!}"
                                             @if ($basket->id == $order->main_basket->weekly_menu_basket_id) selected @endif>
                                         {!! $basket->getName() !!}
-                                        ({!! $basket->getPriceInOrder($recipes_count) !!} {!! $currency !!})
+                                        ({!! $basket->portions !!} @choice('front_labels.count_of_portions', $basket->portions)
+                                        {!! $basket->getPriceInOrder($recipes_count) !!} {!! $currency !!})
                                     </option>
                                 @endforeach
                             @endif

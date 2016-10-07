@@ -379,13 +379,15 @@ class OrderController extends FrontendController
      */
     private function _saveRelationships(Order $model, Request $request)
     {
-        $this->orderService->saveRecipes($model, $request->get('basket_id'), $request->get('recipes'));
+        $basket_id = $request->get('basket_id');
         
-        $this->orderService->saveMainBasket($model, $request->get('basket_id'), $model->recipes->count());
+        $this->orderService->saveRecipes($model, $basket_id, $request->get('recipes'));
+        
+        $this->orderService->saveMainBasket($model, $basket_id, $model->recipes->count());
         
         $this->orderService->saveAdditionalBaskets($model, $request->get('baskets', []));
         
-        $this->orderService->saveIngredients($model, $request->get('ingredients', []));
+        $this->orderService->saveIngredients($model, $basket_id, $request->get('ingredients', []));
         
         $this->subscribeService->store($this->user, $request);
         
@@ -400,12 +402,14 @@ class OrderController extends FrontendController
     {
         if ($model->main_basket->weekly_menu_basket_id != $request->get('basket_id')) {
             $model->ingredients()->delete();
+            
+            $old_recipes = $model->recipes()->with('recipe')->get();
             $model->recipes()->delete();
             
-            $this->orderService->saveRecipes($model, $request->get('basket_id'), [], $request->get('recipes_count'));
+            $this->orderService->saveRecipes($model, $request->get('basket_id'), [], $old_recipes);
         }
         
-        $this->orderService->saveMainBasket($model, $request->get('basket_id'), $request->get('recipes_count'));
+        $this->orderService->saveMainBasket($model, $request->get('basket_id'), $model->recipes->count());
         
         $this->orderService->saveAdditionalBaskets($model, $request->get('baskets', []));
         

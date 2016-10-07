@@ -6,17 +6,21 @@ Order.selectRecipeInPopup = (indexes) ->
   $popupList = $('.order-pop-up__list')
   $popupListItems = $popupList.find('.order-pop-up__item')
 
+  portions = parseInt $('span', '#portions_count_result').text()
+
   $popupListItems.each (index) ->
     if $.inArray(index, indexes) != -1
       $(this).attr('data-active', '')
+      $(this).find('.order-day-item__buttons').attr('data-active', '')
       $(this).find('[type="checkbox"]').prop('checked', true)
     else
       $(this).removeAttr('data-active', '')
+      $(this).find('.order-day-item__buttons').removeAttr('data-active')
       $(this).find('[type="checkbox"]').prop('checked', false)
 
   dinners = parseInt(indexes.length)
 
-  $price = $('.basket-price-' + dinners)
+  $price = $('.basket-' + portions + '-price-' + dinners)
 
   if $price.length
     price = parseInt($price.val())
@@ -25,6 +29,31 @@ Order.selectRecipeInPopup = (indexes) ->
 
   $('#total_dinners').text(dinners)
   $('#popup_total_price').text(price)
+
+Order.calculateDinners = () ->
+  $total_dinners = $('#total_dinners')
+  $total_price = $('#popup_total_price')
+
+  portions = parseInt $('span', '#portions_count_result').text()
+  total_dinners = 0
+  total_price = 0
+
+  $('.order-day-item__buttons[data-active]').each () ->
+    total_dinners += $(this).find('.order-day-item__edit').data('count');
+
+  $total_dinners.text(total_dinners)
+
+  if total_dinners > 7
+    total_price = 0
+  else
+    $price = $('.basket-' + portions + '-price-' + total_dinners);
+
+    if $price.length
+      total_price = parseInt($price.val())
+    else
+      total_price = 0
+
+  $total_price.text(total_price)
 
 Order.updateRecipes = () ->
   $recipes = $('.order__pop-up .order-day-item__buttons[data-active]');
@@ -51,11 +80,12 @@ Order.updateRecipes = () ->
       _count = $(this).find('.order-day-item__edit').data('count')
 
       $mainItems.each (index) ->
-        if index == _index
+        index += 1
 
+        if index == _index
           $(this).attr('data-active', '').find('[type="checkbox"]').prop 'checked', true
 
-          $('.recipe-' + $(this).find('[type=checkbox]').val() + '-ingredient').each ->
+          $('.recipe-' + $(this).find('[type=checkbox]').data('recipe_id') + '-ingredient').each ->
             $(this).removeClass 'h-hidden'
 
           if _count > 0
@@ -63,7 +93,6 @@ Order.updateRecipes = () ->
             while i < _count
               $recipe = $(this).clone()
               $recipe.addClass('cloned').find('[type="checkbox"]').attr('name', 'recipes[' + Order.generated_recipes + ']')
-
 
               $recipe.insertAfter($(this))
 
@@ -75,55 +104,36 @@ Order.updateRecipes = () ->
   $('#order_total_desktop').data('total', price)
 
   total_dinners = parseInt($('#total_dinners').text())
-  $('#portions_count_result').text(total_dinners)
+  $('span', '#recipes_count_result').text(total_dinners)
 
   $('.order-main__count-item [type="checkbox"]').prop('checked', false).removeAttr('checked')
   $('#order-count-radio-' + total_dinners).prop('checked', true).attr('checked', '')
 
   Order.calculateTotal()
 
-Order.calculateDinners = () ->
-  $total_dinners = $('#total_dinners');
-  $total_price = $('#popup_total_price')
-
-  total_dinners = 0;
-  total_price = 0;
-
-  $('.order-day-item__buttons[data-active]').each () ->
-    total_dinners += $(this).find('.order-day-item__edit').data('count');
-
-  $total_dinners.text(total_dinners)
-
-  if total_dinners > 7
-    total_price = 0
-  else
-    $price = $('.basket-price-' + total_dinners);
-
-    if $price.length
-      total_price = parseInt($price.val())
-    else
-      total_price = 0
-
-  $total_price.text(total_price)
-
 Order.calculateTotal = () ->
   $total = $('#order_total_desktop')
   $total_mobile = $('#order_total_mobile')
+  $total_popup = $('#popup_total_price')
   $order_discount = $('#order_discount')
   $per_portion_total = $('#per_portion_total')
 
   recipes = parseInt $('.order-main__item[data-active]').length
-  portions = parseInt $('.order-portions-count [data-active] a').text()
+  portions = parseInt $('span', '#portions_count_result').text()
 
-  total = parseInt($total.data('total'))
+  if $('.order-create-form').length
+    total = parseInt $('.basket-' + portions + '-price-' + recipes).val()
+  else
+    total = parseInt($total.data('total'))
+
   order_discount = 0
 
   $discount = $('[name="coupon_code"]')
   main_discount = parseInt $discount.data('main_discount')
   additional_discount = parseInt $discount.data('additional_discount')
   discount_type = $discount.data('discount_type')
-  # main basket
 
+  # main basket
   if main_discount > 0
     if discount_type == 'absolute'
       order_discount = main_discount
@@ -132,7 +142,9 @@ Order.calculateTotal = () ->
       order_discount = (total / 100 * main_discount)
       total = total - order_discount
 
-  $total_mobile.html(Math.round(total));
+  __total = Math.round(total)
+  $total_mobile.html(__total);
+  $total_popup.text(__total);
 
   if recipes > 0
     per_portions = Math.round(total / recipes / portions)
@@ -194,17 +206,17 @@ Order.checkCoupon = (code) ->
     success: (response) =>
       if response.status == 'success'
         $('[name="coupon_code"]')
-          .data('main_discount', response.main_discount)
-          .data('additional_discount', response.additional_discount)
-          .data('discount_type', response.discount_type)
+        .data('main_discount', response.main_discount)
+        .data('additional_discount', response.additional_discount)
+        .data('discount_type', response.discount_type)
       else
         $('.order-create-form #order-create-coupon-id').val('').find('option:selected').removeAttr('selected')
         $('.order-create-form #order-create-coupon-id [data-last]').attr('selected', 'selected')
 
         $('[name="coupon_code"]').val('')
-          .data('main_discount', 0)
-          .data('additional_discount', 0)
-          .data('discount_type', '')
+        .data('main_discount', 0)
+        .data('additional_discount', 0)
+        .data('discount_type', '')
 
         popUp(lang_error, response.message)
 
@@ -240,21 +252,24 @@ Order.save = ($button, $form) ->
           else
             setTimeout () ->
                 window.location.href = '/'
-            , 1500
+              , 1500
         else
           popUp(lang_error, response.message)
 
 $(document).on "ready", () ->
-  $('.order-main__count-item').on "click", (e) ->
-    price = $(this).find('[type="radio"]').data('price')
-
-    $('#order_total_desktop').data('total', price)
-
-    $('#portions_count_result').text($(this).find('label').text())
+  $('.order-main__count-list.recipes').on "click", '.order-main__count-item', (e) ->
+    $('span', '#recipes_count_result').text($(this).find('label').text())
 
     setTimeout () ->
         Order.calculateTotal()
-      , 1000
+    , 1000
+
+  $('.order-main__count-list.order-portions-count').on 'change', 'input[type="radio"]', () ->
+    $('span', '#portions_count_result').text($(this).val())
+
+    Order.calculateTotal()
+
+    $('[name="basket_id"]').val($(this).data('basket_id'))
 
   $(document).on 'click', '[name="order-promocode__submit"]', (e) ->
     e.preventDefault()

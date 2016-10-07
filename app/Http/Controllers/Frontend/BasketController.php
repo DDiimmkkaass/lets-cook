@@ -9,6 +9,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Models\WeeklyMenu;
+use App\Models\WeeklyMenuBasket;
 
 /**
  * Class BasketController
@@ -29,17 +30,20 @@ class BasketController extends FrontendController
      */
     public function index($week = 'current')
     {
-        $baskets = [];
-        
-        $menu = WeeklyMenu::with('baskets', 'baskets.recipes')->{$week}()->first();
-        
-        if ($menu) {
-            $baskets = $menu->baskets->sortBy(function ($item) {
-                return $item->basket->position . ' ' . $item->getName();
-            });
+        if ($week == 'current') {
+            $menu = WeeklyMenu::current()->first();
+        } else {
+            $menu = WeeklyMenu::next()->first();
         }
         
-        $this->data('baskets', $baskets);
+        $baskets = WeeklyMenuBasket::with('basket', 'recipes')
+            ->joinBasket()
+            ->where('weekly_menu_id', $menu->id)
+            ->groupBy('weekly_menu_baskets.basket_id')
+            ->orderBy('weekly_menu_baskets.portions', 'DESC')
+            ->get(['weekly_menu_baskets.*', 'baskets.position']);
+        
+        $this->data('baskets', $baskets->sortBy('position'));
         
         return $this->render($this->module.'.index');
     }

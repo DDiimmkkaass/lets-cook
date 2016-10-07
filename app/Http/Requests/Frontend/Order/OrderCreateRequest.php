@@ -66,7 +66,7 @@ class OrderCreateRequest extends FormRequest
             'payment_method' => 'required|in:'.implode(',', array_keys(Order::getPaymentMethods())),
             
             'recipes'   => 'required|array',
-            'recipes.*' => 'exists:basket_recipes,id',
+            'recipes.*' => 'numeric',
             
             'baskets'     => 'array',
             'ingredients' => 'array',

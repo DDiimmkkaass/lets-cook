@@ -9,11 +9,11 @@
                         <div class="order-submit__subTitle">{!! $basket->getName() !!}</div>
 
                         <ul class="order-submit__subList">
-                            <li id="portions_count_result" class="order-submit__subItem">
+                            <li id="recipes_count_result" class="order-submit__subItem">
                                 <span>{!! $recipes_count !!}</span>
                                 @choice('front_labels.count_of_dinners', $recipes_count)
                             </li>
-                            <li class="order-submit__subItem">
+                            <li id="portions_count_result"  class="order-submit__subItem">
                                 <span>{!! $basket->portions !!}</span
                                 >@choice('front_labels.count_of_portions', $basket->portions)
                             </li>

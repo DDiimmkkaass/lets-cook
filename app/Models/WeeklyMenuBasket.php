@@ -51,7 +51,7 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
      */
     public function recipes()
     {
-        return $this->hasMany(BasketRecipe::class)->with('recipe');
+        return $this->hasMany(BasketRecipe::class)->with('recipe')->positionSorted();
     }
     
     /**
