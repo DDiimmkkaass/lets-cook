@@ -86,7 +86,7 @@
                             {!! $baskets !!}
                         </td>
                         <td style="width: 15px; text-align: center; {!! $background !!}">
-                            {!! $order->getPlacesCount() !!} {!! $heigth !!}
+                            {!! $order->getPlacesCount() !!}
                         </td>
                         <td style="width: 15px; text-align: center; color: #ff0000; {!! $background !!}">
                             @if ($order->paymentMethod('cash'))
