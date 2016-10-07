@@ -751,7 +751,11 @@ class OrderService
                 
                 if ($basket_recipe) {
                     $recipe_ingredient = $basket_recipe->recipe->home_ingredients
-                        ->where('ingredient_id', (int) $ingredient_id)->first();
+                        ->filter(
+                            function ($item) use ($ingredient_id) {
+                                return (int) $item->ingredient_id == (int) $ingredient_id;
+                            }
+                        )->first();
                     
                     if ($recipe_ingredient && $recipe_ingredient->ingredient->inSale()) {
                         $ingredient = new OrderIngredient(

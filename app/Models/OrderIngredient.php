@@ -160,6 +160,14 @@ class OrderIngredient extends Model
     /**
      * @return string
      */
+    public function getSaleUnit()
+    {
+        return empty($this->ingredient->sale_unit) ? trans('front_labels.not_set'): $this->ingredient->sale_unit->name;
+    }
+    
+    /**
+     * @return string
+     */
     public function getImage()
     {
         return empty($this->ingredient->image) ? '' : $this->ingredient->image;

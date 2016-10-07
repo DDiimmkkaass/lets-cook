@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Events\Frontend\NewOrder;
 use App\Http\Requests\Frontend\Order\OrderCreateRequest;
 use App\Http\Requests\Frontend\Order\OrderUpdateRequest;
 use App\Models\Basket;
@@ -211,6 +212,8 @@ class OrderController extends FrontendController
             $model->save();
             
             DB::commit();
+            
+            event(new NewOrder($model));
             
             if ($model->paymentMethod('online')) {
                 $provider = $this->paymentService->getProvider();

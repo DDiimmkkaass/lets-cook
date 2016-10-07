@@ -46,6 +46,10 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\Events\Frontend\AddToClientsGroup',
         ],
 
+        'App\Events\Frontend\NewOrder' => [
+            'App\Listeners\Events\Frontend\SendUserEmailWithOrderInfo',
+        ],
+
         'App\Events\Frontend\NewComment' => [
             'App\Listeners\Events\Frontend\SendAdminEmailAboutNewComment',
         ],

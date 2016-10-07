@@ -59,4 +59,6 @@ return array(
     'card already connected' => 'Карта уже подключена',
     'server error' => 'Ошибка сервера',
     'password successfully saved' => 'Пароль успешно сохранен',
+    'thanks for you order on site :site_name' => 'Спасибо за Ваш заказа на сайте :site_name',
+    'you used coupon' => 'Вы использовали скидочный купон',
 );

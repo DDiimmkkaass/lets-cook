@@ -109,6 +109,11 @@ class OrderRecipe extends Model
         return $query->orderBy('created_at', $order);
     }
     
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
     public function scopeExistInWeeklyMenu($query)
     {
         return $query->whereExists(
@@ -118,5 +123,21 @@ class OrderRecipe extends Model
                     ->whereRaw('basket_recipes.id = order_recipes.basket_recipe_id');
             }
         );
+    }
+    
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->recipe->getName();
+    }
+    
+    /**
+     * @return string
+     */
+    public function getRecipeName()
+    {
+        return $this->recipe->getRecipeName();
     }
 }
