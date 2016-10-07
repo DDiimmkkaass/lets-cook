@@ -751,7 +751,7 @@ class OrderService
                 
                 if ($basket_recipe) {
                     $recipe_ingredient = $basket_recipe->recipe->home_ingredients
-                        ->where('ingredient_id', $ingredient_id)->first();
+                        ->where('ingredient_id', (int) $ingredient_id)->first();
                     
                     if ($recipe_ingredient && $recipe_ingredient->ingredient->inSale()) {
                         $ingredient = new OrderIngredient(
