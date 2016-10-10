@@ -9,7 +9,6 @@
 namespace App\Http\Requests\Frontend\UserCoupon;
 
 use App\Http\Requests\FormRequest;
-use Sentry;
 
 /**
  * Class CouponCheckRequest
@@ -17,7 +16,7 @@ use Sentry;
  */
 class CouponCheckRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,9 +25,19 @@ class CouponCheckRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'code'  => 'required|exists:coupons,code',
+            'code' => 'required|exists:coupons,code',
         ];
-
+        
         return $rules;
+    }
+    
+    /**
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'code.exists' => trans('validation.coupon code validation error'),
+        ];
     }
 }

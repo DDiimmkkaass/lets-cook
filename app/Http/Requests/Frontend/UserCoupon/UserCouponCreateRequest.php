@@ -16,7 +16,7 @@ use App\Http\Requests\FormRequest;
  */
 class UserCouponCreateRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,9 +25,19 @@ class UserCouponCreateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'code'  => 'required|exists:coupons,code',
+            'code' => 'required|exists:coupons,code',
         ];
-
+        
         return $rules;
+    }
+    
+    /**
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'code.exists' => trans('validation.coupon code validation error'),
+        ];
     }
 }
