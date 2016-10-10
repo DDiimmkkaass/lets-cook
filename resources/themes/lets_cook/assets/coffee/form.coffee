@@ -26,6 +26,6 @@ Form.getErrors = (response) ->
   errors = ''
 
   $.each response.responseJSON, (i, item) =>
-    errors += item + '<br />'
+    errors += item.join('<br />') + '<br />'
 
   return errors

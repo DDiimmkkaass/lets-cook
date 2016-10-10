@@ -221,6 +221,8 @@ class OrderController extends FrontendController
                 $html = $provider->getForm($model);
             }
             
+            dd('end');
+            
             return [
                 'status'  => 'success',
                 'message' => trans('front_messages.your order successfully created'),

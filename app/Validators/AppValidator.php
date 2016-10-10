@@ -75,7 +75,7 @@ class AppValidator extends Validator
         $week = $parameters[1];
     
         $delivery_date = Carbon::createFromFormat('d-m-Y', $value)->startOfDay();
-        $dt = Carbon::create($year, 1, 1, 0, 0, 0)->addWeek($week + 1)->startOfWeek()->endOfDay();
+        $dt = Carbon::create($year, 1, 1, 0, 0, 0)->addWeek($week)->startOfWeek()->endOfDay();
         
         return $delivery_date <= $dt;
     }

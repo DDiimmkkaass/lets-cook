@@ -142,8 +142,6 @@ class WeeklyMenuService
         
         $delivery_dates[] = clone ($dt->endOfWeek()->startOfDay());
         $delivery_dates[] = clone ($dt->endOfWeek()->addDay()->startOfDay());
-        $delivery_dates[] = clone ($dt->endOfWeek()->startOfDay());
-        $delivery_dates[] = clone ($dt->endOfWeek()->addDay()->startOfDay());
         
         return $delivery_dates;
     }
