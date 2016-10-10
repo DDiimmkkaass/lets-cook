@@ -786,6 +786,9 @@
       &[data-active]
         max-height: 3000px
 
+        &::after
+          background: none
+
   &__list-wrapper
     position: relative
     width: 100%
@@ -1253,8 +1256,8 @@
       &[data-order='2']
         padding: 15px 12px 15px
 
-      //&[data-order='3']
-      //  padding: 15px 12px 15px
+    //&[data-order='3']
+    //  padding: 15px 12px 15px
 
     +bp('768')
       &[data-order='1']
@@ -1263,8 +1266,8 @@
       &[data-order='2']
         padding: 24px 20px 24px
 
-      //&[data-order='3']
-      //  padding: 24px 20px 24px
+    //&[data-order='3']
+    //  padding: 24px 20px 24px
 
     +bp('1024')
       flex-direction: row
@@ -1278,8 +1281,8 @@
       &[data-order='2']
         padding: 14px 0
 
-      //&[data-order='3']
-      //  padding: 14px 0
+  //&[data-order='3']
+  //  padding: 14px 0
 
   &__subTitle
     display: none
@@ -1682,7 +1685,7 @@
     width: 50%
     padding: 75px 0 85px 40px
     background-color: transparent
-    //background: linear-gradient(to right, rgba(29,81,55,1) 0%, rgba(65,130,62,1) 100%);    color: $font-yellow-2
+  //background: linear-gradient(to right, rgba(29,81,55,1) 0%, rgba(65,130,62,1) 100%);    color: $font-yellow-2
 
   &__wrapper
 
@@ -1838,7 +1841,7 @@
     font-family: $ptsans-regular
     fsh(14px, 40px)
     color: $font-black-2
-    
+
     &:hover
       text-decoration: none
 

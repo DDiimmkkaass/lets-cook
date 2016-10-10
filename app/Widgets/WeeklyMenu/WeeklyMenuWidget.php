@@ -33,24 +33,16 @@ class WeeklyMenuWidget extends Widget
     {
         $active_week = active_week_menu_week();
         
-        $menus = WeeklyMenu::active()->get();
+        $menus = WeeklyMenu::with('baskets', 'baskets.recipes')->active()->get();
         
         $menu = false;
         $next_menu = false;
         
         foreach ($menus as $_menu) {
             if ($_menu->week == $active_week->weekOfYear) {
-                $baskets = $this->_getBaskets($_menu);
-                
-                if ($baskets->count()) {
-                    $menu = $baskets->random();
-                }
+                $menu = $_menu;
             } else {
-                $baskets = $this->_getBaskets($_menu);
-                
-                if ($baskets->count()) {
-                    $next_menu = $baskets->random();
-                }
+                $next_menu = $_menu;
             }
         }
         
@@ -62,15 +54,5 @@ class WeeklyMenuWidget extends Widget
             ->with('menu', $menu)
             ->with('next_menu', $next_menu)
             ->render();
-    }
-    
-    /**
-     * @param \App\Models\WeeklyMenu $_menu
-     *
-     * @return Collection
-     */
-    private function _getBaskets(WeeklyMenu $_menu)
-    {
-        return $_menu->baskets()->joinBasketRecipes()->with('recipes')->notEmpty()->get(['weekly_menu_baskets.*']);
     }
 }

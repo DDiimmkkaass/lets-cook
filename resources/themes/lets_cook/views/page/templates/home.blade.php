@@ -41,11 +41,7 @@
             </section>
         @endif
 
-        <section class="recipes-and-baskets">
-            @widget__weekly_menu()
-
-            @widget__weekly_menu_baskets()
-        </section>
+        @widget__weekly_menu()
 
         @widget__banner('what_makes_us_different')
 

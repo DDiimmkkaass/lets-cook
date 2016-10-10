@@ -116,7 +116,7 @@
     +bp('1024')
       js-display: flex
       display: flex
-      justify-content: space-between
+      justify-content: space-around
 
   &__item
     width: 172px
@@ -314,8 +314,11 @@
         js-display: flex
         display: flex
         flex-direction: column
-        justify-content: center
+        justify-content: space-around
         width: 50%
+
+      +bp('1600')
+        justify-content: center
 
 .recipes-menu
 
@@ -344,6 +347,9 @@
     &:last-of-type
       margin-left: 40px
 
+  &__hidden
+    display: none
+
   &__content
     margin: 0; padding: 0; list-style-type: none
     position: relative
@@ -369,6 +375,9 @@
 
     &[data-direction='column']
       flex-direction: column
+
+    &[data-direction='row']
+      flex-direction: row
 
   &__item
     width: 50%
@@ -417,16 +426,15 @@
     fsh(14px, 17px)
 
   &__all
-    absolute: left 75% top 100% - (100% / 6)
     transform: translate(-50%, -50%)
     display: inline-block
 
     &[data-position='1'] {
-      absolute: left 50% top 200%
+      absolute: left 50% top 100% - (100% / 3)
     }
 
     &[data-position='2'] {
-      absolute: left 50% top 200%
+      absolute: left 50% top 100% - (100% / 3)
     }
 
     &[data-position='3'] {
@@ -434,7 +442,7 @@
     }
 
     &[data-position='4'] {
-      absolute: left 50% top 125%
+      absolute: left 50% top 100% - (100% / 6)
     }
 
     &[data-position='5'] {
@@ -467,104 +475,119 @@
     +bp('1024')
       text-align: left
 
-  &__list
-    margin: 40px * (310 / 720) auto 0
+  &__info
+    margin: 40px * (310 / 720) auto 0; padding: 0; list-style-type: none
     width: 100%
+    js-display: flex; display: flex
+    justify-content: space-between
+    align-items: flex-end
     max-width: 460px
-    border-collapse: collapse
-    font-family: $ptsans-narrow-regular
-    color: $font-black-1
+    font-family: $ptsans-caption-regular
+    fsh(10px, 1.4)
+    color: $font-white-1
+    text-align: center
 
     +bp('480')
       margin: 40px * (470 / 720) auto 0
+      fs(16px)
 
     +bp('768')
       margin: 40px auto 0
       max-width: 700px
+      fs(20px)
 
     +bp('1024')
-      margin: 40px 0 0
+      margin: 0
       max-width: 550px
 
-    & tr
-      td:first-child
-        fsh(40px * (310 / 720), 1.2)
-        text-decoration: underline
+    +bp('1600')
+      margin: 40px 0 0
 
-        +bp('480')
-          fs(40px * (470 / 720))
+  &__info-item
+    span
+      &[data-info='number']
+        @extend .georgia-title
+        font-style: normal
+        line-height: 1
 
-        +bp('768')
+        +bp('1024')
           fs(40px)
 
-        +bp('1024')
-          fs(24px)
+      &[data-info='text']
+        font-family: $ptsans-caption-bold
 
-      td:nth-child(2)
-        fsh(24px * (310 / 720), 1.2)
-        color: $font-black-1
+  &__main-list
+    margin: 40px * (310 / 720) auto 0; padding: 0; list-style-type: none
+    width: 100%
+    max-width: 460px
+    font-family: $ptsans-narrow-regular
+    color: $font-black-1
+    fsh(40px * (310 / 720), 1.2)
+    text-decoration: underline
 
-        +bp('480')
-          fs(24px * (470 / 720))
+    +bp('480')
+      margin: 40px * (470 / 720) auto 0
+      fs(40px * (470 / 720))
 
-        +bp('768')
-          fs(24px)
+    +bp('768')
+      margin: 40px auto 0
+      max-width: 700px
+      fs(40px)
 
-        +bp('1024')
-          fs(15px)
+    +bp('1024')
+      margin: 0
+      max-width: 550px
+      fs(24px)
 
-      td:nth-child(3)
-        fsh(24px * (310 / 720), 1.2)
-        color: $font-black-1
+    +bp('1600')
+      margin: 40px 0 0
 
-        +bp('480')
-          fs(24px * (470 / 720))
+  &__main-item
+    display: none
 
-        +bp('768')
-          fs(24px)
+    &[data-active]
+      display: block
 
-        +bp('1024')
-          fs(15px)
+  &__sub-list
+    margin: 0; padding: 0; list-style-type: none
 
-    & td
-      padding: (17px * (310 / 720)) 0
+  &__sub-item
+    margin-bottom: 4px
+    cursor: pointer
 
-      +bp('480')
-        padding: (17px * (470 / 720)) 0
+    +bp('480')
+      margin-bottom: 8px
 
-      +bp('768')
-        padding: 17px 0
-
-      +bp('1024')
-        padding: 4px 0
-
-      a
-        color: $font-black-1
-
-      span
-        font-family: $ptsans-bold
-        fs(17px)
+    +bp('768')
+      margin-bottom: 12px
 
   &__desc
     display: none
-    margin-top: 50px
+    margin: 0
     font-family: $ptsans-regular
     fsh(14px, 18px)
     color: $font-black-1
 
     +bp('1024')
-      display: block
+      &[data-active]
+        display: block
+
+    +bp('1600')
+      margin: 40px 0 0
 
     span
       font-family: $ptsans-bold-italic
 
   &__details
     display: none
-    margin-top: 35px
+    margin: 0
 
     +bp('1024')
-      display: inline-block
+      &[data-active]
+        display: inline-block
 
+    +bp('1600')
+      margin: 40px 0 0
 
 
 // OUR DIFFERENCE
@@ -828,9 +851,9 @@
       background-image: url('../images/all-articles-bg.jpg')
 
   &__title
-      margin: 0
-      font-family: $ptsans-bold
-      fsh(20px, 1)
+    margin: 0
+    font-family: $ptsans-bold
+    fsh(20px, 1)
 
   &__desc
     margin: 10px auto 0
