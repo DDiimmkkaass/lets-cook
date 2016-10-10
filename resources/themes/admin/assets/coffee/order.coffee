@@ -117,7 +117,20 @@ Order.addRecipe = (recipe_id) ->
       processError response, null
     success: (response) =>
       if response.status is 'success'
-        $('.order-recipes-table').append response.html
+        inserted = false
+        $recipes = $('.recipe-row')
+
+        if $recipes.length
+          $recipes.each () ->
+            position = $(this).data('position')
+
+            if position > response.position && !inserted
+              $(response.html).insertBefore($(this))
+
+              inserted = true
+
+        unless inserted
+          $('.order-recipes-table').append response.html
 
         fixCustomInputs($('.order-recipes-table tr:last-child'))
       else
@@ -324,6 +337,24 @@ $(document).on "ready", () ->
 
   $('.order-recipes-count-select').on "change", ->
     Order.selectRecipes($(this))
+
+  $new_recipes = $('.new-recipe-row')
+  if $new_recipes.length
+    $recipes = $('.recipe-row')
+
+    $new_recipes.each () ->
+      inserted = false
+      $_recipe = $(this)
+
+      if $recipes.length
+        $recipes.each () ->
+          if $(this).data('position') > $_recipe.data('position') && !inserted
+            $($_recipe).insertBefore($(this))
+
+            inserted = true
+
+      unless inserted
+        $('.order-recipes-table').append response.html
 
   #ingredients
   $('.order-ingredient-select').on "change", ->

@@ -140,4 +140,12 @@ class OrderRecipe extends Model
     {
         return $this->recipe->getRecipeName();
     }
+    
+    /**
+     * @return string
+     */
+    public function getRecipePosition()
+    {
+        return $this->recipe->position;
+    }
 }

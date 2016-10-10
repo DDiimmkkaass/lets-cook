@@ -530,8 +530,9 @@ class OrderController extends BackendController
             $model = BasketRecipe::with('recipe')->findOrFail($recipe_id);
             
             return [
-                'status' => 'success',
-                'html'   => view('views.'.$this->module.'.partials.recipe_row', compact('model'))->render(),
+                'status'   => 'success',
+                'position' => $model->position,
+                'html'     => view('views.'.$this->module.'.partials.recipe_row', compact('model'))->render(),
             ];
         } catch (Exception $e) {
             return [
@@ -592,7 +593,7 @@ class OrderController extends BackendController
             
             if ($orders > 0) {
                 return [
-                    'status' => 'warning',
+                    'status'  => 'warning',
                     'message' => trans('messages.you can not delete this recipe as it is used in order'),
                 ];
             } else {
@@ -618,7 +619,7 @@ class OrderController extends BackendController
             
             if ($orders > 0) {
                 return [
-                    'status' => 'warning',
+                    'status'  => 'warning',
                     'message' => trans('messages.you can not delete this basket as it is used in order'),
                 ];
             } else {

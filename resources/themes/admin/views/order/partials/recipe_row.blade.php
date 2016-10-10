@@ -1,4 +1,4 @@
-<tr id="recipe_{!! $model->id !!}">
+<tr data-position="{!! $model->position !!}" id="recipe_{!! $model->id !!}" class="recipe-row basket-{!! $model->basket_recipe_id !!}-recipe new-recipe-row">
     <td>
         <div class="form-group">
             <input type="text" class="form-control input-sm" name="recipes[new][{!! $model->id !!}][recipe_id]"
@@ -16,6 +16,7 @@
 
             <input type="hidden" name="recipes[new][{!! $model->id !!}][image]" value="{!! $model->recipe->image !!}">
             <input type="hidden" name="recipes[new][{!! $model->id !!}][name]" value="{!! $model->getName() !!}">
+            <input type="hidden" name="recipes[new][{!! $model->id !!}][position]" value="{!! $model->position !!}">
         </div>
     </td>
     <td class="text-center">

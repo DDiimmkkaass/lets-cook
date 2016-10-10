@@ -73,7 +73,7 @@
 
         @if (count($recipes))
             @foreach($recipes as $recipe)
-                <tr id="recipe_{!! $recipe->basket_recipe_id !!}" class="basket-{!! $basket_id !!}-recipe">
+                <tr data-position="{!! $recipe->getRecipePosition() !!}" id="recipe_{!! $recipe->basket_recipe_id !!}" class="recipe-row basket-{!! $basket_id !!}-recipe">
                     <td>
                         <div class="form-group @if ($errors->has('recipes.old.' .$recipe->id. '.basket_recipe_id')) has-error @endif">
                             {!! Form::text('recipes[old][' .$recipe->id. '][recipe_id]', $recipe->recipe_id, ['id' => 'recipes.old.' .$recipe->id. '.recipe_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
@@ -101,7 +101,7 @@
         @if (count(old('recipes.new')))
             @foreach(old('recipes.new') as $recipe_key => $recipe)
                 @if ($recipe_key !== 'replaseme')
-                    <tr id="recipe_{!! $recipe_key !!}">
+                    <tr data-position="{!! $recipe['position'] !!}" id="recipe_{!! $recipe_key !!}" class="recipe-row basket-{!! $recipe['basket_recipe_id'] !!}-recipe new-recipe-row">
                         <td>
                             <div class="form-group @if ($errors->has('recipes.new.' .$recipe_key. '.basket_recipe_id')) has-error @endif">
                                 {!! Form::text('recipes[new][' .$recipe_key. '][recipe_id]', $recipe['recipe_id'], ['id' => 'recipes.new.' .$recipe_key. '.recipe_id', 'class' => 'form-control input-sm', 'readonly' => true]) !!}
@@ -118,6 +118,7 @@
 
                                 {!! Form::hidden('recipes[new][' .$recipe_key. '][image]', $recipe['image']) !!}
                                 {!! Form::hidden('recipes[new][' .$recipe_key. '][name]', $recipe['name']) !!}
+                                {!! Form::hidden('recipes[new][' .$recipe_key. '][position]', $recipe['position']) !!}
                             </div>
                         </td>
                         <td class="text-center coll-actions">
