@@ -21,7 +21,7 @@
 
             <ul class="recipes-menu__hidden">
                 @if ($menu)
-                    @foreach($menu->baskets as $key => $basket)
+                    @foreach($menu_baskets as $key => $basket)
                         @if ($key == 0)
                             @php($active_basket = $basket)
                         @endif
@@ -43,7 +43,7 @@
                 @endif
 
                 @if ($next_menu)
-                    @foreach($next_menu->baskets as $key => $basket)
+                    @foreach($next_menu_baskets as $key => $basket)
                         @if ($key == 0 && !isset($active_basket))
                             @php($active_basket = $basket)
                         @endif
@@ -87,7 +87,7 @@
                 @if ($menu)
                     <li class="baskets-menu__main-item" data-week="0">
                         <ul class="baskets-menu__sub-list">
-                            @foreach($menu->baskets as $key => $basket)
+                            @foreach($menu_baskets as $key => $basket)
                                 <li class="baskets-menu__sub-item"
                                     data-url="{!! localize_route('order.index', $basket->id) !!}"
                                     data-week="0"
@@ -102,7 +102,7 @@
                 @if ($next_menu)
                     <li class="baskets-menu__main-item" data-week="1">
                         <ul class="baskets-menu__sub-list">
-                            @foreach($next_menu->baskets as $key => $basket)
+                            @foreach($next_menu_baskets as $key => $basket)
                                 <li class="baskets-menu__sub-item"
                                     data-url="{!! localize_route('order.index', $basket->id) !!}"
                                     data-week="1"

@@ -9,6 +9,7 @@
 namespace App\Widgets\WeeklyMenu;
 
 use App\Models\WeeklyMenu;
+use App\Models\WeeklyMenuBasket;
 use Illuminate\Support\Collection;
 use Pingpong\Widget\Widget;
 
@@ -33,16 +34,33 @@ class WeeklyMenuWidget extends Widget
     {
         $active_week = active_week_menu_week();
         
-        $menus = WeeklyMenu::with('baskets', 'baskets.recipes')->active()->get();
+        $menus = WeeklyMenu::active()->get();
         
         $menu = false;
+        $menu_baskets = [];
+        
         $next_menu = false;
+        $next_menu_baskets = [];
         
         foreach ($menus as $_menu) {
             if ($_menu->week == $active_week->weekOfYear) {
                 $menu = $_menu;
+    
+                $menu_baskets = WeeklyMenuBasket::with('basket', 'recipes')
+                    ->joinBasket()
+                    ->where('weekly_menu_id', $menu->id)
+                    ->groupBy('weekly_menu_baskets.basket_id')
+                    ->orderBy('weekly_menu_baskets.portions', 'DESC')
+                    ->get(['weekly_menu_baskets.*', 'baskets.position']);
             } else {
                 $next_menu = $_menu;
+    
+                $next_menu_baskets = WeeklyMenuBasket::with('basket', 'recipes')
+                    ->joinBasket()
+                    ->where('weekly_menu_id', $next_menu->id)
+                    ->groupBy('weekly_menu_baskets.basket_id')
+                    ->orderBy('weekly_menu_baskets.portions', 'DESC')
+                    ->get(['weekly_menu_baskets.*', 'baskets.position']);
             }
         }
         
@@ -51,8 +69,8 @@ class WeeklyMenuWidget extends Widget
         }
         
         return view('widgets.weekly_menu.templates.'.$this->template.'.index')
-            ->with('menu', $menu)
-            ->with('next_menu', $next_menu)
+            ->with('menu', $menu)->with('menu_baskets', $menu_baskets)
+            ->with('next_menu', $next_menu)->with('next_menu_baskets', $next_menu_baskets)
             ->render();
     }
 }
