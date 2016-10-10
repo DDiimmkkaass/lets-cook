@@ -5,7 +5,7 @@
                 <div class="order-submit__common-title georgia-title">У вас в заказе:</div>
 
                 <ul class="order-submit__list">
-                    <li class="order-submit__item">
+                    <li class="order-submit__item order-submit__item_main">
                         <div class="order-submit__subTitle">{!! $basket->getName() !!}</div>
 
                         <ul class="order-submit__subList">
@@ -22,7 +22,7 @@
 
                     @if ($selected_baskets->count())
                         @foreach($selected_baskets as $_basket)
-                            <li class="order-submit__item">
+                            <li class="order-submit__item additional-ingredient-item additional-ingredient-item-{!! $_basket->id !!}">
                                 <div class="order-submit__subTitle">{!! $_basket->getName() !!}</div>
                             </li>
                         @endforeach

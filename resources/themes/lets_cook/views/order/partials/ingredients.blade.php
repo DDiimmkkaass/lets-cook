@@ -49,6 +49,7 @@
                                            data-price="{!! $ingredient->getPriceInOrder() !!}"
                                            value="{!! $recipe->id !!}_{!! $ingredient->ingredient_id !!}"
                                            class="checkbox-button"
+                                           data-ingredient_name="{!! $ingredient->ingredient->getTitle() !!}"
                                            data-id="{!! $recipe->id !!}_{!! $ingredient->id !!}">
                                     <label for="f-order-ing-{!! $recipe->id !!}_{!! $ingredient->id !!}"
                                            data-add="Добавить"

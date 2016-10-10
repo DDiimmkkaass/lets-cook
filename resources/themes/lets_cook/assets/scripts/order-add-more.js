@@ -42,9 +42,9 @@ function orderAddMore() {
             $label.text($label.attr('data-remove'));
             $that.attr('data-active', '');
             //add
-            let html = '<li class="order-submit__item additional-basket-item-' + $checkbox.data('id') + '">' +
+            let html = '<li class="order-submit__item additional-basket-item additional-basket-item-' + $checkbox.data('id') + '">' +
                 '<div class="order-submit__subTitle">' + $checkbox.data('basket_name') + '</div></li>';
-            $('.order-submit__list').append(html);
+            $(html).insertAfter('.order-submit__item_main');
         }
 
         Order.calculateTotal();

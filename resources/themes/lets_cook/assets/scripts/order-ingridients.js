@@ -54,9 +54,15 @@ function orderIngredients() {
         if ($that.is(':checked')) {
             $label.text($label.attr('data-remove'));
             $(this).attr('name', $(this).data('name'));
+
+            let html = '<li class="order-submit__item additional-ingredient-item additional-ingredient-item-' + $that.data('id') + '">' +
+                '<div class="order-submit__subTitle">' + $that.data('ingredient_name') + '</div></li>';
+            $('.order-submit__list').append(html);
         } else {
             $label.text($label.attr('data-add'));
             $(this).removeAttr('name');
+
+            $('.additional-ingredient-item-' + $that.data('id')).remove()
         }
 
         Order.calculateTotal();
