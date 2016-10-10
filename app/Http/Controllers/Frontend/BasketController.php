@@ -28,7 +28,7 @@ class BasketController extends FrontendController
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function index($week = 'current')
+    public function index($week)
     {
         if ($week == 'current') {
             $menu = WeeklyMenu::current()->first();

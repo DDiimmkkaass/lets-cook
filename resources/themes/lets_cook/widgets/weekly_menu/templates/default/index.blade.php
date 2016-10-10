@@ -5,14 +5,12 @@
             <ul class="recipes-menu__choose">
                 @if ($menu)
                     <li class="recipes-menu__chooseItem"
-                        data-url="{!! localize_route('baskets.index', 'current') !!}"
                         data-week="0">
                         Меню на эту неделю
                     </li>
                 @endif
                 @if ($next_menu)
                     <li class="recipes-menu__chooseItem"
-                        data-url="{!! localize_route('baskets.index', 'next') !!}"
                         data-week="1">
                         Меню на следующую неделю
                     </li>
@@ -124,7 +122,7 @@
                     Заказав после, вы получите продукты меню следующей недели.
                 </div>
 
-                <a href="{!! localize_route('baskets.index') !!}"
+                <a href="{!! localize_route('baskets.index', 'current') !!}"
                    data-week="0"
                    class="baskets-menu__details black-long-button">
                     одробнее про корзины
