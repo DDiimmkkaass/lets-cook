@@ -14,7 +14,7 @@ Form.processFormSubmitError = (response, $form) ->
   else if response.status == 405
     popUp(lang_error, response.responseJSON.message)
   else if response.status == 422
-    popUp(lang_error, lang_errorValidation + '<br />' + Form.getErrors(response))
+    popUp(lang_error, Form.getErrors(response))
   else
     if response.message
       message = response.message
@@ -26,6 +26,6 @@ Form.getErrors = (response) ->
   errors = ''
 
   $.each response.responseJSON, (i, item) =>
-    errors += item.join('<br />') + '<br />'
+    errors += item + '<br />'
 
   return errors
