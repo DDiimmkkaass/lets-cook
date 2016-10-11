@@ -42,9 +42,9 @@ class YandexKassa implements PaymentProvider
         ];
         
         $response = Guzzle::post($this->_getPayUrl(), $data);
-        $response = simplexml_load_string($response);
+        $response = simplexml_load_string((string) $response);
         
-        $error = $response['error'];
+        $error = isset($response->error) ? $response->error : false;
         
         if (!empty($error)) {
             return $response;
@@ -69,8 +69,9 @@ class YandexKassa implements PaymentProvider
         ];
         
         $response = Guzzle::post($this->_getConfirmUrl(), $data);
+        $response = simplexml_load_string((string) $response);
     
-        $error = $response['error'];
+        $error = isset($response->error) ? $response->error : false;
     
         if (!empty($error)) {
             return $response;
