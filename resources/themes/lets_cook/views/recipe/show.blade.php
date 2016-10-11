@@ -101,6 +101,11 @@
                     </div>
                 </div>
             </div>
+
+            <div class="order-ing__show black-short-button">
+                <span>Развернуть</span>
+                <span>Свернуть</span>
+            </div>
         </section>
 
         @if ($model->steps->count())
