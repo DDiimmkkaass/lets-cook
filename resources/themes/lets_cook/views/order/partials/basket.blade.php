@@ -15,28 +15,16 @@
                         <div class="order-main__count">
                             <div class="order-main__count-title">Ужинов</div>
                             <ul class="order-main__count-list recipes">
-                                @if (!empty($trial))
-                                    <li class="order-main__count-item order-count-radio">
-                                        <input type="radio" id="order-count-radio-1" name="recipes_count"
-                                               checked
-                                               value="1"
-                                               data-count="1">
-                                        <label for="order-count-radio-1">1</label>
-                                    </li>
-                                @endif
-                                @for ($i = 3; $i <= 7; $i++)
+                                @for ($i = 1; $i <= 7; $i++)
                                     <li class="order-main__count-item order-count-radio">
                                         <input type="radio" id="order-count-radio-{!! $i !!}"
                                                name="recipes_count"
-                                               @if (!empty($trial))
-                                               @else
                                                @if (
                                                 ($_recipes_count < $recipes_count && $i == $_recipes_count)
                                                 ||
-                                                ($i == $recipes_count)
+                                                (($_recipes_count >= $recipes_count) && $i == $recipes_count)
                                                 )
                                                checked
-                                               @endif
                                                @endif
                                                value="{!! $i !!}"
                                                data-count="{!! $i !!}">
