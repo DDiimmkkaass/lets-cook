@@ -5,7 +5,7 @@
         </div>
         <div class="margin-bottom-10 col-xs-12 col-sm-3 col-md-2 col-lg-1">
             <select name="week" id="week" class="form-control select2 pull-left input-sm" required="required">
-                @php($_week = old('week') ?: ($model->week ?: Carbon::now()->weekOfYear))
+                @php($_week = old('week') ?: ($model->week ?: active_week()->weekOfYear))
                 @foreach(range(1, 52) as $week)
                     <option @if ($week == $_week) selected="selected" @endif value="{!! $week !!}">@lang('labels.w_label'){!! $week !!}</option>
                 @endforeach
