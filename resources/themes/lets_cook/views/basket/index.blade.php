@@ -14,10 +14,18 @@
                         <li class="baskets-main__item baskets-main-item">
                             <div class="baskets-main-item__top">
                                 <div class="baskets-main-item__left">
-                                    <h1 class="baskets-main-item__title">
-                                        <span data-device="mobile">{!! $basket->getName() !!}</span>
-                                        <span data-device="desktop">{!! $basket->getName() !!}</span>
-                                    </h1>
+                                    <h2 class="baskets-main-item__title">
+                                        <a title="{!! $basket->getName() !!}"
+                                           href="{!! localize_route('order.index', $basket->id) !!}"
+                                           data-device="mobile">
+                                            {!! $basket->getName() !!}
+                                        </a>
+                                        <a title="{!! $basket->getName() !!}"
+                                           href="{!! localize_route('order.index', $basket->id) !!}"
+                                           data-device="desktop">
+                                            {!! $basket->getName() !!}
+                                        </a>
+                                    </h2>
 
                                     <div class="baskets-main-item__result">
                                         <div class="baskets-main-item__result-wrapper">
@@ -46,7 +54,8 @@
 
                             <div class="baskets-main-item__main">
                                 <div class="baskets-main-item__first">
-                                    <a href="#" class="baskets-main-item__link">
+                                    <a href="{!! localize_route('order.index', $basket->id) !!}"
+                                       class="baskets-main-item__link">
                                         <div class="baskets-main-item__img"
                                              style="background-image: url({!! thumb($basket->getImage(), 980, 335) !!}); height: 335px"></div>
                                         <h3 class="baskets-main-item__main-title">

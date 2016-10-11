@@ -85,10 +85,12 @@ class OrderCreateRequest extends FormRequest
     public function messages()
     {
         return [
-            'recipes.required'   => trans('validation.you must add at least one recipe'),
-            'recipes.*.exists'   => trans('validation.selected recipe not exist'),
-            'terms.accepted'     => trans('validation.terms accepted'),
-            'coupon_code.exists' => trans('validation.coupon code validation error'),
+            'recipes.required'         => trans('validation.you must add at least one recipe'),
+            'recipes.*.exists'         => trans('validation.selected recipe not exist'),
+            'terms.accepted'           => trans('validation.terms accepted'),
+            'coupon_code.exists'       => trans('validation.coupon code validation error'),
+            'city_id.required_without' => trans('validation.city_id required without city name'),
+            'city_name.required'       => trans('validation.city name is required'),
         ];
     }
 }

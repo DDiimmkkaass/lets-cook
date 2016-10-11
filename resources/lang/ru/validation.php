@@ -197,4 +197,6 @@ return array (
   'max_recipes_count' => 'Вы можете выбрать не более :count рецептов',
   'selected recipe not exist' => 'Выбранный рецепт не существует',
   'coupon code validation error' => 'К сожалению, промокод введен неверно. Проверьте правильность ввода',
+  'city name is required' => 'Поле город обязательно для заполнения',
+  'city_id required without city name' => 'Вы должны выбрать город из списка',
 );

@@ -151,13 +151,17 @@
       margin: 22px 0 16px
       text-align: left
 
-    span[data-device='mobile']
+    a[data-device='mobile']
       display: inline-block
       font-family: $ptsans-narrow-bold
       fsh(42px * (310 / 720), 1)
       color: $font-yellow-2
       text-transform: uppercase
       text-decoration: underline
+      cursor: pointer
+
+      &:hover
+        text-decoration: none
 
       +bp('480')
         fs(42px * (470 / 720))
@@ -168,13 +172,18 @@
       +bp('1024')
         display: none
 
-    span[data-device='desktop']
+    a[data-device='desktop']
       display: none
       text-align: left
       font-family: $ptsans-narrow-bold
       color: $font-black-1
       font-style: normal
       fs(48px)
+      text-decoration: none
+      cursor: pointer
+
+      &:hover
+        text-decoration: underline
 
       +bp('1024')
         display: inline-block
@@ -305,11 +314,11 @@
         font-family: $ptsans-narrow-regular
 
   &__main
-      order: 0
+    order: 0
 
-      +bp('1024')
-        order: 1
-        margin-top: 23px
+    +bp('1024')
+      order: 1
+      margin-top: 23px
 
 
   &__right

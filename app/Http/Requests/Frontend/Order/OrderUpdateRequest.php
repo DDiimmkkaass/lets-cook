@@ -5,7 +5,6 @@ namespace App\Http\Requests\Frontend\Order;
 use App\Http\Requests\FormRequest;
 use App\Models\Order;
 use App\Services\WeeklyMenuService;
-use Sentry;
 
 /**
  * Class OrderUpdateRequest
@@ -41,7 +40,7 @@ class OrderUpdateRequest extends FormRequest
         $city_id = $this->request->get('city_id', 0);
         
         $rules = [
-            'basket_id'   => 'required|exists:weekly_menu_baskets,id',
+            'basket_id' => 'required|exists:weekly_menu_baskets,id',
             
             'delivery_date' => [
                 'required',
@@ -56,12 +55,22 @@ class OrderUpdateRequest extends FormRequest
             'city_name' => $city_id == 0 ? 'required' : '',
             'address'   => 'required',
             
-            'payment_method'   => 'required|in:'.implode(',', array_keys(Order::getPaymentMethods())),
+            'payment_method' => 'required|in:'.implode(',', array_keys(Order::getPaymentMethods())),
             
-            'baskets'     => 'array',
+            'baskets'   => 'array',
             'baskets.*' => 'exists:baskets,id',
         ];
         
         return $rules;
+    }
+    
+    /**
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'city_name.required' => trans('validation.city name is required'),
+        ];
     }
 }
