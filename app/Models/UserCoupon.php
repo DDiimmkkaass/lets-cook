@@ -76,13 +76,14 @@ class UserCoupon extends Model
             return false;
         }
             
-        if ($this->getType() == 'new') {
+        if ($this->getUsersType() == 'new') {
+            
             if ($user && $user->orders->count() > 0) {
                 return false;
             }
         }
     
-        if ($this->getType() == 'exists') {
+        if ($this->getUsersType() == 'exists') {
             if (!$user || $user->orders->count() == 0) {
                 return false;
             }
@@ -113,6 +114,14 @@ class UserCoupon extends Model
     public function getType()
     {
         return $this->coupon->getStringType();
+    }
+    
+    /**
+     * @return string
+     */
+    public function getUsersType()
+    {
+        return $this->coupon->getStringUsersType();
     }
     
     /**
