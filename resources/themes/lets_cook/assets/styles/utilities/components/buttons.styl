@@ -142,11 +142,11 @@
 
 .yellow-short-button
   display: inline-block
-  size 240px 49px
+  size 125px 36px
   background-color: $bg-yellow-3
   border-radius: 5px
   text-align: center
-  fsh(16px, 49px)
+  fsh(12px, 36px)
   text-transform: uppercase
   text-decoration: none
   color: $font-black-1
@@ -154,19 +154,35 @@
   border: none; outline: none
   font-family: $ptsans-caption-regular
 
+  +bp('768')
+    size 200px 44px
+    fsh(14px, 44px)
+
+  +bp('1024')
+    size 240px 49px
+    fsh(16px, 49px)
+
 .red-short-button
   display: inline-block
-  size 240px 49px
+  size 125px 36px
   background-color: $bg-red-2
   border-radius: 5px
   text-align: center
-  fsh(16px, 49px)
+  fsh(12px, 36px)
   text-transform: uppercase
   text-decoration: none
   color: $font-white-1
   cursor: pointer
   border: none; outline: none
   font-family: $ptsans-caption-regular
+
+  +bp('768')
+    size 200px 44px
+    fsh(14px, 44px)
+
+  +bp('1024')
+    size 240px 49px
+    fsh(16px, 49px)
 
 
 .black-short-button
