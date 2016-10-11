@@ -19,11 +19,11 @@
         </div>
     </div>
 
-    <div class="form-group @if ($errors->has('phone')) has-error @endif">
+    <div class="form-group required @if ($errors->has('phone')) has-error @endif">
         {!! Form::label('phone', trans('labels.phone'), ['class' => 'col-md-3 control-label']) !!}
 
         <div class="col-md-3">
-            {!! Form::text('phone', null, ['placeholder' => trans('labels.phone'), 'class' => 'form-control input-sm inputmask-2']) !!}
+            {!! Form::text('phone', null, ['placeholder' => trans('labels.phone'), 'class' => 'form-control input-sm inputmask-2', 'required' => true]) !!}
 
             {!! $errors->first('phone', '<p class="help-block error">:message</p>') !!}
         </div>
