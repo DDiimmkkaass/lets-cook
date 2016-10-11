@@ -43,7 +43,7 @@
             </div>
 
             <div class="recipe-simple-basket__right"
-                 style="background-image: url({!! thumb($model->image) !!});"></div>
+                 style="background-image: url({!! thumb($model->image, 720, 370) !!});"></div>
         </section>
 
         <section class="recipe-simple__all all-baskets">
