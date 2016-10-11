@@ -45,4 +45,5 @@ return array(
   'order_list' => 'Состав заказа',
   'your_info' => 'Ваши данные',
   'payment_method' => 'Способ оплаты',
+  'select_basket' => 'Выбрать корзину',
 );

@@ -6,7 +6,7 @@
             <div class="order-main__left">
                 <h1 class="order-main__title">{!! $basket->getName() !!}</h1>
                 <div class="order-main__subTitle">
-                    На приготовление одного блюда понадобится не более 40 минут
+                    @lang('front_texts.basket description on order page')
                 </div>
 
                 @php($_recipes_count = $basket->getRecipesCount())

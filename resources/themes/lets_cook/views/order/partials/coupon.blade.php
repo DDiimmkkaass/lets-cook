@@ -3,7 +3,7 @@
         <h2 class="order-promocode__title">
             <span data-device="mobile">Промокод</span>
             <span data-device="desktop">
-                Промокод можно получить в купонных сертификатах следите за акциями на нашем сайте.
+                @lang('front_texts.promo code description on order page')
             </span>
         </h2>
 

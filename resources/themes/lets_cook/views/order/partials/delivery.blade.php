@@ -82,7 +82,9 @@
     <div class="order-addr-date__comment">
         <div class="order-addr-date__comment-wrapper">
             <div class="order-addr-date__comment-title">
-                <span data-device="desktop">Дополнительно сообщите о наличии консьержа или домофона, а также номер поъезда и особенности ориентирования на местности</span>
+                <span data-device="desktop">
+                    @lang('front_texts.comment helper text on order page')
+                </span>
                 <span data-device="mobile">Комментарий:</span>
             </div>
 

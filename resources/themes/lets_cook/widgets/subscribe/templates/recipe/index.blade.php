@@ -1,8 +1,8 @@
 <section class="recipe-simple__subscribe recipe-simple-subscribe">
-    <h2 class="recipe-simple-subscribe__title georgia-title">Понравился рецепт?</h2>
+    <h2 class="recipe-simple-subscribe__title georgia-title">@lang('front_texts.subscribe widget title for recipe page')</h2>
 
-    <div class="recipe-simple-subscribe__desc">Подпишитесь на нашу рассылку и мы будем присылать вам по 3
-        интересных блюда каждую неделю
+    <div class="recipe-simple-subscribe__desc">
+        @lang('front_texts.subscribe widget description for recipe page')
     </div>
 
     <form action="{!! route('subscribes.store') !!}" class="recipe-simple-subscribe__form subscribe-form">

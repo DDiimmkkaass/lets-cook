@@ -1,8 +1,8 @@
 <section class="main-subscribe">
-    <h2 class="main-subscribe__title">будьте в курсе</h2>
+    <h2 class="main-subscribe__title">@lang('front_texts.subscribe widget title')</h2>
 
     <div class="main-subscribe__desc">
-        Получать раз в неделю информацию о специальных предложениях, акциях и изменениях меню
+        @lang('front_texts.subscribe widget description')
     </div>
 
     <form method="post" action="{!! route('subscribes.store') !!}" class="main-subscribe__form subscribe-form">

@@ -3,20 +3,27 @@
 @section('content')
     <main class="main">
         <section class="let-cook">
-            <h3 class="let-cook__supTitle">Сервис доставки качественных продуктов на дом</h3>
+            <h3 class="let-cook__supTitle">
+                @lang('front_texts.home top text 1')
+            </h3>
             <h1 class="let-cook__title">&laquo; {!! config('app.name') !!} &raquo;</h1>
-            <h2 class="let-cook__subTitle">просто и вкусно</h2>
+            <h2 class="let-cook__subTitle">
+                @lang('front_texts.home top text 2')
+            </h2>
 
             <div class="make-order--desktop">
-                <a href="{!! localize_route('baskets.index', 'current') !!}" class="choose-basket green-long-button">Выбрать
-                    корзину</a>
+                <a href="{!! localize_route('baskets.index', 'current') !!}" class="choose-basket green-long-button">
+                    @lang('front_labels.select_basket')
+                </a>
 
                 @widget__trial_order('home')
             </div>
         </section>
 
         <section class="make-order--mobile">
-            <a href="{!! localize_route('baskets.index', 'current') !!}" class="choose-basket">Выбрать корзину</a>
+            <a href="{!! localize_route('baskets.index', 'current') !!}" class="choose-basket">
+                @lang('front_labels.select_basket')
+            </a>
 
             @widget__trial_order('home')
         </section>
@@ -27,7 +34,7 @@
             <section class="about-service">
                 <div class="about-service__title">
                     <div class="about-service__icon"></div>
-                    <div class="about-service__text">Основатель о том, как работает сервис</div>
+                    <div class="about-service__text">@lang('front_texts.video on home title')</div>
                 </div>
 
                 <div class="about-service__content">
@@ -46,17 +53,16 @@
         @widget__banner('what_makes_us_different')
 
         <section class="free-delivery">
-            <h2 class="free-delivery__title">доставка бесплатно</h2>
-            <div class="free-delivery__subTitle">c воскресенья по понедельник, и до 12 км от МКАД</div>
-            <div class="free-delivery__desc">Доставка на большие расстояния стоит 24 рубля за каждый километр от МКАД
-            </div>
+            <h2 class="free-delivery__title">@lang('front_texts.delivery text title')</h2>
+            <div class="free-delivery__subTitle">@lang('front_texts.delivery text subtitle')</div>
+            <div class="free-delivery__desc">@lang('front_texts.delivery text description')</div>
         </section>
 
         <section class="spec-review">
-            <h2 class="spec-review__title">диетолог о «Давай готовить!»</h2>
+            <h2 class="spec-review__title">диетолог о «{!! config('app.name') !!}»</h2>
 
             <div class="spec-review__main">
-                <div class="spec-review__img" style="background-image: url('/assets/themes/lets_cook/images/spec-review-1.jpg')"></div>
+                <div class="spec-review__img" style="background-image: url({!! thumb(variable('nutritionist_image')) !!})"></div>
 
                 <div class="spec-review__comment">
                     <div class="spec-review__inner">
@@ -66,30 +72,14 @@
                         </div>
 
                         <div class="spec-review__text">
-                            <p>Просчитав детально меню на следующую неделю (состав и калорийность блюд), я могу
-                                подтвердить, что
-                                блюда сбалансированы по белкам, жирам и углеводам, низкокалорийные, содержат необходимые
-                                нашему
-                                организму витамины и минералы. И самое главное — вкусные и разнообразные!</p>
-
-                            <p>Просчитав детально меню на следующую неделю (состав и калорийность блюд), я могу
-                                подтвердить, что
-                                блюда сбалансированы по белкам, жирам и углеводам, низкокалорийные, содержат необходимые
-                                нашему
-                                организму витамины и минералы. И самое главное — вкусные и разнообразные!</p>
-
-                            <p>Просчитав детально меню на следующую неделю (состав и калорийность блюд), я могу
-                                подтвердить, что
-                                блюда сбалансированы по белкам, жирам и углеводам, низкокалорийные, содержат необходимые
-                                нашему
-                                организму витамины и минералы. И самое главное — вкусные и разнообразные!</p>
+                            @lang('front_texts.home nutritionist text')
                         </div>
                     </div>
 
                     <div class="spec-review__hois">
-                        <div class="spec-review__name">Людмила Денисенко</div>
+                        <div class="spec-review__name">@lang('front_texts.nutritionist name')</div>
 
-                        <div class="spec-review__profession">(диетолог, «Азбука стройности»)</div>
+                        <div class="spec-review__profession">@lang('front_texts.nutritionist description')</div>
                     </div>
                 </div>
             </div>
