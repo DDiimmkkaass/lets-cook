@@ -18,9 +18,9 @@ php-7:
   type: test
   image: php:7.0-cli
   script:
-    - docker-php-ext-enable zip
-    - docker-php-ext-enable mbstring
-    - docker-php-ext-enable pdo_mysql
+    - docker-php-ext-install zip
+    - docker-php-ext-install mbstring
+    - docker-php-ext-install pdo_mysql
     - ping -c 3 mysql
     - php -v
     - composer self-update
