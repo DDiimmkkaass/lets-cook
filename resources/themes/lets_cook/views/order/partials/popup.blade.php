@@ -33,37 +33,16 @@
                     <div class="order-day-item__change order-day-change">
                         <div class="order-day-change__title">ужинов</div>
 
+                        <div class="order-day-change__cancel"></div>
+
                         <ul class="order-day-change__list">
-                            <li class="order-day-change__item">
-                                <input type="radio" id="f-order-day-change-{!! $key !!}-0"
-                                       name="order-day-add-change" data-number="2" data-title="2 @choice('front_labels.count_of_dinners', 2)">
-                                <label for="f-order-day-change-{!! $key !!}-0">2</label>
-                            </li>
-                            <li class="order-day-change__item">
-                                <input type="radio" id="f-order-day-change-{!! $key !!}-1"
-                                       name="order-day-add-change" data-number="3" data-title="3 @choice('front_labels.count_of_dinners', 3)">
-                                <label for="f-order-day-change-{!! $key !!}-1">3</label>
-                            </li>
-                            <li class="order-day-change__item">
-                                <input type="radio" id="f-order-day-change-{!! $key !!}-2"
-                                       name="order-day-add-change" data-number="4" data-title="4 @choice('front_labels.count_of_dinners', 4)">
-                                <label for="f-order-day-change-{!! $key !!}-2">4</label>
-                            </li>
-                            <li class="order-day-change__item">
-                                <input type="radio" id="f-order-day-change-{!! $key !!}-3"
-                                       name="order-day-add-change" data-number="5" data-title="5 @choice('front_labels.count_of_dinners', 5)">
-                                <label for="f-order-day-change-{!! $key !!}-3">5</label>
-                            </li>
-                            <li class="order-day-change__item">
-                                <input type="radio" id="f-order-day-change-{!! $key !!}-4"
-                                       name="order-day-add-change" data-number="6" data-title="6 @choice('front_labels.count_of_dinners', 6)">
-                                <label for="f-order-day-change-{!! $key !!}-4">6</label>
-                            </li>
-                            <li class="order-day-change__item">
-                                <input type="radio" id="f-order-day-change-{!! $key !!}-5"
-                                       name="order-day-add-change" data-number="7" data-title="7 @choice('front_labels.count_of_dinners', 7)">
-                                <label for="f-order-day-change-{!! $key !!}-5">7</label>
-                            </li>
+                            @for ($i = 1; $i <= 7; $i++)
+                                <li class="order-day-change__item">
+                                    <input type="radio" id="f-order-day-change-{!! $key !!}-{!! $i !!}"
+                                           name="order-day-add-change" data-number="{!! $i !!}" data-title="{!! $i !!} @choice('front_labels.count_of_dinners', $i)">
+                                    <label for="f-order-day-change-{!! $key !!}-{!! $i !!}">{!! $i !!}</label>
+                                </li>
+                            @endfor
                         </ul>
                     </div>
                 </li>

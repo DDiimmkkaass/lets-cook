@@ -211,6 +211,14 @@ function orderPopUp() {
         $change.attr('data-active', '');
     });
 
+    $list.on('click', '.order-day-change__cancel', function() {
+        let $that = $(this),
+            $parent = $that.closest('.order-day-item'),
+            $change = $parent.find('.order-day-item__change');
+
+        $change.removeAttr('data-active');
+    });
+
     $list.on('change', '.order-day-change__item input[type="radio"]', function () {
         let $that = $(this),
             number = parseInt($that.attr('data-number'), 10),
