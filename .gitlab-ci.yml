@@ -1,0 +1,32 @@
+image: tetraweb/php:5.6-cli
+
+services:
+  - mysql:latest
+
+variables:
+  WITH_XDEBUG: "1"
+  MYSQL_ROOT_PASSWORD: secret
+  MYSQL_DATABASE: homestead
+  MYSQL_USER: homestead
+  MYSQL_PASSWORD: secret
+  COMPOSER_HOME: /cache/composer
+
+stages:
+  - test
+
+php-5.6:
+  type: test
+  image: tetraweb/php:5.6-cli
+  script:
+    - docker-php-ext-enable zip
+    - docker-php-ext-enable mbstring
+    - docker-php-ext-enable pdo_mysql
+    - ping -c 3 mysql
+    - php -v
+    - composer self-update
+    - composer install --no-progress --no-interaction
+    - cp .env.test .env
+    - php artisan key:generate
+    - php artisan migrate:refresh
+    - php artisan db:seed
+    - php vendor/bin/phpunit --colors --coverage-text
