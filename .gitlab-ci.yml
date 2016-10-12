@@ -1,4 +1,4 @@
-image: tetraweb/php:5.6-cli
+image: php:7.0-cli
 
 services:
   - mysql:latest
@@ -14,8 +14,9 @@ variables:
 stages:
   - test
 
-php-5.6:
+php-7:
   type: test
+  image: php:7.0-cli
   script:
     - docker-php-ext-enable zip
     - docker-php-ext-enable mbstring
