@@ -1,14 +1,16 @@
 image: crisu83/docker-nginx-php-node
 services:
   - mysql:latest
+variables:
+  WITH_XDEBUG: "1"
+  MYSQL_ROOT_PASSWORD: secret
+  MYSQL_DATABASE: homestead
+  MYSQL_USER: homestead
+  MYSQL_PASSWORD: secret
+  COMPOSER_HOME: /cache/composer
 deploy:
   image: crisu83/docker-nginx-php-node
   script:
-    - apt-get update
-    - apt-get install -y -qq zlib1g-dev lftp
-    - docker-php-ext-install zip
-    - docker-php-ext-install mbstring
-    - docker-php-ext-install pdo_mysql
     - php -v
     - conposer install --no-progress --no-interaction
     - npm install
