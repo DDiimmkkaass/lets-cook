@@ -3,14 +3,6 @@ image: php:7.0-cli
 services:
   - mysql:latest
 
-#variables:
-#  WITH_XDEBUG: "1"
-#  MYSQL_ROOT_PASSWORD: secret
-#  MYSQL_DATABASE: homestead
-#  MYSQL_USER: homestead
-#  MYSQL_PASSWORD: secret
-#  COMPOSER_HOME: /cache/composer
-
 stages:
   - production
 
@@ -30,9 +22,4 @@ deploy:
     - php composer-setup.php
     - php -r "unlink('composer-setup.php');"
     - php composer.phar install --no-progress --no-interaction
-    #- cp .env.test .env
-    #- php artisan key:generate
-    #- php artisan migrate:refresh
-    #- php artisan db:seed
-    #- php vendor/bin/phpunit --colors --coverage-text
     - lftp -e "mirror -R . $DEPLOY_FTP_DIR" -u $DEPLOY_FTP_USER,$DEPLOY_FTP_PASSWORD $DEPLOY_FTP_HOST
