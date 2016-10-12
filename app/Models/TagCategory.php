@@ -9,6 +9,7 @@
 namespace App\Models;
 
 use App\Traits\Models\PositionSortedTrait;
+use App\Traits\Models\VisibleTrait;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -18,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
 class TagCategory extends Model
 {
     
+    use VisibleTrait;
     use PositionSortedTrait;
     
     /**
@@ -25,6 +27,7 @@ class TagCategory extends Model
      */
     protected $fillable = [
         'name',
+        'status',
         'position',
     ];
     

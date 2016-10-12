@@ -657,4 +657,5 @@ return array (
   'tab_packaging_booklet' => 'Буклет',
   'booklet' => 'Буклет',
   'download_xlsx_file_with_booklet' => 'Скачать буклет',
+  'show_on_site' => 'Отображать на сайте',
 );

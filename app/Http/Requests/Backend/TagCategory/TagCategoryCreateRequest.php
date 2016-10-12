@@ -16,7 +16,7 @@ use App\Http\Requests\FormRequest;
  */
 class TagCategoryCreateRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -26,6 +26,7 @@ class TagCategoryCreateRequest extends FormRequest
     {
         return [
             'name'     => 'required|unique:tag_categories,name',
+            'status'   => 'required|boolean',
             'position' => 'integer',
         ];
     }

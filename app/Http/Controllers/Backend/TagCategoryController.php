@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Requests\Backend\TagCategory\TagCategoryCreateRequest;
 use App\Http\Requests\Backend\TagCategory\TagCategoryUpdateRequest;
 use App\Models\TagCategory;
+use App\Traits\Controllers\AjaxFieldsChangerTrait;
 use Datatables;
 use Exception;
 use FlashMessages;
@@ -27,6 +28,8 @@ use Response;
 class TagCategoryController extends BackendController
 {
 
+    use AjaxFieldsChangerTrait;
+    
     /**
      * @var string
      */
@@ -73,11 +76,20 @@ class TagCategoryController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = TagCategory::select('id', 'name', 'position');
+            $list = TagCategory::select('id', 'name', 'status', 'position');
 
             return $dataTables = Datatables::of($list)
                 ->filterColumn('id', 'where', 'tag_categories.id', '=', '$1')
                 ->filterColumn('name', 'where', 'tag_categories.name', 'LIKE', '%$1%')
+                ->editColumn(
+                    'status',
+                    function ($model) {
+                        return view(
+                            'partials.datatables.toggler',
+                            ['model' => $model, 'type' => $this->module, 'field' => 'status']
+                        )->render();
+                    }
+                )
                 ->editColumn(
                     'actions',
                     function ($model) {

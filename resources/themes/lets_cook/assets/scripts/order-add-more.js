@@ -2,13 +2,21 @@
 /* ----- ORDER ADD MORE ----- */
 
 function orderAddMore() {
-    let $orderAddMore = $('.order-add-more'),
+    let $order = $('.main.order'),
+        $orderAddMore = $order.find('.order-add-more'),
         $list = $orderAddMore.find('.order-add-more__list'),
-        $listItems = $list.find('.order-add-more__item.more-item'),
-        $listItemsCheckboxes = $listItems.find('.checkbox-button input[type="checkbox"]');
+        $items = $list.children(),
+        $itemsMobileInfo = $items.find('.more-item__info[data-device="mobile"]'),
+        $itemsDesktopInfo = $items.find('.more-item__info[data-device="desktop"]'),
+        $hiddenListItems = $order.find('.order-add-more__hidden').children(),
+        $popUp = $order.find('.order__add-pop-up.order-add-pop-up'),
+        $popUpBgLayout = $popUp.find('.order-add-pop-up__bg-layout'),
+        $popUpCancel = $popUp.find('.order-add-pop-up__cancel'),
+        $popUpList = $popUp.find('.order-add-pop-up__list'),
+        $popUpCheckboxes = $popUpList.find('.checkbox-button input[type="checkbox"]');
 
     function init() {
-        $listItemsCheckboxes.each(function() {
+        $popUpCheckboxes.each(function() {
             let $that = $(this),
                 $parent = $that.closest('.more-item');
 
@@ -18,36 +26,111 @@ function orderAddMore() {
         });
     }
 
+    function setMobileInfoHeight() {
+        let maxHeight = 0;
+
+        $itemsMobileInfo.css('height', 'auto');
+
+        $itemsMobileInfo.each(function() {
+            let $that = $(this),
+                that__height = $that.outerHeight();
+
+            if (that__height > maxHeight) {
+                maxHeight = that__height;
+            }
+        });
+
+        $itemsMobileInfo.outerHeight(maxHeight);
+    }
+
+    function setDesktopInfoHeight() {
+        let maxHeight = 0;
+
+        $itemsDesktopInfo.css('height', 'auto');
+
+        $itemsDesktopInfo.each(function() {
+            let $that = $(this),
+                that__height = $that.outerHeight();
+
+            if (that__height > maxHeight) {
+                maxHeight = that__height;
+            }
+        });
+
+        $itemsDesktopInfo.outerHeight(maxHeight);
+    }
+
+
     $(window).on('resize', function() {
         init();
+
+        setMobileInfoHeight();
+        setDesktopInfoHeight();
     }).resize();
 
-    $list.on('click', '.order-add-more__item', function(e) {
+    $list.on('click', '.order-add-more__item', function() {
+        let $list_that = $(this),
+            list_data_more = parseInt($list_that.attr('data-more'));
+
+        $popUpList.empty();
+
+        $hiddenListItems.each(function() {
+            let $hidden_that = $(this),
+                hidden_data_more = parseInt($hidden_that.attr('data-more'));
+
+            if (list_data_more === hidden_data_more) {
+                $popUpList.append($hidden_that.clone());
+            }
+        });
+
+        $popUp.attr('data-active', '');
+    });
+
+    $popUpBgLayout.add($popUpCancel).on('click', function() {
+        $popUp.removeAttr('data-active');
+    });
+
+    $popUpList.on('click', '.order-add-more__item', function(e) {
         e.preventDefault();
 
         let $that = $(this),
-            $checkbox = $that.find('input[type="checkbox"]'),
-            $label = $checkbox.next();
+            $checkbox = $that.find('input[type="checkbox"]');
+
+        let $baskets = $('.f-order-add-more-' + $checkbox.data('id'));
 
         if ($checkbox.is(':checked')) {
-            $checkbox.prop('checked', false);
-            $checkbox.removeAttr('name');
-            $label.text($label.attr('data-add'));
-            $that.removeAttr('data-active');
+            $baskets.each(function () {
+                $(this).prop('checked', false);
+                $(this).removeAttr('name');
+
+                $(this).closest('.order-add-more__item').removeAttr('data-active');
+
+                let $label = $(this).next();
+                $label.text($label.attr('data-add'));
+            });
+
             //remove
             $('.additional-basket-item-' + $checkbox.data('id')).remove()
         } else {
-            $checkbox.prop('checked', true);
-            $checkbox.attr('name', $checkbox.data('name'));
-            $label.text($label.attr('data-remove'));
-            $that.attr('data-active', '');
+            $baskets.each(function () {
+                $(this).prop('checked', true);
+                $(this).attr('name', $(this).data('name'));
+
+                $(this).closest('.order-add-more__item').attr('data-active', '');
+
+                let $label = $(this).next();
+                $label.text($label.attr('data-remove'));
+            });
+
             //add
             let html = '<li class="order-submit__item additional-basket-item additional-basket-item-' + $checkbox.data('id') + '">' +
                 '<div class="order-submit__subTitle">' + $checkbox.data('basket_name') + '</div></li>';
             $(html).insertAfter('.baskets-spliter');
         }
 
-        Order.calculateTotal();
+        setTimeout(function () {
+            Order.calculateTotal();
+        }, 1000);
     });
 }
 

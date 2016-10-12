@@ -28,6 +28,7 @@ class TagUpdateRequest extends FormRequest
         
         $rules = [
             'category_id' => 'exists:tag_categories,id',
+            'image'       => ['regex:'.$this->image_regex],
         ];
         
         $languageRules = [

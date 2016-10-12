@@ -12,6 +12,7 @@
                             ->addHead([
                                 ['text' => trans('labels.id')],
                                 ['text' => trans('labels.name')],
+                                ['text' => trans('labels.show_on_site')],
                                 ['text' => trans('labels.position')],
                                 ['text' => trans('labels.actions')]
                             ])

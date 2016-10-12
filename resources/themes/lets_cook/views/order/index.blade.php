@@ -5,6 +5,10 @@
     <main class="main order">
         @include('order.partials.popup')
 
+        @if ($additional_baskets_tags->count())
+            @include('order.partials.additional_baskets_popup')
+        @endif
+
         <form action="{!! localize_route('order.store') !!}" method="post" class="order-create-form">
             {!! csrf_field() !!}
 
@@ -14,8 +18,8 @@
                 @include('order.partials.ingredients')
             @endif
 
-            @if ($additional_baskets->count())
-                @include('order.partials.additional_baskets')
+            @if ($additional_baskets_tags->count())
+                @include('order.partials.additional_baskets_tags')
             @endif
 
             @include('order.partials.delivery')

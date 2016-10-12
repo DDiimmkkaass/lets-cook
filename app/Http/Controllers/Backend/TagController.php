@@ -84,6 +84,7 @@ class TagController extends BackendController
                 ->joinTranslations('tags', 'tag_translations', 'id', 'tag_id')
                 ->select(
                     'tags.id',
+                    'tags.image',
                     'tag_translations.name',
                     'category_id'
                 );
@@ -91,6 +92,24 @@ class TagController extends BackendController
             return $dataTables = Datatables::of($list)
                 ->filterColumn('id', 'where', 'tags.id', '=', '$1')
                 ->filterColumn('tag_translations.name', 'where', 'tag_translations.name', 'LIKE', '%$1%')
+                ->editColumn(
+                    'name',
+                    function ($model) {
+                        $html = $model->name;
+    
+                        if ($model->image) {
+                            $html = view(
+                                    'partials.image',
+                                    [
+                                        'src'        => $model->image,
+                                        'attributes' => ['width' => 50, 'class' => 'margin-right-10'],
+                                    ]
+                                )->render().$html;
+                        }
+                        
+                        return $html;
+                    }
+                )
                 ->editColumn(
                     'category_id',
                     function ($model) {
@@ -110,6 +129,7 @@ class TagController extends BackendController
                     }
                 )
                 ->setIndexColumn('id')
+                ->removeColumn('image')
                 ->removeColumn('meta_keywords')
                 ->removeColumn('meta_title')
                 ->removeColumn('meta_description')

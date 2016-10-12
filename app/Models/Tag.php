@@ -36,6 +36,7 @@ class Tag extends Model
      */
     protected $fillable = [
         'category_id',
+        'image',
         'name',
     ];
 

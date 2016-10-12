@@ -159,9 +159,11 @@ Order.calculateTotal = () ->
 
   # additional baskets add
   _total = 0
-  $('.order-add-more__list .checkbox-button input[type="checkbox"]').each () ->
-    if ($(this).is(':checked'))
+  _baskets = []
+  $('.order-add-more__hidden .checkbox-button input[type="checkbox"]').each () ->
+    if ($(this).is(':checked')) && !_baskets.includes($(this).data('id'))
       _total += parseInt($(this).data('price'))
+      _baskets.push($(this).data('id'))
 
   # additional baskets edit
   $('.order-edit__add-list .order-add-item__checkbox input[type="checkbox"]').each () ->

@@ -566,6 +566,14 @@ $router->group(
                 );
                 
                 //tag categories
+                $router->post(
+                    'tag_category/{id}/ajax_field',
+                    [
+                        'middleware' => ['ajax'],
+                        'as'         => 'admin.tag_category.ajax_field',
+                        'uses'       => 'Backend\TagCategoryController@ajaxFieldChange',
+                    ]
+                );
                 $router->resource('tag_category', 'Backend\TagCategoryController');
             }
         );

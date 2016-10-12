@@ -29,6 +29,7 @@ class TagCategoryUpdateRequest extends FormRequest
         return [
             'name'     => 'required|unique:tag_categories,name,'.$id.',id',
             'position' => 'integer',
+            'status'   => 'required|boolean',
         ];
     }
 }

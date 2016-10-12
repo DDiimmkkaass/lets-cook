@@ -116,7 +116,7 @@ class OrderController extends FrontendController
         )->joinWeeklyMenu()
             ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
             ->find($basket_id);
-    
+        
         $this->data('trial', $trial);
         $this->data('basket', $basket);
         $this->data('same_basket', $this->weeklyMenuService->getSameBasket($basket));
@@ -351,8 +351,32 @@ class OrderController extends FrontendController
      */
     private function _fillAdditionalTemplateData($year, $week)
     {
-        $additional_baskets = Basket::with('recipes')->additional()->positionSorted()->get();
+        $additional_baskets = Basket::with('recipes', 'tags', 'tags.tag.category')
+            ->additional()
+            ->positionSorted()
+            ->get();
         $this->data('additional_baskets', $additional_baskets);
+        
+        $additional_baskets_tags = [];
+        foreach ($additional_baskets as $additional_basket) {
+            foreach ($additional_basket->tags as $tag) {
+                if ($tag->tag->category && $tag->tag->category->status) {
+                    if (!isset($additional_baskets_tags[$tag->tag->id])) {
+                        $additional_baskets_tags[$tag->tag->id] = [
+                            'tag'   => $tag->tag,
+                            'name'  => $tag->tag->name,
+                            'price' => $additional_basket->price,
+                        ];
+                    }
+                    
+                    $additional_baskets_tags[$tag->tag->id]['price'] = min(
+                        $additional_baskets_tags[$tag->tag->id]['price'],
+                        $additional_basket->price
+                    );
+                }
+            }
+        }
+        $this->data('additional_baskets_tags', collect($additional_baskets_tags)->sortBy('name'));
         
         $this->data('delivery_dates', $this->weeklyMenuService->getDeliveryDates($year, $week));
         
