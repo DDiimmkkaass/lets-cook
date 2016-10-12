@@ -1,0 +1,19 @@
+image: crisu83/docker-nginx-php-node
+services:
+  - mysql:latest
+variables:
+  WITH_XDEBUG: "1"
+  MYSQL_ROOT_PASSWORD: secret
+  MYSQL_DATABASE: homestead
+  MYSQL_USER: homestead
+  MYSQL_PASSWORD: secret
+  COMPOSER_HOME: /cache/composer
+deploy:
+  image: crisu83/docker-nginx-php-node
+  script:
+    - php -v
+    - composer install --no-progress --no-interaction
+    - npm install
+    - lftp -e "mirror -R . $DEPLOY_FTP_DIR --parallel=10 --exclude-glob .git* --exclude .git/" -u $DEPLOY_FTP_USER,$DEPLOY_FTP_PASSWORD $DEPLOY_FTP_HOST
+  only:
+    - master
