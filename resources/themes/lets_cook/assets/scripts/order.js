@@ -137,7 +137,13 @@ function countList() {
     })();
 
     $controlsList.on('change', 'input[type="radio"]', function () {
-        findChanges($(this), null);
+        if ($(this).closest('li').hasClass('exists')) {
+            findChanges($(this), null);
+        } else {
+            $(this).prop('checked', false).removeAttr('checked');
+
+            $('.order-main__count-item.exists').last().find('label').click();
+        }
     });
 }
 

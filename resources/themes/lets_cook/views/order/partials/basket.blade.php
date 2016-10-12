@@ -16,7 +16,7 @@
                             <div class="order-main__count-title">Ужинов</div>
                             <ul class="order-main__count-list recipes">
                                 @for ($i = 1; $i <= 7; $i++)
-                                    <li class="order-main__count-item order-count-radio">
+                                    <li class="order-main__count-item order-count-radio @if ($i <= $_recipes_count) exists @endif">
                                         <input type="radio" id="order-count-radio-{!! $i !!}"
                                                name="recipes_count"
                                                @if (
@@ -28,7 +28,7 @@
                                                @endif
                                                value="{!! $i !!}"
                                                data-count="{!! $i !!}">
-                                        <label for="order-count-radio-{!! $i !!}">{!! $i !!}</label>
+                                        <label class="@if ($i > $_recipes_count) not-exists @endif" for="order-count-radio-{!! $i !!}">{!! $i !!}</label>
                                     </li>
                                 @endfor
                             </ul>

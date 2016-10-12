@@ -258,11 +258,12 @@ Order.save = ($button, $form) ->
 
 $(document).on "ready", () ->
   $('.order-main__count-list.recipes').on "click", '.order-main__count-item', (e) ->
-    $('span', '#recipes_count_result').text($(this).find('label').text())
+    if $(this).hasClass('exists')
+      $('span', '#recipes_count_result').text($(this).find('label').text())
 
-    setTimeout () ->
-        Order.calculateTotal()
-    , 1000
+      setTimeout () ->
+          Order.calculateTotal()
+        , 1000
 
   $('.order-main__count-list.order-portions-count').on 'change', 'input[type="radio"]', () ->
     $('span', '#portions_count_result').text($(this).val())
