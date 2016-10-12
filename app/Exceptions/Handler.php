@@ -35,29 +35,31 @@ class Handler extends ExceptionHandler
     public function report(Exception $e)
     {
         if (!in_array((int) $e->getCode(), [404, 422])) {
-            $_request = request()->all();
-    
-            $debugSetting = config('app.debug');
-            
-            config('app.debug', true);
-            if (ExceptionHandler::isHttpException($e)) {
-                $content = ExceptionHandler::toIlluminateResponse(ExceptionHandler::renderHttpException($e), $e);
-            } else {
-                $content = ExceptionHandler::toIlluminateResponse(ExceptionHandler::convertExceptionToResponse($e), $e);
+            if (config('mail.from.address')) {
+                $_request = request()->all();
+        
+                $debugSetting = config('app.debug');
+        
+                config('app.debug', true);
+                if (ExceptionHandler::isHttpException($e)) {
+                    $content = ExceptionHandler::toIlluminateResponse(ExceptionHandler::renderHttpException($e), $e);
+                } else {
+                    $content = ExceptionHandler::toIlluminateResponse(ExceptionHandler::convertExceptionToResponse($e), $e);
+                }
+        
+                config('app.debug', $debugSetting);
+        
+                $content = (!isset($content->original)) ? $e->getMessage() : $content->original;
+        
+                admin_notify(
+                    'message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile(),
+                    [
+                        'url'     => request()->fullUrl(),
+                        'request' => $_request,
+                        'content' => $content,
+                    ]
+                );
             }
-    
-            config('app.debug', $debugSetting);
-    
-            $content = (!isset($content->original)) ? $e->getMessage() : $content->original;
-            
-            admin_notify(
-                'message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile(),
-                [
-                    'url'     => request()->fullUrl(),
-                    'request' => $_request,
-                    'content' => $content,
-                ]
-            );
         }
         
         return parent::report($e);
