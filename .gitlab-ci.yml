@@ -16,7 +16,6 @@ stages:
 
 php-5.6:
   type: test
-  image: tetraweb/php:5.6-cli
   script:
     - docker-php-ext-enable zip
     - docker-php-ext-enable mbstring
