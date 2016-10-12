@@ -178,8 +178,16 @@ function orderPopUp() {
             $buttonsWrapper = $parent.find('.order-day-item__buttons');
         $editButton = $buttonsWrapper.find('.order-day-item__edit');
 
+        let total_dinners = parseInt($('#total_dinners').text()) + 1;
+
         if ($that.is(':checked')) {
-            $buttonsWrapper.attr('data-active', '');
+            if (total_dinners > 7) {
+                $that.prop('checked', false).removeAttr('checked');
+
+                popUp(lang_error, 'Вы не можете выбрать более 7 ужинов');
+            } else {
+                $buttonsWrapper.attr('data-active', '');
+            }
         } else {
             $buttonsWrapper.removeAttr('data-active');
             $editButton.find('span').text('1 ужин');
@@ -205,12 +213,20 @@ function orderPopUp() {
             $change = $parent.find('.order-day-item__change'),
             $editButton = $parent.find('.order-day-item__edit');
 
-        $editButton.find('span').text(title);
-        $editButton.data('count', number);
+        let total_dinners = parseInt($('#total_dinners').text()) - $editButton.data('count');
 
-        $change.removeAttr('data-active');
+        total_dinners += number;
 
-        Order.calculateDinners();
+        if (total_dinners > 7) {
+            popUp(lang_error, 'Вы не можете выбрать более 7 ужинов');
+        } else {
+            $editButton.find('span').text(title);
+            $editButton.data('count', number);
+
+            $change.removeAttr('data-active');
+
+            Order.calculateDinners();
+        }
     });
 
     $(window).on('resize', function() {
