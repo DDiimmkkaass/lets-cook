@@ -123,3 +123,21 @@
 //card connect form
 #payment_connect_form
   display none
+
+//order page
+.ordered-items-spliter
+  float none
+  height: 1px
+  margin 0
+  padding 0
+
+.order-submit__item
+  &:not(:last-of-type)
+    &.order-submit__item_main
+      &::after
+        content none!important
+
+.additional-basket-item
+  &:last-of-type
+    &::after
+      content none!important

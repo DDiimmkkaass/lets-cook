@@ -20,6 +20,8 @@
                         </ul>
                     </li>
 
+                    <li class="ordered-items-spliter baskets-spliter"></li>
+
                     @if ($selected_baskets->count())
                         @foreach($selected_baskets as $_basket)
                             <li class="order-submit__item additional-ingredient-item additional-ingredient-item-{!! $_basket->id !!}">
@@ -27,6 +29,8 @@
                             </li>
                         @endforeach
                     @endif
+
+                    <li class="ordered-items-spliter ingredients-spliter"></li>
                 </ul>
             </div>
 

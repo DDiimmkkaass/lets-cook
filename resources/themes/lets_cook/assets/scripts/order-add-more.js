@@ -44,7 +44,7 @@ function orderAddMore() {
             //add
             let html = '<li class="order-submit__item additional-basket-item additional-basket-item-' + $checkbox.data('id') + '">' +
                 '<div class="order-submit__subTitle">' + $checkbox.data('basket_name') + '</div></li>';
-            $(html).insertAfter('.order-submit__item_main');
+            $(html).insertAfter('.baskets-spliter');
         }
 
         Order.calculateTotal();
