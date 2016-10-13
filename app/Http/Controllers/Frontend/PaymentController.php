@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Events\Frontend\BeforeErrorDepositionNotificationResponse;
+use Artem328\LaravelYandexKassa\Requests\YandexKassaRequest;
 use Artem328\LaravelYandexKassa\YandexKassaController;
 use FlashMessages;
 
@@ -28,7 +30,7 @@ class PaymentController extends YandexKassaController
     public function fail()
     {
         FlashMessages::add('error', trans('Платеж завершился ошибкой, заказ не оплачен.'));
-    
+        
         return redirect()->route('home');
     }
     
@@ -38,5 +40,14 @@ class PaymentController extends YandexKassaController
     public function instruction()
     {
         return redirect()->route('home');
+    }
+    
+    /**
+     * we do not use this method makeDeposition, so we can not handle this request
+     * just in case, send 200 response
+     */
+    public function depositError()
+    {
+        return;
     }
 }
