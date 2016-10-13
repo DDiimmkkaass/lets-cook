@@ -49,7 +49,7 @@
   "scripts": {
     "gulp": "gulp",
     "gulp-watch": "gulp watch",
-    "bower": "bower install"
+    "bower": "bower install --allow-root"
   },
   "eslintConfig": {
     "env": {
