@@ -12,7 +12,8 @@ deploy:
   image: crisu83/docker-nginx-php-node
   script:
     - php -v
-    - npm install -g npm
+    - curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+    - sudo apt-get install -y build-essential nodejs lftp
     - composer install --no-progress --no-interaction
     - lftp -e "mirror -R . $DEPLOY_FTP_DIR --parallel=10 --exclude-glob .git* --exclude .git/" -u $DEPLOY_FTP_USER,$DEPLOY_FTP_PASSWORD $DEPLOY_FTP_HOST
   only:
