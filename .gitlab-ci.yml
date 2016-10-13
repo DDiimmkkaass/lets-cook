@@ -23,7 +23,8 @@ deploy:
     - git config git-ftp.url ftp://$DEPLOY_FTP_HOST/$DEPLOY_FTP_DIR
     - git config git-ftp.user $DEPLOY_FTP_USER
     - git config git-ftp.password $DEPLOY_FTP_PASSWORD
+    - git ftp push
     - lftp -e "mirror -R ./public/assets/ $DEPLOY_FTP_DIR/public/assets/ --parallel=10" -u $DEPLOY_FTP_USER,$DEPLOY_FTP_PASSWORD $DEPLOY_FTP_HOST
-    - ssh $DEPLOY_FTP_USER@$DEPLOY_FTP_HOST "cd $DEPLOY_FTP_DIR && php artisan migrate --force"
+    - ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $DEPLOY_FTP_USER@$DEPLOY_FTP_HOST "cd $DEPLOY_FTP_DIR && php artisan migrate --force"
   only:
     - master
