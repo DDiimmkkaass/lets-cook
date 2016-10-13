@@ -22,7 +22,7 @@
     "ionicons": "*",
     "bootstrap-switch": "~3.0.0",
     "datatables": "~1",
-    "sysTranslit": "https://synctranslit.googlecode.com/files/synctranslit_0.0.7.zip",
+    "sysTranslit": "https://storage.googleapis.com/google-code-archive-downloads/v2/code.google.com/synctranslit/synctranslit_0.0.7.zip",
     "sly": "https://github.com/darsain/sly/archive/master.zip",
     "bootstrap-validator": "~0.9",
     "jquery.inputmask": "3.2.5",
