@@ -270,5 +270,10 @@ $router->group(
             'instruction',
             ['as' => 'payment.instruction', 'uses' => 'Frontend\PaymentController@instruction']
         );
+    
+        $router->post(
+            'deposit_error',
+            ['as' => 'payment.deposit_error', 'uses' => 'Frontend\PaymentController@depositError']
+        );
     }
 );

@@ -315,22 +315,6 @@
                 </li>
             @endif
 
-            @if ($user->hasAccess('question.read'))
-                <li class="{!! active_class('admin.question*') !!}">
-                    <a href="{!! route('admin.question.index') !!}">
-                        <i class="fa fa-question-circle"></i>
-                        <span>@lang('labels.question_&_answer')</span>
-
-                        @if ($user->hasAccess('question.create'))
-                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_question')"
-                                   data-href="{!! route('admin.question.create') !!}">
-                                <i class="fa fa-plus"></i>
-                            </small>
-                        @endif
-                    </a>
-                </li>
-            @endif
-
             @if ($user->hasAccess('comment.read'))
                 <li class="{!! active_class('admin.comment*') !!}">
                     <a href="{!! route('admin.comment.index') !!}">
