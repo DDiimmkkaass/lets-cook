@@ -32,9 +32,7 @@ class Variable
      */
     public function __construct()
     {
-        if (Schema::hasTable('variables')) {
-            $this->variables = VariableModel::withTranslations()->visible()->get()->keyBy('key');
-        }
+        $this->_setVariables();
     }
 
     /**
@@ -84,5 +82,19 @@ class Variable
         }
         
         return $variables;
+    }
+    
+    /**
+     * get variables from database
+     */
+    private function _setVariables()
+    {
+        try {
+            $this->variables = VariableModel::withTranslations()->visible()->get()->keyBy('key');
+        } catch (Exception $e) {
+            // just insure themselves in case of problems with the database
+            
+            $this->variables = collect();
+        }
     }
 }

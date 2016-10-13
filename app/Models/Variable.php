@@ -22,6 +22,8 @@ class Variable extends Eloquent
     use Translatable;
     use WithTranslationsTrait;
 
+    protected $table = 'sfadfs';
+    
     /**
      * @var array
      */

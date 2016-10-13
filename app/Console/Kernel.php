@@ -56,42 +56,57 @@ class Kernel extends ConsoleKernel
         $schedule->command('orders:process-tmp-orders-for-current-week')
             ->cron('10 0 * * 2');
         
-        $schedule->command('orders:process-paid-orders-for-current-week')
-            ->cron($this->_getProcessPaidOrdersTime());
+        $time = $this->_getProcessPaidOrdersTime();
+            
+        if ($time) {
+            $schedule->command('orders:process-paid-orders-for-current-week')
+                ->cron($time);
+        }
     
-        $schedule->command('orders:remove-unsuccessful-orders-for-current-week')
-            ->cron($this->_getFinalisingOrdersTime());
-        
-        $schedule->command('orders:generate-reports-for-current-week')
-            ->cron($this->_getFinalisingOrdersTime());
-        
+        $time = $this->_getFinalisingOrdersTime();
+        if ($time) {
+            $schedule->command('orders:remove-unsuccessful-orders-for-current-week')
+                ->cron($time);
+    
+            $schedule->command('orders:generate-reports-for-current-week')
+                ->cron($time);
+        }
+            
         $schedule->command('orders:archive-completed-orders')
             ->cron('0 0 * * 1,2');
     }
     
     /**
-     * @return string
+     * @return string|boolean
      */
     private function _getProcessPaidOrdersTime()
     {
         $time = variable('stop_ordering_time');
         $time = explode(':', $time);
         
-        $time = (int) $time[1].' '.(int) $time[0].' * * '.variable('stop_ordering_date');
+        if (isset($time[0]) && isset($time[1])) {
+            $time = (int) $time[1].' '.(int) $time[0].' * * '.variable('stop_ordering_date');
+    
+            return $time;
+        }
         
-        return $time;
+        return false;
     }
     
     /**
-     * @return string
+     * @return string|boolean
      */
     private function _getFinalisingOrdersTime()
     {
         $time = variable('finalising_reports_time');
         $time = explode(':', $time);
     
-        $time = (int) $time[1].' '.(int) $time[0].' * * '.variable('finalising_reports_date');
+        if (isset($time[0]) && isset($time[1])) {
+            $time = (int) $time[1].' '.(int) $time[0].' * * '.variable('finalising_reports_date');
     
-        return $time;
+            return $time;
+        }
+        
+        return false;
     }
 }
