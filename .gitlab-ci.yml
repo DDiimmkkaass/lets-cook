@@ -20,6 +20,7 @@ deploy:
     - npm install --silent --depth -1
     - npm run --silent bower
     - npm run gulp
+    - lftp -e "mirror -R ./vendor/ $DEPLOY_FTP_DIR/vendor/ --parallel=10" -u $DEPLOY_FTP_USER,$DEPLOY_FTP_PASSWORD $DEPLOY_FTP_HOST
     - git config git-ftp.url ftp://$DEPLOY_FTP_HOST/$DEPLOY_FTP_DIR
     - git config git-ftp.user $DEPLOY_FTP_USER
     - git config git-ftp.password $DEPLOY_FTP_PASSWORD
