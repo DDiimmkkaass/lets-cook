@@ -13,13 +13,16 @@ deploy:
   script:
     - php -v
     - curl -sL https://deb.nodesource.com/setup_6.x | bash -
-    - apt-get install -y build-essential nodejs lftp
+    - apt-get install -y build-essential nodejs lftp git-ftp
     - mkdir -p ~/.lftp
     - echo "set ssl:verify-certificate no" >> ~/.lftp/rc
     - composer install --no-progress --no-interaction
     - npm install
     - npm run bower
     - npm run gulp
-    - lftp -e "mirror -R . $DEPLOY_FTP_DIR --parallel=10 --exclude-glob .git* --exclude .git/ --exclude node_modules/" -u $DEPLOY_FTP_USER,$DEPLOY_FTP_PASSWORD $DEPLOY_FTP_HOST
+    - git config git-ftp.url ftp://$DEPLOY_FTP_HOST/$DEPLOY_FTP_DIR
+    - git config git-ftp.user $DEPLOY_FTP_USER
+    - git config git-ftp.password $DEPLOY_FTP_PASSWORD
+    - lftp -e "mirror -R ./public/assets/ $DEPLOY_FTP_DIR/public/assets/ --parallel=10" -u $DEPLOY_FTP_USER,$DEPLOY_FTP_PASSWORD $DEPLOY_FTP_HOST
   only:
     - master
