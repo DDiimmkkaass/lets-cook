@@ -9,6 +9,10 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Foundation\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+/**
+ * Class Handler
+ * @package App\Exceptions
+ */
 class Handler extends ExceptionHandler
 {
     /**
@@ -34,34 +38,6 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        if (!in_array((int) $e->getCode(), [404, 422])) {
-            if (config('mail.from.address')) {
-                $_request = request()->all();
-        
-                $debugSetting = config('app.debug');
-        
-                config('app.debug', true);
-                if (ExceptionHandler::isHttpException($e)) {
-                    $content = ExceptionHandler::toIlluminateResponse(ExceptionHandler::renderHttpException($e), $e);
-                } else {
-                    $content = ExceptionHandler::toIlluminateResponse(ExceptionHandler::convertExceptionToResponse($e), $e);
-                }
-        
-                config('app.debug', $debugSetting);
-        
-                $content = (!isset($content->original)) ? $e->getMessage() : $content->original;
-        
-                admin_notify(
-                    'message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile(),
-                    [
-                        'url'     => request()->fullUrl(),
-                        'request' => $_request,
-                        'content' => $content,
-                    ]
-                );
-            }
-        }
-        
         return parent::report($e);
     }
     
@@ -75,15 +51,59 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
-        if ($this->isHttpException($e) && env('HANDLE_ERROR', true)) {
+        if ($this->isHttpException($e)) {
             $statusCode = $e->getStatusCode();
-            
-            switch ($statusCode) {
-                case 404:
-                    return redirect(route('not_found'), 301);
+    
+            if (env('HANDLE_ERROR', true)) {
+                switch ($statusCode) {
+                    case 404:
+                        return redirect(route('not_found'), 301);
+                }
             }
+        } else {
+            $this->_sendToAdmin($e);
         }
         
         return parent::render($request, $e);
+    }
+    
+    /**
+     * @param Exception $e
+     */
+    private function _sendToAdmin(Exception $e)
+    {
+        try {
+            if (config('mail.from.address')) {
+                $_request = request()->all();
+                
+                $debugSetting = config('app.debug');
+                
+                config('app.debug', true);
+                
+                if (ExceptionHandler::isHttpException($e)) {
+                    $content = ExceptionHandler::toIlluminateResponse(ExceptionHandler::renderHttpException($e), $e);
+                } else {
+                    $content = ExceptionHandler::toIlluminateResponse(
+                        ExceptionHandler::convertExceptionToResponse($e),
+                        $e
+                    );
+                }
+                
+                config('app.debug', $debugSetting);
+                
+                $content = (!isset($content->original)) ? $e->getMessage() : $content->original;
+                
+                admin_notify(
+                    'message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile(),
+                    [
+                        'url' => request()->fullUrl(),
+                        'request' => $_request,
+                        'content' => $content,
+                    ]
+                );
+            }
+        } catch (Exception $e) {
+            // nonsense, i do not know what to do
+        }
     }
 }
