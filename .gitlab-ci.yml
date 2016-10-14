@@ -16,7 +16,6 @@ deploy:
     - apt-get install -y build-essential nodejs lftp git-ftp sshpass
     - mkdir -p ~/.lftp
     - echo "set ssl:verify-certificate no" >> ~/.lftp/rc
-    - composer install --no-progress --no-interaction
     - npm install --silent --depth -1
     - npm run --silent bower
     - npm run gulp
@@ -24,6 +23,8 @@ deploy:
     - git config git-ftp.user $DEPLOY_FTP_USER
     - git config git-ftp.password $DEPLOY_FTP_PASSWORD
     - git ftp push
+    - lftp -e "mirror -R ./public/assets/ $DEPLOY_FTP_DIR/public/assets/ --parallel=10" -u $DEPLOY_FTP_USER,$DEPLOY_FTP_PASSWORD $DEPLOY_FTP_HOST
+    - sshpass -p$DEPLOY_FTP_PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $DEPLOY_FTP_USER@$DEPLOY_FTP_HOST "cd $DEPLOY_FTP_DIR && composer install --no-progress --no-interaction"
     - sshpass -p$DEPLOY_FTP_PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $DEPLOY_FTP_USER@$DEPLOY_FTP_HOST "php $DEPLOY_FTP_DIR/artisan migrate --force"
   only:
     - master
