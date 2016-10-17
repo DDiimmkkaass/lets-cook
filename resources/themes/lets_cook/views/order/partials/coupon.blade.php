@@ -1,4 +1,4 @@
-<section class="order__promocode order-promocode" @if ($user && $user->subscribe()->count()) data-fullscreen @endif>
+<section class="order__promocode order-promocode" @if ($user && $user->subscribe()->count()) data-fullscreen @endif data-steps="7">
     <div class="order-promocode__wrapper">
         <h2 class="order-promocode__title">
             <span data-device="mobile">Промокод</span>

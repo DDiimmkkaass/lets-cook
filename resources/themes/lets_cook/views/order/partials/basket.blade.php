@@ -1,4 +1,4 @@
-<section class="order__main order-main">
+<section class="order__main order-main" data-steps="1">
     <input type="hidden" name="basket_id" value="{!! $basket->id !!}">
 
     <div class="order-main__wrapper">

@@ -1,4 +1,4 @@
-<section class="order__personal-data order-personal">
+<section class="order__personal-data order-personal" data-steps="6">
     <h2 class="order-personal__title georgia-title">Личные данные</h2>
 
     <div class="order-personal__main">

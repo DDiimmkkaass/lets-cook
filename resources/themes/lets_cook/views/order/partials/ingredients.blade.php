@@ -1,4 +1,4 @@
-<section class="order__ingredients order-ing">
+<section class="order__ingredients order-ing" data-steps="2">
     <a href='#' class="order-ing__title ptsans-narrow-regular-tittle">
         <span>Ингредиенты</span>
         <span>Свернуть</span>

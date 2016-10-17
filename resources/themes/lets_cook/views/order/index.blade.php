@@ -9,6 +9,8 @@
             @include('order.partials.additional_baskets_popup')
         @endif
 
+        @include('order.partials.steps')
+
         <form action="{!! localize_route('order.store') !!}" method="post" class="order-create-form">
             {!! csrf_field() !!}
 

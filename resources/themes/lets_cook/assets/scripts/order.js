@@ -261,4 +261,72 @@ function orderPopUp() {
     }).resize();
 }
 
+
+function orderSteps() {
+    let $order_steps = $('.order__steps'),
+        $current_count = $order_steps.find('.order-steps__num-count span[data-step="1"]'),
+        $common_count = $order_steps.find('.order-steps__num-count span[data-step="2"]');
+
+    let $main_order = $('.main.order'),
+        $main_sections = $main_order.find('[data-steps]'),
+        sections_top = [];
+
+    function getSectionsTop() {
+        sections_top.length = 0;
+
+        $main_sections.each(function() {
+            let $that = $(this),
+                top = $that.offset().top;
+
+            sections_top.push(top);
+        });
+    }
+
+    function setSectionsCount() {
+        $common_count.text($main_sections.length);
+    }
+
+    function setCurrentCount() {
+        let $window = $(window),
+            window_center = $window.scrollTop() + ($window.height() / 2);
+
+        console.log(window_center);
+
+        $main_sections.each(function(i) {
+            console.log(sections_top[i]);
+
+            if (window_center > sections_top[i]) {
+                $current_count.text(i+1);
+            }
+        });
+    }
+
+    function stepsStatus() {
+        let $window = $(window),
+            window_scroll_top = $window.scrollTop(),
+            window_width = $window.width();
+
+        getSectionsTop();
+
+        if (window_scroll_top > 100 || window_width >= 1020) {
+            $order_steps.attr('data-active', '');
+        } else {
+            $order_steps.removeAttr('data-active');
+        }
+    }
+
+    (function init() {
+        getSectionsTop();
+        setSectionsCount();
+        setCurrentCount();
+        stepsStatus();
+    }());
+
+    $(window).on('scroll resize', function() {
+        setCurrentCount();
+
+        stepsStatus();
+    });
+}
+
 /* ----- end ORDER ----- */

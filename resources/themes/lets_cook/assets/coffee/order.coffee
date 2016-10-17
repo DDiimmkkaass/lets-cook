@@ -114,6 +114,7 @@ Order.updateRecipes = () ->
 Order.calculateTotal = () ->
   $total = $('#order_total_desktop')
   $total_mobile = $('#order_total_mobile')
+  $order_total_steps = $('#order_total_steps')
   $total_popup = $('#popup_total_price')
   $order_discount = $('#order_discount')
   $per_portion_total = $('#per_portion_total')
@@ -189,12 +190,14 @@ Order.calculateTotal = () ->
   if order_discount < 0 || isNaN(order_discount)
     order_discount = 0
 
+  $order_total_steps.text(total)
+
   total += '<span>' + currency + '</span>';
   order_discount += '<span>' + currency + '</span>';
 
-  $total.html(total);
+  $total.html(total)
 
-  $order_discount.html(order_discount);
+  $order_discount.html(order_discount)
 
 Order.checkCoupon = (code) ->
   $.ajax
