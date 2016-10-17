@@ -46,6 +46,7 @@ module.exports =
   dev: [theme.concat('::css:dev'), theme.concat('::coffee:dev'), theme.concat('::purejs'), theme.concat('::images'), theme.concat('::fonts'), theme.concat('::vendor')]
   watch: [theme.concat('::css:watch'), theme.concat('::coffee:watch'), theme.concat('::purejs:watch'), theme.concat('::images:watch'), theme.concat('::fonts:watch'), theme.concat('::vendor:watch')]
 
+gulp.task theme, [theme.concat('::css'), theme.concat('::coffee'), theme.concat('::purejs'), theme.concat('::images'), theme.concat('::fonts'), theme.concat('::vendor')]
 
 # SASS #
 gulp.task theme.concat("::css"), ->

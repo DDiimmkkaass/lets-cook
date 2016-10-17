@@ -4,4 +4,5 @@ composer install --no-interaction --prefer-dist
 php artisan migrate --force
 ./node_modules/.bin/bower install
 npm install
-gulp
+gulp lets_cook
+gulp admin
