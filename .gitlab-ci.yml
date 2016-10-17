@@ -11,6 +11,8 @@ deploy:
   script:
     - apt-get update
     - apt-get install -y sshpass
+    - sshpass -p$DEPLOY_FTP_PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $DEPLOY_FTP_USER@$DEPLOY_FTP_HOST "cd $DEPLOY_FTP_DIR && git reset --hard"
+    - sshpass -p$DEPLOY_FTP_PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $DEPLOY_FTP_USER@$DEPLOY_FTP_HOST "cd $DEPLOY_FTP_DIR && git pull origin master"
     - sshpass -p$DEPLOY_FTP_PASSWORD ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no $DEPLOY_FTP_USER@$DEPLOY_FTP_HOST "cd $DEPLOY_FTP_DIR && ./deploy.sh"
   only:
     - master
