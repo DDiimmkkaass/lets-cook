@@ -1,4 +1,4 @@
-<section class="order__payment order-payment">
+<section class="order__payment order-payment" data-steps="5">
     <h2 class="order-payment__title georgia-title">Оплата</h2>
 
     <ul class="order-payment__list">

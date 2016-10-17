@@ -1,4 +1,4 @@
-<section class="order__add-more order-add-more">
+<section class="order__add-more order-add-more" data-steps="3">
     <h2 class="order-add-more__title georgia-title">Добавьте к заказу</h2>
 
     <ul class="order-add-more__hidden">

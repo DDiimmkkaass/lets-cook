@@ -1,4 +1,4 @@
-<section class="order__address-and-date order-addr-date">
+<section class="order__address-and-date order-addr-date" data-steps="4">
     <div class="order-addr-date__header">
         <h2 class="order-addr-date__title">
             <span class="georgia-title" data-device="mobile">Доставка</span>

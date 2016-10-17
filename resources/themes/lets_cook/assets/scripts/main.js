@@ -129,6 +129,8 @@ $(window).load(function() {
         countList();
 
         orderPopUp();
+
+        orderSteps();
     }
 
     if ($('main[class="main baskets"]').length) {

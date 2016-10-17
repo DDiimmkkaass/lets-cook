@@ -2354,4 +2354,101 @@
     fsh(14px, 1.3)
     color: $font-black-1
 
+
+// ORDER STEPS
+
+.order-steps
+  fixed: top 0 left 0
+  transform: translateY(-35px)
+  z-index: 9999
+  size: 100% 30px
+  js-display: flex; display: flex
+  flex-direction: row
+  justify-content: space-between
+  align-items: center
+  padding: 0 (20px * (310 / 720))
+  background-color: $bg-green-1
+  border-bottom: 2px solid $bg-green-8
+  box-shadow: 0 1px 3px rgba(14, 15, 15, 0.38)
+  color: $font-white-1
+  will-change: transform
+  transition: transform 0.3s;
+
+  &[data-active]
+    transform: translateY(0px)
+
+  +bp('480')
+    padding: 0 (20px * (470 / 720))
+
+  +bp('768')
+    height: 50px
+    padding: 0 20px
+    transform: translateY(-55px)
+
+  +bp('1024')
+    fixed: top 50% right 22px; left: auto
+    transform: translateY(-50%) !important
+    flex-direction: column
+    size: 168px
+    padding: 12px 10px 7px
+    border: 6px solid $bg-green-8
+    border-radius: 50%
+    box-shadow: 0 3px 15px rgba(14, 15, 15, 0.38)
+    color: $font-white-1
+
+  &__num-title
+    display: inline-block
+    font-family: $ptsans-regular
+    fsh(14px, 1.4)
+
+    +bp('768')
+      fs(16px)
+
+    +bp('1024')
+      display: block
+
+  &__num-count
+    display: inline-block
+    fsh(16px, 1.4)
+    font-family: $ptsans-regular
+
+    +bp('768')
+      fs(19px)
+
+    +bp('1024')
+      display: block
+
+    span[data-step='1']
+      font-family: $ptsans-bold
+
+  &__price-title
+    display: none
+    font-family: $ptsans-regular
+    fsh(16px, 1.4)
+
+    +bp('1024')
+      display: block
+
+  &__price-value
+    display: inline-block
+    font-family: $ptsans-caption-bold
+    fsh(22px, 1)
+
+    +bp('768')
+      fs(33px)
+
+    +bp('1024')
+      display: block
+      text-align: center
+
+    span[data-price='2']
+      margin-left: 5px
+      display: inline-block
+      font-family: $ptsans-regular
+      fsh(17px, 1.4)
+
+      +bp('1024')
+        margin: 0
+        display: block
+
 /* ----- end ORDER ----- */

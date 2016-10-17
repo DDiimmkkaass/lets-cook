@@ -1,4 +1,4 @@
-<section class="order__submit order-submit">
+<section class="order__submit order-submit" data-steps="8">
     <div class="order-submit__wrapper">
         <div class="order-submit__content">
             <div class="order-submit__common">
