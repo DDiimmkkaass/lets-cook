@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'driver' => 'gd',
+    'driver' => 'imagick',
 
     'allowed_image_file_type' => [
         'image/jpeg',
