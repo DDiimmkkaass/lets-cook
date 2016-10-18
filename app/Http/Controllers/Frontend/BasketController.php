@@ -36,14 +36,16 @@ class BasketController extends FrontendController
             $menu = WeeklyMenu::next()->first();
         }
         
-        $baskets = WeeklyMenuBasket::with('basket', 'recipes')
-            ->joinBasket()
-            ->where('weekly_menu_id', $menu->id)
-            ->groupBy('weekly_menu_baskets.basket_id')
-            ->orderBy('weekly_menu_baskets.portions', 'DESC')
-            ->get(['weekly_menu_baskets.*', 'baskets.position']);
+        if ($menu) {
+            $baskets = WeeklyMenuBasket::with('basket', 'recipes')
+                ->joinBasket()
+                ->where('weekly_menu_id', $menu->id)
+                ->groupBy('weekly_menu_baskets.basket_id')
+                ->orderBy('weekly_menu_baskets.portions', 'DESC')
+                ->get(['weekly_menu_baskets.*', 'baskets.position']);
+        }
         
-        $this->data('baskets', $baskets->sortBy('position'));
+        $this->data('baskets', isset($baskets) ? $baskets->sortBy('position') : collect());
         
         return $this->render($this->module.'.index');
     }
