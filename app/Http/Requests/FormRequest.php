@@ -58,10 +58,6 @@ class FormRequest extends IlluminateRequest
      */
     public function response(array $errors)
     {
-        if (!$this->ajax() && !$this->wantsJson()) {
-            FlashMessages::add("error", trans("messages.validation_failed"));
-        }
-        
         foreach ($errors as $key => $error) {
             foreach ($error as $_key => $e) {
                 preg_match_all('/.*\s([a-zA-z0-9\.]{3,})\s.*/iUs', $e, $matches);
@@ -75,6 +71,18 @@ class FormRequest extends IlluminateRequest
                     }
                 }
             }
+        }
+    
+        $message = trans("messages.validation_failed");
+
+        if (!$this->ajax() && !$this->wantsJson()) {
+            foreach ($errors as $key => $error) {
+                foreach ($error as $_key => $e) {
+                    $message .= '<br >'.$e;
+                }
+            }
+        
+            FlashMessages::add("error", $message);
         }
         
         return parent::response($errors);

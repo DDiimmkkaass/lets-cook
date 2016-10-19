@@ -28,7 +28,7 @@ class CardCreateRequest extends FormRequest
     {
         $rules = [
             'name'    => 'required',
-            'number'  => 'numeric|regex:/^[0-9]{0,16}$/',
+            'number'  => 'regex:/^[0-9]{0,16}$/',
             'default' => 'required|boolean',
         ];
         

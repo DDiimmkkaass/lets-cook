@@ -173,7 +173,8 @@ return array (
     'coupon' => 'купон',
     'codes' => 'коды',
     'create_count' => 'количество',
-    'prices' => 
+    'number' => 'номер',
+    'prices' =>
     array (
       2 => 'цена',
       4 => 'цена',
