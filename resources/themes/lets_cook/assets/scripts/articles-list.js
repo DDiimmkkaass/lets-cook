@@ -27,8 +27,7 @@ function articlesList($rootElement, loadedPage) {
 
         return $.ajax({
             type: 'GET',
-            // url: ajaxUrl,
-            url: 'recipes.php',
+            url: ajaxUrl,
             dataType: 'json',
             xhrFields: {
                 withCredentials: true
