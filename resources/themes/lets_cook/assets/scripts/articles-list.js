@@ -60,9 +60,9 @@ function articlesList($rootElement, loadedPage) {
         $.each(articlesObj[page], function(index, item) {
             let currentArticle = '<li class="articles-list-main__item article-item">'
                 + '<div class="article-item__main">'
-                + '<a href="#" class="article-item__img" style="background-image: url(' + '\'' + item.image + '\'' + ');"></a>'
+                + '<a href="' + item.href + '" class="article-item__img" style="background-image: url(' + '\'' + item.image + '\'' + ');"></a>'
                 + '<div class="article-item__content">'
-                + '<a href="#" class="article-item__title">' + item.name + '</a>'
+                + '<a href="' + item.href + '" class="article-item__title">' + item.name + '</a>'
                 + '<ul class="article-item__tag-list">';
 
             $.each(item.tags, function(index, item) {
