@@ -706,9 +706,6 @@
   &__text
     position: relative
     padding: 20px 56px
-    will-change: height
-    transition: height 0.3s
-    overflow: hidden
 
     &::before
       content: '«'
@@ -720,11 +717,12 @@
       absolute: bottom 7px right -2px
       fsh(70px, 32px)
 
-    p
-      margin: 20px 0
-
-      &:first-child
-        margin-top: 0
+    &_text
+      padding-bottom: 20px
+      will-change: height
+      transition: height 0.3s
+      height 100px
+      overflow: hidden
 
   &__toggle
     absolute: bottom 0 right 56px

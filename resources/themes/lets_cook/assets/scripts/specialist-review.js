@@ -3,14 +3,10 @@
 
 function specReview() {
     let $specReview = $('.spec-review'),
-        $specText = $specReview.find('.spec-review__text'),
+        $specText = $specReview.find('.spec-review__text_text'),
         $specAllParagraphs = $specText.children(),
         $specShow = $specReview.find('.spec-review__show'),
         $specHide = $specReview.find('.spec-review__hide');
-
-    (function init() {
-        $specText.height($specAllParagraphs.first().height());
-    }());
 
     $specShow.on('click', function() {
         let tempHeight = 0;
@@ -26,8 +22,7 @@ function specReview() {
     });
 
     $specHide.on('click', function() {
-
-        $specText.height($specAllParagraphs.first().height());
+        $specText.removeAttr('style');
 
         $specShow.removeAttr('data-active');
         $specHide.removeAttr('data-active');

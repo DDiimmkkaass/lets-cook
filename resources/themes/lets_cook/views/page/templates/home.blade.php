@@ -72,7 +72,11 @@
                         </div>
 
                         <div class="spec-review__text">
-                            @lang('front_texts.home nutritionist text')
+                            <div class="spec-review__text_text">
+                                <p>
+                                    @lang('front_texts.home nutritionist text')
+                                </p>
+                            </div>
                         </div>
                     </div>
 
