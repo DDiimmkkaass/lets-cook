@@ -43,7 +43,7 @@ return array(
     'you can not edit other users orders' => 'Вы не можете редактировать заказы других пользователей',
     'you cannot add this coupon' => 'Вы не можете добавить этот купон',
     'coupon successfully added' => 'Купон успешно добавлен',
-    'you cannot make this coupon default' => 'Вы не можете сделать етот купон активным',
+    'you cannot make this coupon default' => 'Вы не можете сделать этот купон активным',
     'coupon successfully make default' => 'Купон успешно установлен как активный',
     'coupon already default' => 'Этот купон уже установлен как активный',
     'coupon not available' => 'Этот купон не действителен или Вы не можете его использовать',

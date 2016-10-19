@@ -125,7 +125,7 @@
                 <a href="{!! localize_route('baskets.index', 'current') !!}"
                    data-week="0"
                    class="baskets-menu__details black-long-button">
-                    одробнее про корзины
+                    подробнее про корзины
                 </a>
             @endif
 
@@ -141,7 +141,7 @@
                 <a href="{!! localize_route('baskets.index', 'next') !!}"
                    data-week="1"
                    class="baskets-menu__details black-long-button">
-                    одробнее про корзины
+                    подробнее про корзины
                 </a>
             @endif
         </div>
