@@ -498,7 +498,11 @@ class RecipeService
      */
     public function getList()
     {
-        $list = Recipe::with(['tags', 'tags.tag.translations', 'ingredients'])->visible()->nameSorted();
+        $list = Recipe::with(['tags', 'tags.tag.translations', 'ingredients'])
+            ->visible()
+            ->nameSorted()
+            ->portionsSorted('DESC')
+            ->groupBy(DB::raw('coalesce(bind_id, id)'));
         
         $list = $this->_implodeFrontFilters($list);
         

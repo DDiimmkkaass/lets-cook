@@ -182,6 +182,17 @@ class Recipe extends Model implements FrontLink, MetaGettable
     }
     
     /**
+     * @param        $query
+     * @param string $order
+     *
+     * @return mixed
+     */
+    public function scopePortionsSorted($query, $order = 'ASC')
+    {
+        return $query->orderBy($this->getTable().'.portions', $order);
+    }
+    
+    /**
      * set and return price of recipe
      *
      * @return int|mixed
