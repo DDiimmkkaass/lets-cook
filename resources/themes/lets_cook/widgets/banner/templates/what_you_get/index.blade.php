@@ -1,7 +1,6 @@
-<section class="order__you-get order-you-get {!! $banner->class !!}">
-    <h2 class="order-you-get__title georgia-title">{!! $banner->title !!}</h2>
-
-    @if ($banner->visible_items->count())
+@if ($banner->visible_items->count())
+    <section class="order__you-get order-you-get {!! $banner->class !!}">
+        <h2 class="order-you-get__title georgia-title">{!! $banner->title !!}</h2>
         <ul class="order-you-get__list">
             @foreach($banner->visible_items as $item)
                 <li class="order-you-get__item">
@@ -13,5 +12,5 @@
                 </li>
             @endforeach
         </ul>
-    @endif
-</section>
+    </section>
+@endif
