@@ -388,6 +388,25 @@
                 </li>
             @endif
 
+            @if ($user->hasAccess('translation.read'))
+                <li class="treeview {!! active_class('admin.translation.index*') !!}">
+                    <a href="#">
+                        <i class="fa fa-language"></i>
+                        <span>@lang('labels.translations')</span>
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </a>
+                    <ul class="treeview-menu">
+                        @foreach($translation_groups as $group)
+                            <li class="{!! front_active_class(route('admin.translation.index', $group)) !!}">
+                                <a href="{!! route('admin.translation.index', $group) !!}">
+                                    <span>@lang('labels.translation_group_' . $group)</span>
+                                </a>
+                            </li>
+                        @endforeach
+                    </ul>
+                </li>
+            @endif
+
             @if ($user->hasAccess('group') || $user->hasAccess('user.read'))
                 <li class="header">@lang('labels.users')</li>
             @endif
