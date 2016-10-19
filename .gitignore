@@ -16,3 +16,4 @@ _ide_helper_models.php
 /public/assets/*
 /.sass-cache
 npm-debug.log
+/cert
