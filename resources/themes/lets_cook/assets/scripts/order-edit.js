@@ -13,12 +13,8 @@ function orderEdit() {
         $addressAddress = $address.find('#order-edit-address'),
         $addressText = $address.find('.order-edit__address-text'),
         $addressChange = $address.find('.order-edit__address-change'),
-        $makeOrder = $orderEdit.find('.order-edit__make-order');
-
-
-    function init() {
-        $orderEdit.outerHeight($orderEditWrapper.outerHeight() + $title.outerHeight());
-    }
+        $makeOrder = $orderEdit.find('.order-edit__make-order'),
+        $orderAddItems = $orderEdit.find('.order-edit__add-list .order-edit__add-item ');
 
     (function addressChange() {
         $addressCityId.on('change', function () {
@@ -54,6 +50,31 @@ function orderEdit() {
             }
         });
     }());
+
+    function orderAddItemsSetTitleHeight() {
+        let maxHeight = 0,
+            $titles = $orderAddItems.find('.order-add-item__title');
+
+        $titles.css('height', 'auto');
+
+        $titles.each(function() {
+            let that_height = $(this).height();
+
+            console.dir($(this));
+
+            if (that_height > maxHeight) {
+                maxHeight = that_height;
+            }
+        });
+
+        $titles.height(maxHeight);
+    }
+
+    function init() {
+        $orderEdit.outerHeight($orderEditWrapper.outerHeight() + $title.outerHeight());
+
+        orderAddItemsSetTitleHeight();
+    }
 
     $makeOrder.on('click', function() {
         // ENTER YOUR CODE
