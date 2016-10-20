@@ -60,6 +60,10 @@ class Handler extends ExceptionHandler
                         return redirect(route('not_found'), 301);
                 }
             }
+            
+            if (!in_array($statusCode, [404, 422])) {
+                $this->_sendToAdmin($e);
+            }
         } else {
             $this->_sendToAdmin($e);
         }
