@@ -10,10 +10,10 @@ namespace App\Providers\Payment;
 
 use App\Contracts\PaymentProvider;
 use App\Exceptions\AutomaticallyPayException;
-use App\Exceptions\OrderConfirmException;
 use App\Models\Card;
 use App\Models\Order;
 use App\Models\User;
+use Exception;
 use Guzzle;
 
 /**
@@ -32,10 +32,29 @@ class YandexKassa implements PaymentProvider
      * @param \App\Models\Order $order
      * @param \App\Models\Card  $card
      *
-     * @return void
+     * @return bool
      * @throws \Exception
      */
     public function pay(Order $order, Card $card)
+    {
+        $result = $this->_pay($order, $card);
+        
+        if ($result) {
+            $this->_confirm($result, $order);
+            
+            return true;
+        }
+        
+        return false;
+    }
+    
+    /**
+     * @param \App\Models\Order $order
+     * @param \App\Models\Card  $card
+     *
+     * @return array|bool
+     */
+    public function _pay(Order $order, Card $card)
     {
         $_data =
             [
@@ -47,34 +66,31 @@ class YandexKassa implements PaymentProvider
         
         $response = $this->_sendRequest($this->_getPayUrl(), $_data);
         
-        if (!empty($response['@attributes']['error'])) {
-            throw new AutomaticallyPayException($this->__toStringError($response));
-        }
+        $response = $response['@attributes'];
         
-        $this->_confirm($response, $order);
+        return $this->_checkRequest($response) ? $response : false;
     }
     
     /**
      * @param array             $response
      * @param \App\Models\Order $order
      *
-     * @return void
-     * @throws \Exception
+     * @return bool
      */
     public function _confirm($response, Order $order)
     {
         $data = [
-            'requestDT' => $response['@attributes']['processedDT'],
-            'orderId'   => $response['@attributes']['clientOrderId'],
+            'requestDT' => $response['processedDT'],
+            'orderId'   => $response['clientOrderId'],
             'amount'    => $order->total,
             'currency'  => config('yandex_kassa.currency'),
         ];
         
         $response = $this->_sendRequest($this->_getConfirmUrl(), $data);
         
-        if (!empty($response['@attributes']['error'])) {
-            throw new OrderConfirmException($this->__toStringError($response));
-        }
+        $response = $response['@attributes'];
+        
+        return $this->_checkRequest($response);
     }
     
     /**
@@ -241,13 +257,45 @@ class YandexKassa implements PaymentProvider
     /**
      * @param array $response
      *
+     * @return bool
+     * @throws \App\Exceptions\AutomaticallyPayException
+     * @throws \Exception
+     */
+    private function _checkRequest($response)
+    {
+        $status = true;
+        
+        if (isset($response['status'])) {
+            switch ((int) $response['status']) {
+                case 0:
+                    // all good, move on
+                    break;
+                case 1:
+                    $status = false;
+                    // payment server return status = 'processed', repeat request one more time
+                    // repeat not needed if this is a payment confirm
+                    break;
+                case 3:
+                    throw new AutomaticallyPayException('Payment error : '.$this->__toStringError($response));
+                    break;
+            }
+        } else {
+            throw new Exception('Unacceptable response: '.$this->__toStringError($response));
+        }
+        
+        return $status;
+    }
+    
+    /**
+     * @param array $data
+     *
      * @return string
      */
-    private function __toStringError($response)
+    private function __toStringError($data)
     {
         $error = '';
         
-        foreach ($response['@attributes'] as $key => $value) {
+        foreach ($data as $key => $value) {
             $error .= $key.': '.$value.', ';
         }
         

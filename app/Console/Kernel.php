@@ -54,7 +54,7 @@ class Kernel extends ConsoleKernel
             ->cron('5 0 * * 2');
         
         $schedule->command('orders:process-tmp-orders-for-current-week')
-            ->cron('10 0 * * 2');
+            ->cron('0 * * * 2-'.variable('stop_ordering_date'));
         
         $time = $this->_getProcessPaidOrdersTime();
             

@@ -55,10 +55,8 @@ class PaymentService
         }
         
         $provider = $this->getProvider();
-    
-        $provider->pay($order, $card);
         
-        return true;
+        return $provider->pay($order, $card);
     }
     
     /**
