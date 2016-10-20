@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Events\Backend\TmplOrderPaymentError;
+use App\Exceptions\AutomaticallyPayException;
+use App\Exceptions\OrderConfirmException;
 use App\Exceptions\UnsupportedPaymentMethod;
 use App\Models\Card;
 use App\Models\Order;
@@ -83,6 +85,15 @@ class ProcessTmplOrdersForCurrentWeek extends Command
                     $result = $this->paymentService->automaticallyPay($order, $card);
                     
                     if ($result === true) {
+                        $order->status = 'paid';
+                        $order->save();
+                        
+                        $this->orderService->addSystemOrderComment(
+                            $order,
+                            trans('messages.order successfully auto paid'),
+                            'paid'
+                        );
+                        
                         continue;
                     }
                     
@@ -96,6 +107,10 @@ class ProcessTmplOrdersForCurrentWeek extends Command
                 }
             } catch (UnsupportedPaymentMethod $e) {
                 $message = $admin_message = $e->getMessage();
+            } catch (AutomaticallyPayException $e) {
+                $admin_message = $e->getMessage();
+            } catch (OrderConfirmException $e) {
+                $admin_message = $e->getMessage();
             } catch (Exception $e) {
                 $admin_message = $e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
             }
@@ -109,11 +124,11 @@ class ProcessTmplOrdersForCurrentWeek extends Command
             
             $order->status = 'changed';
             $order->save();
-    
+            
             $this->log('order #'.$order->id.' status changed to "changed"', 'info');
-    
+            
             $this->orderService->addSystemOrderComment($order, $admin_message, 'changed');
-    
+            
             admin_notify($this->description.' error: '.$admin_message);
             
             if (!empty($message)) {

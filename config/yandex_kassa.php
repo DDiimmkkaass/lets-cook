@@ -106,8 +106,7 @@ return [
     
     /*
     |--------------------------------------------------------------------------
-    | Routes settings
-    | Настройки путей
+    | MWS setting
     |--------------------------------------------------------------------------
     |
     */
@@ -124,5 +123,11 @@ return [
             'url'           => 'https://penelope.yamoney.ru/webservice/mws/api/confirmPayment',
             'test_mode_url' => 'https://penelope-demo.yamoney.ru:8083/webservice/mws/api/confirmPayment',
         ],
-    ],
+
+        'cert' => env('MWS_CERT', base_path('cert/davaigotovit.cer')),
+
+        'private_key' => env('MWS_PRIVATE_KEY', base_path('cert/private.key')),
+
+        'cert_password' => env('MWS_CERT_PASSWORD'),
+    ]
 ];

@@ -9,6 +9,8 @@
 namespace App\Providers\Payment;
 
 use App\Contracts\PaymentProvider;
+use App\Exceptions\AutomaticallyPayException;
+use App\Exceptions\OrderConfirmException;
 use App\Models\Card;
 use App\Models\Order;
 use App\Models\User;
@@ -30,54 +32,49 @@ class YandexKassa implements PaymentProvider
      * @param \App\Models\Order $order
      * @param \App\Models\Card  $card
      *
-     * @return array|bool|\SimpleXMLElement
+     * @return void
+     * @throws \Exception
      */
     public function pay(Order $order, Card $card)
     {
-        $data = [
-            'clientOrderId' => $order->id,
-            'invoiceId'     => $card->invoice_id,
-            'amount'        => $order->total,
-            'orderNumber'   => $order->id,
-        ];
+        $_data =
+            [
+                'clientOrderId' => $order->id,
+                'invoiceId'     => $card->invoice_id,
+                'amount'        => $order->total,
+                'orderNumber'   => $order->id,
+            ];
         
-        $response = Guzzle::post($this->_getPayUrl(), $data);
-        $response = simplexml_load_string((string) $response);
+        $response = $this->_sendRequest($this->_getPayUrl(), $_data);
         
-        $error = isset($response->error) ? $response->error : false;
-        
-        if (!empty($error)) {
-            return $response;
+        if (!empty($response['@attributes']['error'])) {
+            throw new AutomaticallyPayException($this->__toStringError($response));
         }
         
-        return $this->_confirm($response, $order);
+        $this->_confirm($response, $order);
     }
     
     /**
      * @param array             $response
      * @param \App\Models\Order $order
      *
-     * @return array|bool
+     * @return void
+     * @throws \Exception
      */
     public function _confirm($response, Order $order)
     {
         $data = [
-            'requestDT' => $response['processedDT'],
-            'orderId'   => $response['clientOrderId'],
+            'requestDT' => $response['@attributes']['processedDT'],
+            'orderId'   => $response['@attributes']['clientOrderId'],
             'amount'    => $order->total,
             'currency'  => config('yandex_kassa.currency'),
         ];
         
-        $response = Guzzle::post($this->_getConfirmUrl(), $data);
-        $response = simplexml_load_string((string) $response);
-    
-        $error = isset($response->error) ? $response->error : false;
-    
-        if (!empty($error)) {
-            return $response;
-        }
+        $response = $this->_sendRequest($this->_getConfirmUrl(), $data);
         
-        return true;
+        if (!empty($response['@attributes']['error'])) {
+            throw new OrderConfirmException($this->__toStringError($response));
+        }
     }
     
     /**
@@ -213,5 +210,47 @@ class YandexKassa implements PaymentProvider
         return config('yandex_kassa.test_mode') ?
             config('yandex_kassa.mws.confirm.test_mode_url') :
             config('yandex_kassa.mws.confirm.url');
+    }
+    
+    /**
+     * @param string $url
+     * @param array  $data
+     *
+     * @return array
+     */
+    private function _sendRequest($url, $data)
+    {
+        $response = Guzzle::request(
+            'POST',
+            $url,
+            [
+                'form_params' => $data,
+                'curl'        => [
+                    CURLOPT_SSLCERT        => config('yandex_kassa.mws.cert'),
+                    CURLOPT_SSLKEY         => config('yandex_kassa.mws.private_key'),
+                    CURLOPT_SSLKEYPASSWD   => config('yandex_kassa.mws.cert_password'),
+                    CURLOPT_SSL_VERIFYHOST => 0,
+                    CURLOPT_SSL_VERIFYPEER => 0,
+                ],
+            ]
+        );
+        
+        return (array) simplexml_load_string((string) $response->getBody());
+    }
+    
+    /**
+     * @param array $response
+     *
+     * @return string
+     */
+    private function __toStringError($response)
+    {
+        $error = '';
+        
+        foreach ($response['@attributes'] as $key => $value) {
+            $error .= $key.': '.$value.', ';
+        }
+        
+        return trim($error, ', ');
     }
 }

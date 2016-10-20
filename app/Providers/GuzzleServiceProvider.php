@@ -26,13 +26,7 @@ class GuzzleServiceProvider extends ServiceProvider
         $this->app->bind(
             'guzzle',
             function () {
-                if (env('APP_ENV') !== 'production') {
-                    $client = new Client(['verify' => false]);
-                } else {
-                    $client = new Client();
-                }
-                
-                return $client;
+                return new Client();
             }
         );
     }

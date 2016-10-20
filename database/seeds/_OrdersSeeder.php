@@ -18,6 +18,23 @@ use Illuminate\Database\Eloquent\Collection;
 class _OrdersSeeder extends DataSeeder
 {
     /**
+     * @var \App\Services\OrderService
+     */
+    private $orderService;
+    
+    /**
+     * _OrdersSeeder constructor.
+     *
+     * @param \App\Services\OrderService $orderService
+     */
+    public function __construct(\App\Services\OrderService $orderService)
+    {
+        parent::__construct();
+        
+        $this->orderService = $orderService;
+    }
+    
+    /**
      * Run the database seeds.
      *
      * @return void
@@ -30,8 +47,6 @@ class _OrdersSeeder extends DataSeeder
         $delivery_times = config('order.delivery_times');
         
         for ($i = 1; $i < 10; $i++) {
-            $type = rand(1, 2);
-            
             $city_id = rand(0, 1) > 0 ? City::all()->random(1)->id : null;
             
             if ($i % 2 == 0) {
@@ -42,8 +57,6 @@ class _OrdersSeeder extends DataSeeder
             
             $input = [
                 'user_id'          => Group::clients()->first()->users()->get()->random(1)->id,
-                'type'             => $type,
-                'subscribe_period' => $type == 2 ? rand(1, 2) : 0,
                 'full_name'        => $this->faker->name,
                 'email'            => $this->faker->email,
                 'phone'            => $this->faker->phoneNumber,
@@ -168,8 +181,14 @@ class _OrdersSeeder extends DataSeeder
                     $order->additional_baskets()->save($_basket);
                 }
             }
+    
+            $this->orderService->updatePrices($order);
+    
+            list($subtotal, $total) = $this->orderService->getTotals($order);
+    
+            $order->subtotal = $subtotal;
+            $order->total = $total;
             
-            $order->total = $order->getTotal();
             $order->save();
         }
     }
