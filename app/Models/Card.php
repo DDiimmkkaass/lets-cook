@@ -51,6 +51,6 @@ class Card extends Model
      */
     public function scopeDefault($query)
     {
-        return $query->where($this->getTable().'.default', true)->whereNotNull($this->getTable().'invoice_id');
+        return $query->where($this->getTable().'.default', true)->whereNotNull($this->getTable().'.invoice_id');
     }
 }
