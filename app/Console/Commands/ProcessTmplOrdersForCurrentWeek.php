@@ -112,6 +112,7 @@ class ProcessTmplOrdersForCurrentWeek extends Command
             } catch (OrderConfirmException $e) {
                 $admin_message = $e->getMessage();
             } catch (Exception $e) {
+                $admin_notify = true;
                 $admin_message = $e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
             }
             
@@ -129,7 +130,9 @@ class ProcessTmplOrdersForCurrentWeek extends Command
             
             $this->orderService->addSystemOrderComment($order, $admin_message, 'changed');
             
-            admin_notify($this->description.' error: '.$admin_message);
+            if (isset($admin_notify)) {
+                admin_notify($this->description.' error: '.$admin_message);
+            }
             
             if (!empty($message)) {
                 event(new TmplOrderPaymentError($order, $message));
