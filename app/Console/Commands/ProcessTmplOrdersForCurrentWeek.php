@@ -85,15 +85,6 @@ class ProcessTmplOrdersForCurrentWeek extends Command
                     $result = $this->paymentService->automaticallyPay($order, $card);
                     
                     if ($result === true) {
-                        $order->status = 'paid';
-                        $order->save();
-                        
-                        $this->orderService->addSystemOrderComment(
-                            $order,
-                            trans('messages.order successfully auto paid'),
-                            'paid'
-                        );
-                        
                         continue;
                     }
                     
