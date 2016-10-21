@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Order;
 use App\Services\OrderService;
+use Exception;
 
 /**
  * Class ProcessPaidOrdersForCurrentWeek
@@ -50,18 +51,29 @@ class ProcessPaidOrdersForCurrentWeek extends Command
     public function handle()
     {
         $this->log('Start '.$this->description);
-    
+        
         foreach (Order::ofStatus('paid')->forCurrentWeek()->get() as $order) {
-            $order->status = Order::getStatusIdByName('processed');
-            $order->save();
-            
-            $this->orderService->addSystemOrderComment(
-                $order,
-                trans('messages.paid order successfully transferred to the processing'),
-                'processed'
-            );
-    
-            $this->log('order #'.$order->id.' successfully set processed status, order status changed to "processed"', 'info');
+            try {
+                $order->status = Order::getStatusIdByName('processed');
+                $order->save();
+                
+                $this->orderService->addSystemOrderComment(
+                    $order,
+                    trans('messages.paid order successfully transferred to the processing'),
+                    'processed'
+                );
+                
+                $this->log(
+                    'order #'.$order->id.' successfully set processed status, order status changed to "processed"',
+                    'info'
+                );
+            } catch (Exception $e) {
+                $message = $e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
+                
+                $this->log($message, 'error');
+                
+                admin_notify($this->description.' error: '.$message);
+            }
         }
         
         $this->log('End '.$this->description);

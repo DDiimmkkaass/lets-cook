@@ -90,6 +90,8 @@ class UpdateMainBasketForTmplOrders extends Command
             } catch (Exception $e) {
                 $message = $e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
                 
+                $this->log($message, 'error');
+                
                 admin_notify($this->description.' error: '.$message);
             }
         }

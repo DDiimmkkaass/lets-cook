@@ -48,32 +48,32 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('orders:generate-tmpl-orders')
-            ->cron('0 0 * * 2');
-    
+            ->cron('0 0 * * 2')->sendOutputTo($this->_logFile('generate-tmpl-orders'));
+        
         $schedule->command('orders:update-main-basket-form-tmp-orders')
-            ->cron('5 0 * * 2');
+            ->cron('5 0 * * 2')->sendOutputTo($this->_logFile('update-main-basket-form-tmp-orders'));
         
         $schedule->command('orders:process-tmp-orders-for-current-week')
-            ->cron('0 * * * 2-'.variable('stop_ordering_date'));
+            ->cron('0 * * * 2-'.variable('stop_ordering_date'))->sendOutputTo($this->_logFile('process-tmp-orders-for-current-week'));
         
         $time = $this->_getProcessPaidOrdersTime();
-            
+        
         if ($time) {
             $schedule->command('orders:process-paid-orders-for-current-week')
-                ->cron($time);
+                ->cron($time)->sendOutputTo($this->_logFile('process-paid-orders-for-current-week'));
         }
-    
+        
         $time = $this->_getFinalisingOrdersTime();
         if ($time) {
             $schedule->command('orders:remove-unsuccessful-orders-for-current-week')
-                ->cron($time);
-    
-            $schedule->command('orders:generate-reports-for-current-week')
-                ->cron($time);
-        }
+                ->cron($time)->sendOutputTo($this->_logFile('remove-unsuccessful-orders-for-current-week'));
             
+            $schedule->command('orders:generate-reports-for-current-week')
+                ->cron($time)->sendOutputTo($this->_logFile('generate-reports-for-current-week'));
+        }
+        
         $schedule->command('orders:archive-completed-orders')
-            ->cron('0 0 * * 1,2');
+            ->cron('0 0 * * 1,2')->sendOutputTo($this->_logFile('archive-completed-orders'));
     }
     
     /**
@@ -86,7 +86,7 @@ class Kernel extends ConsoleKernel
         
         if (isset($time[0]) && isset($time[1])) {
             $time = (int) $time[1].' '.(int) $time[0].' * * '.variable('stop_ordering_date');
-    
+            
             return $time;
         }
         
@@ -100,13 +100,23 @@ class Kernel extends ConsoleKernel
     {
         $time = variable('finalising_reports_time');
         $time = explode(':', $time);
-    
+        
         if (isset($time[0]) && isset($time[1])) {
             $time = (int) $time[1].' '.(int) $time[0].' * * '.variable('finalising_reports_date');
-    
+            
             return $time;
         }
         
         return false;
+    }
+    
+    /**
+     * @param string $command
+     *
+     * @return string
+     */
+    private function _logFile($command)
+    {
+        return base_path('/storage/logs/schedule_'.str_replace('-', '_', $command).'.log');
     }
 }

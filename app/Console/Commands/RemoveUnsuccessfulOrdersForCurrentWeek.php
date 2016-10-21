@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Order;
 use App\Services\OrderService;
+use Exception;
 
 /**
  * Class RemoveUnsuccessfulOrdersForCurrentWeek
@@ -52,16 +53,27 @@ class RemoveUnsuccessfulOrdersForCurrentWeek extends Command
         $this->log('Start '.$this->description);
         
         foreach (Order::ofStatus('changed')->forCurrentWeek()->get() as $order) {
-            $order->status = Order::getStatusIdByName('deleted');
-            $order->save();
-            
-            $this->orderService->addSystemOrderComment(
-                $order,
-                trans('messages.deleted, because payment was not made on time'),
-                'deleted'
-            );
-            
-            $this->log('unpaid order #'.$order->id.' successfully deleted, order status changed to "deleted"', 'info');
+            try {
+                $order->status = Order::getStatusIdByName('deleted');
+                $order->save();
+                
+                $this->orderService->addSystemOrderComment(
+                    $order,
+                    trans('messages.deleted, because payment was not made on time'),
+                    'deleted'
+                );
+                
+                $this->log(
+                    'unpaid order #'.$order->id.' successfully deleted, order status changed to "deleted"',
+                    'info'
+                );
+            } catch (Exception $e) {
+                $message = $e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
+                
+                $this->log($message, 'error');
+                
+                admin_notify($this->description.' error: '.$message);
+            }
         }
         
         $this->log('End '.$this->description);

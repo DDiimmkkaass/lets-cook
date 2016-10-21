@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Services\PurchaseService;
+use Exception;
 
 /**
  * Class GenerateReportsForCurrentWeek
@@ -49,8 +50,16 @@ class GenerateReportsForCurrentWeek extends Command
     public function handle()
     {
         $this->log('Start '.$this->description);
-    
-        $this->purchaseService->generate();
+        
+        try {
+            $this->purchaseService->generate();
+        } catch (Exception $e) {
+            $message = $e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
+            
+            $this->log($message, 'error');
+            
+            admin_notify($this->description.' error: '.$message);
+        }
         
         $this->log('End '.$this->description);
     }
