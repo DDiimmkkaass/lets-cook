@@ -109,8 +109,6 @@ class ProcessTmplOrdersForCurrentWeek extends Command
                 $message = $e->getMessage();
                 
                 $this->_sendAdminMessage($order, $message);
-                
-                $this->_setChangedStatus($order, $message);
             } catch (Exception $e) {
                 $message = 'message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
                 
