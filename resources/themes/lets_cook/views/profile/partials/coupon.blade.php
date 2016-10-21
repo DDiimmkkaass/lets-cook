@@ -1,5 +1,5 @@
 <tr>
-    <td>{!! $coupon->getName() !!} [{!! $coupon->getAvailableCount() !!}]</td>
+    <td>{!! $coupon->getName() !!} [{!! $coupon->getAvailableCountLabel() !!}]</td>
     <td>{!! $coupon->getCode() !!}</td>
     <td>{!! $coupon->getDiscountLabel() !!}</td>
     <td>

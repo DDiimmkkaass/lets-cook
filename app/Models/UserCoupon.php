@@ -77,7 +77,6 @@ class UserCoupon extends Model
         }
             
         if ($this->getUsersType() == 'new') {
-            
             if ($user && $user->orders->count() > 0) {
                 return false;
             }
@@ -185,9 +184,19 @@ class UserCoupon extends Model
      */
     public function getAvailableCount()
     {
+        $coupons_count = $this->getCouponsCount();
+        
         $available_count = $this->getCouponsCount() - $this->orders->count();
         
-        return $available_count < 0 ? 0 : $available_count;
+        return $coupons_count > 0 ? ($available_count < 0 ? 0 : $available_count) : 1;
+    }
+    
+    /**
+     * @return string|int
+     */
+    public function getAvailableCountLabel()
+    {
+        return $this->getCouponsCount() == 0 ? trans('front_labels.unlimited') : $this->getAvailableCount();
     }
     
     /**
