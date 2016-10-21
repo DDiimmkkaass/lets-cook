@@ -7,9 +7,13 @@
  */
 
 return [
-
+    
     'analytics' => [
-        'id'    => env('GOOGLE_ANALYTICS_ID', false)
-    ]
+        'id' => env('GOOGLE_ANALYTICS_ID', null),
+    ],
+    
+    'tagmanager' => [
+        'id' => env('GOOGLE_TAGMANAGER_ID', null),
+    ],
 
 ];
