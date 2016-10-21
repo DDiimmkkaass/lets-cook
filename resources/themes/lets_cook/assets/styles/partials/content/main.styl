@@ -9,7 +9,7 @@
   justify-content: center
   align-items: center
   height: 480px * (310 / 720)
-  background: url('../images/let-cook-bg.jpg') center center no-repeat;
+  background: url('../images/main.jpg') center center no-repeat;
   background-size: cover
   color: $font-white-1
 
@@ -120,19 +120,35 @@
 
   &__item
     width: 172px
+    position relative
+
+    &::after
+      content: ''
+      position absolute
+      top: 40%
+      right -47px
+      height 3px
+      width 34px
+      background $bg-green-1
+      z-index 1
+      border-radius 10px
+
+    &:last-of-type
+      &::after
+        content: none
 
   &__img
     size: 172px
     border-radius: 50%
-    background-color: $bg-green-2
     background-position: center center
     background-size: cover
     background-repeat: no-repeat
 
   &__title
-    margin: 3px auto 0
-    width: 80%
+    margin: 15px auto 0
+    width: 100%
     text-align: center
+    font-family: PTSansRegular, sans-serif
     fsh(14px, 1.25)
     color: $bg-green-2
 
