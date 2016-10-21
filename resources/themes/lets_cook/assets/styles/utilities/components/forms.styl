@@ -562,6 +562,9 @@
       text-decoration: none
       cursor: default
 
+      &.not-exists
+        opacity 1
+
   label
     display: inline-block
     size: 20px
@@ -581,6 +584,8 @@
       color: $font-yellow-2
 
     &.not-exists
+      opacity .5
+      cursor: default!important
       &:hover
         background-color: transparent
         color: $font-red-3

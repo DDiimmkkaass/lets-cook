@@ -9,14 +9,19 @@ Order.selectRecipeInPopup = (indexes) ->
   portions = parseInt $('span', '#portions_count_result').text()
 
   $popupListItems.each (index) ->
+    $this = $(this)
+
     if $.inArray(index, indexes) != -1
-      $(this).attr('data-active', '')
-      $(this).find('.order-day-item__buttons').attr('data-active', '')
-      $(this).find('[type="checkbox"]').prop('checked', true)
+      $this.attr('data-active', '')
+      $this.find('.order-day-item__buttons').attr('data-active', '')
+      $this.find('[type="checkbox"]').prop('checked', true)
     else
-      $(this).removeAttr('data-active', '')
-      $(this).find('.order-day-item__buttons').removeAttr('data-active')
-      $(this).find('[type="checkbox"]').prop('checked', false)
+      $this.removeAttr('data-active', '')
+      $this.find('.order-day-item__buttons').removeAttr('data-active')
+      $this.find('[type="checkbox"]').prop('checked', false)
+
+    $this.find('.order-day-item__edit').data('count', 1).find('span').text('1 ужин')
+    $this.find('[name="order-day-add-change"]').prop('checked', false)
 
   dinners = parseInt(indexes.length)
 

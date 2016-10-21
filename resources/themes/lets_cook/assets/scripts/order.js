@@ -136,13 +136,16 @@ function countList() {
         findChanges($checked, null);
     })();
 
-    $controlsList.on('change', 'input[type="radio"]', function () {
-        if ($(this).closest('li').hasClass('exists')) {
-            findChanges($(this), null);
-        } else {
-            $(this).prop('checked', false).removeAttr('checked');
+    $controlsList.on('click', 'label', function (e) {
+        e.preventDefault();
 
-            $('.order-main__count-item.exists').last().find('label').click();
+        let $parent = $(this).closest('li');
+
+        if ($parent.hasClass('exists')) {
+            let $checkbox = $parent.find('input[type="radio"]');
+
+            $checkbox.prop('checked', true);
+            findChanges($checkbox, null);
         }
     });
 }
@@ -290,11 +293,7 @@ function orderSteps() {
         let $window = $(window),
             window_center = $window.scrollTop() + ($window.height() / 2);
 
-        console.log(window_center);
-
         $main_sections.each(function(i) {
-            console.log(sections_top[i]);
-
             if (window_center > sections_top[i]) {
                 $current_count.text(i+1);
             }
