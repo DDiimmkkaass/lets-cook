@@ -38,6 +38,10 @@ function recipesMenu() {
             setItems(week_num, 0);
 
             $allRecipesLink.attr('href', $('.baskets-menu__main-item[data-active]').find('.baskets-menu__sub-item').data('url'));
+
+            $('.baskets-menu__main-item[data-active]')
+                .find('.baskets-menu__sub-item').removeAttr('data-active-item')
+                .first().attr('data-active-item', '');
         });
     }
 
@@ -48,6 +52,9 @@ function recipesMenu() {
                 data_basket = parseInt($that.attr('data-basket'));
 
             $allRecipesLink.attr('href', $that.data('url'));
+
+            $basketsMenuList.find('.baskets-menu__sub-item').removeAttr('data-active-item');
+            $that.attr('data-active-item', '');
 
             setItems(data_week, data_basket);
         });

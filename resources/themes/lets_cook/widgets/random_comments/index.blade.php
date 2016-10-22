@@ -6,7 +6,9 @@
             @foreach($list as $item)
                 <li class="clients-reviews__item review-item">
                     <div class="review-item__img"
-                         style="background-image: url({!! thumb($item->getUserImage(), 100) !!});">
+                         @if (!empty($item->getUserImage()))
+                            style="background-image: url({!! thumb($item->getUserImage(), 104) !!});"
+                         @endif>
                     </div>
                     <div class="review-item__main">
                         <div class="review-item__name">{!! $item->getUserName() !!}</div>

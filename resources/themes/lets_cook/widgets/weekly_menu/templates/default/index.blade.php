@@ -88,6 +88,7 @@
                             @foreach($menu_baskets as $key => $basket)
                                 <li class="baskets-menu__sub-item"
                                     data-url="{!! localize_route('order.index', $basket->id) !!}"
+                                    @if ($key == 0) data-active-item @endif
                                     data-week="0"
                                     data-basket="{!! $key !!}">
                                     {!! $basket->getName() !!}
@@ -103,6 +104,7 @@
                             @foreach($next_menu_baskets as $key => $basket)
                                 <li class="baskets-menu__sub-item"
                                     data-url="{!! localize_route('order.index', $basket->id) !!}"
+                                    @if ($key == 0) data-active-item @endif
                                     data-week="1"
                                     data-basket="{!! $key !!}">
                                     {!! $basket->getName() !!}

@@ -564,12 +564,24 @@
     &[data-active]
       display: block
 
+    [data-active-item]
+      &::before
+        content: ''
+        position absolute
+        left -20px
+        top: 6px
+        width: 0
+        height 0
+        border: 9px solid transparent;
+        border-left: 15px solid #091f2a;
+
   &__sub-list
     margin: 0; padding: 0; list-style-type: none
 
   &__sub-item
     margin-bottom: 4px
     cursor: pointer
+    position relative
 
     +bp('480')
       margin-bottom: 8px
@@ -817,9 +829,10 @@
   align-items: flex-start
 
   &__img
-    size: 100px
+    size: 104px
     border-radius: 50%
-    background: $bg-green-2 center center / cover no-repeat
+    background-size cover
+    background: url(../images/comment.png) no-repeat left top
 
   &__main
     width: 350px
