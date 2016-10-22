@@ -87,6 +87,22 @@ class UserInfo extends Eloquent
     {
         $this->attributes['city_id'] = empty($value) ? null : (int) $value;
     }
+    
+    /**
+     * @param string $value
+     */
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = prepare_phone($value);
+    }
+    
+    /**
+     * @param string $value
+     */
+    public function setAdditionalPhoneAttribute($value)
+    {
+        $this->attributes['additional_phone'] = prepare_phone($value);
+    }
 
     /**
      * @param string $value

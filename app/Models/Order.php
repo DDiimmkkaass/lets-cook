@@ -199,6 +199,22 @@ class Order extends Model
     }
     
     /**
+     * @param string $value
+     */
+    public function setPhoneAttribute($value)
+    {
+        $this->attributes['phone'] = prepare_phone($value);
+    }
+    
+    /**
+     * @param string $value
+     */
+    public function setAdditionalPhoneAttribute($value)
+    {
+        $this->attributes['additional_phone'] = prepare_phone($value);
+    }
+    
+    /**
      * @param $value
      *
      * @return float

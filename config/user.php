@@ -10,7 +10,7 @@ return [
     
     'no_image' => '',
     
-    'min_phone_length' => 5,
+    'min_phone_length' => 7,
     
     'sources' => [
         'От друзей',

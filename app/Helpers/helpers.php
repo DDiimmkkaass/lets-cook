@@ -419,14 +419,14 @@ if (!function_exists('thumb')) {
         if (URL::isValidUrl($path)) {
             return $path;
         }
-    
+        
         $height = $height ? : $width;
         $path = File::exists(public_path($path)) ? $path : false;
         
         if ($path) {
             if (!$width) {
                 $img_info = getimagesize(public_path($path));
-    
+                
                 $width = $img_info[0];
                 $height = $img_info[1];
             } elseif ($width && $height) {
@@ -437,7 +437,7 @@ if (!function_exists('thumb')) {
                     $height = $height <= $img_info[1] ? $height : $img_info[1];
                 }
             }
-    
+            
             $thumb = url(Thumb::thumb($path, $width, $height)->link());
         }
         
@@ -883,10 +883,10 @@ if (!function_exists('before_week_closing')) {
         
         $stop_day = variable('stop_ordering_date');
         $stop_time = variable('stop_ordering_time');
-    
+        
         $now = Carbon::now()->startOfWeek();
         $day_of_week = Carbon::now()->dayOfWeek;
-    
+        
         if (future_week($year, $week)) {
             return true;
         }
@@ -895,10 +895,10 @@ if (!function_exists('before_week_closing')) {
             if ($day_of_week >= 1 && ($day_of_week < $stop_day || $stop_day == 0)) {
                 return true;
             }
-    
+            
             if ($day_of_week == $stop_day) {
                 $now_time = Carbon::now()->format('H:i');
-        
+                
                 if ($now_time < $stop_time) {
                     return true;
                 }
@@ -977,11 +977,23 @@ if (!function_exists('active_week_menu_week')) {
     function active_week_menu_week()
     {
         $dt = active_week();
-    
+        
         if (after_week_closing($dt->year, $dt->weekOfYear)) {
             $dt->addWeek();
         }
         
         return $dt;
+    }
+}
+
+if (!function_exists('prepare_phone')) {
+    /**
+     * @param string $phone
+     *
+     * @return string
+     */
+    function prepare_phone($phone)
+    {
+        return preg_replace('/([^0-9]+)/', '', $phone);
     }
 }

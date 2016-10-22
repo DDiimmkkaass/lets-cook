@@ -47,7 +47,7 @@ class OrderCreateRequest extends FormRequest
             
             'full_name' => 'required',
             'email'     => 'required|email',
-            'phone'     => 'required',
+            'phone'     => 'required|string|regex:/^[\+0-9]+$/|max:17|min:'.config('user.min_phone_length'),
             
             'delivery_date' => [
                 'required',
@@ -91,6 +91,7 @@ class OrderCreateRequest extends FormRequest
             'coupon_code.exists'       => trans('validation.coupon code validation error'),
             'city_id.required_without' => trans('validation.city_id required without city name'),
             'city_name.required'       => trans('validation.city name is required'),
+            'phone.regex'              => trans('validation.phone validation error'),
         ];
     }
 }
