@@ -68,7 +68,7 @@ class OrderService
      */
     public function table(Request $request, $statuses)
     {
-        $list = Order::with('user', 'main_basket', 'additional_baskets', 'coupon')
+        $list = Order::with('user', 'user.subscribe', 'user.subscribe.basket', 'main_basket', 'additional_baskets', 'coupon')
             ->select(
                 'id',
                 'full_name',
@@ -171,6 +171,8 @@ class OrderService
             )
             ->setIndexColumn('id')
             ->removeColumn('user')
+            ->removeColumn('subscribe')
+            ->removeColumn('basket')
             ->removeColumn('main_basket')
             ->removeColumn('additional_baskets')
             ->removeColumn('user_id')
