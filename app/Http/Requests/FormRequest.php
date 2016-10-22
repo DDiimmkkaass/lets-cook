@@ -76,9 +76,11 @@ class FormRequest extends IlluminateRequest
         $message = trans("messages.validation_failed");
 
         if (!$this->ajax() && !$this->wantsJson()) {
-            foreach ($errors as $key => $error) {
-                foreach ($error as $_key => $e) {
-                    $message .= '<br >'.$e;
+            if (!is_admin_panel()) {
+                foreach ($errors as $key => $error) {
+                    foreach ($error as $_key => $e) {
+                        $message .= '<br >'.$e;
+                    }
                 }
             }
         

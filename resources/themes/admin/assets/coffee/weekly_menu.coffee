@@ -41,20 +41,21 @@ WeeklyMenu.removeBasket = ($button) ->
 
   id = $button.data('id')
 
-  $.ajax
-    url: '/admin/order/weekly-menu-basket/' + id + '/count'
-    type: 'GET'
-    dataType: 'json'
-    error: (response) =>
-      processError response, null
-    success: (response) =>
-      if response.status == 'success'
-        $tab.remove()
-        $content_block.remove()
+  unless id == 'new'
+    $.ajax
+      url: '/admin/order/weekly-menu-basket/' + id + '/count'
+      type: 'GET'
+      dataType: 'json'
+      error: (response) =>
+        processError response, null
+      success: (response) =>
+        if response.status == 'success'
+          $tab.remove()
+          $content_block.remove()
 
-        checkLastBasketTabInList()
-      else
-        message.show response.message, response.status
+          checkLastBasketTabInList()
+        else
+          message.show response.message, response.status
 
 WeeklyMenu.removeRecipe = ($button) ->
   $basket = $button.closest('.tab-pane')

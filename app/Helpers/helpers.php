@@ -724,6 +724,16 @@ if (!function_exists('is_front')) {
     }
 }
 
+if (!function_exists('is_admin_panel')) {
+    /**
+     * @return bool
+     */
+    function is_admin_panel()
+    {
+        return request()->segment(1) == 'admin';
+    }
+}
+
 if (!function_exists('currency')) {
     /**
      * Get / set the currency value.
