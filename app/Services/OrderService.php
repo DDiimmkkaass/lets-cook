@@ -396,7 +396,9 @@ class OrderService
         
         $this->_saveRecipes($model, $recipes);
         
-        $this->saveMainBasket($model, $input['basket_id'], $model->recipes->count());
+        if (isset($input['basket_id'])) {
+            $this->saveMainBasket($model, $input['basket_id'], $model->recipes->count());
+        }
         
         $this->saveAdditionalBaskets($model, isset($input['baskets']) ? $input['baskets'] : []);
         
@@ -868,6 +870,7 @@ class OrderService
     public function getTotals(Order $order)
     {
         $subtotal = $total = 0;
+        $main_basket_price = 0;
         
         $ingredients_price = $order->ingredients()->get(['count', 'price'])->reduce(
             function ($_subtotal, $item) {
@@ -875,7 +878,10 @@ class OrderService
             }
         );
         
-        $main_basket_price = $order->main_basket()->first()->price;
+        $main_basket = $order->main_basket()->first();
+        if ($main_basket) {
+            $main_basket_price = $main_basket->price;
+        }
         
         $additional_baskets_price = $order->additional_baskets()->get()->sum('price');
         
