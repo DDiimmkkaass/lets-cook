@@ -660,4 +660,5 @@ return array (
   'show_on_site' => 'Отображать на сайте',
   'first_order_date' => 'Дата первого заказа(на старом сайте)',
   'old_site_orders_count' => 'Количество заказов(на старом сайте)',
+  'order_comments' => 'Комментарии',
 );

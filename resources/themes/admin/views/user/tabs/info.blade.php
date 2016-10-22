@@ -125,10 +125,10 @@
     </div>
 
     <div class="form-group">
-        {!! Form::label('comment', trans('labels.comment'), ['class' => 'col-md-3 control-label']) !!}
+        {!! Form::label('comment', trans('labels.order_comments'), ['class' => 'col-md-3 control-label']) !!}
 
         <div class="col-md-9">
-            {!! Form::textarea('comment', null, ['rows' => '3', 'placeholder' => trans('labels.comment'), 'class' => 'form-control input-sm']) !!}
+            {!! Form::textarea('comment', null, ['rows' => '3', 'placeholder' => trans('labels.order_comments'), 'class' => 'form-control input-sm']) !!}
         </div>
     </div>
 

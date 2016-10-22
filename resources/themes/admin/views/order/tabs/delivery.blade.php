@@ -53,10 +53,10 @@
 </div>
 
 <div class="form-group @if ($errors->has('comment')) has-error @endif">
-    {!! Form::label('comment', trans('labels.comment'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
+    {!! Form::label('comment', trans('labels.order_comments'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-8 col-sm-7 col-md-10">
-        {!! Form::textarea('comment', null, ['rows' => '3', 'placeholder' => trans('labels.comment'), 'class' => 'form-control input-sm']) !!}
+        {!! Form::textarea('comment', null, ['rows' => '3', 'placeholder' => trans('labels.order_comments'), 'class' => 'form-control input-sm']) !!}
 
         {!! $errors->first('comment', '<p class="help-block error">:message</p>') !!}
     </div>

@@ -25,7 +25,7 @@
                                 ['attr' => ['class' => 'col-sm-1'], 'text' => trans('labels.status')],
                                 ['text' => trans('labels.coupon_simple')],
                                 ['attr' => ['class' => 'col-sm-2'], 'text' => trans('labels.delivery_date')],
-                                ['attr' => ['class' => 'col-sm-2'], 'text' => trans('labels.address').'/'.trans('labels.comments')],
+                                ['attr' => ['class' => 'col-sm-2'], 'text' => trans('labels.address').'/'.trans('labels.order_comments')],
                                 ['text' => trans('labels.actions')]
                             ])
                             ->addFoot([
