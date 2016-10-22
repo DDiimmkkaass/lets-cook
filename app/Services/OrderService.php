@@ -596,6 +596,7 @@ class OrderService
                 'city_id'          => $subscribe->user->city_id,
                 'city_name'        => $subscribe->user->city_name,
                 'address'          => $subscribe->user->address,
+                'comment'          => $subscribe->user->comment,
             ]
         );
         
