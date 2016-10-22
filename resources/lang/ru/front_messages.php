@@ -17,7 +17,7 @@ return array(
     'user activation failed, try again later' => 'Ошибка активации! Попробуйте, пожалуйста, позже',
     'password restore message' => 'На Ваш email было отправлено письмо с инструкциями для восстановления пароля',
     'user with such email was not activated' => 'Аккаунт с данным email еще не активирован',
-    'password restore success message' => 'Восстановление прошло успешно. На Ваш email было отправлено письмо с новыми данными для входа в аккаунт',
+    'password restore success message' => 'Вы успешно сбросили Ваш старый пароль и можете ввести новый',
     'you have entered an invalid code' => 'Вы ввели неверный код',
     'an error has occurred, try_later' => 'Произошла ошибка, попробуйте, пожалуйста, позже',
     'you have successfully logged in' => 'Вы успешно вошли',

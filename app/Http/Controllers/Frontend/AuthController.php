@@ -245,26 +245,20 @@ class AuthController extends FrontendController
                 $password = str_random(config('auth.passwords.min_length'));
                 
                 if ($user->attemptResetPassword($token, $password)) {
-                    $user->activated = true;
-                    $user->save();
-                    
-                    Mail::queue(
-                        'emails.auth.reset',
-                        ['email' => $email, 'password' => $password],
-                        function ($message) use ($user) {
-                            $user = User::find($user->id);
-                            
-                            $message->to($user->email, $user->getFullName())
-                                ->subject(trans('front_subjects.password_reset_success_subject'));
-                        }
-                    );
+                    if (!$user->isActivated()) {
+                        $user->activated = true;
+                        
+                        $user->save();
+                    }
                     
                     FlashMessages::add(
                         'success',
                         trans('front_messages.password restore success message')
                     );
                     
-                    return redirect()->home();
+                    Sentry::login($user);
+                    
+                    return redirect()->route('profiles.edit.password');
                 } else {
                     $error = trans('front_messages.you have entered an invalid code');
                 }
