@@ -204,24 +204,20 @@ class AuthController extends FrontendController
         
         try {
             $user = Sentry::findUserByLogin($email);
-            
-            if ($user->activated) {
-                Mail::queue(
-                    'emails.auth.restore',
-                    ['email' => $email, 'token' => $user->getResetPasswordCode()],
-                    function ($message) use ($user) {
-                        $message->to($user->email, $user->getFullName())
-                            ->subject(trans('front_subjects.password_restore_subject'));
-                    }
-                );
-                
-                return [
-                    'status'  => 'success',
-                    'message' => trans('front_messages.password restore message'),
-                ];
-            }
-            
-            $error = trans('front_messages.user with such email was not activated');
+    
+            Mail::queue(
+                'emails.auth.restore',
+                ['email' => $email, 'token' => $user->getResetPasswordCode()],
+                function ($message) use ($user) {
+                    $message->to($user->email, $user->getFullName())
+                        ->subject(trans('front_subjects.password_restore_subject'));
+                }
+            );
+    
+            return [
+                'status'  => 'success',
+                'message' => trans('front_messages.password restore message'),
+            ];
         } catch (UserNotFoundException $e) {
             $error = trans('front_messages.user with such email was not found');
         } catch (Exception $e) {
@@ -249,6 +245,9 @@ class AuthController extends FrontendController
                 $password = str_random(config('auth.passwords.min_length'));
                 
                 if ($user->attemptResetPassword($token, $password)) {
+                    $user->activated = true;
+                    $user->save();
+                    
                     Mail::queue(
                         'emails.auth.reset',
                         ['email' => $email, 'password' => $password],

@@ -2,6 +2,11 @@
     <div class="sign-in__wrapper">
         <div class="sign-in__title">Вход в личный кабинет</div>
 
+        <div class="sign-in__helper">
+            <div class="sign-in__helper_close"></div>
+            @lang('front_texts.login info text for old users')
+        </div>
+
         <div class="sign-in__content">
             <form action="{!! localize_route('auth.login.post') !!}" class="sign-in__form">
                 {!! csrf_field() !!}
