@@ -263,6 +263,30 @@ class User extends SentryUser implements FrontLink
     }
     
     /**
+     * @return string
+     */
+    public function getFirstOrderDateAttribute()
+    {
+        if (empty($this->info->first_order_date)) {
+            return '';
+        }
+        
+        return $this->info->first_order_date;
+    }
+    
+    /**
+     * @return int
+     */
+    public function getOldSiteOrdersCountAttribute()
+    {
+        if (empty($this->info->old_site_orders_count)) {
+            return 0;
+        }
+        
+        return $this->info->old_site_orders_count;
+    }
+    
+    /**
      * @return mixed
      */
     public function getFullName()

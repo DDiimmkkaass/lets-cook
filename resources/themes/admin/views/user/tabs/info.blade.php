@@ -140,6 +140,21 @@
         </div>
     </div>
 
+    <div class="form-group">
+        {!! Form::label('first_order_date', trans('labels.first_order_date'), ['class' => 'col-md-3 control-label']) !!}
+
+        <div class="col-md-3">
+            {!! Form::text('first_order_date', null, ['class' => 'form-control input-sm', 'readonly' => true]) !!}
+        </div>
+    </div>
+    <div class="form-group">
+        {!! Form::label('old_site_orders_count', trans('labels.old_site_orders_count'), ['class' => 'col-md-3 control-label']) !!}
+
+        <div class="col-md-3">
+            {!! Form::text('old_site_orders_count', null, ['class' => 'form-control input-sm', 'readonly' => true]) !!}
+        </div>
+    </div>
+
     @include('partials.tabs.fields')
 
 </div>
