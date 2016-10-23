@@ -83,6 +83,7 @@ class OrderService
                 'delivery_date',
                 'delivery_time',
                 'city_id',
+                'city_name',
                 'address',
                 'comment'
             )
@@ -181,6 +182,7 @@ class OrderService
             ->removeColumn('payment_method')
             ->removeColumn('comment')
             ->removeColumn('city_id')
+            ->removeColumn('city_name')
             ->removeColumn('delivery_time');
     }
     

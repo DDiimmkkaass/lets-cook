@@ -50,7 +50,7 @@
             <div class="order-addr-date__date-select main-select" data-select="city">
                 <label for="f-select-city">Город</label>
                 @php($_city_id = empty($repeat_order) ? ($user ? $user->city_id : '' ) : $repeat_order->city_id)
-                @php($_city_name = empty($repeat_order) ? ($user ? $user->city_name : '') : $repeat_order->city_name)
+                @php($_city_name = empty($_city_id) ? (empty($repeat_order) ? ($user ? $user->city_name : '') : $repeat_order->city_name) : '')
                 <select class="main-select__wrapper" name="city_id" id="f-select-city" required>
                     <option value="" disabled selected hidden>Выберите город</option>
                     @foreach($cities as $city)
@@ -58,7 +58,7 @@
                             {!! $city->name !!}
                         </option>
                     @endforeach
-                    <option value="0" @unless (empty($_city_name)) selected="selected" @endunless>Другой..</option>
+                    <option value="0" @if ($user && empty($_city_id)) selected="selected" @endif>Другой..</option>
                 </select>
             </div>
 
