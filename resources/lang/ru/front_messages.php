@@ -25,6 +25,7 @@ return array(
     'enter your login' => 'Введите Ваш логин',
     'enter your password' => 'Введите Ваш пароль',
     'you have entered a wrong password' => 'Вы ввели неверный пароль',
+    'you have entered a wrong old password' => 'Вы ввели неверный текущий пароль',
     'user with such email was blocked' => 'Аккаунт с данным email заблокирован',
     'user with such email was banned' => 'Аккаунт с данным email забанен',
     'you have successfully logout' => 'Вы успешно вышли',
@@ -61,4 +62,5 @@ return array(
     'password successfully saved' => 'Пароль успешно сохранен',
     'thanks for you order on site :site_name' => 'Спасибо за Ваш заказа на сайте :site_name',
     'you used coupon' => 'Вы использовали скидочный купон',
+    'this action is not available' => 'Это действие недоступно',
 );

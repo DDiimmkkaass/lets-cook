@@ -9,8 +9,6 @@
 namespace App\Http\Requests\Frontend\User;
 
 use App\Http\Requests\FormRequest;
-use App\Models\UserInfo;
-use Sentry;
 
 /**
  * Class UserPasswordUpdateRequest
@@ -18,7 +16,7 @@ use Sentry;
  */
 class UserPasswordUpdateRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -27,11 +25,12 @@ class UserPasswordUpdateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'password' => 'required|confirmed:password_confirmation|min:'.
+            'old_password'          => str_contains(url()->previous(), 'edit') ? 'required' : '',
+            'password'              => 'required|confirmed:password_confirmation|min:'.
                 config('auth.passwords.min_length'),
             'password_confirmation' => 'required',
         ];
-
+        
         return $rules;
     }
 }

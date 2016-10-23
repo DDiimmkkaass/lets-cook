@@ -126,7 +126,7 @@ return array (
     'full_name' => 'ФИО',
     'crop_options' => 'область изображения',
     'year' => 'год',
-    'old_password' => 'старый пароль',
+    'old_password' => 'текущий пароль',
     'show_email' => 'показывать email',
     'show_phone' => 'показывать телефон',
     'transaction_id' => 'номер транзакции',

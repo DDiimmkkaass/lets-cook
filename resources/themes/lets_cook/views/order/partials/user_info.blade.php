@@ -28,7 +28,7 @@
 
         <div class="order-personal__row">
             <label for="f-personal-data-phone" class="order-personal__label">Ваш телефон</label>
-            @php($user_phone = empty($repeat_order) ? ($user ? $user->phone : '') : $repeat_order->phone)
+            @php($user_phone = empty($repeat_order) ? ($user ? $user->phone : '+') : $repeat_order->phone)
             <input type="text"
                    name="phone"
                    id="f-personal-data-phone"

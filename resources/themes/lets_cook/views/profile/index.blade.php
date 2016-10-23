@@ -18,6 +18,7 @@
 
         <div class="profile-contacts__buttons">
             <a href="{!! localize_route('profiles.edit') !!}" class="profile-contacts__buttons-link black-long-button">Редактировать профиль</a>
+            <a href="{!! localize_route('profiles.edit.password') !!}" class="profile-contacts__buttons-link black-long-button">Изменить пароль</a>
             <a href="{!! localize_route('profiles.cards.index') !!}" class="profile-contacts__buttons-link black-long-button">Банковские карточки</a>
         </div>
     </section>

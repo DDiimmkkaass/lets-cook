@@ -187,7 +187,11 @@ $router->group(
             '/update',
             ['as' => 'profiles.update', 'uses' => 'Frontend\ProfileController@update']
         );
-        
+    
+        $router->get(
+            '/set/password',
+            ['as' => 'profiles.set.password', 'uses' => 'Frontend\ProfileController@setPassword']
+        );
         $router->get(
             '/edit/password',
             ['as' => 'profiles.edit.password', 'uses' => 'Frontend\ProfileController@editPassword']

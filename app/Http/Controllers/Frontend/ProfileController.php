@@ -196,6 +196,20 @@ class ProfileController extends FrontendController
     /**
      * @return \Illuminate\Contracts\View\View
      */
+    public function setPassword()
+    {
+        if (!session()->has('set_password')) {
+            FlashMessages::add('success', trans('front_messages.this action is not available'));
+            
+            return redirect()->route('profiles.index');
+        }
+        
+        return $this->render($this->module.'.set_password');
+    }
+    
+    /**
+     * @return \Illuminate\Contracts\View\View
+     */
     public function editPassword()
     {
         return $this->render($this->module.'.change_password');
@@ -211,9 +225,18 @@ class ProfileController extends FrontendController
         try {
             $model = Sentry::findUserById($this->user->id);
             
+            if (str_contains(url()->previous(), 'edit') && !$model->checkPassword($request->get('old_password')))
+            {
+                FlashMessages::add('success', trans('front_messages.you have entered a wrong old password'));
+    
+                return redirect()->back()->withInput([]);
+            }
+            
             $this->userService->updatePassword($model, $request->get('password'));
             
             FlashMessages::add('success', trans('front_messages.password successfully saved'));
+    
+            session()->forget('set_password');
             
             return redirect()->route('profiles.index');
         } catch (Exception $e) {

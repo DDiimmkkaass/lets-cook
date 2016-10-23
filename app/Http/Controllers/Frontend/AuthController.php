@@ -176,7 +176,9 @@ class AuthController extends FrontendController
                 
                 Sentry::login($user);
                 
-                return redirect()->route('profiles.edit.password');
+                session()->put('set_password', true);
+                
+                return redirect()->route('profiles.set.password');
             } else {
                 $error = trans('front_messages.user activation failed, wrong activation code');
             }
@@ -257,8 +259,10 @@ class AuthController extends FrontendController
                     );
                     
                     Sentry::login($user);
+    
+                    session()->put('set_password', true);
                     
-                    return redirect()->route('profiles.edit.password');
+                    return redirect()->route('profiles.set.password');
                 } else {
                     $error = trans('front_messages.you have entered an invalid code');
                 }
