@@ -35,6 +35,7 @@
 
         <div class="profile-edit-section__buttons">
             <button type="submit" class="profile-password-edit-section__save">Сохранить</button>
+            <a href="{!! localize_route('profiles.index') !!}" class="profile-edit-section__cancel">Отмена</a>
         </div>
         {!! Form::close() !!}
     </section>
