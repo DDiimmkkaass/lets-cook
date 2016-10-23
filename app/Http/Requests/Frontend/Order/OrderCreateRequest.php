@@ -47,7 +47,7 @@ class OrderCreateRequest extends FormRequest
             
             'full_name' => 'required',
             'email'     => 'required|email',
-            'phone'     => 'required|string|regex:/^[\+0-9]+$/|max:17|min:'.config('user.min_phone_length'),
+            'phone'     => 'required|string|regex:/^\+[0-9]+$/|max:17|min:'.config('user.min_phone_length'),
             
             'delivery_date' => [
                 'required',

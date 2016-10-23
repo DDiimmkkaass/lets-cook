@@ -97,6 +97,7 @@ class UserController extends BackendController
                     'user_info.full_name',
                     'email',
                     'user_info.phone',
+                    'user_info.additional_phone',
                     'activated',
                 ]
             );

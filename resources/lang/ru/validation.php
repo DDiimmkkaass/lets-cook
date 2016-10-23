@@ -200,7 +200,7 @@ return array (
   'coupon code validation error' => 'К сожалению, промокод введен неверно. Проверьте правильность ввода',
   'city name is required' => 'Поле город обязательно для заполнения',
   'city_id required without city name' => 'Вы должны выбрать город из списка',
-  'phone validation error' => 'Поле телефон может содержать только цифры и знак "+"',
-  'user phone validation error' => 'Поле телефон может содержать только цифры',
-  'user additional phone validation error' => 'Поле доп. телефон может содержать только цифры',
+  'phone validation error' => 'Поле телефон может содержать только цифры и начинаться со знака "+"',
+  'user phone validation error' => 'Поле телефон может содержать только цифры и начинаться со знака "+"',
+  'user additional phone validation error' => 'Поле доп. телефон может содержать только цифры и начинаться со знака "+"',
 );

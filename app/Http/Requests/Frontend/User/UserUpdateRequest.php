@@ -30,7 +30,7 @@ class UserUpdateRequest extends FormRequest
             'email'            => 'required|email|unique:users,email,'.Sentry::getUser()->getId().',id',
             'full_name'        => 'required',
             'birthday'         => 'date_format:d-m-Y',
-            'phone'            => 'required|string|regex:/^[0-9]+$/|max:17|min:'.config('user.min_phone_length'),
+            'phone'            => 'required|string|regex:/^\+[0-9]+$/|max:17|min:'.config('user.min_phone_length'),
             'additional_phone' => 'string|regex:/^\+[0-9]+$/|max:17|min:'.config('user.min_phone_length'),
             'gender'           => 'required|in:'.implode(',', UserInfo::$genders),
             'city_id'          => 'required_without:city_name|exists:cities,id',

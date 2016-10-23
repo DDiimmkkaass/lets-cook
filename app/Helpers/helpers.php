@@ -1004,6 +1004,8 @@ if (!function_exists('prepare_phone')) {
      */
     function prepare_phone($phone)
     {
-        return preg_replace('/([^0-9]+)/', '', $phone);
+        $phone = preg_replace('/([^0-9]+)/', '', $phone);
+        
+        return empty($phone) ? null : '+'.$phone;
     }
 }

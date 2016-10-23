@@ -14,6 +14,7 @@
                                     ['text' => trans('labels.fio')],
                                     ['text' => trans('labels.email')],
                                     ['text' => trans('labels.phone')],
+                                    ['text' => trans('labels.additional_phone')],
                                     ['text' => trans('labels.activated')],
                                     ['text' => trans('labels.actions')]
                                 ])
