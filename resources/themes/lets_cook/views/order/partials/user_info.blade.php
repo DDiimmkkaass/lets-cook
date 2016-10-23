@@ -33,7 +33,7 @@
                    name="phone"
                    id="f-personal-data-phone"
                    class="order-personal__input input-text-small"
-                   @if ($user_phone) readonly @endif
+                   @if ($user_phone && $user_phone != '+') readonly @endif
                    value="{!! $user_phone !!}"
                    placeholder="Телефон">
         </div>

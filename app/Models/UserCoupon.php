@@ -54,7 +54,7 @@ class UserCoupon extends Model
      */
     public function orders()
     {
-        return $this->hasMany(Order::class, 'coupon_id', 'coupon_id')->ofUser(Sentry::getUser()->getId());
+        return $this->hasMany(Order::class, 'coupon_id', 'coupon_id')->ofUser($this->user_id);
     }
     
     /**
@@ -77,13 +77,13 @@ class UserCoupon extends Model
         }
             
         if ($this->getUsersType() == 'new') {
-            if ($user && $user->orders->count() > 0) {
+            if ($user && ($user->orders->count() > 0 || (int) $user->old_site_orders_count > 0)) {
                 return false;
             }
         }
     
         if ($this->getUsersType() == 'exists') {
-            if (!$user || $user->orders->count() == 0) {
+            if (!$user || ($user->orders->count() == 0 && (int) $user->old_site_orders_count == 0)) {
                 return false;
             }
         }

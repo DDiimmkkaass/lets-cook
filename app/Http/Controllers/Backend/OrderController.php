@@ -640,7 +640,7 @@ class OrderController extends BackendController
      */
     private function _fillAdditionalTemplateData(Order $model)
     {
-        $this->data('users', Group::clients()->first()->users()->active()->get());
+        $this->data('users', User::active()->orWhere('id', '=', $model->user_id)->get());
         
         $payment_methods = [];
         foreach (Order::getPaymentMethods() as $id => $payment_method) {

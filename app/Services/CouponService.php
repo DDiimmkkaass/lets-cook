@@ -138,7 +138,7 @@ class CouponService
             return false;
         }
         
-        $user_orders = $user->orders()->count();
+        $user_orders = max($user->orders()->count(), (int) $user->old_site_orders_count);
         
         if ($coupon->getStringUsersType() == 'new' && $user_orders > 0) {
             return false;
@@ -150,6 +150,14 @@ class CouponService
         
         if ($this->used($coupon, $user)) {
             return false;
+        }
+        
+        if ((int) $coupon->users_count > 0) {
+            $added_to_users = UserCoupon::whereCouponId($coupon->id)->count();
+            
+            if ($added_to_users >= $coupon->users_count) {
+                return false;
+            }
         }
         
         return true;
@@ -186,19 +194,31 @@ class CouponService
         $now = Carbon::now();
         
         if ($coupon->getStringUsersType() == 'new') {
-            if ($user && $user->orders()->count() > 0) {
+            if ($user && ($user->orders()->count() > 0 || (int) $user->old_site_orders_count > 0)) {
                 return false;
             }
         }
         
         if ($coupon->getStringUsersType() == 'exists') {
-            if (!$user || $user->orders()->count() == 0) {
+            if (!$user || ($user->orders()->count() == 0 && (int) $user->old_site_orders_count == 0)) {
                 return false;
             }
         }
         
         if ($coupon->getStartedAt() > $now || $this->used($coupon, $user)) {
             return false;
+        }
+        
+        if ((int) $coupon->users_count > 0) {
+            if ($user) {
+                $added_to_users = UserCoupon::whereCouponId($coupon->id)->where('user_id', '<>', $user->id)->count();
+            } else {
+                $added_to_users = UserCoupon::whereCouponId($coupon->id)->count();
+            }
+            
+            if ($added_to_users >= $coupon->users_count) {
+                return false;
+            }
         }
         
         return true;
