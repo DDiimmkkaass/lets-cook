@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Backend;
 
+use App\Http\Requests\Backend\User\CouponCreateRequest;
 use App\Http\Requests\Backend\User\PasswordChangeRequest;
 use App\Http\Requests\Backend\User\UserCreateRequest;
 use App\Http\Requests\Backend\User\UserUpdateRequest;
@@ -16,6 +17,7 @@ use App\Models\Field;
 use App\Models\User;
 use App\Models\UserCoupon;
 use App\Models\UserInfo;
+use App\Services\CouponService;
 use App\Traits\Controllers\AjaxFieldsChangerTrait;
 use App\Traits\Controllers\ProcessFieldsTrait;
 use App\Traits\Controllers\SaveImageTrait;
@@ -28,8 +30,6 @@ use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Meta;
-use Redirect;
-use Response;
 use Sentry;
 
 /**
@@ -63,21 +63,24 @@ class UserController extends BackendController
         'postNewPassword' => 'user.write',
         'ajaxFieldChange' => 'user.write',
     ];
-
+    
     /**
-     * @var
+     * @var \App\Services\CouponService
      */
-    protected $userInfoForm;
-
+    private $couponService;
+    
     /**
      * @param \Illuminate\Contracts\Routing\ResponseFactory $response
+     * @param \App\Services\CouponService                   $couponService
      */
-    public function __construct(ResponseFactory $response)
+    public function __construct(ResponseFactory $response, CouponService $couponService)
     {
         parent::__construct($response);
-
+    
+        $this->couponService = $couponService;
+        
         Meta::title(trans('labels.users'));
-
+    
         $this->breadcrumbs(trans('labels.users'), route('admin.'.$this->module.'.index'));
     }
 
@@ -86,7 +89,7 @@ class UserController extends BackendController
      *
      * @param \Illuminate\Http\Request $request
      *
-     * @return \Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index(Request $request)
     {
@@ -141,7 +144,7 @@ class UserController extends BackendController
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -162,7 +165,7 @@ class UserController extends BackendController
      *
      * @param \App\Http\Requests\Backend\User\UserCreateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(UserCreateRequest $request)
     {
@@ -207,7 +210,7 @@ class UserController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      *
      */
     public function show($id)
@@ -220,12 +223,12 @@ class UserController extends BackendController
      *
      * @param int $id
      *
-     * @return Response
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function edit($id)
     {
         try {
-            $model = User::with(['info', 'fields'])->whereId($id)->firstOrFail();
+            $model = User::with(['coupons', 'fields'])->whereId($id)->firstOrFail();
 
             $this->data('page_title', '"'.$model->getFullName().'"');
 
@@ -249,7 +252,7 @@ class UserController extends BackendController
      * @param  int                                              $id
      * @param \App\Http\Requests\Backend\User\UserUpdateRequest $request
      *
-     * @return \Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function update($id, UserUpdateRequest $request)
     {
@@ -307,7 +310,7 @@ class UserController extends BackendController
      *
      * @param  int $id
      *
-     * @return Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy($id)
     {
@@ -325,7 +328,7 @@ class UserController extends BackendController
     /**
      * @param int $id
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function getNewPassword($id = 0)
     {
@@ -348,25 +351,22 @@ class UserController extends BackendController
      * @param                       $id
      * @param PasswordChangeRequest $request
      *
-     * @return $this|\Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function postNewPassword($id, PasswordChangeRequest $request)
     {
-        $responce = ($request->only('password', 'password_confirmation'));
+        $response = ($request->only('password', 'password_confirmation'));
 
         try {
-            // Find the user using the user id
             $user = Sentry::getUserProvider()->findById($id);
-            // Update the user details
-            $user->password = $responce['password'];
+            
+            $user->password = $response['password'];
 
-            // Update the user
             if ($user->save()) {
                 FlashMessages::add("success", trans("messages.save_ok"));
 
                 return redirect()->route('admin.'.$this->module.'.edit', $id);
             } else {
-                // User information was not updated
                 FlashMessages::add('error', trans("messages.save_failed"));
             }
         } catch (UserExistsException $e) {
@@ -376,6 +376,44 @@ class UserController extends BackendController
         }
 
         return redirect()->back()->withInput();
+    }
+    
+    /**
+     * @param \App\Http\Requests\Backend\User\CouponCreateRequest $request
+     *
+     * @return array
+     */
+    public function storeCoupon(CouponCreateRequest $request)
+    {
+        try {
+            $coupon = $this->couponService->getCoupon($request->get('code'));
+            $user = User::find($request->get('user_id'));
+        
+            if (!$this->couponService->validToAdd($coupon, $user)) {
+                return [
+                    'status'  => 'warning',
+                    'message' => trans('messages.you cannot add this coupon this user'),
+                ];
+            }
+        
+            $model = UserCoupon::create(
+                [
+                    'user_id'   => $user->id,
+                    'coupon_id' => $coupon->id,
+                ]
+            );
+        
+            return [
+                'status'  => 'success',
+                'message' => trans('messages.coupon successfully added'),
+                'html'    => view('user.partials.coupon', ['coupon' => $model, 'user' => $user])->render(),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('messages.an error has occurred, please reload the page and try again'),
+            ];
+        }
     }
 
     /**

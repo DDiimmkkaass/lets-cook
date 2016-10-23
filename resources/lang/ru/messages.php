@@ -162,4 +162,8 @@ return array (
   'you can not delete this recipe as it is used in order' => 'Вы не можете удалить этот рецепт, так как он уже используется в заказе',
   'you can not delete this basket as it is used in order' => 'Вы не можете удалить эту корзину, так как она уже используется в заказе',
   'no recipes' => 'Еще нет заказанных рецептов',
+  'you cannot add this coupon this user' => 'Вы не можете добавить этот купон этому пользователю',
+  'coupon successfully added' => 'Купон успешно добавлен',
+  'enter coupon code' => 'Введите код купона, который хотите добавить пользователю',
+  'user not have any saved coupons' => 'Пользователь еще не имеет сохраненных купонов',
 );

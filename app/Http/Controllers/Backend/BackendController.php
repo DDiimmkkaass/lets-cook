@@ -135,7 +135,7 @@ class BackendController extends BaseController
     public function getIndex(OrderService $orderService)
     {
         $this->data('statistic', $orderService->getOrdersStatistic());
-    
+        
         $this->data('page_title', trans('labels.home'));
         
         return $this->render();
@@ -217,6 +217,7 @@ class BackendController extends BaseController
                 'lang_errorValidation'              => trans('messages.validation_failed'),
                 'lang_errorEmptyData'               => trans('messages.you have not entered any data'),
                 'lang_errorEmptyNameField'          => trans('messages.name field not set'),
+                'lang_errorEnterCouponCode'         => trans('messages.enter coupon code'),
                 'upload_max_filesize'               => $upload_max_filesize,
                 'elfinderConnectorUrl'              => route('admin.elfinder.connector'),
                 'currency'                          => $this->currency,

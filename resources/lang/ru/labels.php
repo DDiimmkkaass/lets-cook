@@ -661,4 +661,12 @@ return array (
   'first_order_date' => 'Дата первого заказа(на старом сайте)',
   'old_site_orders_count' => 'Количество заказов(на старом сайте)',
   'order_comments' => 'Комментарии',
+  'coupon_expire_date' => 'Дата истечения',
+  'untimely' => 'Безвременно',
+  'available' => 'Доступен',
+  'expired' => 'Истек',
+  'used' => 'Использован',
+  'default_coupon' => 'По умолчанию',
+  'tab_coupons' => 'Купоны',
+  'activation' => 'Активация',
 );

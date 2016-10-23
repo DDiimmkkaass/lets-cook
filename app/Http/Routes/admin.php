@@ -34,6 +34,10 @@ $router->group(
                     'user/new_password/{id}',
                     ['as' => 'admin.user.new_password.post', 'uses' => 'Backend\UserController@postNewPassword']
                 );
+                $router->post(
+                    'user/coupon',
+                    ['as' => 'admin.user.coupon.store', 'uses' => 'Backend\UserController@storeCoupon']
+                );
                 $router->resource('user', 'Backend\UserController');
                 
                 // groups
