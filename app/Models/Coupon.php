@@ -19,8 +19,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Coupon extends Model
 {
     
-    use SoftDeletes;
-    
     /**
      * @var array
      */
