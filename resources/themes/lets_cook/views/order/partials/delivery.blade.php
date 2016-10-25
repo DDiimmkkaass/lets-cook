@@ -96,7 +96,11 @@
 
         <div class="order-addr-date__terms square-checkbox">
             <div class="square-checkbox__wrapper">
-                <input type="checkbox" name="terms" id="f-addr-date__terms" value="true">
+                <input type="checkbox"
+                       @if ($user) checked @endif
+                       name="terms"
+                       id="f-addr-date__terms"
+                       value="true">
                 <label for="f-addr-date__terms"></label>
             </div>
 
