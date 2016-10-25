@@ -99,11 +99,11 @@ class RecipeRequest extends FormRequest
             'files'            => 'array',
             
             'steps.old.*.description' => 'required',
-            'steps.old.*.image'       => 'regex:'.$this->image_regex,
+            'steps.old.*.image'       => ['regex:'.$this->image_regex],
             'steps.old.*.position'    => 'required|numeric|min:0',
             
             'steps.new.*.description' => 'required',
-            'steps.new.*.image'       => 'regex:'.$this->image_regex,
+            'steps.new.*.image'       => ['regex:'.$this->image_regex],
             'steps.new.*.position'    => 'required|numeric|min:0',
             
             'steps.remove' => 'array',

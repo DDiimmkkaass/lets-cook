@@ -100,8 +100,11 @@ class FormRequest extends IlluminateRequest
             '/^.*\.('.implode('|', config('image.allowed_image_extension')).')$/';
     }
     
+    /**
+     * set files regexp
+     */
     private function _setFileRegexp()
     {
-        $this->file_regex = '/^.*\.('.implode('|', config('recipe.allowed_file_extension')).')$/';;
+        $this->file_regex = '/^.*\.('.implode('|', config('recipe.allowed_file_extension')).')$/';
     }
 }
