@@ -49,7 +49,15 @@
                    class="input-text-small"
                    name="coupon_code"
                    placeholder="Или введите вручную">
-            <input type="button" name="order-promocode__submit" value="Пересчитать">
+
+            <input type="button"
+                   name="order-promocode__submit"
+                   @if (empty($selected))
+                        value="Пересчитать"
+                   @else
+                       value="Скидка учтена" disabled="disabled"
+                   @endif
+            >
         </div>
     </div>
 </section>

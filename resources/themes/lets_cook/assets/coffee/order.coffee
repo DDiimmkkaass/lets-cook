@@ -213,24 +213,36 @@ Order.checkCoupon = (code) ->
       code: code
     error: (response) =>
       Form.processFormSubmitError(response)
+
+      Order.unselectCoupon()
     success: (response) =>
+      $button = $('[name="order-promocode__submit"]', '.order-create-form')
+
       if response.status == 'success'
         $('[name="coupon_code"]')
         .data('main_discount', response.main_discount)
         .data('additional_discount', response.additional_discount)
         .data('discount_type', response.discount_type)
+
+        $button.attr('disabled', 'disabled').val('Скидка учтена')
       else
-        $('.order-create-form #order-create-coupon-id').val('').find('option:selected').removeAttr('selected')
-        $('.order-create-form #order-create-coupon-id [data-last]').attr('selected', 'selected')
+        Order.unselectCoupon()
 
         $('[name="coupon_code"]').val('')
         .data('main_discount', 0)
         .data('additional_discount', 0)
         .data('discount_type', '')
 
+        $button.removeAttr('disabled').val('Перещитать')
+
         popUp(lang_error, response.message)
 
       Order.calculateTotal();
+
+Order.unselectCoupon = () ->
+  $('.order-create-form #order-create-coupon-id option:selected').removeAttr('selected')
+  $('.order-create-form #order-create-coupon-id').val('')
+  $('.order-create-form #order-create-coupon-id [data-last]').attr('selected', 'selected')
 
 Order.save = ($button, $form) ->
   data = Form.getFormData($form)
@@ -297,24 +309,15 @@ $(document).on "ready", () ->
     .data('additional_discount', $option.data('additional_discount'))
     .data('discount_type', $option.data('discount_type'))
 
-    $('.order-create-form [name="coupon_code"]').val($option.data('code')).trigger('change')
+    $('.order-create-form [name="coupon_code"]').val($option.data('code'))
+
+    $('[name="order-promocode__submit"]', '.order-create-form').removeAttr('disabled').val('Перещитать')
 
   $('.order-create-form [name="coupon_code"]').on "change", () ->
-    code = $(this).val()
+    $('[name="order-promocode__submit"]', '.order-create-form').removeAttr('disabled').val('Перещитать')
 
-    if code
-      Order.checkCoupon(code)
-    else
-      $(this)
-      .data('main_discount', 0)
-      .data('additional_discount', 0)
-      .data('discount_type', '')
-
-      $('.order-create-form #order-create-coupon-id option:selected').removeAttr('selected')
-      $('.order-create-form #order-create-coupon-id').val('')
-      $('.order-create-form #order-create-coupon-id [data-last]').attr('selected', 'selected')
-
-      Order.calculateTotal()
+    if $(this).val() == ''
+      Order.unselectCoupon()
 
   $('.order-create-form').on 'click', '[name="order-submit"]', (e) ->
     e.preventDefault()

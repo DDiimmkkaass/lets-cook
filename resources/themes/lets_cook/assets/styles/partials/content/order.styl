@@ -2125,6 +2125,10 @@
       &:hover
         text-decoration: underline
 
+      &[disabled]
+        &:hover
+          text-decoration: none
+
       +bp('480')
         size: 130px (80px * (470 / 720))
         fsh(32px * (470 / 720), 80px * (470 / 720))
