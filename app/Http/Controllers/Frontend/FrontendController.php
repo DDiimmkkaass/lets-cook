@@ -118,6 +118,9 @@ class FrontendController extends BaseController
                 'lang_error'                         => trans('front_labels.error'),
                 'lang_success'                       => trans('front_labels.success'),
                 'lang_notice'                        => trans('front_labels.notice'),
+                'lang_deleteCardConfirmMessage'      => trans(
+                    'messages.your really want to delete this card'
+                ),
                 'lang_errorRequestError'             => trans(
                     'messages.an error has occurred, please reload the page and try again'
                 ),

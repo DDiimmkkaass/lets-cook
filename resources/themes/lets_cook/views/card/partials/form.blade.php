@@ -9,7 +9,7 @@
 
     <div class="order-personal__row">
         <label for="f-personal-data-number" class="order-personal__label h-number-label">
-            Номер карты <br><small>(не обязательно)</small>
+            Последние 4 цифры номера карты
         </label>
         <input name="number" value="{!! old('number') ?: $card->number !!}" type="text" id="f-personal-data-number"
                class="order-personal__input input-text-small" placeholder="номер">

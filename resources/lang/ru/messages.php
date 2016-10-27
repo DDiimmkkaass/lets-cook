@@ -166,4 +166,5 @@ return array (
   'coupon successfully added' => 'Купон успешно добавлен',
   'enter coupon code' => 'Введите код купона, который хотите добавить пользователю',
   'user not have any saved coupons' => 'Пользователь еще не имеет сохраненных купонов',
+  'your really want to delete this card' => 'Вы действительно хотите удалить эту карту?',
 );

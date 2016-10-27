@@ -27,7 +27,7 @@ class CardUpdateRequest extends FormRequest
     {
         $rules = [
             'name'    => 'required',
-            'number'  => 'regex:/^[0-9]{0,16}$/',
+            'number'  => 'string|max:4',
             'default' => 'required|boolean',
         ];
         

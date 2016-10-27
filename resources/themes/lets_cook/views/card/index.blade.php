@@ -14,7 +14,7 @@
 
                     <div class="subscribe-table__basket h-card-number-col">
                         <span>
-                            {!! $card->number !!}
+                            ****{!! $card->number !!}
                         </span>
                     </div>
 
@@ -28,7 +28,7 @@
 
                     <div class="subscribe-table__functional">
                         <a href="{!! localize_route('profiles.cards.edit', $card->id) !!}"
-                           class="subscribe-table__change h-margin-right-20">
+                           class="subscribe-table__change h-margin-right-10">
                             Изменить
                         </a>
                         <div title="Удалить" class="subscribe-table__delete delete-card"
@@ -39,7 +39,7 @@
                             <a href="#"
                                data-card_id="{!! $card->id !!}"
                                data-token="{!! csrf_token() !!}"
-                               class="subscribe-table__connect h-margin-left-20 connect-card">
+                               class="subscribe-table__connect h-margin-left-10 connect-card">
                                 Подключить
                             </a>
                         @endif
