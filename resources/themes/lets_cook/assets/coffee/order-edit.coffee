@@ -48,22 +48,32 @@ $(document).on "ready", () ->
       .data('additional_discount', $option.data('additional_discount'))
       .data('discount_type', $option.data('discount_type'))
 
-    $coupon_code = $('.order-edit-form [name="coupon_code"]')
+    if $option.attr('data-selected') != undefined
+      $('.order-edit-form [name="coupon_code"]').val('')
+      $('#order-edit-check-coupon').attr('disabled', 'disabled').html('Скидка учтена')
 
-    if $option.attr('data-selected') == undefined
-      $coupon_code.val($option.data('code'))
+      Order.calculateTotal()
     else
-      $coupon_code.val('')
+      $('.order-edit-form [name="coupon_code"]').val($option.data('code'))
 
-    $coupon_code.trigger('change')
+      $('#order-edit-check-coupon').removeAttr('disabled').text('Перещитать')
 
   $('.order-edit-form [name="coupon_code"]').on "change", () ->
-    code = $(this).val()
+    $option = $('#order-edit-coupon-id').find('option:selected');
 
-    if code
-      Order.checkCoupon(code)
-    else
-      Order.calculateTotal()
+    if $option.attr('data-selected') == undefined
+      $('#order-edit-check-coupon').removeAttr('disabled').text('Перещитать')
+
+      if $(this).val() == ''
+        Order.unselectCoupon()
+
+  $(document).on 'click', '#order-edit-check-coupon', (e) ->
+    e.preventDefault()
+
+    unless $(this).attr('disabled')
+      Order.checkCoupon($('[name="coupon_code"]').val(), $(this), true);
+
+    return false
 
   $('.order-edit-form [name="basket_id"]').on "change", () ->
     $option = $(this).find('option:selected')

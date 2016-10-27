@@ -133,6 +133,7 @@ Order.calculateTotal = () ->
     total = parseInt($total.data('total'))
 
   order_discount = 0
+  _order_discount = 0
 
   $discount = $('[name="coupon_code"]')
   main_discount = parseInt $discount.data('main_discount')
@@ -185,7 +186,6 @@ Order.calculateTotal = () ->
         _order_discount = (_total / 100 * additional_discount)
         _total = _total - _order_discount
 
-
   total = Math.round(total + _total)
   order_discount = Math.round(order_discount + _order_discount)
 
@@ -204,40 +204,58 @@ Order.calculateTotal = () ->
 
   $order_discount.html(order_discount)
 
-Order.checkCoupon = (code) ->
-  $.ajax
-    url: '/coupons/check'
-    type: "post"
-    dataType: 'json'
-    data:
-      code: code
-    error: (response) =>
-      Form.processFormSubmitError(response)
+Order.checkCoupon = (code, $button, edit) ->
+  edit = edit || false
 
-      Order.unselectCoupon()
-    success: (response) =>
-      $button = $('[name="order-promocode__submit"]', '.order-create-form')
+  if code
+    $.ajax
+      url: '/coupons/check'
+      type: "post"
+      dataType: 'json'
+      data:
+        code: code
+      error: (response) =>
+        Form.processFormSubmitError(response)
 
-      if response.status == 'success'
-        $('[name="coupon_code"]')
-        .data('main_discount', response.main_discount)
-        .data('additional_discount', response.additional_discount)
-        .data('discount_type', response.discount_type)
-
-        $button.attr('disabled', 'disabled').val('Скидка учтена')
-      else
         Order.unselectCoupon()
+      success: (response) =>
+        if response.status == 'success'
+          $('[name="coupon_code"]')
+          .data('main_discount', response.main_discount)
+          .data('additional_discount', response.additional_discount)
+          .data('discount_type', response.discount_type)
 
-        $('[name="coupon_code"]').val('')
-        .data('main_discount', 0)
-        .data('additional_discount', 0)
-        .data('discount_type', '')
+          $button.attr('disabled', 'disabled')
 
-        $button.removeAttr('disabled').val('Перещитать')
+          if edit
+            $button.html('Скидка учтена')
+          else
+            $button.val('Скидка учтена')
+        else
+          Order.unselectCoupon()
 
-        popUp(lang_error, response.message)
+          $('[name="coupon_code"]').val('')
+          .data('main_discount', 0)
+          .data('additional_discount', 0)
+          .data('discount_type', '')
 
-      Order.calculateTotal();
+          $button.removeAttr('disabled')
+
+          if edit
+            $button.html('Перещитать')
+          else
+            $button.val('Перещитать')
+
+          popUp(lang_error, response.message)
+
+        Order.calculateTotal();
+  else
+    $('[name="coupon_code"]').val('')
+    .data('main_discount', 0)
+    .data('additional_discount', 0)
+    .data('discount_type', '')
+
+    Order.calculateTotal();
 
 Order.unselectCoupon = () ->
   $('.order-create-form #order-create-coupon-id option:selected').removeAttr('selected')
@@ -297,7 +315,7 @@ $(document).on "ready", () ->
   $(document).on 'click', '[name="order-promocode__submit"]', (e) ->
     e.preventDefault()
 
-    Order.checkCoupon($('[name="coupon_code"]').val());
+    Order.checkCoupon($('[name="coupon_code"]').val(), $(this));
 
     return false
 

@@ -60,8 +60,6 @@ function orderEdit() {
         $titles.each(function() {
             let that_height = $(this).height();
 
-            console.dir($(this));
-
             if (that_height > maxHeight) {
                 maxHeight = that_height;
             }

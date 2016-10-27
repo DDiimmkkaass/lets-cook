@@ -164,8 +164,9 @@
                                                 data-additional_discount="{!! $coupon->getMainDiscount() !!}"
                                                 data-discount_type="{!! $coupon->getDiscountType() !!}"
                                                 @if ($order->coupon_id == $coupon->coupon_id)
-                                                data-selected
-                                                selected
+                                                    data-selected
+                                                    selected
+                                                    @php($selected = true)
                                                 @endif>
                                             {!! $coupon->getName() !!}
                                         </option>
@@ -190,11 +191,25 @@
                            data-discount_type=""
                            placeholder="Введите сюда код">
 
+                    <div id="order-edit-check-coupon"
+                         @if (isset($selected))
+                            disabled="disabled"
+                         @endif
+                         class="order-edit__check-coupon">
+                        @if (isset($selected))
+                            Скидка учтена
+                        @else
+                            Перещитать
+                        @endif
+                    </div>
+
+                    <div class="h-clearfix"></div>
+
                     <div class="order-edit__total">
                         <div class="order-edit__total-wrapper">
                             <div class="order-edit__total-title">Ваша скидка:</div>
                             <div id="order_discount" class="order-edit__total-value">
-                                {!! $order->getDiscount() !!}<span>руб</span>
+                                {!! $order->getDiscount() !!}<span>{!! $currency !!}</span>
                             </div>
                         </div>
 
