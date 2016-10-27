@@ -564,16 +564,17 @@
     &[data-active]
       display: block
 
-    [data-active-item]
-      &::before
-        content: ''
-        position absolute
-        left -20px
-        top: 6px
-        width: 0
-        height 0
-        border: 9px solid transparent;
-        border-left: 15px solid #091f2a;
+    +bp('1024')
+      [data-active-item]
+        &::before
+          content: ''
+          position absolute
+          left -20px
+          top: 6px
+          width: 0
+          height 0
+          border: 9px solid transparent;
+          border-left: 15px solid #091f2a;
 
   &__sub-list
     margin: 0; padding: 0; list-style-type: none

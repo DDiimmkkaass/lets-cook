@@ -51,12 +51,18 @@ function recipesMenu() {
                 data_week = parseInt($that.attr('data-week')),
                 data_basket = parseInt($that.attr('data-basket'));
 
-            $allRecipesLink.attr('href', $that.data('url'));
+            let url = $that.data('url');
 
-            $basketsMenuList.find('.baskets-menu__sub-item').removeAttr('data-active-item');
-            $that.attr('data-active-item', '');
+            if ($('.recipes-and-baskets__item.recipes-menu').css('display') == 'none') {
+                window.location.href = url;
+            } else {
+                $allRecipesLink.attr('href', url);
 
-            setItems(data_week, data_basket);
+                $basketsMenuList.find('.baskets-menu__sub-item').removeAttr('data-active-item');
+                $that.attr('data-active-item', '');
+
+                setItems(data_week, data_basket);
+            }
         });
     }
 
