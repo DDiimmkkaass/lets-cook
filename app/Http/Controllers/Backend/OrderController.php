@@ -14,7 +14,6 @@ use App\Http\Requests\Backend\Order\OrderStatusChangeRequest;
 use App\Models\Basket;
 use App\Models\BasketRecipe;
 use App\Models\City;
-use App\Models\Group;
 use App\Models\Ingredient;
 use App\Models\Order;
 use App\Models\OrderBasket;
@@ -173,8 +172,10 @@ class OrderController extends BackendController
             
             DB::beginTransaction();
             
-            if (!$this->_validCoupon($request, $user, null)) {
-                FlashMessages::add('error', trans('front_messages.coupon not available'));
+            $status = $this->_validCoupon($request, $user);
+            
+            if ($status !== true) {
+                FlashMessages::add('error', $status);
                 
                 return redirect()->back();
             }
@@ -244,7 +245,6 @@ class OrderController extends BackendController
                 'additional_baskets',
                 'comments',
                 'user',
-                'user.coupons',
                 'user.orders'
             )->findOrFail($id);
             
@@ -278,8 +278,10 @@ class OrderController extends BackendController
             
             DB::beginTransaction();
             
-            if (!$this->_validCoupon($request, $model->user, $model)) {
-                FlashMessages::add('error', trans('front_messages.coupon not available'));
+            $status = $this->_validCoupon($request, $model->user, $model);
+            
+            if ($status !== true) {
+                FlashMessages::add('error', $status);
                 
                 return redirect()->back();
             }
@@ -721,7 +723,17 @@ class OrderController extends BackendController
         
         $user_coupons = ['' => trans('labels.not_set')];
         if ($model->exists) {
-            foreach ($model->user->coupons as $coupon) {
+            $user_id = $model->user_id;
+            
+            $coupons = $model->user->coupons()->with(
+                [
+                    'orders' => function ($query) use ($user_id) {
+                        $query->whereUserId($user_id);
+                    },
+                ]
+            )->get();
+            
+            foreach ($coupons as $coupon) {
                 if ($coupon->available($model->user) || $coupon->coupon_id == $model->coupon_id) {
                     $user_coupons[$coupon->coupon_id] = $coupon->getName();
                 }
@@ -743,11 +755,13 @@ class OrderController extends BackendController
      *
      * @return bool
      */
-    private function _validCoupon(Request $request, User $user, $order)
+    private function _validCoupon(Request $request, User $user, $order = null)
     {
         if ($request->get('coupon_code')) {
-            if (!$this->couponService->available($request->get('coupon_code'), $user)) {
-                return false;
+            $status = $this->couponService->available($request->get('coupon_code'), $user);
+            
+            if ($status !== true) {
+                return $status;
             }
             
             $this->couponService->saveUserCoupon($user, $request->get('coupon_code'));
@@ -755,8 +769,10 @@ class OrderController extends BackendController
             $coupon_id = $request->get('coupon_id');
             
             if ($coupon_id && (!$order || $coupon_id != $order->coupon_id)) {
-                if (!$this->couponService->availableById($coupon_id, $user)) {
-                    return false;
+                $status = $this->couponService->availableById($coupon_id, $user);
+                
+                if ($status !== true) {
+                    return $status;
                 }
             }
         }

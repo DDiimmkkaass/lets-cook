@@ -11,8 +11,8 @@
             <th>@lang('labels.activation')</th>
         </tr>
 
-        @if ($model->coupons->count())
-            @foreach($model->coupons as $coupon)
+        @if ($user_coupons->count())
+            @foreach($user_coupons as $coupon)
                 @include('user.partials.coupon', ['user' => $model])
             @endforeach
         @else

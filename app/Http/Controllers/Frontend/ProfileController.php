@@ -59,8 +59,6 @@ class ProfileController extends FrontendController
     public function index()
     {
         Meta::title($this->user->getFullName());
-        
-        $this->data('user_coupons', UserCoupon::with(['coupon', 'orders'])->whereUserId($this->user->id)->get());
     
         $this->data('profile_css_class', 'profile-main');
         

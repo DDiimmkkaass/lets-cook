@@ -127,43 +127,6 @@ class CouponService
     }
     
     /**
-     * @param \App\Models\Coupon $coupon
-     * @param \App\Models\User   $user
-     *
-     * @return bool
-     */
-    public function validToAdd(Coupon $coupon, User $user)
-    {
-        if ($user->coupons()->whereCouponId($coupon->id)->count()) {
-            return false;
-        }
-        
-        $user_orders = max($user->orders()->count(), (int) $user->old_site_orders_count);
-        
-        if ($coupon->getStringUsersType() == 'new' && $user_orders > 0) {
-            return false;
-        }
-        
-        if ($coupon->getStringUsersType() == 'exists' && $user_orders == 0) {
-            return false;
-        }
-        
-        if ($this->used($coupon, $user)) {
-            return false;
-        }
-        
-        if ((int) $coupon->users_count > 0) {
-            $added_to_users = UserCoupon::whereCouponId($coupon->id)->count();
-            
-            if ($added_to_users >= $coupon->users_count) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-    
-    /**
      * @param string|Coupon $coupon
      *
      * @return Coupon
@@ -178,46 +141,32 @@ class CouponService
     }
     
     /**
-     * @param string|Coupon         $coupon
-     * @param \App\Models\User|null $user
+     * @param \App\Models\Coupon $coupon
+     * @param \App\Models\User   $user
      *
      * @return bool
      */
-    public function available($coupon, $user = null)
+    public function validToAdd(Coupon $coupon, User $user)
     {
-        $coupon = $this->getCoupon($coupon);
-        
-        if (!$coupon) {
-            return false;
+        if ($user->coupons()->whereCouponId($coupon->id)->count()) {
+            return trans('front_messages.you already added this coupon');
         }
         
-        $now = Carbon::now();
+        $user_orders = max($user->orders()->count(), (int) $user->old_site_orders_count);
         
-        if ($coupon->getStringUsersType() == 'new') {
-            if ($user && ($user->orders()->count() > 0 || (int) $user->old_site_orders_count > 0)) {
-                return false;
-            }
+        if ($coupon->getStringUsersType() == 'new' && $user_orders > 0) {
+            return trans('front_messages.coupon available only for new users');
         }
         
-        if ($coupon->getStringUsersType() == 'exists') {
-            if (!$user || ($user->orders()->count() == 0 && (int) $user->old_site_orders_count == 0)) {
-                return false;
-            }
-        }
-        
-        if ($coupon->getStartedAt() > $now || $this->used($coupon, $user)) {
-            return false;
+        if ($coupon->getStringUsersType() == 'exists' && $user_orders == 0) {
+            return trans('front_messages.coupon available only for exists users');
         }
         
         if ((int) $coupon->users_count > 0) {
-            if ($user) {
-                $added_to_users = UserCoupon::whereCouponId($coupon->id)->where('user_id', '<>', $user->id)->count();
-            } else {
-                $added_to_users = UserCoupon::whereCouponId($coupon->id)->count();
-            }
+            $added_to_users = UserCoupon::whereCouponId($coupon->id)->count();
             
             if ($added_to_users >= $coupon->users_count) {
-                return false;
+                return trans('front_messages.this coupon already used');
             }
         }
         
@@ -225,74 +174,79 @@ class CouponService
     }
     
     /**
-     * @param int       $coupon_id
-     * @param null|User $user
+     * @param int  $coupon_id
+     * @param User $user
      *
      * @return bool
      */
-    public function availableById($coupon_id, $user = null)
+    public function availableById($coupon_id, User $user)
     {
-        $coupon = Coupon::find($coupon_id);
+        $user_coupon = $user->coupons()->whereCouponId($coupon_id)->first();
         
-        return $this->available($coupon, $user);
+        if (!$user_coupon) {
+            return trans('front_messages.you do not have this coupon');
+        }
+        
+        return $this->available($user_coupon->coupon, $user);
     }
     
     /**
-     * @param string|Coupon         $coupon
-     * @param \App\Models\User|null $user
+     * @param string|Coupon    $coupon
+     * @param \App\Models\User $user
      *
      * @return bool
      */
-    public function used($coupon, $user = null)
+    public function available($coupon, User $user)
     {
         $coupon = $this->getCoupon($coupon);
         
         if (!$coupon) {
-            return true;
+            return trans('front_messages.coupon not find');
         }
         
         $now = Carbon::now();
         
+        if ($coupon->getStartedAt() > $now) {
+            return trans('front_messages.this coupon has not yet started');
+        }
+        
         if ($coupon->getExpiredAt() && $coupon->getExpiredAt() < $now) {
-            return true;
+            return trans('front_messages.time of this coupon out');
         }
         
         if ($coupon->getStringUsersType() == 'new') {
-            $coupon->count = 1;
-            $coupon->users_count = 1;
+            if ($user->orders()->count() > 0 || (int) $user->old_site_orders_count > 0) {
+                return trans('front_messages.coupon available only for new users');
+            }
         }
         
-        $orders = Order::notOfStatus('deleted')->whereCouponId($coupon->id)->get(['id', 'user_id', 'status']);
+        if ($coupon->getStringUsersType() == 'exists') {
+            if ($user->orders()->count() == 0 && (int) $user->old_site_orders_count == 0) {
+                return trans('front_messages.coupon available only for exists users');
+            }
+        }
         
-        if ($coupon->users_count > 0) {
-            $users = $orders->groupBy('user_id')->count();
-            
-            if ($user) {
-                $orders->where('user_id', $user->id)->all();
-                
-                if ($orders->count()) {
-                    if ($coupon->count > 0) {
-                        if ($orders->count() >= $coupon->count) {
-                            return true;
-                        }
-                    }
-                    
-                    return false;
-                }
+        if ((int) $coupon->users_count > 0) {
+            if ($user->exists) {
+                $added_to_users = UserCoupon::whereCouponId($coupon->id)->where('user_id', '<>', $user->id)->count();
+            } else {
+                $added_to_users = UserCoupon::whereCouponId($coupon->id)->count();
             }
             
-            if ($users >= $coupon->users_count) {
-                return true;
+            if ($added_to_users >= $coupon->users_count) {
+                return trans('front_messages.this coupon already used');
             }
-            
-            return false;
+        }
+    
+        if ($coupon->count > 0) {
+            $user_order_count = $user->orders()->whereCouponId($coupon->id)->count();
+        
+            if ($user_order_count >= $coupon->count) {
+                return trans('front_messages.this coupon already used');
+            }
         }
         
-        if ($coupon->count > 0 && $orders->count() >= $coupon->count) {
-            return true;
-        }
-        
-        return false;
+        return true;
     }
     
     /**

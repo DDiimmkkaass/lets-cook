@@ -10,7 +10,6 @@ namespace App\Models;
 
 use Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Sentry;
 
 /**
  * Class UserCoupon
@@ -22,7 +21,7 @@ class UserCoupon extends Model
     /**
      * @var array
      */
-    protected $with = ['coupon', 'orders'];
+    protected $with = ['coupon'];
     
     /**
      * @var array
@@ -54,7 +53,7 @@ class UserCoupon extends Model
      */
     public function orders()
     {
-        return $this->hasMany(Order::class, 'coupon_id', 'coupon_id')->ofUser($this->user_id);
+        return $this->hasMany(Order::class, 'coupon_id', 'coupon_id');
     }
     
     /**
@@ -62,13 +61,15 @@ class UserCoupon extends Model
      *
      * @return bool
      */
-    public function available($user = null)
+    public function available($user)
     {
-        if (($this->getExpiredAt() && $this->getExpiredAt() < Carbon::now()->format('Y-m-d H:i:s'))) {
+        $now = Carbon::now();
+        
+        if ($this->getExpiredAt() && $this->getExpiredAt() < $now) {
             return false;
         }
     
-        if (($this->getStartedAt() && $this->getStartedAt() > Carbon::now()->format('Y-m-d H:i:s'))) {
+        if ($this->getStartedAt() && $this->getStartedAt() > $now) {
             return false;
         }
         
@@ -186,9 +187,9 @@ class UserCoupon extends Model
     {
         $coupons_count = $this->getCouponsCount();
         
-        $available_count = $this->getCouponsCount() - $this->orders->count();
+        $available_count = $coupons_count - $this->orders->count();
         
-        return $coupons_count > 0 ? ($available_count < 0 ? 0 : $available_count) : 1;
+        return $coupons_count > 0 ? ($available_count <= 0 ? 0 : $available_count) : 1;
     }
     
     /**

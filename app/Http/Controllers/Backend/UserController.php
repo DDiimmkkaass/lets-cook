@@ -228,7 +228,14 @@ class UserController extends BackendController
     public function edit($id)
     {
         try {
-            $model = User::with(['coupons', 'fields'])->whereId($id)->firstOrFail();
+            $model = User::with(['orders', 'fields'])->whereId($id)->firstOrFail();
+            $user_coupons = $model->coupons()->with(
+                [
+                    'orders' => function ($query) use ($id) {
+                        $query->whereUserId($id);
+                    },
+                ]
+            )->get();
 
             $this->data('page_title', '"'.$model->getFullName().'"');
 
@@ -237,6 +244,7 @@ class UserController extends BackendController
             $this->fillAdditionalTemplateData(__FUNCTION__, $model);
 
             $this->data('model', $model);
+            $this->data('user_coupons', $user_coupons);
 
             return $this->render('views.'.$this->module.'.edit');
         } catch (Exception $e) {
@@ -389,10 +397,12 @@ class UserController extends BackendController
             $coupon = $this->couponService->getCoupon($request->get('code'));
             $user = User::find($request->get('user_id'));
         
-            if (!$this->couponService->validToAdd($coupon, $user)) {
+            $status = $this->couponService->validToAdd($coupon, $user);
+            
+            if ($status !== true) {
                 return [
                     'status'  => 'warning',
-                    'message' => trans('messages.you cannot add this coupon this user'),
+                    'message' => $status,
                 ];
             }
         
@@ -495,7 +505,13 @@ class UserController extends BackendController
     {
         try {
             $user = User::with('orders')->find($user_id);
-            $coupons = UserCoupon::whereUserId($user_id)->get();
+            $coupons = UserCoupon::with(
+                [
+                    'orders' => function ($query) use ($user_id) {
+                        $query->whereUserId($user_id);
+                    },
+                ]
+            )->whereUserId($user_id)->get();
     
             $html = view('partials.selects.option', ['item' => ['id' => '', 'name' => trans('labels.please_select')]])
                 ->render();

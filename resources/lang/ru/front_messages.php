@@ -63,4 +63,12 @@ return array(
     'thanks for you order on site :site_name' => 'Спасибо за Ваш заказа на сайте :site_name',
     'you used coupon' => 'Вы использовали скидочный купон',
     'this action is not available' => 'Это действие недоступно',
+    'you already added this coupon' => 'Вы уже добавили этот купон',
+    'coupon available only for new users' => 'Этот купон доступено только для существующих пользователей',
+    'coupon available only for exists users' => 'Этот купон доступено только для новых пользователей',
+    'this coupon already used' => 'Этот купон уже использован',
+    'you do not have this coupon' => 'Вы не имеете такого купона',
+    'coupon not find' => 'Купон не найден',
+    'this coupon has not yet started' => 'Время действия этого купона еще не наступило',
+    'time of this coupon out' => 'Время действия этого купона уже завершилась',
 );

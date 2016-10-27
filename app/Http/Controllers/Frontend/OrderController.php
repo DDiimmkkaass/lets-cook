@@ -185,10 +185,12 @@ class OrderController extends FrontendController
                 }
             }
             
-            if (!$this->_validCoupon($request, null)) {
+            $status = $this->_validCoupon($request);
+            
+            if ($status !== true) {
                 return [
                     'status'  => 'error',
-                    'message' => trans('front_messages.coupon not available'),
+                    'message' => $status,
                 ];
             }
             
@@ -269,10 +271,12 @@ class OrderController extends FrontendController
         $model = $this->orderService->getOrder($order_id);
         
         try {
-            if (!$this->_validCoupon($request, $model)) {
+            $status = $this->_validCoupon($request, $model);
+    
+            if ($status !== true) {
                 return [
                     'status'  => 'error',
-                    'message' => trans('front_messages.coupon not available'),
+                    'message' => $status,
                 ];
             }
             
@@ -451,11 +455,13 @@ class OrderController extends FrontendController
      *
      * @return bool
      */
-    private function _validCoupon(Request $request, $order)
+    private function _validCoupon(Request $request, $order = null)
     {
         if ($request->get('coupon_code')) {
-            if (!$this->couponService->available($request->get('coupon_code'), $this->user)) {
-                return false;
+            $status = $this->couponService->available($request->get('coupon_code'), $this->user);
+            
+            if ($status !== true) {
+                return $status;
             }
             
             $this->couponService->saveUserCoupon($this->user, $request->get('coupon_code'));
@@ -463,8 +469,10 @@ class OrderController extends FrontendController
             $coupon_id = $request->get('coupon_id');
             
             if ($coupon_id && (!$order || $coupon_id != $order->coupon_id)) {
-                if (!$this->couponService->availableById($coupon_id, $this->user)) {
-                    return false;
+                $status = $this->couponService->availableById($coupon_id, $this->user);
+                
+                if ($status !== true) {
+                    return $status;
                 }
             }
         }

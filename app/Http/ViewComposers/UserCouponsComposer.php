@@ -39,7 +39,15 @@ class UserCouponsComposer
     public function compose(View $view)
     {
         if ($this->user) {
-            $user_coupons = $this->user->coupons()->get();
+            $user_id = $this->user->id;
+            
+            $user_coupons = $this->user->coupons()->with(
+                [
+                    'orders' => function ($query) use ($user_id) {
+                        $query->whereUserId($user_id);
+                    },
+                ]
+            )->get();
         } else {
             $user_coupons = [];
         }

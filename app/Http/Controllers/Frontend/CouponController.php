@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Requests\Frontend\UserCoupon\CouponCheckRequest;
 use App\Http\Requests\Frontend\UserCoupon\UserCouponCreateRequest;
 use App\Http\Requests\Frontend\UserCoupon\UserCouponMakeDefaultRequest;
+use App\Models\User;
 use App\Models\UserCoupon;
 use App\Services\CouponService;
 use Exception;
@@ -54,10 +55,12 @@ class CouponController extends FrontendController
         try {
             $coupon = $this->couponService->getCoupon($request->get('code'));
             
-            if (!$this->couponService->validToAdd($coupon, $this->user)) {
+            $status = $this->couponService->validToAdd($coupon, $this->user);
+            
+            if ($status !== true) {
                 return [
                     'status'  => 'notice',
-                    'message' => trans('front_messages.you cannot add this coupon'),
+                    'message' => $status,
                 ];
             }
             
@@ -129,10 +132,12 @@ class CouponController extends FrontendController
         try {
             $coupon = $this->couponService->getCoupon($request->get('code'));
     
-            if (!$this->couponService->available($coupon, $this->user)) {
+            $status = $this->couponService->available($coupon, $this->user ? $this->user : new User());
+            
+            if ($status !== true) {
                 return [
                     'status'  => 'error',
-                    'message' => trans('front_messages.coupon not available'),
+                    'message' => $status,
                 ];
             }
             
