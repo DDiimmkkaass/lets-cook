@@ -4,7 +4,7 @@
             <a aria-expanded="false" href="#info" data-toggle="tab">@lang('labels.tab_info')</a>
         </li>
 
-        @if ($user->exists)
+        @if ($model->exists)
             <li>
                 <a aria-expanded="false" href="#coupons" data-toggle="tab">@lang('labels.tab_coupons')</a>
             </li>
@@ -20,7 +20,7 @@
             @include('user.tabs.info')
         </div>
 
-        @if ($user->exists)
+        @if ($model->exists)
             <div class="tab-pane" id="coupons">
                 @include('user.tabs.coupons')
             </div>
