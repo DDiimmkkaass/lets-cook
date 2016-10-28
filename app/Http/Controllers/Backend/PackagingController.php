@@ -197,6 +197,11 @@ class PackagingController extends BackendController
                 'html'   => $html,
             ];
         } catch (Exception $e) {
+            admin_notify(
+                'message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile(),
+                [$tab, $year, $week]
+            );
+            
             return [
                 'status'  => 'error',
                 'message' => trans('messages.an error has occurred, please reload the page and try again'),
