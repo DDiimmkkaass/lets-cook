@@ -162,7 +162,9 @@ class PackagingService
                     $baskets[$recipe['basket_id']][$recipe['recipe_id']]['recipes_count'] += $recipe['recipes_count'];
                 }
                 
-                $binds[$recipe['bind_id']] = $recipe['recipe_id'];
+                if (!empty($recipe['bind_id'])) {
+                    $binds[$recipe['bind_id']] = $recipe['recipe_id'];
+                }
             } else {
                 $recipe_id = $binds[$recipe['bind_id']];
                 
