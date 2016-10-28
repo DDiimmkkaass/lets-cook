@@ -56,13 +56,13 @@ $(document).on "ready", () ->
     else
       $('.order-edit-form [name="coupon_code"]').val($option.data('code'))
 
-      $('#order-edit-check-coupon').removeAttr('disabled').text('Перещитать')
+      $('#order-edit-check-coupon').removeAttr('disabled').text('Пересчитать')
 
   $('.order-edit-form [name="coupon_code"]').on "change", () ->
     $option = $('#order-edit-coupon-id').find('option:selected');
 
     if $option.attr('data-selected') == undefined
-      $('#order-edit-check-coupon').removeAttr('disabled').text('Перещитать')
+      $('#order-edit-check-coupon').removeAttr('disabled').text('Пересчитать')
 
       if $(this).val() == ''
         Order.unselectCoupon()

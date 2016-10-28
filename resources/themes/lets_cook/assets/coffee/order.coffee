@@ -242,9 +242,9 @@ Order.checkCoupon = (code, $button, edit) ->
           $button.removeAttr('disabled')
 
           if edit
-            $button.html('Перещитать')
+            $button.html('Пересчитать')
           else
-            $button.val('Перещитать')
+            $button.val('Пересчитать')
 
           popUp(lang_error, response.message)
 
@@ -329,10 +329,10 @@ $(document).on "ready", () ->
 
     $('.order-create-form [name="coupon_code"]').val($option.data('code'))
 
-    $('[name="order-promocode__submit"]', '.order-create-form').removeAttr('disabled').val('Перещитать')
+    $('[name="order-promocode__submit"]', '.order-create-form').removeAttr('disabled').val('Пересчитать')
 
   $('.order-create-form [name="coupon_code"]').on "change", () ->
-    $('[name="order-promocode__submit"]', '.order-create-form').removeAttr('disabled').val('Перещитать')
+    $('[name="order-promocode__submit"]', '.order-create-form').removeAttr('disabled').val('Пересчитать')
 
     if $(this).val() == ''
       Order.unselectCoupon()
