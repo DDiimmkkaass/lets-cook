@@ -8,7 +8,7 @@
                     @if ($order->additional_baskets->contains('basket_id', $basket->id))
                         <li class="order-edit__add-item order-add-item">
                             <div class="order-add-item__img"
-                                 style="background-image: url({!! $basket->getImage() !!});"></div>
+                                 style="background-image: url({!! thumb($basket->getImage(), 204, 138) !!});"></div>
 
                             <div class="order-add-item__main">
                                 <div class="order-add-item__title">{!! $basket->getName() !!}</div>
@@ -34,7 +34,7 @@
                 @foreach($additional_baskets as $key => $basket)
                     <li class="order-edit__add-item order-add-item">
                         <div class="order-add-item__img"
-                             style="background-image: url({!! $basket->getImage() !!});"></div>
+                             style="background-image: url({!! thumb($basket->getImage(), 204, 138) !!});"></div>
 
                         <div class="order-add-item__main">
                             <div class="order-add-item__title">{!! $basket->getName() !!}</div>
