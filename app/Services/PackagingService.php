@@ -168,7 +168,7 @@ class PackagingService
             } else {
                 $recipe_id = $binds[$recipe['bind_id']];
     
-                if (!isset($baskets[$recipe['basket_id']][$recipe['recipe_id']])) {
+                if (!isset($baskets[$recipe['basket_id']][$recipe_id])) {
                     $baskets[$recipe['basket_id']][$recipe_id] = [
                         'name'          => str_limit($recipe['name'], mb_strlen($recipe['name']) - 2, '.pdf'),
                         'position'      => $recipe['position'],
