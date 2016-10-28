@@ -167,8 +167,16 @@ class PackagingService
                 }
             } else {
                 $recipe_id = $binds[$recipe['bind_id']];
-                
-                $baskets[$recipe['basket_id']][$recipe_id]['recipes_count'] += $recipe['recipes_count'];
+    
+                if (!isset($baskets[$recipe['basket_id']][$recipe['recipe_id']])) {
+                    $baskets[$recipe['basket_id']][$recipe_id] = [
+                        'name'          => str_limit($recipe['name'], mb_strlen($recipe['name']) - 2, '.pdf'),
+                        'position'      => $recipe['position'],
+                        'recipes_count' => $recipe['recipes_count'],
+                    ];
+                } else {
+                    $baskets[$recipe['basket_id']][$recipe_id]['recipes_count'] += $recipe['recipes_count'];
+                }
             }
         }
         
