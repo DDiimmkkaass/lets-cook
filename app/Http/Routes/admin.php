@@ -38,6 +38,10 @@ $router->group(
                     'user/coupon',
                     ['as' => 'admin.user.coupon.store', 'uses' => 'Backend\UserController@storeCoupon']
                 );
+                $router->post(
+                    'user/{user_id}/coupon/{coupon_id}/default',
+                    ['as' => 'admin.user.coupon.default', 'uses' => 'Backend\UserController@makeDefaultCoupon']
+                );
                 $router->resource('user', 'Backend\UserController');
                 
                 // groups

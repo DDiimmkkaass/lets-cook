@@ -58,38 +58,43 @@ class UserCoupon extends Model
     
     /**
      * @param User|null $user
+     * @param bool      $full_message
      *
-     * @return bool
+     * @return bool|string
      */
-    public function available($user)
+    public function available($user, $full_message = false)
     {
         $now = Carbon::now();
         
         if ($this->getExpiredAt() && $this->getExpiredAt() < $now) {
-            return false;
+            $message = trans('front_messages.time of this coupon out');
         }
-    
-        if ($this->getStartedAt() && $this->getStartedAt() > $now) {
-            return false;
+        
+        if ($this->getStartedAt() && $this->getStartedAt() >= $now) {
+            $message = trans('front_messages.this coupon has not yet started');
         }
         
         if ($this->getAvailableCount() <= 0) {
-            return false;
+            $message = trans('front_messages.this coupon already used');
         }
-            
+        
         if ($this->getUsersType() == 'new') {
             if ($user && ($user->orders->count() > 0 || (int) $user->old_site_orders_count > 0)) {
-                return false;
-            }
-        }
-    
-        if ($this->getUsersType() == 'exists') {
-            if (!$user || ($user->orders->count() == 0 && (int) $user->old_site_orders_count == 0)) {
-                return false;
+                $message = trans('front_messages.coupon available only for new users');
             }
         }
         
-        return true;
+        if ($this->getUsersType() == 'exists') {
+            if (!$user || ($user->orders->count() == 0 && (int) $user->old_site_orders_count == 0)) {
+                $message = trans('front_messages.coupon available only for exists users');
+            }
+        }
+        
+        if ($full_message) {
+            return isset($message) ? $message : true;
+        }
+        
+        return isset($message) ? false : true;
     }
     
     /**

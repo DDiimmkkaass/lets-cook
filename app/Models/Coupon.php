@@ -152,6 +152,16 @@ class Coupon extends Model
     }
     
     /**
+     * @return bool
+     */
+    public function started()
+    {
+        $started_at = $this->getStartedAt();
+        
+        return (!$started_at || ($started_at && $started_at <= Carbon::now()));
+    }
+    
+    /**
      * @return string
      */
     public function getStringType()

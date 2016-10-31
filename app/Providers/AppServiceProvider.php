@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Card;
 use App\Models\Order;
+use App\Models\UserCoupon;
 use App\Observers\CardObserver;
 use App\Observers\OrderObserver;
+use App\Observers\UserCouponObserver;
 use App\Validators\AppValidator;
 use Barryvdh\Debugbar\ServiceProvider as DebugbarServiceProvider;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
@@ -27,7 +29,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->_registerValidators();
-    
+        
         $this->_registerModelsObservers();
     }
     
@@ -76,5 +78,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Order::observe(OrderObserver::class);
         Card::observe(CardObserver::class);
+        UserCoupon::observe(UserCouponObserver::class);
     }
 }

@@ -151,6 +151,10 @@ class CouponService
         if ($user->coupons()->whereCouponId($coupon->id)->count()) {
             return trans('front_messages.you already added this coupon');
         }
+    
+        if ($coupon->getExpiredAt() && $coupon->getExpiredAt() < Carbon::now()) {
+            return trans('front_messages.time of this coupon out');
+        }
         
         $user_orders = max($user->orders()->count(), (int) $user->old_site_orders_count);
         
@@ -206,7 +210,7 @@ class CouponService
         
         $now = Carbon::now();
         
-        if ($coupon->getStartedAt() > $now) {
+        if (($coupon->getStartedAt() && $coupon->getStartedAt() > $now) || !$coupon->getStartedAt()) {
             return trans('front_messages.this coupon has not yet started');
         }
         
@@ -247,17 +251,6 @@ class CouponService
         }
         
         return true;
-    }
-    
-    /**
-     * @param UserCoupon $coupon
-     */
-    public function makeDefault(UserCoupon $coupon)
-    {
-        UserCoupon::whereUserId($coupon->user_id)->update(['default' => false]);
-        
-        $coupon->default = true;
-        $coupon->save();
     }
     
     /**

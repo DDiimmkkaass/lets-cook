@@ -21,6 +21,9 @@ $(document).on "ready", () ->
         Form.processFormSubmitError(response, $form)
       success: (response) =>
         if response.status == 'success'
+          if response.default == 1
+            $('.profile-coupons__table').find('[data-chosen]').text('Не выбран').removeAttr('data-chosen')
+
           Coupon.addCouponRow(response.html)
 
           $form.find('[name="add-coupons-text"]').val('')

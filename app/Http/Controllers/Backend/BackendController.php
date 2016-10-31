@@ -199,6 +199,7 @@ class BackendController extends BaseController
                 'lang_confirm'                      => trans('labels.confirm'),
                 'lang_save'                         => trans('labels.save'),
                 'lang_cancel'                       => trans('labels.cancel'),
+                'lang_activate'                     => trans('labels.activate'),
                 'lang_select'                       => trans('labels.select'),
                 'lang_weekLabel'                    => trans('labels.week_label_short'),
                 'lang_from'                         => trans('labels.from'),

@@ -28,6 +28,7 @@ use DB;
 use Exception;
 use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Meta;
 use Sentry;
@@ -38,16 +39,16 @@ use Sentry;
  */
 class UserController extends BackendController
 {
-
+    
     use ProcessFieldsTrait;
     use SaveImageTrait;
     use AjaxFieldsChangerTrait;
-
+    
     /**
      * @var string
      */
     public $module = "user";
-
+    
     /**
      * @var array
      */
@@ -76,14 +77,14 @@ class UserController extends BackendController
     public function __construct(ResponseFactory $response, CouponService $couponService)
     {
         parent::__construct($response);
-    
+        
         $this->couponService = $couponService;
         
         Meta::title(trans('labels.users'));
-    
+        
         $this->breadcrumbs(trans('labels.users'), route('admin.'.$this->module.'.index'));
     }
-
+    
     /**
      * Display a listing of the resource.
      *
@@ -104,7 +105,7 @@ class UserController extends BackendController
                     'activated',
                 ]
             );
-
+            
             return $dataTables = Datatables::of($list)
                 ->filterColumn('users.id', 'where', 'users.id', 'LIKE', '$1')
                 ->filterColumn('full_name', 'where', 'user_info.full_name', 'LIKE', '%$1%')
@@ -114,7 +115,7 @@ class UserController extends BackendController
                     'activated',
                     function ($model) {
                         $model->status = $model->activated;
-
+                        
                         return view(
                             'partials.datatables.toggler',
                             ['model' => $model, 'type' => $this->module, 'field' => 'activated']
@@ -134,13 +135,13 @@ class UserController extends BackendController
                 ->removeColumn('info')
                 ->make();
         }
-
+        
         $this->data('page_title', trans('labels.users'));
         $this->breadcrumbs(trans('labels.users_list'));
-
+        
         return $this->render('views.'.$this->module.'.index');
     }
-
+    
     /**
      * Show the form for creating a new resource.
      *
@@ -150,16 +151,16 @@ class UserController extends BackendController
     {
         $model = new User();
         $this->data('model', $model);
-
+        
         $this->fillAdditionalTemplateData(__FUNCTION__);
-
+        
         $this->data('page_title', trans('labels.user_create'));
-
+        
         $this->breadcrumbs(trans('labels.user_create'));
-
+        
         return $this->render('views.'.$this->module.'.create');
     }
-
+    
     /**
      * Store a newly created resource in storage.
      *
@@ -171,40 +172,40 @@ class UserController extends BackendController
     {
         $input = $request->only('email', 'activated', 'password');
         $user_info = $request->all();
-
+        
         if (!$this->validateImage('avatar')) {
             FlashMessages::add('warning', trans('messages.bad image'));
-
+            
             return redirect()->back()->withInput($input);
         }
-
+        
         DB::beginTransaction();
-
+        
         try {
             $user = Sentry::createUser($input);
             $user->activated = $input['activated'];
             $user->save();
-
+            
             $this->_processGroups($user, $request->get('groups', []));
-
+            
             $this->_processInfo($user, $user_info);
-
+            
             $this->processFields($user);
-
+            
             DB::commit();
-
+            
             FlashMessages::add('success', trans('messages.save_ok'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
-
+            
             FlashMessages::add("error", trans('messages.update_error'));
-
+            
             return redirect()->back()->withInput();
         }
     }
-
+    
     /**
      * Display the specified resource.
      *
@@ -217,7 +218,7 @@ class UserController extends BackendController
     {
         return $this->edit($id);
     }
-
+    
     /**
      * Show the form for editing the specified resource.
      *
@@ -236,24 +237,24 @@ class UserController extends BackendController
                     },
                 ]
             )->get();
-
+            
             $this->data('page_title', '"'.$model->getFullName().'"');
-
+            
             $this->breadcrumbs(trans('labels.user_edit'));
-
+            
             $this->fillAdditionalTemplateData(__FUNCTION__, $model);
-
+            
             $this->data('model', $model);
             $this->data('user_coupons', $user_coupons);
-
+            
             return $this->render('views.'.$this->module.'.edit');
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         }
     }
-
+    
     /**
      * Update the specified resource in storage.
      *
@@ -266,53 +267,53 @@ class UserController extends BackendController
     {
         if (!$this->user->hasAccess('superuser') && (!$this->user->hasAccess('user.write') || $this->user->id != $id)) {
             FlashMessages::add('warning', trans('messages.you can not update others users'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         }
-
+        
         try {
             $user = User::with(['info', 'fields'])->whereId($id)->firstOrFail();
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.record_not_found'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         }
-
+        
         $input = $request->only('email', 'activated');
         $user_info = $request->all();
-
+        
         if (!$this->validateImage('avatar')) {
             FlashMessages::add('warning', trans('messages.bad image'));
-
+            
             return redirect()->back()->withInput($input);
         }
-
+        
         DB::beginTransaction();
-
+        
         try {
             $user->activated = $input['activated'];
             $user->update($input);
-
+            
             $this->_processGroups($user, $request->get('groups', []));
-
+            
             $this->_processInfo($user, $user_info);
-
+            
             $this->processFields($user);
-
+            
             DB::commit();
-
+            
             FlashMessages::add('success', trans('messages.save_ok'));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
             DB::rollBack();
-
+            
             FlashMessages::add("error", trans('messages.update_error'));
-
+            
             return redirect()->back()->withInput();
         }
     }
-
+    
     /**
      * Remove the specified resource from storage.
      *
@@ -324,15 +325,15 @@ class UserController extends BackendController
     {
         try {
             $user = Sentry::getUserProvider()->findById($id);
-
+            
             $user->delete();
         } catch (UserNotFoundException $e) {
             FlashMessages::add('error', trans("User was not found."));
         }
-
+        
         return redirect()->route('admin.'.$this->module.'.index');
     }
-
+    
     /**
      * @param int $id
      *
@@ -341,20 +342,20 @@ class UserController extends BackendController
     public function getNewPassword($id = 0)
     {
         $model = Sentry::getUserProvider()->findById($id);
-
+        
         if (!$model) {
             FlashMessages::add('error', trans("messages.record_not_found"));
-
+            
             return redirect()->route('admin.'.$this->module.'.index');
         }
-
+        
         $this->data('model', $model);
-
+        
         $this->data('page_title', trans('labels.password_edit'));
-
+        
         return $this->render('views.'.$this->module.'.new_password');
     }
-
+    
     /**
      * @param                       $id
      * @param PasswordChangeRequest $request
@@ -364,15 +365,15 @@ class UserController extends BackendController
     public function postNewPassword($id, PasswordChangeRequest $request)
     {
         $response = ($request->only('password', 'password_confirmation'));
-
+        
         try {
             $user = Sentry::getUserProvider()->findById($id);
             
             $user->password = $response['password'];
-
+            
             if ($user->save()) {
                 FlashMessages::add("success", trans("messages.save_ok"));
-
+                
                 return redirect()->route('admin.'.$this->module.'.edit', $id);
             } else {
                 FlashMessages::add('error', trans("messages.save_failed"));
@@ -382,7 +383,7 @@ class UserController extends BackendController
         } catch (UserNotFoundException $e) {
             FlashMessages::add('error', trans("messages.record_not_found"));
         }
-
+        
         return redirect()->back()->withInput();
     }
     
@@ -396,7 +397,7 @@ class UserController extends BackendController
         try {
             $coupon = $this->couponService->getCoupon($request->get('code'));
             $user = User::find($request->get('user_id'));
-        
+            
             $status = $this->couponService->validToAdd($coupon, $user);
             
             if ($status !== true) {
@@ -405,18 +406,20 @@ class UserController extends BackendController
                     'message' => $status,
                 ];
             }
-        
+            
             $model = UserCoupon::create(
                 [
                     'user_id'   => $user->id,
                     'coupon_id' => $coupon->id,
+                    'default'   => $coupon->started() ? true : false,
                 ]
             );
-        
+            
             return [
                 'status'  => 'success',
                 'message' => trans('messages.coupon successfully added'),
                 'html'    => view('user.partials.coupon', ['coupon' => $model, 'user' => $user])->render(),
+                'default' => (int) $model->default,
             ];
         } catch (Exception $e) {
             return [
@@ -425,7 +428,66 @@ class UserController extends BackendController
             ];
         }
     }
-
+    
+    /**
+     * @param int $user_id
+     * @param int $coupon_id
+     *
+     * @return array
+     */
+    public function makeDefaultCoupon($user_id, $coupon_id)
+    {
+        try {
+            $user_coupon = UserCoupon::with(
+                [
+                    'user',
+                    'orders' => function ($query) use ($user_id) {
+                        $query->whereUserId($user_id);
+                    },
+                ]
+            )->whereUserId($user_id)->whereCouponId($coupon_id)
+                ->firstOrFail();
+            
+            if ($user_coupon->default) {
+                $user_coupon->default = false;
+                $user_coupon->save();
+                
+                return [
+                    'status'  => 'success',
+                    'default' => 0,
+                    'message' => trans('messages.coupon not default any more'),
+                ];
+            }
+            
+            $status = $user_coupon->available($user_coupon->user, true);
+            
+            if ($status !== true) {
+                return [
+                    'status'  => 'warning',
+                    'message' => $status,
+                ];
+            }
+            
+            $user_coupon->default = true;
+            $user_coupon->save();
+            
+            return [
+                'status'  => 'success',
+                'default' => 1,
+                'message' => trans('messages.coupon successfully make default'),
+            ];
+        } catch (ModelNotFoundException $e) {
+            $message = trans('messages.coupon not find');
+        } catch (Exception $e) {
+            $message = trans('messages.an error has occurred, please reload the page and try again');
+        }
+        
+        return [
+            'status'  => 'error',
+            'message' => $message,
+        ];
+    }
+    
     /**
      * @param      $function
      * @param null $model
@@ -442,7 +504,7 @@ class UserController extends BackendController
                 $this->data('user_groups', $user_groups->pluck('id')->toArray());
                 break;
         }
-
+        
         //set users groups
         $list = Sentry::getGroupProvider()->findAll();
         $groups = [];
@@ -450,20 +512,20 @@ class UserController extends BackendController
             $groups[$item['id']] = $item['name'];
         }
         $this->data('groups', $groups);
-
+        
         //set users genders
         $genders = [];
         foreach (UserInfo::$genders as $gender) {
             $genders[$gender] = trans('labels.'.$gender);
         }
         $this->data('genders', $genders);
-    
+        
         $cities = ['' => trans('labels.another')];
         foreach (City::positionSorted()->get() as $city) {
             $cities[$city->id] = $city->name;
         }
         $this->data('cities', $cities);
-
+        
         //field types
         $field_types = ['' => trans('labels.please_select')];
         foreach (Field::$types as $type => $key) {
@@ -471,17 +533,17 @@ class UserController extends BackendController
         }
         $this->data('field_types', $field_types);
     }
-
+    
     /**
      * @param $usersId
      */
     public function getUsersAjax($usersId)
     {
         $arr['results'] = [];
-
+        
         if (isset($_GET['term']) && !empty($_GET['term'])) {
             $users = User::where('email', 'like', $_GET['term'].'%')->where('id', '<>', $usersId)->get();
-
+            
             foreach ($users as $user) {
                 $arr['results'][] = [
                     'textForList' => "<span>{$user->email}</span>",
@@ -490,9 +552,9 @@ class UserController extends BackendController
                 ];
             }
         }
-
+        
         print json_encode($arr);
-
+        
         exit;
     }
     
@@ -512,16 +574,19 @@ class UserController extends BackendController
                     },
                 ]
             )->whereUserId($user_id)->get();
-    
+            
             $html = view('partials.selects.option', ['item' => ['id' => '', 'name' => trans('labels.please_select')]])
                 ->render();
-    
+            
             $coupons->each(
                 function ($item, $index) use (&$html, $user) {
                     if ($item->available($user)) {
                         $_coupon = view(
                             'partials.selects.option',
-                            ['item' => ['id' => $item->coupon_id, 'name' => $item->getName()], 'selected' => $item->default]
+                            [
+                                'item'     => ['id' => $item->coupon_id, 'name' => $item->getName()],
+                                'selected' => $item->default,
+                            ]
                         )->render();
                     } else {
                         $_coupon = '';
@@ -530,10 +595,10 @@ class UserController extends BackendController
                     return $html .= $_coupon;
                 }
             );
-        
+            
             return [
-                'status'  => 'success',
-                'html' => $html,
+                'status' => 'success',
+                'html'   => $html,
             ];
         } catch (Exception $e) {
             return [
@@ -542,7 +607,7 @@ class UserController extends BackendController
             ];
         }
     }
-
+    
     /**
      * @param \App\Models\User $user
      * @param array            $groups
@@ -553,7 +618,7 @@ class UserController extends BackendController
             $user->groups()->sync($groups);
         }
     }
-
+    
     /**
      * @param \App\Models\User $user
      * @param array            $user_info
@@ -564,7 +629,7 @@ class UserController extends BackendController
     {
         $user_info['id'] = $user->id;
         $this->setImage($user_info, 'avatar', $this->module);
-
+        
         $info = $user->info()->first();
         if (empty($info)) {
             $info = new UserInfo();

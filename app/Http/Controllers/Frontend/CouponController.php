@@ -68,6 +68,7 @@ class CouponController extends FrontendController
                 [
                     'user_id'   => $this->user->id,
                     'coupon_id' => $coupon->id,
+                    'default'   => $coupon->started() ? true : false,
                 ]
             );
             
@@ -75,6 +76,7 @@ class CouponController extends FrontendController
                 'status'  => 'success',
                 'message' => trans('front_messages.coupon successfully added'),
                 'html'    => view('profile.partials.coupon', ['coupon' => $model])->render(),
+                'default' => (int) $model->default,
             ];
         } catch (Exception $e) {
             return [
@@ -108,7 +110,8 @@ class CouponController extends FrontendController
                 ];
             }
             
-            $this->couponService->makeDefault($coupon);
+            $coupon->default = true;
+            $coupon->save();
             
             return [
                 'status'  => 'success',
@@ -131,7 +134,7 @@ class CouponController extends FrontendController
     {
         try {
             $coupon = $this->couponService->getCoupon($request->get('code'));
-    
+            
             $status = $this->couponService->available($coupon, $this->user ? $this->user : new User());
             
             if ($status !== true) {

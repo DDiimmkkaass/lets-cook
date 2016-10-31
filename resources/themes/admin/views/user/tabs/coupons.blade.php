@@ -6,6 +6,7 @@
             <th>@lang('labels.name')</th>
             <th>@lang('labels.code')</th>
             <th>@lang('labels.discount')</th>
+            <th>@lang('labels.coupon_started_date')</th>
             <th>@lang('labels.coupon_expire_date')</th>
             <th>@lang('labels.status')</th>
             <th>@lang('labels.activation')</th>

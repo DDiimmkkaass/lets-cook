@@ -3,6 +3,13 @@
     <td>{!! $coupon->getCode() !!}</td>
     <td>{!! $coupon->getDiscountLabel() !!}</td>
     <td>
+        @if ($coupon->getStartedAt())
+            {!! get_localized_date($coupon->getStartedAt()) !!}
+        @else
+            Безвременно
+        @endif
+    </td>
+    <td>
         @if ($coupon->getExpiredAt())
             {!! get_localized_date($coupon->getExpiredAt()) !!}
         @else
@@ -13,7 +20,7 @@
         @if ($coupon->available($user))
             Доступен
         @else
-            Истек/Использован
+            Не доступен
         @endif
     </td>
     <td class="h-pointer make-coupon-default"

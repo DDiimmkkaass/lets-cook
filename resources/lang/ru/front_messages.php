@@ -70,5 +70,5 @@ return array(
     'you do not have this coupon' => 'Вы не имеете такого купона',
     'coupon not find' => 'Купон не найден',
     'this coupon has not yet started' => 'Время действия этого купона еще не наступило',
-    'time of this coupon out' => 'Время действия этого купона уже завершилась',
+    'time of this coupon out' => 'Время действия этого купона уже завершилось',
 );
