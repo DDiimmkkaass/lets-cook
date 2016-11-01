@@ -6,8 +6,6 @@ use Illuminate\Translation\FileLoader;
 use Illuminate\Translation\TranslationServiceProvider as LaravelTranslationServiceProvider;
 use Illuminate\Translation\Translator;
 
-//use App\Classes\Translator;
-
 class TranslationServiceProvider extends LaravelTranslationServiceProvider
 {
     /**
