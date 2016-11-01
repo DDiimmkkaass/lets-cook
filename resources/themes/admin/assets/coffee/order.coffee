@@ -157,9 +157,9 @@ Order.getBasketRecipesIngredients = ($basket_select) ->
           message.show response.message, response.status
 
 Order.clearOldData = (clear_recipes_count, clear_recipes, clear_ingredients) ->
-  clear_recipes_count = clear_recipes_count == undefined ? true : clear_recipes_count
-  clear_recipes = clear_recipes == undefined || true : clear_recipes
-  clear_ingredients = clear_ingredients == undefined || true : clear_ingredients
+  clear_recipes_count = clear_recipes_count == undefined ? true: clear_recipes_count
+  clear_recipes = clear_recipes == undefined || true: clear_recipes
+  clear_ingredients = clear_ingredients == undefined || true: clear_ingredients
 
   if clear_recipes_count
     $('.order-recipes-count-select').val('');
@@ -204,8 +204,8 @@ Order.getUserCoupons = (user_id) ->
         $(this).remove()
 
   setTimeout () ->
-      fixCustomInputs($coupon_select.closest('.tab-pane'))
-    , 1000
+    fixCustomInputs($coupon_select.closest('.tab-pane'))
+  , 1000
 
 $(document).on "ready", () ->
   $('.orders-table').on 'click', '.change-status', (e) ->
@@ -252,12 +252,26 @@ $(document).on "ready", () ->
       $('#full_name').val $option.data('full_name')
       $('#email').val $option.data('email')
       $('#phone').val $option.data('phone')
+      $('#additional_phone').val $option.data('additional_phone')
+      $('#address').val $option.data('address')
+      $('#city_id').select2().val($option.data('city_id')).trigger("change")
+      $('#city_name').val $option.data('city_name')
+      $('#comment').val $option.data('comment')
+
+      setTimeout () =>
+          $('[for="city_id"]').closest('.form-group').removeClass('has-error')
+        , 500
 
       $('#order_user_link').attr 'href', $option.data('link')
     else
       $('#full_name').val ''
       $('#email').val ''
       $('#phone').val ''
+      $('#additional_phone').val $option.data('')
+      $('#address').val $option.data('')
+      $('#city_id').select2().val($option.data('')).trigger("change")
+      $('#city_name').val $option.data('')
+      $('#comment').val $option.data('')
 
       $('#order_user_link').attr 'href', '#'
 

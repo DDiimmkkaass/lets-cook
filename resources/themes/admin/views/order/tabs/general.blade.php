@@ -9,6 +9,11 @@
                         data-full_name="{!! $user->getFullName() !!}"
                         data-email="{!! $user->email !!}"
                         data-phone="{!! $user->phone !!}"
+                        data-additional_phone="{!! $user->additional_phone !!}"
+                        data-address="{!! $user->address !!}"
+                        data-city_id="{!! $user->city_id ? $user->city_id : '' !!}"
+                        data-city_name="{!! $user->city_name !!}"
+                        data-comment="{!! $user->comment !!}"
                         data-link="{!! route('admin.user.edit', $user->id) !!}"
                         @if ($user->id == $model->user_id || $user->id == old('user_id')) selected="selected" @endif
                 >
