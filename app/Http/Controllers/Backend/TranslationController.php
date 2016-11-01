@@ -102,7 +102,6 @@ class TranslationController extends BackendController
         } catch (TranslationOfGroupNotAllowed $e) {
             FlashMessages::add('error', trans('messages.you can\\\'t edit this translations group'));
         } catch (Exception $e) {
-            dd('message: ' . $e->getMessage() . ', line: ' . $e->getLine() . ', file: ' . $e->getFile());
             FlashMessages::add('error', trans('messages.an error has occurred, try_later'));
         }
         
