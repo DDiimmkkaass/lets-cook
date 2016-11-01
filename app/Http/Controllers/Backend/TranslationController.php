@@ -11,14 +11,13 @@ namespace App\Http\Controllers\Backend;
 use App\Exceptions\TranslationOfGroupNotAllowed;
 use App\Http\Requests\Backend\Translation\TranslationUpdateRequest;
 use App\Traits\Controllers\AjaxFieldsChangerTrait;
+use Barryvdh\TranslationManager\Models\Translation;
 use Exception;
-use File;
 use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Meta;
-use Response;
 
 /**
  * Class TranslationController
@@ -26,14 +25,14 @@ use Response;
  */
 class TranslationController extends BackendController
 {
-
+    
     use AjaxFieldsChangerTrait;
-
+    
     /**
      * @var string
      */
     public $module = "translation";
-
+    
     /**
      * @var array
      */
@@ -41,43 +40,43 @@ class TranslationController extends BackendController
         'index'  => 'translation.read',
         'update' => 'translation.write',
     ];
-
+    
     /**
      * @var array
      */
     public $locales = [];
-
+    
     /**
      * @param \Illuminate\Contracts\Routing\ResponseFactory $response
      */
     public function __construct(ResponseFactory $response)
     {
         parent::__construct($response);
-
+        
         Meta::title(trans('labels.translations'));
-
+        
         $this->breadcrumbs(trans('labels.translations'));
-
+        
         $this->getExistsLocales();
     }
-
+    
     /**
      * @param string $group
      *
-     * @return \Response
+     * @return \Illuminate\Contracts\View\View
      */
     public function index($group)
     {
         try {
             $this->validateGroup($group);
-
+            
             $page = request('page', 1);
-
+            
             $list = $this->getGroupCollection($group);
-
+            
             $total = $list->count();
             $list = $list->slice(($page - 1) * config('translation.per_page'))->take(config('translation.per_page'));
-
+            
             $list = new LengthAwarePaginator(
                 $list,
                 $total,
@@ -88,27 +87,28 @@ class TranslationController extends BackendController
                     'query' => [],
                 ]
             );
-
+            
             $this->data('locales', $this->locales);
             $this->data('list', $list);
             $this->data('group', $group);
             $this->data('page', $page);
-
+            
             $this->data('page_title', trans('labels.translation_group_'.$group));
             $this->breadcrumbs(trans('labels.translation_group_'.$group));
-
+            
             request()->flush();
-
+            
             return $this->render('views.'.$this->module.'.index');
         } catch (TranslationOfGroupNotAllowed $e) {
             FlashMessages::add('error', trans('messages.you can\\\'t edit this translations group'));
         } catch (Exception $e) {
+            dd('message: ' . $e->getMessage() . ', line: ' . $e->getLine() . ', file: ' . $e->getFile());
             FlashMessages::add('error', trans('messages.an error has occurred, try_later'));
         }
-
+        
         return redirect()->route('admin.home');
     }
-
+    
     /**
      * @param \App\Http\Requests\Backend\Translation\TranslationUpdateRequest $request
      *
@@ -118,36 +118,38 @@ class TranslationController extends BackendController
     {
         try {
             $group = $request->route('group');
-
+            
             $this->validateGroup($group);
-
+            
             foreach ($this->locales as $locale) {
                 $translations = $request->get($locale);
-
+                
                 $locale_exist_translations = $this->getLocaleExistTranslationsForGroup($locale, $group);
                 $translation = array_merge($locale_exist_translations, $translations);
                 
-                $path = app()->langPath().'/'.$locale.'/'.$group.'.php';
-                $output = "<?php\n\nreturn ".var_export($translation, true).";\n";
-                File::put($path, $output);
-
-                sleep(1);
+                foreach ($translation as $key => $value) {
+                    $_translation = Translation::firstOrNew(['locale' => $locale, 'group' => $group, 'key' => $key]);
+                    
+                    $_translation->value = $value;
+                    
+                    $_translation->save();
+                }
             }
-
+            
             request()->flush();
-
+            
             FlashMessages::add('success', trans('messages.save_ok'));
-
+            
             return redirect(route('admin.'.$this->module.'.index', $group, ['page' => request('page', 1)]));
         } catch (TranslationOfGroupNotAllowed $e) {
             FlashMessages::add('error', trans('messages.you can\'t edit this translations group'));
         } catch (Exception $e) {
             FlashMessages::add('error', trans('messages.an error has occurred, try_later'));
         }
-
+        
         return redirect()->back();
     }
-
+    
     /**
      * fill array of all physical exists locales
      */
@@ -155,7 +157,7 @@ class TranslationController extends BackendController
     {
         $this->locales = config('app.locales');
     }
-
+    
     /**
      * @param string $group
      *
@@ -167,10 +169,10 @@ class TranslationController extends BackendController
         if (!in_array($group, config('translation.visible_groups'))) {
             throw new TranslationOfGroupNotAllowed();
         }
-
+        
         return true;
     }
-
+    
     /**
      * @param string $group
      *
@@ -182,17 +184,21 @@ class TranslationController extends BackendController
         foreach ($this->locales as $locale) {
             $path = app()->langPath().'/'.$locale.'/'.$group.'.php';
             $_list = include($path);
-
+            
+            $_translation = Translation::whereLocale($locale)->whereGroup($group)
+                ->get(['key', 'value'])
+                ->keyBy('key');
+            
             foreach ($_list as $key => $item) {
-                $list[$key][$locale] = $item;
+                $list[$key][$locale] = $_translation->has($key) ? $_translation->get($key)->value : $item;
             }
         }
-
+        
         ksort($list);
-
+        
         return Collection::make($list);
     }
-
+    
     /**
      * @param string $locale
      * @param string $group
@@ -202,11 +208,11 @@ class TranslationController extends BackendController
     private function getLocaleExistTranslationsForGroup($locale, $group)
     {
         $list = [];
-
+        
         foreach ($this->getGroupCollection($group) as $key => $translation) {
             $list[$key] = isset($translation[$locale]) ? $translation[$locale] : '';
         }
-
+        
         return $list;
     }
 }

@@ -166,13 +166,13 @@ return [
         Illuminate\Redis\RedisServiceProvider::class,
         Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
         Illuminate\Session\SessionServiceProvider::class,
-        Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         
         /*
          * Custom Providers. This one provider must be here
          */
+        App\Providers\TranslationServiceProvider::class,
         YAAP\Theme\ThemeServiceProvider::class,
         
         /*
@@ -279,6 +279,7 @@ return [
         'Excel'               => Maatwebsite\Excel\Facades\Excel::class,
         'YandexKassa'         => Artem328\LaravelYandexKassa\Facades\YandexKassa::class,
         'Guzzle'              => App\Facades\Guzzle::class,
+        'TranslationCache'    => \Waavi\Translation\Facades\TranslationCache::class,
     
     ],
 
