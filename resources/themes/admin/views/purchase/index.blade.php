@@ -8,7 +8,10 @@
                 <div class="box-body">
                     <div class="purchase-table">
                         {!!
-                            TablesBuilder::create(['id' => "datatable1", 'class' => "table table-bordered table-striped table-hover"], ['bStateSave' => true])
+                            TablesBuilder::create(
+                                ['id' => "datatable1", 'class' => "table table-bordered table-striped table-hover"],
+                                ['bStateSave' => true, 'order' => [[ 0, 'desc' ]]]
+                            )
                             ->addHead([
                                 ['text' => trans('labels.week'), 'attr' => ['class' => 'col-sm-4']],
                                 ['text' => trans('labels.year'), 'attr' => ['class' => 'col-sm-3']],
