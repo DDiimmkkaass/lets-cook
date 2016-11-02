@@ -1,7 +1,7 @@
 
 /* ----- COMMON POP UP ----- */
 
-function popUp(title = '', content = '', callback = function() {}) {
+function popUp(title = '', content = '', callback = function() {}, closeCallback = function() {}) {
     let $popUp = $('.pop-up'),
         $title = $popUp.find('.pop-up__title'),
         $content = $popUp.find('.pop-up__content');
@@ -18,10 +18,16 @@ function popUp(title = '', content = '', callback = function() {}) {
         setTimeout(function () {
             $title.empty();
             $content.empty();
+
+            if (typeof closeCallback == "function") {
+                closeCallback();
+            }
         }, 1000);
     });
 
-    callback();
+    if (typeof callback == "function") {
+        callback();
+    }
 }
 
 /* ----- end COMMON POP UP ----- */

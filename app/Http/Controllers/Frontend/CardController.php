@@ -68,7 +68,7 @@ class CardController extends FrontendController
     /**
      * @param \App\Http\Requests\Frontend\Card\CardCreateRequest $request
      *
-     * @return \Illuminate\Http\RedirectResponse
+     * @return array
      */
     public function store(CardCreateRequest $request)
     {
@@ -77,13 +77,22 @@ class CardController extends FrontendController
             $card->user_id = $this->user->id;
             
             $card->save();
-            
-            FlashMessages::add('success', trans('front_messages.card successfully saved'));
-        } catch (ModelNotFoundException $e) {
-            FlashMessages::add('error', trans('front_messages.card not found'));
+    
+            $provider = $this->paymentService->getProvider();
+    
+            $form = $provider->getConnectForm($card->toArray());
+    
+            return [
+                'message' => trans('front_messages.card successfully saved'),
+                'status' => 'success',
+                'html'   => $form,
+            ];
+        } catch (Exception $e) {
+            return [
+                'status'  => 'error',
+                'message' => trans('front_messages.an error has occurred, please reload the page and try again'),
+            ];
         }
-        
-        return redirect()->route('profiles.cards.index');
     }
     
     /**

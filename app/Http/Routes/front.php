@@ -132,21 +132,25 @@ $router->group(
         
         $router->group(
             [
-                'prefix' => 'cards'
+                'prefix' => 'cards',
             ],
             function () use ($router) {
                 $router->get(
                     '/',
                     ['as' => 'profiles.cards.index', 'uses' => 'Frontend\CardController@index']
                 );
-    
+                
                 $router->get(
                     '/create',
                     ['as' => 'profiles.cards.create', 'uses' => 'Frontend\CardController@create']
                 );
                 $router->post(
                     '/',
-                    ['as' => 'profiles.cards.store', 'uses' => 'Frontend\CardController@store']
+                    [
+                        'as'         => 'profiles.cards.store',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Frontend\CardController@store',
+                    ]
                 );
                 
                 $router->get(
@@ -157,15 +161,23 @@ $router->group(
                     '/{card_id}',
                     ['as' => 'profiles.cards.update', 'uses' => 'Frontend\CardController@update']
                 )->where('card_id', '[0-9]+');
-    
+                
                 $router->post(
                     '/{card_id}/connect',
-                    ['as' => 'profiles.cards.connect', 'uses' => 'Frontend\CardController@connect']
+                    [
+                        'as'         => 'profiles.cards.connect',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Frontend\CardController@connect',
+                    ]
                 )->where('card_id', '[0-9]+');
-    
+                
                 $router->post(
                     '/{card_id}/delete',
-                    ['as' => 'profiles.cards.delete', 'uses' => 'Frontend\CardController@delete']
+                    [
+                        'as'         => 'profiles.cards.delete',
+                        'middleware' => 'ajax',
+                        'uses'       => 'Frontend\CardController@delete',
+                    ]
                 )->where('card_id', '[0-9]+');
             }
         );
@@ -187,7 +199,7 @@ $router->group(
             '/update',
             ['as' => 'profiles.update', 'uses' => 'Frontend\ProfileController@update']
         );
-    
+        
         $router->get(
             '/set/password',
             ['as' => 'profiles.set.password', 'uses' => 'Frontend\ProfileController@setPassword']
@@ -274,7 +286,7 @@ $router->group(
             'instruction',
             ['as' => 'payment.instruction', 'uses' => 'Frontend\PaymentController@instruction']
         );
-    
+        
         $router->post(
             'deposit_error',
             ['as' => 'payment.deposit_error', 'uses' => 'Frontend\PaymentController@depositError']

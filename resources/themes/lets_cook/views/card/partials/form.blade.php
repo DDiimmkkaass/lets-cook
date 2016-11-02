@@ -40,6 +40,9 @@
 </div>
 
 <div class="profile-edit-section__buttons">
-    <button type="submit" class="h-card-form-section__save black-long-button">Сохранить</button>
+    <button type="submit"
+            class="h-card-form-section__save black-long-button {!! isset($button_type) ? $button_type: '' !!}">
+        Сохранить
+    </button>
     <a href="{!! localize_route('profiles.cards.index') !!}" class="h-card-form-section__cancel black-long-button">Отмена</a>
 </div>

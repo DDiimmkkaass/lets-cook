@@ -14,7 +14,7 @@
 
                     <div class="subscribe-table__basket h-card-number-col">
                         <span>
-                            ****{!! $card->number !!}
+                            @if ($card->number) ****{!! $card->number !!} @endif
                         </span>
                     </div>
 
