@@ -54,23 +54,25 @@ class ChangeOrderStatusWhenPaymentSuccessful
         if (!$event->request->get('cardConnect', false)) {
             $order = Order::find($event->request->get('orderNumber'));
     
-            if ($event->request->isValidHash()) {
-                $status = $order->status;
-                
-                $order->status = $this->_getStatus($order);
-                $order->save();
+            if (!in_array($order->getStringStatus(), ['paid', 'processed'])) {
+                if ($event->request->isValidHash()) {
+                    $status = $order->status;
         
-                $this->orderService->addSystemOrderComment($order, trans('payments.success_payment'));
+                    $order->status = $this->_getStatus($order);
+                    $order->save();
         
-                $this->paymentService->storeTransaction($order->id, $event->request->all(), 'success');
-                
-                if ($status == 'tmpl') {
-                    event(new TmplOrderSuccessfullyPaid($order));
+                    $this->orderService->addSystemOrderComment($order, trans('payments.success_payment'));
+        
+                    $this->paymentService->storeTransaction($order->id, $event->request->all(), 'success', 'paymentAviso');
+        
+                    if ($status == 'tmpl') {
+                        event(new TmplOrderSuccessfullyPaid($order));
+                    }
+                } else {
+                    $this->orderService->addSystemOrderComment($order, trans('payments.invalid_has'));
+        
+                    $this->paymentService->storeTransaction($order->id, $event->request->all(), 'error', 'paymentAviso');
                 }
-            } else {
-                $this->orderService->addSystemOrderComment($order, trans('payments.invalid_has'));
-        
-                $this->paymentService->storeTransaction($order->id, $event->request->all(), 'error');
             }
         }
     }

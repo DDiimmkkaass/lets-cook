@@ -23,7 +23,7 @@
                 <input type="radio"
                        id="f-personal-data-default-1"
                        name="default"
-                       @if (old('default') == 1 || (old('default') === null && ((int)$card->default))) checked @endif
+                       @if ($card->default) checked @endif
                        value="1">
                 <label for="f-personal-data-default-1">Да</label>
             </div>
@@ -31,7 +31,7 @@
                 <input type="radio"
                        id="f-personal-data-default-0"
                        name="default"
-                       @if (old('default') == 0 || (old('default') === null && !((int) $card->default))) checked @endif
+                       @if (!$card->default) checked @endif
                        value="0">
                 <label for="f-personal-data-default-0">Нет</label>
             </div>

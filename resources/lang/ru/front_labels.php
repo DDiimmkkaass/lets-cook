@@ -47,4 +47,6 @@ return array(
   'payment_method' => 'Способ оплаты',
   'select_basket' => 'Выбрать корзину',
   'unlimited' => 'неограниченно',
+  'main_card' => 'Моя карта',
+  'order' => 'Заказ',
 );

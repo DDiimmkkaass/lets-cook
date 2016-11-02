@@ -25,12 +25,24 @@ class SaveUserCard
      */
     public function handle(BeforePaymentAvisoResponse $event)
     {
-        if ($event->request->get('cardConnect', false)) {
+        if ($event->request->get('rebillingOn')) {
             if ($event->request->isValidHash()) {
-                $card_id = $event->request->get('orderNumber');
-                $card_id = explode('_', $card_id);
+                $order_number = $event->request->get('orderNumber');
                 
-                $card = Card::find($card_id[1]);
+                if (strpos($order_number, 'card_') !== false) {
+                    $card_id = explode('_', $order_number);
+                    
+                    $card = Card::find($card_id[1]);
+                } else {
+                    $card = new Card(
+                        [
+                            'name'    => trans('front_labels.main_card').' ('.
+                                trans('front_labels.order').' #'.$order_number.')',
+                            'default' => true,
+                        ]
+                    );
+                    $card->user_id = $event->request->get('customerNumber');
+                }
     
                 $card->invoice_id = $event->request->get('invoiceId');
                 $card->save();
