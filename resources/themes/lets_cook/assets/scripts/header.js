@@ -16,14 +16,32 @@ function headerActions() {
         $restorePopUp = $header.find('.header__restore'),
         $restoreClose = $restorePopUp.find('.restore__close-layout, .restore__close');
 
+    let getCookie = function(name) {
+        let match = document.cookie.match(new RegExp(name + '=([^;]+)'));
+
+        if (match) {
+            return match[1];
+        }
+
+        return null;
+    };
+
     // REGISTRATION BIRTHDAY DATEPICKER
     datePicker($regBirthday);
+
+    // HEADER TRIAL ORDER
+    let header_trial_order = getCookie('header_trial_order');
+    if (header_trial_order != 'hidden') {
+        $headerTop.attr('data-active', 'true');
+    }
 
     // HEADER CLOSE BUTTON CLICK
     $closeButton.on('click', function() {
         let $headerTop = $(this).parent();
 
         $headerTop.attr('data-active', 'false');
+
+        document.cookie = "header_trial_order=hidden";
     });
 
     // HEADER PROFILE CLICK
