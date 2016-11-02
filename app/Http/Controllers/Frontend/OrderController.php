@@ -328,11 +328,22 @@ class OrderController extends FrontendController
     {
         $model = $this->orderService->getOrder($order_id);
         
-        abort_if($model->user_id != $this->user->id || !$model->isStatus('tmpl'), 404);
-        
         try {
-            $model->status = Order::getStatusIdByName('deleted');
+            if ($model->user_id != $this->user->id) {
+                return [
+                    'status'  => 'error',
+                    'message' => trans('front_messages.order not found'),
+                ];
+            }
             
+            if (!$model->isStatus('changed') && !$model->isStatus('tmpl')) {
+                return [
+                    'status'  => 'error',
+                    'message' => trans('front_messages.you can not cancel payed or processed orders'),
+                ];
+            }
+            
+            $model->status = Order::getStatusIdByName('deleted');
             $model->save();
             
             return [

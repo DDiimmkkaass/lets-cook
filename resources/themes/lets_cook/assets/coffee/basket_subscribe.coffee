@@ -39,17 +39,18 @@ $(document).on 'ready', () ->
     window.location.href = $(this).find('div').data('href')
 
   $(document).on 'click', '.basket-subscribes-form .delete-tmpl-order', () ->
-    $.ajax
-      url: '/order/' + $(this).data('order_id') + '/delete'
-      type: 'post'
-      data: {_token: $(this).data('token')}
-      dataType: 'json'
-      success: (response) =>
-        if response.status == 'success'
-          $(this).closest('.subscribe-table__row').fadeOut()
-          popUp(lang_success, response.message)
-        else
-          popUp(lang_error, response.message)
+    if confirm(lang_youReallyWantToCancelThisOrder)
+      $.ajax
+        url: '/order/' + $(this).data('order_id') + '/delete'
+        type: 'post'
+        data: {_token: $(this).data('token')}
+        dataType: 'json'
+        success: (response) =>
+          if response.status == 'success'
+            $(this).closest('.subscribe-table__row').fadeOut()
+            popUp(lang_success, response.message)
+          else
+            popUp(lang_error, response.message)
 
   $(document).on 'click', '.basket-subscribes-form .basket-subscribes-form-submit', () ->
     $form = $(this).closest('form')

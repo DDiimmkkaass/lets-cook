@@ -25,7 +25,19 @@
 
                         <div class="own-order__price">{!! $order->total !!} {!! $currency !!}</div>
 
-                        <div class="own-order__change-button">Изменить</div>
+                        <div href="#" class="own-order__change-button green-long-button">
+                            Изменить
+                        </div>
+
+                        @if ($order->isStatus('changed'))
+                            <div data-order_id="{!! $order->id !!}"
+                                 data-token="{!! csrf_token() !!}"
+                                 class="own-order__cancel-button">
+                                Отменить заказ
+                            </div>
+                        @endif
+
+                        <div class="h-clearfix"></div>
                     </div>
 
                     @if ($order->additional_baskets->count())

@@ -109,38 +109,39 @@ class FrontendController extends BaseController
         // set javascript vars
         JavaScript::put(
             [
-                'app_url'                            => Config::get('app.url', ''),
-                'lang'                               => Lang::getLocale(),
-                'currency'                           => currency(),
-                'max_upload_file_size'               => $max_upload_file_size,
-                'max_upload_image_width'             => config('image.max_upload_width'),
-                'max_upload_image_height'            => config('image.max_upload_height'),
-                'lang_error'                         => trans('front_labels.error'),
-                'lang_success'                       => trans('front_labels.success'),
-                'lang_notice'                        => trans('front_labels.notice'),
-                'lang_deleteCardConfirmMessage'      => trans(
+                'app_url'                             => Config::get('app.url', ''),
+                'lang'                                => Lang::getLocale(),
+                'currency'                            => currency(),
+                'max_upload_file_size'                => $max_upload_file_size,
+                'max_upload_image_width'              => config('image.max_upload_width'),
+                'max_upload_image_height'             => config('image.max_upload_height'),
+                'lang_error'                          => trans('front_labels.error'),
+                'lang_success'                        => trans('front_labels.success'),
+                'lang_notice'                         => trans('front_labels.notice'),
+                'lang_deleteCardConfirmMessage'       => trans(
                     'messages.your really want to delete this card'
                 ),
-                'lang_errorRequestError'             => trans(
+                'lang_errorRequestError'              => trans(
                     'messages.an error has occurred, please reload the page and try again'
                 ),
-                'lang_errorValidation'               => trans('messages.validation_failed'),
-                'lang_errorFormSubmit'               => trans('messages.error form submit'),
-                'lang_authError'                     => trans('messages.auth middleware error message'),
-                'lang_errorSelectedFileIsTooLarge'   => trans('messages.trying to load is too large file'),
-                'lang_errorIncorrectFileType'        => trans('messages.trying to load unsupported file type'),
-                'lang_errorSelectedImageWidthError'  => trans(
+                'lang_errorValidation'                => trans('messages.validation_failed'),
+                'lang_errorFormSubmit'                => trans('messages.error form submit'),
+                'lang_authError'                      => trans('messages.auth middleware error message'),
+                'lang_errorSelectedFileIsTooLarge'    => trans('messages.trying to load is too large file'),
+                'lang_errorIncorrectFileType'         => trans('messages.trying to load unsupported file type'),
+                'lang_errorSelectedImageWidthError'   => trans(
                     'messages.max allowed image width: :width px',
                     ['width' => config('image.max_upload_width')]
                 ),
-                'lang_errorSelectedImageHeightError' => trans(
+                'lang_errorSelectedImageHeightError'  => trans(
                     'messages.max allowed image height: :height px',
                     ['height' => config('image.max_upload_height')]
                 ),
-                'lang_errorCantShowAjaxPopup'        => trans('messages.an error has occurred, try_later'),
-                'no_image'                           => 'http://www.placehold.it/250x250/EFEFEF/AAAAAA&text=no+image',
-                'no_image_user'                      => config('user.no_image'),
-                'is_mobile'                          => Agent::isMobile(),
+                'lang_youReallyWantToCancelThisOrder' => trans('messages.you really want to cancel this order'),
+                'lang_errorCantShowAjaxPopup'         => trans('messages.an error has occurred, try_later'),
+                'no_image'                            => 'http://www.placehold.it/250x250/EFEFEF/AAAAAA&text=no+image',
+                'no_image_user'                       => config('user.no_image'),
+                'is_mobile'                           => Agent::isMobile(),
             ]
         );
         

@@ -31,6 +31,30 @@ OrderEdit.save = ($form) ->
       else
         popUp(lang_error, response.message)
 
+OrderEdit.cancelOrder = ($order) ->
+  if confirm(lang_youReallyWantToCancelThisOrder)
+    $.ajax
+      url: '/order/' + $order.data('order_id') + '/delete'
+      type: 'post'
+      data: {_token: $order.data('token')}
+      dataType: 'json'
+      success: (response) =>
+        if response.status == 'success'
+          popUp(lang_success, response.message)
+
+          if $('.order-edit-form').length
+            window.location = '/profiles/orders'
+          else
+            $order = $order.closest('.profile-orders-own__item')
+
+            $order.fadeOut(600)
+
+            setTimeout () ->
+                $order.remove()
+              , 800
+        else
+          popUp(lang_error, response.message)
+
 $(document).on "ready", () ->
   $('.order-edit-form .order-add-item__checkbox [type="checkbox"]').on 'click', (e) ->
     $checkbox = $(this)
@@ -86,5 +110,19 @@ $(document).on "ready", () ->
     e.preventDefault()
 
     OrderEdit.save($(this).closest('form'));
+
+    return false
+
+  $('.order-edit-form').on 'click', '.order-edit__cancel-order', (e) ->
+    e.preventDefault()
+
+    OrderEdit.cancelOrder($(this));
+
+    return false
+
+  $(document).on 'click', '.own-order__cancel-button', (e) ->
+    e.preventDefault()
+
+    OrderEdit.cancelOrder($(this));
 
     return false

@@ -170,4 +170,5 @@ return array (
   'coupon not find' => 'Купон не найден',
   'coupon not default any more' => 'Купон больше не установлен по умолчанию',
   'coupon successfully make default' => 'Купон успешно установлен по умолчанию',
+  'you really want to cancel this order' => 'Вы действительно хотите отменить этот заказ?',
 );

@@ -566,10 +566,26 @@
 
   &__change-button
     display: none
-    margin-top: 10px
+    margin-top: 15px
     font-family: $ptsans-bold
-    fsh(20px, 1)
+    fsh(18px, 28px)
     text-decoration: underline
+    float right
+    height 30px
+    width 50%
+    text-transform none
+
+    +bp('1024')
+      display: block
+
+  &__cancel-button
+    display: none
+    margin-top: 15px
+    margin-bottom: 5px
+    font-family: $ptsans-bold
+    fsh(16px, 18px)
+    text-decoration: underline
+    float left
 
     +bp('1024')
       display: block

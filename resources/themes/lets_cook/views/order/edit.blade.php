@@ -222,7 +222,21 @@
                         </div>
                     </div>
 
-                    <div name="order-submit" class="order-edit__make-order">Заказать</div>
+                    @if ($order->isStatus('changed'))
+                        <a href="#"
+                           data-order_id="{!! $order->id !!}"
+                           data-token="{!! csrf_token() !!}"
+                           class="order-edit__cancel-order h-float-left">
+                            Отменить заказ
+                        </a>
+                    @endif
+
+                    <div name="order-submit"
+                         class="order-edit__make-order @if ($order->isStatus('changed')) h-half-button h-float-right @endif">
+                        Сохранить
+                    </div>
+
+                    <div class="h-clearfix"></div>
                 </div>
             </div>
         </form>

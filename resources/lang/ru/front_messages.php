@@ -71,4 +71,6 @@ return array(
     'coupon not find' => 'Купон не найден',
     'this coupon has not yet started' => 'Время действия этого купона еще не наступило',
     'time of this coupon out' => 'Время действия этого купона уже завершилось',
+    'order not found' => 'Заказ не найден',
+    'you can not cancel payed or processed orders' => 'Вы не можете отменить оплаченный заказ или заказ в обработке',
 );
