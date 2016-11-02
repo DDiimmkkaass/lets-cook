@@ -103,11 +103,19 @@ class User extends SentryUser implements FrontLink
     }
     
     /**
-     * @param      $q
+     * @param $query
      */
-    public function scopeJoinInfo($q)
+    public function scopeJoinInfo($query)
     {
-        return $q->leftJoin('user_info', 'users.id', '=', 'user_info.user_id');
+        return $query->leftJoin('user_info', 'users.id', '=', 'user_info.user_id');
+    }
+    
+    /**
+     * @param $query
+     */
+    public function scopeJoinCities($query)
+    {
+        return $query->leftJoin('cities', 'cities.id', '=', 'user_info.city_id');
     }
     
     /**
@@ -292,6 +300,14 @@ class User extends SentryUser implements FrontLink
     public function getFullName()
     {
         return $this->full_name;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getCityName()
+    {
+        return $this->info->getCityName();
     }
     
     /**

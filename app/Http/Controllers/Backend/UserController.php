@@ -29,6 +29,7 @@ use Exception;
 use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Meta;
 use Sentry;
@@ -95,16 +96,20 @@ class UserController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = User::with('info')->joinInfo()->select(
+            $list = User::with('info.city')->joinInfo()->joinCities()->select(
                 [
                     'users.id',
                     'user_info.full_name',
                     'email',
                     'user_info.phone',
                     'user_info.additional_phone',
+                    'user_info.city_id',
+                    'user_info.city_name',
                     'activated',
                 ]
             );
+    
+            $this->_implodeFilters($list, $request);
             
             return $dataTables = Datatables::of($list)
                 ->filterColumn('users.id', 'where', 'users.id', 'LIKE', '$1')
@@ -115,6 +120,12 @@ class UserController extends BackendController
                     'id',
                     function ($model) {
                         return '#'.$model->id;
+                    }
+                )
+                ->editColumn(
+                    'city_name',
+                    function ($model) {
+                        return $model->getCityName();
                     }
                 )
                 ->editColumn(
@@ -139,6 +150,8 @@ class UserController extends BackendController
                 )
                 ->setIndexColumn('users.id')
                 ->removeColumn('info')
+                ->removeColumn('city')
+                ->removeColumn('city_id')
                 ->make();
         }
         
@@ -643,6 +656,30 @@ class UserController extends BackendController
             $user->info()->save($info);
         } else {
             $info->update($user_info);
+        }
+    }
+    
+    /**
+     * @param Builder $list
+     * @param Request $request
+     */
+    private function _implodeFilters(&$list, $request)
+    {
+        $filters = $request->get('datatable_filters');
+        
+        if (count($filters)) {
+            foreach ($filters as $filter => $value) {
+                if ($value !== '' && $value !== 'null') {
+                    switch ($filter) {
+                        case 'city_name':
+                            $list->where(function ($query) use ($value) {
+                                return $query->where('user_info.city_name', 'LIKE', '%'.$value.'%')
+                                    ->orWhere('cities.name', 'LIKE', '%'.$value.'%');
+                            });
+                            break;
+                    }
+                }
+            }
         }
     }
 }

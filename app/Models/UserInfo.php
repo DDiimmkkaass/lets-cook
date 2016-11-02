@@ -17,6 +17,7 @@ use Eloquent;
  */
 class UserInfo extends Eloquent
 {
+    
     /**
      * @var bool
      */
@@ -116,6 +117,14 @@ class UserInfo extends Eloquent
         } else {
             return Carbon::createFromFormat('Y-m-d', $value)->startOfDay()->format('d-m-Y');
         }
+    }
+    
+    /**
+     * @return string
+     */
+    public function getCityName()
+    {
+        return $this->city_id ? $this->city->name : $this->city_name;
     }
     
     /**
