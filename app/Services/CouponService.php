@@ -210,7 +210,7 @@ class CouponService
         
         $now = Carbon::now();
         
-        if (($coupon->getStartedAt() && $coupon->getStartedAt() > $now) || !$coupon->getStartedAt()) {
+        if ($coupon->getStartedAt() && $coupon->getStartedAt() > $now) {
             return trans('front_messages.this coupon has not yet started');
         }
         

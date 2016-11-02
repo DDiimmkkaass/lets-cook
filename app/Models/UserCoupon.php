@@ -65,13 +65,13 @@ class UserCoupon extends Model
     public function available($user, $full_message = false)
     {
         $now = Carbon::now();
+    
+        if ($this->getStartedAt() && $this->getStartedAt() > $now) {
+            $message = trans('front_messages.this coupon has not yet started');
+        }
         
         if ($this->getExpiredAt() && $this->getExpiredAt() < $now) {
             $message = trans('front_messages.time of this coupon out');
-        }
-        
-        if ($this->getStartedAt() && $this->getStartedAt() >= $now) {
-            $message = trans('front_messages.this coupon has not yet started');
         }
         
         if ($this->getAvailableCount() <= 0) {
