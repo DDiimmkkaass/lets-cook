@@ -17,7 +17,7 @@
                 <tr class="user-title">
                     <th colspan="4">
                         <h4 class="margin-top-0 margin-bottom-0">
-                            <b>{!! $user['full_name'] !!} ({!! $user['user_id']  !!})</b>
+                            <b>{!! $user['full_name'] !!} (#{!! $user['user_id'] !!})</b>
                         </h4>
                     </th>
                 </tr>

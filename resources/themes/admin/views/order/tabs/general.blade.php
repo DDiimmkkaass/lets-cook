@@ -17,7 +17,7 @@
                         data-link="{!! route('admin.user.edit', $user->id) !!}"
                         @if ($user->id == $model->user_id || $user->id == old('user_id')) selected="selected" @endif
                 >
-                    {!! $user->getFullName() !!}
+                    {!! $user->getFullName() !!} (#{!! $user->id !!})
                 </option>
             @endforeach
         </select>

@@ -99,7 +99,7 @@ class OrderService
                 function ($model) {
                     return '<a href="'.route('admin.user.show', $model->user_id).'" 
                             title="'.trans('labels.go_to_user').' '.$model->getUserFullName().'">
-                            '.$model->getUserFullName().'
+                            '.$model->getUserFullName().' (#'.$model->user_id.')
                             </a>';
                 }
             )

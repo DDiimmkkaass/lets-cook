@@ -8,7 +8,7 @@
             @foreach($list as $user)
                 <tr style="vertical-align: bottom; height: 30px; width: 70px">
                     <th style="background-color: #cccccc;" colspan="4">
-                        {!! $user['full_name'] !!} [{!! $user['user_id']  !!}]
+                        {!! $user['full_name'] !!} (#{!! $user['user_id']  !!})
                     </th>
                 </tr>
 

@@ -67,7 +67,7 @@
                         </td>
                         <td style="width: 40px; {!! $background !!}">
                             {!! $order->getUserFullName() !!}
-                            [{!! $order->user->id !!}]
+                            [#{!! $order->user->id !!}]
                             ({!! $order->user->orders()->finished()->count() + $order->user->old_site_orders_count !!})
                         </td>
                         <td style="text-align: center; {!! $background !!}">

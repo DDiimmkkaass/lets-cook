@@ -112,6 +112,12 @@ class UserController extends BackendController
                 ->filterColumn('email', 'where', 'email', 'LIKE', '%$1%')
                 ->filterColumn('phone', 'where', 'user_info.phone', 'LIKE', '%$1%')
                 ->editColumn(
+                    'id',
+                    function ($model) {
+                        return '#'.$model->id;
+                    }
+                )
+                ->editColumn(
                     'activated',
                     function ($model) {
                         $model->status = $model->activated;
@@ -238,7 +244,7 @@ class UserController extends BackendController
                 ]
             )->get();
             
-            $this->data('page_title', '"'.$model->getFullName().'"');
+            $this->data('page_title', '"'.$model->getFullName().'" (#'.$model->id.')');
             
             $this->breadcrumbs(trans('labels.user_edit'));
             
