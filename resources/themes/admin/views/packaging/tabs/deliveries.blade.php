@@ -56,7 +56,7 @@
                         <td>
                             {!! $order->getUserFullName() !!}
                             [{!! $order->user->id !!}]
-                            ({!! $order->user->orders()->finished()->count() !!})
+                            ({!! $order->user->orders()->finished()->count() + $order->user->old_site_orders_count !!})
                         </td>
                         <td>
                             {!! $order->delivery_time !!}
