@@ -54,10 +54,12 @@ class UserCouponsComposer
             if (!$default) {
                 $coupon = $_user_coupons->last();
                 
-                $coupon->default = true;
-                $coupon->save();
-                
-                $user_coupons->put($coupon->id, $coupon);
+                if ($coupon) {
+                    $coupon->default = true;
+                    $coupon->save();
+    
+                    $user_coupons->put($coupon->id, $coupon);
+                }
             }
         } else {
             $user_coupons = [];

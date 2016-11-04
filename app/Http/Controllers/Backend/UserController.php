@@ -614,11 +614,13 @@ class UserController extends BackendController
     
             if (!$default) {
                 $coupon = $coupons->last();
-        
-                $coupon->default = true;
-                $coupon->save();
     
-                $coupons->put($coupon->id, $coupon);
+                if ($coupon) {
+                    $coupon->default = true;
+                    $coupon->save();
+    
+                    $coupons->put($coupon->id, $coupon);
+                }
             }
             
             $coupons->each(

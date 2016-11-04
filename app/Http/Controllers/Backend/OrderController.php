@@ -750,10 +750,12 @@ class OrderController extends BackendController
             if (!$default) {
                 $coupon = $_coupons->last();
     
-                $coupon->default = true;
-                $coupon->save();
+                if ($coupon) {
+                    $coupon->default = true;
+                    $coupon->save();
     
-                $coupons->put($coupon->id, $coupon);
+                    $coupons->put($coupon->id, $coupon);
+                }
             }
             
             foreach ($coupons as $coupon) {
