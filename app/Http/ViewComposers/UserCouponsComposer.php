@@ -8,7 +8,6 @@
 
 namespace App\Http\ViewComposers;
 
-use App\Models\User;
 use Illuminate\View\View;
 use Sentry;
 
@@ -18,18 +17,6 @@ use Sentry;
  */
 class UserCouponsComposer
 {
-    /**
-     * @var User
-     */
-    protected $user;
-    
-    /**
-     * ProfileComposer constructor.
-     */
-    public function __construct()
-    {
-        $this->user = Sentry::getUser();
-    }
     
     /**
      * Bind data to the view.
@@ -38,16 +25,40 @@ class UserCouponsComposer
      */
     public function compose(View $view)
     {
-        if ($this->user) {
-            $user_id = $this->user->id;
+        $user = Sentry::getUser();
+        
+        if ($user) {
+            $user_id = $user->id;
+            $default = false;
             
-            $user_coupons = $this->user->coupons()->with(
+            $user_coupons = $user->coupons()->with(
                 [
                     'orders' => function ($query) use ($user_id) {
                         $query->whereUserId($user_id);
                     },
                 ]
-            )->get();
+            )->get()->keyBy('id');
+            
+            $_user_coupons = $user_coupons->filter(
+                function ($item) use ($user, &$default) {
+                    if ($item->available($user)) {
+                        $default = $item->default ? true : $default;
+                        
+                        return true;
+                    }
+                    
+                    return false;
+                }
+            );
+            
+            if (!$default) {
+                $coupon = $_user_coupons->last();
+                
+                $coupon->default = true;
+                $coupon->save();
+                
+                $user_coupons->put($coupon->id, $coupon);
+            }
         } else {
             $user_coupons = [];
         }

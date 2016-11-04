@@ -723,15 +723,38 @@ class OrderController extends BackendController
         
         $user_coupons = ['' => trans('labels.not_set')];
         if ($model->exists) {
-            $user_id = $model->user_id;
+            $user = $model->user;
+            $user_id = $user->id;
+            $default = false;
             
-            $coupons = $model->user->coupons()->with(
+            $coupons = $user->coupons()->with(
                 [
                     'orders' => function ($query) use ($user_id) {
                         $query->whereUserId($user_id);
                     },
                 ]
-            )->get();
+            )->get()->keyBy('id');
+    
+            $_coupons = $coupons->filter(
+                function ($item) use ($model, $user, &$default) {
+                    if ($item->available($user)) {
+                        $default = $item->default ? true : $default;
+        
+                        return true;
+                    }
+    
+                    return false;
+                }
+            );
+            
+            if (!$default) {
+                $coupon = $_coupons->last();
+    
+                $coupon->default = true;
+                $coupon->save();
+    
+                $coupons->put($coupon->id, $coupon);
+            }
             
             foreach ($coupons as $coupon) {
                 if ($coupon->available($model->user) || $coupon->coupon_id == $model->coupon_id) {

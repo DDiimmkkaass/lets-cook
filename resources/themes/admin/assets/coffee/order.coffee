@@ -199,13 +199,13 @@ Order.getUserCoupons = (user_id) ->
         else
           message.show response.message, response.status
   else
-    $('.coupon-select').find('option').each (index, item) ->
+    $coupon_select.find('option').each (index, item) ->
       if index > 0
         $(this).remove()
 
   setTimeout () ->
-    fixCustomInputs($coupon_select.closest('.tab-pane'))
-  , 1000
+      fixCustomInputs($coupon_select.closest('.tab-pane'))
+    , 800
 
 $(document).on "ready", () ->
   $('.orders-table').on 'click', '.change-status', (e) ->

@@ -586,30 +586,50 @@ class UserController extends BackendController
     {
         try {
             $user = User::with('orders')->find($user_id);
+    
+            $default = false;
+            
             $coupons = UserCoupon::with(
                 [
                     'orders' => function ($query) use ($user_id) {
                         $query->whereUserId($user_id);
                     },
                 ]
-            )->whereUserId($user_id)->get();
+            )->whereUserId($user_id)->get()->keyBy('id');;
             
             $html = view('partials.selects.option', ['item' => ['id' => '', 'name' => trans('labels.please_select')]])
                 ->render();
+    
+            $coupons = $coupons->filter(
+                function ($item) use ($user, &$default) {
+                    if ($item->available($user)) {
+                        $default = $item->default ? true : $default;
+                
+                        return true;
+                    }
+            
+                    return false;
+                }
+            );
+    
+            if (!$default) {
+                $coupon = $coupons->last();
+        
+                $coupon->default = true;
+                $coupon->save();
+    
+                $coupons->put($coupon->id, $coupon);
+            }
             
             $coupons->each(
                 function ($item, $index) use (&$html, $user) {
-                    if ($item->available($user)) {
-                        $_coupon = view(
-                            'partials.selects.option',
-                            [
-                                'item'     => ['id' => $item->coupon_id, 'name' => $item->getName()],
-                                'selected' => $item->default,
-                            ]
-                        )->render();
-                    } else {
-                        $_coupon = '';
-                    }
+                    $_coupon = view(
+                        'partials.selects.option',
+                        [
+                            'item'     => ['id' => $item->coupon_id, 'name' => $item->getName()],
+                            'selected' => $item->default,
+                        ]
+                    )->render();
                     
                     return $html .= $_coupon;
                 }

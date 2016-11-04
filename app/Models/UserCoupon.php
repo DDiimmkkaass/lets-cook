@@ -57,6 +57,17 @@ class UserCoupon extends Model
     }
     
     /**
+     * @param     $query
+     * @param int $user_id
+     *
+     * @return mixed
+     */
+    public function scopeOfUser($query, $user_id)
+    {
+        return $query->where($this->getTable().'.user_id', $user_id);
+    }
+    
+    /**
      * @param User|null $user
      * @param bool      $full_message
      *
@@ -65,7 +76,7 @@ class UserCoupon extends Model
     public function available($user, $full_message = false)
     {
         $now = Carbon::now();
-    
+        
         if ($this->getStartedAt() && $this->getStartedAt() > $now) {
             $message = trans('front_messages.this coupon has not yet started');
         }

@@ -22,7 +22,10 @@ class UserCouponObserver
     public function saved(UserCoupon $model)
     {
         if ($model->default) {
-            UserCoupon::whereDefault(true)->where('id', '<>', $model->id)->update(['default' => false]);
+            UserCoupon::ofUser($model->user_id)
+                ->whereDefault(true)
+                ->where('id', '<>', $model->id)
+                ->update(['default' => false]);
         }
     }
 }
