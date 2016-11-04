@@ -53,16 +53,20 @@ class Handler extends ExceptionHandler
     {
         if ($this->isHttpException($e)) {
             $statusCode = $e->getStatusCode();
-    
+            
+            if (!in_array($statusCode, [404])) {
+                $this->_sendToAdmin($e);
+            }
+            
             if (env('HANDLE_ERROR', true)) {
                 switch ($statusCode) {
                     case 404:
                         return redirect(route('not_found'), 301);
+                    default:
+                        if (is_front()) {
+                            return response(view('errors.500')->render());
+                        }
                 }
-            }
-            
-            if (!in_array($statusCode, [404, 422])) {
-                $this->_sendToAdmin($e);
             }
         } else {
             $this->_sendToAdmin($e);
@@ -100,7 +104,7 @@ class Handler extends ExceptionHandler
                 admin_notify(
                     'message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile(),
                     [
-                        'url' => request()->fullUrl(),
+                        'url'     => request()->fullUrl(),
                         'request' => $_request,
                         'content' => $content,
                     ]
