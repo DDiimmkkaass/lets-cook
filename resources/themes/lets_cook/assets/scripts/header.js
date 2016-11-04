@@ -31,8 +31,11 @@ function headerActions() {
 
     // HEADER TRIAL ORDER
     let header_trial_order = getCookie('header_trial_order');
-    if (header_trial_order != 'hidden') {
+    if (header_trial_order != 'closed') {
         $headerTop.attr('data-active', 'true');
+
+        let _date = new Date(0);
+        document.cookie = "header_trial_order=; path=/; expires=" + _date.toUTCString();
     }
 
     // HEADER CLOSE BUTTON CLICK
@@ -41,7 +44,9 @@ function headerActions() {
 
         $headerTop.attr('data-active', 'false');
 
-        document.cookie = "header_trial_order=hidden";
+        let _date = new Date;
+        _date.setDate(_date.getDate() + 1);
+        document.cookie = "header_trial_order=closed; path=/; expires=" + _date.toUTCString();
     });
 
     // HEADER PROFILE CLICK
