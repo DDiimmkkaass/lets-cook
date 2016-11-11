@@ -19,6 +19,7 @@
                                     ['text' => trans('labels.phone')],
                                     ['text' => trans('labels.additional_phone')],
                                     ['text' => trans('labels.city')],
+                                    ['text' => trans('labels.address')],
                                     ['text' => trans('labels.activated')],
                                     ['text' => trans('labels.actions')]
                                 ])

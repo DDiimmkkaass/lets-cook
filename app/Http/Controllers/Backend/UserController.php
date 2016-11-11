@@ -104,18 +104,17 @@ class UserController extends BackendController
                     'user_info.phone',
                     'user_info.additional_phone',
                     'user_info.city_id',
-                    'user_info.city_name',
+                    DB::raw(
+                        '(select (IF(user_info.city_id IS NOT NULL, cities.name, user_info.city_name))) as city_name'
+                    ),
+                    'user_info.address',
                     'activated',
                 ]
             );
-    
-            $this->_implodeFilters($list, $request);
             
+            $this->_implodeFilters($list, $request);
+
             return $dataTables = Datatables::of($list)
-                ->filterColumn('users.id', 'where', 'users.id', 'LIKE', '$1')
-                ->filterColumn('full_name', 'where', 'user_info.full_name', 'LIKE', '%$1%')
-                ->filterColumn('email', 'where', 'email', 'LIKE', '%$1%')
-                ->filterColumn('phone', 'where', 'user_info.phone', 'LIKE', '%$1%')
                 ->editColumn(
                     'id',
                     function ($model) {
@@ -586,7 +585,7 @@ class UserController extends BackendController
     {
         try {
             $user = User::with('orders')->find($user_id);
-    
+            
             $default = false;
             
             $coupons = UserCoupon::with(
@@ -599,26 +598,26 @@ class UserController extends BackendController
             
             $html = view('partials.selects.option', ['item' => ['id' => '', 'name' => trans('labels.please_select')]])
                 ->render();
-    
+            
             $coupons = $coupons->filter(
                 function ($item) use ($user, &$default) {
                     if ($item->available($user)) {
                         $default = $item->default ? true : $default;
-                
+                        
                         return true;
                     }
-            
+                    
                     return false;
                 }
             );
-    
+            
             if (!$default) {
                 $coupon = $coupons->last();
-    
+                
                 if ($coupon) {
                     $coupon->default = true;
                     $coupon->save();
-    
+                    
                     $coupons->put($coupon->id, $coupon);
                 }
             }
