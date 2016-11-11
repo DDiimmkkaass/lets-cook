@@ -41,7 +41,7 @@ class CheckCardCreateRequisites
      */
     public function handle(BeforeCheckOrderResponse $event)
     {
-        if ($event->request->get('cardConnect', false)) {
+        if ($event->request->get('cardConnect')) {
             $provider = $this->paymentService->getProvider();
     
             if (!$provider->validCardConnectPayment($event->request->all())) {

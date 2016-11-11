@@ -40,8 +40,6 @@ class YandexKassa implements PaymentProvider
         $result = $this->_pay($order, $card);
         
         if ($result) {
-            $this->_confirm($result, $order);
-            
             return true;
         }
         
@@ -68,7 +66,7 @@ class YandexKassa implements PaymentProvider
         
         $response = $response['@attributes'];
         
-        return $this->_checkRequest($response) ? $response : false;
+        return $this->_checkRequest($response);
     }
     
     /**
@@ -130,7 +128,7 @@ class YandexKassa implements PaymentProvider
             if (!$order) {
                 $this->errors[] = trans('payments.order not find');
             } else {
-                if ($order->getStringStatus() != 'changed') {
+                if (!in_array($order->getStringStatus(), ['changed', 'tmpl']) ) {
                     $this->errors[] = trans('payments.order status already changed');
                 }
                 

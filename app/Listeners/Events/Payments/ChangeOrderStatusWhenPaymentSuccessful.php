@@ -13,7 +13,6 @@ use App\Models\Order;
 use App\Services\OrderService;
 use App\Services\PaymentService;
 use Artem328\LaravelYandexKassa\Events\BeforePaymentAvisoResponse;
-use Carbon\Carbon;
 
 /**
  * Class ChangeOrderStatusWhenPaymentSuccessful
@@ -51,7 +50,7 @@ class ChangeOrderStatusWhenPaymentSuccessful
      */
     public function handle(BeforePaymentAvisoResponse $event)
     {
-        if (!$event->request->get('cardConnect', false)) {
+        if (!$event->request->get('cardConnect')) {
             $order = Order::find($event->request->get('orderNumber'));
     
             if (!in_array($order->getStringStatus(), ['paid', 'processed'])) {
