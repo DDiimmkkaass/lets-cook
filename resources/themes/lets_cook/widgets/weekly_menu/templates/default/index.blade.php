@@ -25,7 +25,7 @@
                         @endif
                         @foreach($basket->recipes as $_key => $recipe)
                             <li class="recipes-menu__item" data-week="0" data-basket="{!! $key !!}">
-                                <a href="{!! $recipe->recipe->getUrl() !!}"
+                                <a href="{!! localize_route('order.index', $basket->id) !!}"
                                    title="{!! $recipe->getRecipeName() !!}"
                                    class="recipes-menu__link">
                                     <div class="recipes-menu__img"
@@ -47,7 +47,7 @@
                         @endif
                         @foreach($basket->recipes as $_key => $recipe)
                             <li class="recipes-menu__item" data-week="1" data-basket="{!! $key !!}">
-                                <a href="{!! $recipe->recipe->getUrl() !!}"
+                                <a href="{!! localize_route('order.index', $basket->id) !!}"
                                    title="{!! $recipe->getRecipeName() !!}"
                                    class="recipes-menu__link">
                                     <div class="recipes-menu__img"
@@ -124,10 +124,10 @@
                     Заказав после, вы получите продукты меню следующей недели.
                 </div>
 
-                <a href="{!! localize_route('baskets.index', 'current') !!}"
+                <a href="{!! localize_route('order.index', $active_basket->id) !!}"
                    data-week="0"
-                   class="baskets-menu__details black-long-button">
-                    подробнее про корзины
+                   class="baskets-menu__details black-long-button baskets-menu__to-order">
+                    подробнее про корзину
                 </a>
             @endif
 
@@ -140,10 +140,10 @@
                     Заказав после, вы получите продукты меню следующей недели.
                 </div>
 
-                <a href="{!! localize_route('baskets.index', 'next') !!}"
+                <a href="{!! localize_route('order.index', $active_basket->id) !!}"
                    data-week="1"
-                   class="baskets-menu__details black-long-button">
-                    подробнее про корзины
+                   class="baskets-menu__details black-long-button baskets-menu__to-order">
+                    подробнее про корзину
                 </a>
             @endif
         </div>

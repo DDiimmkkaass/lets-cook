@@ -16,6 +16,7 @@ function recipesMenu() {
         $basketsMenuDesc = $basketsMenu.find('.baskets-menu__desc'),
         $basketsMenuLink = $basketsMenu.find('.baskets-menu__details'),
         $allRecipesLink = $recipesMenu.find('.recipes-menu__all'),
+        $_allRecipesLink = $basketsMenu.find('.baskets-menu__to-order'),
         initWeek = 0,
         initBasket = 0;
 
@@ -37,9 +38,11 @@ function recipesMenu() {
 
             setItems(week_num, 0);
 
-            $allRecipesLink.attr('href', $('.baskets-menu__main-item[data-active]').find('.baskets-menu__sub-item').data('url'));
+            let _order_url = $('.baskets-menu__main-item[data-active]').find('.baskets-menu__sub-item').data('url');
+            $allRecipesLink.attr('href', _order_url);
+            $_allRecipesLink.attr('href', _order_url);
 
-            $('.baskets-menu__main-item[data-active]')
+                $('.baskets-menu__main-item[data-active]')
                 .find('.baskets-menu__sub-item').removeAttr('data-active-item')
                 .first().attr('data-active-item', '');
         });
@@ -57,6 +60,7 @@ function recipesMenu() {
                 window.location.href = url;
             } else {
                 $allRecipesLink.attr('href', url);
+                $_allRecipesLink.attr('href', url);
 
                 $basketsMenuList.find('.baskets-menu__sub-item').removeAttr('data-active-item');
                 $that.attr('data-active-item', '');

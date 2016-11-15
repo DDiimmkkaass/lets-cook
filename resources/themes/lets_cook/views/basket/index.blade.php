@@ -68,7 +68,7 @@
                                     <ul class="baskets-main-item__list">
                                         @foreach($basket->recipes->keyBy('position')->take(5) as $key => $recipe)
                                             <li class="baskets-main-item__item">
-                                                <a href="{!! $recipe->recipe->getUrl() !!}"
+                                                <a href="{!! localize_route('order.index', $basket->id) !!}"
                                                    class="baskets-main-item__link">
                                                     <div class="baskets-main-item__img"
                                                          style="background-image: url({!! thumb($recipe->getRecipeImage(), 195, 134) !!});"></div>

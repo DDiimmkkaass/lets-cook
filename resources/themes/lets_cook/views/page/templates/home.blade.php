@@ -1,8 +1,8 @@
-@extends('layouts.master')
+    @extends('layouts.master')
 
 @section('content')
     <main class="main">
-        <section class="let-cook">
+        <section class="let-cook" @if (variable('home_main_image')) style="background: url({!! variable('home_main_image') !!}) center center no-repeat" @endif>
             <h3 class="let-cook__supTitle">
                 @lang('front_texts.home top text 1')
             </h3>

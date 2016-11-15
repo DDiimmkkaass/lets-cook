@@ -33,8 +33,15 @@ class SendUserActivationEmail implements ShouldQueue
             'emails.auth.activation',
             ['user' => serialize($event->user)],
             function ($message) use ($event) {
-                $message->to($event->user->email, $event->user->getFullName())
-                    ->subject(trans('front_subjects.profile activation').' '.config('app.name'));
+                $bcc = variable('user_activation_bcc_email');
+                
+                $message->to($event->user->email, $event->user->getFullName());
+                
+                if ($bcc) {
+                    $message->bcc('customers@davaigotovit.ru', config('app.name'));
+                }
+    
+                $message->subject(trans('front_subjects.profile activation').' '.config('app.name'));
             }
         );
     }

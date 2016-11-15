@@ -1,5 +1,7 @@
 <header class="header">
-    @widget__trial_order()
+    @if (!$user)
+        @widget__trial_order()
+    @endif
 
     <div class="header__main header-main">
         <a href="{!! route('home') !!}"

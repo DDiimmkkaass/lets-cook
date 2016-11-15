@@ -231,8 +231,8 @@ class Comment extends Model implements SearchableContract, Likable
         return empty($this->image) ?
             (
                 empty($this->user_id) ?
-                config('user.no_image') :
-                ($this->user->avatar ? $this->user->avatar : config('user.no_image'))
+                variable('comment_user_default_image') :
+                ($this->user->avatar ? $this->user->avatar : variable('comment_user_default_image'))
             ) :
             $this->image;
     }
