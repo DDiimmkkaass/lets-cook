@@ -87,15 +87,9 @@
                     </div>
                 </div>
 
-                <a href="#" class="order-main__make-order black-short-button" data-device="desktop">
-                    Заказать в один клик
-                </a>
+                <div href="#" class="order-main__make-order" data-device="desktop"></div>
             </div>
         </div>
-
-        <a href='#' class="order-main__make-order ptsans-narrow-regular-tittle" data-device="mobile">
-            Заказать в один клик
-        </a>
 
         <ul class="order-main__list">
             @foreach($basket->recipes->keyBy('position') as $key => $recipe)
