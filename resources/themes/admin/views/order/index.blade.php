@@ -2,9 +2,9 @@
 
 @section('content')
 
-    @if (empty($history))
-        @include('order.partials.summary_table')
-    @endif
+    {{--@if (empty($history))--}}
+        {{--@include('order.partials.summary_table')--}}
+    {{--@endif--}}
 
     <div class="row">
         <div class="col-lg-12">
@@ -30,7 +30,12 @@
                             ])
                             ->addFoot([
                                 ['attr' => ['colspan' => 7]],
-                                ['text' => Form::text('datatable_filters[delivery_date_from]', '', ['class' => 'form-control input-sm datatable-filter datatable-date-filter inputmask-birthday datepicker-birthday', 'placeholder' => trans('labels.from')]).' - '.Form::text('datatable_filters[delivery_date_to]', '', ['class' => 'form-control input-sm datatable-filter datatable-date-filter inputmask-birthday datepicker-birthday', 'placeholder' => trans('labels.to')])],
+                                ['text' => '<div class="btn btn-flat btn-default no-margin btn-sm week-pagination prev-week"><i class="fa fa-angle-double-left" aria-hidden="true"></i></div> '.
+                                    Form::text('datatable_filters[week]', active_week()->weekOfYear, ['class' => 'form-control input-sm datatable-filter datatable-date-filter datatable-week-filter inputmask-week', 'placeholder' => trans('labels.week'), 'data-current' => active_week()->weekOfYear]).' '.
+                                    Form::text('datatable_filters[year]', active_week()->year, ['class' => 'form-control input-sm datatable-filter datatable-date-filter datatable-year-filter inputmask-year', 'placeholder' => trans('labels.year'), 'data-current' => active_week()->year]).' '.
+                                    '<div class="btn btn-flat btn-default no-margin btn-sm week-pagination next-week"><i class="fa fa-angle-double-right" aria-hidden="true"></i></div> '.
+                                    '<div class="btn btn-flat btn-default no-margin btn-sm current-week pull-right" title="'.trans('labels.current_week').'"><i class="fa fa-clock-o" aria-hidden="true"></i></div>'
+                                ],
                                 ['attr' => ['colspan' => 1]],
                             ])
                              ->make()

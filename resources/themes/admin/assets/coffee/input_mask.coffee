@@ -23,5 +23,15 @@ window.initInputMask = () ->
     $(this).inputmask
       mask: '99:99'
 
+  $(".inputmask-week").each () ->
+    $(this).inputmask
+      mask: '99'
+      placeholder: ''
+
+  $(".inputmask-year").each () ->
+    $(this).inputmask
+      mask: '9999'
+      placeholder: ''
+
 $(document).on "ready", () ->
   initInputMask()

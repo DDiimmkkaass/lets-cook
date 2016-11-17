@@ -233,6 +233,59 @@ $(document).on "ready", () ->
 
     return false;
 
+  #week filter
+  $(document).on "click", ".week-pagination", () ->
+    $week = $('.datatable-week-filter')
+    $year = $('.datatable-year-filter')
+
+    week = parseInt $week.val()
+    year = parseInt $year.val()
+
+    _year = year
+
+    if ($(this).hasClass('prev-week'))
+      _week = week - 1
+    else
+      _week = week + 1
+
+    if _week <= 0
+      _week = 52
+      _year = year - 1
+
+    if _week > 52
+      _week = 1
+      _year = year + 1
+
+    if isNaN(_week)
+      if ($(this).hasClass('prev-week'))
+        _year = year - 1
+      else
+        _year = year + 1
+
+    if _year != year
+      $year.val(_year)
+
+    $week.val(_week).trigger('change')
+
+  $(document).on "click", ".current-week", () ->
+    $week = $('.datatable-week-filter')
+    $year = $('.datatable-year-filter')
+
+    current_week = parseInt $week.data('current')
+
+    if current_week != parseInt($week.val())
+      $week.val(current_week)
+      $year.val(parseInt($year.data('current')))
+
+      $week.trigger('change')
+
+    current_year = parseInt $year.data('current')
+
+    if current_year != parseInt($year.val())
+      $year.val(current_year)
+
+      $year.trigger('change')
+
   if $('.order-weekly-menu-select').val()
     Order.getWeeklyMenuBaskets($('.order-weekly-menu-select'))
   else

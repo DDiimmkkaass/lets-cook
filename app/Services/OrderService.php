@@ -43,7 +43,7 @@ class OrderService
      */
     public function tableIndex(Request $request)
     {
-        $table = $this->table($request, ['changed', 'paid', 'processed', 'tmpl']);
+        $table = $this->table($request, $this->_getActiveStatuses());
         
         return $table->make();
     }
@@ -55,7 +55,7 @@ class OrderService
      */
     public function tableHistory(Request $request)
     {
-        $table = $this->table($request, ['deleted', 'archived']);
+        $table = $this->table($request, $this->_getClosedStatuses());
         
         return $table->make();
     }
@@ -68,7 +68,14 @@ class OrderService
      */
     public function table(Request $request, $statuses)
     {
-        $list = Order::with('user', 'user.subscribe', 'user.subscribe.basket', 'main_basket', 'additional_baskets', 'coupon')
+        $list = Order::with(
+            'user',
+            'user.subscribe',
+            'user.subscribe.basket',
+            'main_basket',
+            'additional_baskets',
+            'coupon'
+        )
             ->select(
                 'id',
                 'full_name',
@@ -92,8 +99,6 @@ class OrderService
         $this->_implodeFilters($list, $request);
         
         return $dataTables = Datatables::of($list)
-            ->filterColumn('id', 'where', 'orders.id', '=', '$1')
-            ->filterColumn('full_name', 'where', 'orders.full_name', 'LIKE', '%$1%')
             ->editColumn(
                 'full_name',
                 function ($model) {
@@ -195,24 +200,48 @@ class OrderService
         $filters = $request->get('datatable_filters');
         
         if (count($filters)) {
+            $year = empty($filters['year']) ? active_week()->year : $filters['year'];
+            
+            if (!empty($filters['week'])) {
+                unset($filters['year']);
+            }
+            
             foreach ($filters as $filter => $value) {
                 if ($value !== '' && $value !== 'null') {
                     switch ($filter) {
-                        case 'delivery_date_from':
-                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
-                                $value = Carbon::createFromFormat('d-m-Y', $value)->startOfDay()->format('Y-m-d H:i:s');
-                                $list->where('orders.delivery_date', '>=', $value);
+                        case 'week':
+                            if (preg_match('/^[\d]{1,2}$/', $value)) {
+                                $dt = Carbon::create($year, 1, 1, 0, 0, 0)->addWeek($value - 1);
+                                
+                                $start_delivery_date = clone ($dt->endOfWeek()->startOfDay());
+                                $end_delivery_date = clone ($dt->endOfWeek()->addDay()->startOfDay());
+                                
+                                $list->where('orders.delivery_date', '>=', $start_delivery_date);
+                                $list->where('orders.delivery_date', '<=', $end_delivery_date);
                             }
                             break;
-                        case 'delivery_date_to':
-                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
-                                $value = Carbon::createFromFormat('d-m-Y', $value)->endOfDay()->format('Y-m-d H:i:s');
-                                $list->where('orders.delivery_date', '<=', $value);
+                        case 'year':
+                            if (preg_match('/^[\d]{4}$/', $value)) {
+                                $dt = Carbon::create($year, 1, 1, 0, 0, 0);
+            
+                                $start_delivery_date = clone ($dt->startOfDay());
+                                $end_delivery_date = clone ($dt->endOfYear()->endOfDay());
+            
+                                $list->where('orders.delivery_date', '>=', $start_delivery_date);
+                                $list->where('orders.delivery_date', '<=', $end_delivery_date);
                             }
                             break;
                     }
                 }
             }
+        } else {
+            $dt = Carbon::create(active_week()->year, 1, 1, 0, 0, 0)->addWeek(active_week()->weekOfYear - 1);
+    
+            $start_delivery_date = clone ($dt->endOfWeek()->startOfDay());
+            $end_delivery_date = clone ($dt->endOfWeek()->addDay()->startOfDay());
+    
+            $list->where('orders.delivery_date', '>=', $start_delivery_date);
+            $list->where('orders.delivery_date', '<=', $end_delivery_date);
         }
     }
     
@@ -920,5 +949,21 @@ class OrderService
                 }
             )
             ->first();
+    }
+    
+    /**
+     * @return array
+     */
+    private function _getActiveStatuses()
+    {
+        return ['changed', 'paid', 'processed', 'tmpl'];
+    }
+    
+    /**
+     * @return array
+     */
+    private function _getClosedStatuses()
+    {
+        return ['deleted', 'archived'];
     }
 }
