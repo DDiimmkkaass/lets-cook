@@ -12,7 +12,7 @@
             </h2>
 
             <div class="make-order--desktop">
-                <a href="{!! localize_route('baskets.index', 'current') !!}" class="choose-basket green-long-button">
+                <a href="#" class="choose-basket go-to-choose-basket green-long-button">
                     @lang('front_labels.select_basket')
                 </a>
 
