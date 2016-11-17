@@ -16,7 +16,7 @@
                 <input type="submit" name="sign-in__submit" class="black-long-button" value="Войти">
             </form>
 
-            @include('auth.partials.social_login')
+            {{--@include('auth.partials.social_login')--}}
 
             <a class="sign-in__restore-button">Забыли пароль?</a>
         </div>
