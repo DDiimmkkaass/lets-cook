@@ -407,7 +407,7 @@
                 </li>
             @endif
 
-            @if ($user->hasAccess('group') || $user->hasAccess('user.read'))
+            @if ($user->hasAccess('group') || $user->hasAccess('user.read') || $user->hasAccess('subscribe.read'))
                 <li class="header">@lang('labels.users')</li>
             @endif
             @if ($user->hasAccess('user.read'))
@@ -422,6 +422,14 @@
                                 <i class="fa fa-plus"></i>
                             </small>
                         @endif
+                    </a>
+                </li>
+            @endif
+            @if ($user->hasAccess('subscribe.read'))
+                <li class="{!! active_class('admin.subscribe.index*') !!}">
+                    <a href="{!! route('admin.subscribe.index') !!}">
+                        <i class="fa fa-envelope"></i>
+                        <span>@lang('labels.subscribes')</span>
                     </a>
                 </li>
             @endif

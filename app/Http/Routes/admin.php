@@ -562,7 +562,7 @@ $router->group(
                                 'uses' => 'Backend\PackagingController@download',
                             ]
                         );
-    
+                        
                         $router->post(
                             'update_booklet',
                             [
@@ -583,6 +583,16 @@ $router->group(
                     ]
                 );
                 $router->resource('tag_category', 'Backend\TagCategoryController');
+                
+                //subscribes
+                $router->get(
+                    'subscribe',
+                    ['as' => 'admin.subscribe.index', 'uses' => 'Backend\SubscribeController@index']
+                );
+                $router->get(
+                    'subscribe/export',
+                    ['as' => 'admin.subscribe.export', 'uses' => 'Backend\SubscribeController@export']
+                );
             }
         );
         

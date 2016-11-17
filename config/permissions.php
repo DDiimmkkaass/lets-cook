@@ -164,7 +164,10 @@ return array (
     'user.write',
     'user.delete',
     'user.group.write',
-
+    
+    'subscribe.read',
+    'subscribe.export',
+    
     'group.create',
     'group.read',
     'group.write',

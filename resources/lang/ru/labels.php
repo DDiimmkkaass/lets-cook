@@ -672,4 +672,8 @@ return array (
   'tab_coupons' => 'Купоны',
   'activation' => 'Активация',
   'activate' => 'Активировать',
+  'export_in_csv' => 'Выгрузить в .csv',
+  'subscribes_export_file_name' => 'Выгрузка_подписчиков',
+  'subscribes' => 'Подписка',
+  'subscribes_list' => 'Список подписок',
 );
