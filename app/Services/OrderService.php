@@ -334,8 +334,10 @@ class OrderService
         $data['user_id'] = $user->id;
         $data['full_name'] = $user->getFullName();
         $data['email'] = $user->email;
-        $data['phone'] = $user->phone;
-        $data['additional_phone'] = $user->additional_phone;
+        $data['phone'] = empty($user->phone) ? $request->get('phone') : $user->phone;
+        $data['additional_phone'] = empty($user->additional_phone) ?
+            $request->get('additional_phone') :
+            $user->additional_phone;
         
         $data['basket_id'] = $request->get('basket_id');
         

@@ -103,6 +103,14 @@ class User extends SentryUser implements FrontLink
     }
     
     /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function socials()
+    {
+        return $this->hasMany(UserSocial::class);
+    }
+    
+    /**
      * @param $query
      */
     public function scopeJoinInfo($query)

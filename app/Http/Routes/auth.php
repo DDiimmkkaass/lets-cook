@@ -13,7 +13,7 @@ $router->group(
                     'logout',
                     ['as' => 'auth.logout', 'uses' => 'Frontend\AuthController@getLogout']
                 );
-
+                
                 $router->group(
                     ['middleware' => 'guest'],
                     function () use ($router) {
@@ -29,20 +29,25 @@ $router->group(
                             'login',
                             ['as' => 'auth.login.post', 'uses' => 'Frontend\AuthController@postLogin']
                         );
-
+                        
                         $router->get(
                             'activate/{email}/{code}',
                             ['as' => 'auth.activate', 'uses' => 'Frontend\AuthController@getActivate']
                         );
-
+                        
                         $router->post(
                             'restore',
                             ['as' => 'auth.restore.post', 'uses' => 'Frontend\AuthController@postRestore']
                         );
-
+                        
                         $router->get(
                             'reset/{email}/{token}',
                             ['as' => 'auth.reset', 'uses' => 'Frontend\AuthController@getReset']
+                        );
+                        
+                        $router->get(
+                            'social/{provider}',
+                            ['as' => 'auth.social', 'uses' => 'Frontend\AuthController@social']
                         );
                     }
                 );

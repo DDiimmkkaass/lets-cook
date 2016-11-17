@@ -8,7 +8,7 @@
 
 namespace App\Listeners\Events\Frontend;
 
-use App\Events\Frontend\UserRegister;
+use App\Events\Event;
 use App\Services\CouponService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -20,7 +20,7 @@ use Mail;
  */
 class GiveRegistrationCoupon implements ShouldQueue
 {
-
+    
     use InteractsWithQueue;
     
     /**
@@ -37,13 +37,13 @@ class GiveRegistrationCoupon implements ShouldQueue
     {
         $this->couponService = $couponService;
     }
-
+    
     /**
      * Handle the event.
      *
-     * @param \App\Events\FrontEnd\UserRegister $event
+     * @param \App\Events\Event $event
      */
-    public function handle(UserRegister $event)
+    public function handle(Event $event)
     {
         if (variable('registration_coupon_discount')) {
             $coupon = $this->couponService->giveRegistrationCoupon($event->user);

@@ -299,7 +299,7 @@ class CouponService
             [
                 'type'          => Coupon::getTypeIdByName('all'),
                 'name'          => trans('front_labels.registration_coupon'),
-                'description'   => trans('front_texts.registration_coupon_description'),
+                'description'   => trans('front_texts.registration coupon description'),
                 'discount'      => (int) variable('registration_coupon_discount'),
                 'discount_type' => Coupon::getDiscountTypeIdByName('percentage'),
                 'count'         => 1,

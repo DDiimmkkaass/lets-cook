@@ -9,8 +9,12 @@
 namespace App\Services;
 
 use App\Events\Frontend\UserQuickRegister;
+use App\Events\Frontend\UserSocialRegister;
 use App\Http\Requests\Frontend\Auth\UserRegisterRequest;
+use App\Models\City;
+use App\Models\User;
 use App\Models\UserInfo;
+use App\Models\UserSocial;
 use Cartalyst\Sentry\Users\UserInterface;
 use Request;
 use Sentry;
@@ -88,6 +92,44 @@ class AuthService
     }
     
     /**
+     * @param array $profile
+     *
+     * @return User
+     */
+    public function registerFromSocialProfile($profile)
+    {
+        $social = new UserSocial(
+            [
+                'provider'    => $profile['provider'],
+                'external_id' => $profile['id'],
+                'token'       => $profile['token'],
+                'profile_url' => $profile['url'],
+            ]
+        );
+        
+        if (Sentry::check()) {
+            $user = Sentry::getUser();
+        } else {
+            $user = User::whereEmail($profile['email'])->first();
+            
+            if (!$user) {
+                $input = $this->_prepareSocialRegisterInput($profile);
+                
+                $user = $this->register($input);
+                
+                $user->activated = true;
+                $user->save();
+                
+                event(new UserSocialRegister($user, $input));
+            }
+        }
+        
+        $user->socials()->save($social);
+        
+        return $user;
+    }
+    
+    /**
      * @param UserRegisterRequest $request
      *
      * @return array
@@ -113,5 +155,29 @@ class AuthService
         $user_info = new UserInfo($input);
         
         $user->info()->save($user_info);
+    }
+    
+    /**
+     * @param array $input
+     *
+     * @return array mixed
+     */
+    private function _prepareSocialRegisterInput($input)
+    {
+        $city = City::whereName($input['city'])->first();
+        if (!$city) {
+            $city = City::create(['name' => $input['city']]);
+        }
+        $input['city_id'] = $city->id;
+        $input['city_name'] = null;
+        
+        $input['password'] = str_random(config('auth.passwords.min_length'));
+        
+        $input['address'] = null;
+        $input['comment'] = null;
+        
+        $input['ip_address'] = Request::getClientIp();
+        
+        return $input;
     }
 }

@@ -209,6 +209,7 @@ return [
         App\Providers\VariableServiceProvider::class,
         App\Providers\ViewComposerServiceProvider::class,
         App\Providers\GuzzleServiceProvider::class,
+        Artdarek\OAuth\OAuthServiceProvider::class,
     ],
     
     /*
@@ -279,7 +280,7 @@ return [
         'Excel'               => Maatwebsite\Excel\Facades\Excel::class,
         'YandexKassa'         => Artem328\LaravelYandexKassa\Facades\YandexKassa::class,
         'Guzzle'              => App\Facades\Guzzle::class,
-        'TranslationCache'    => \Waavi\Translation\Facades\TranslationCache::class,
+        'OAuth'               => Artdarek\OAuth\Facade\OAuth::class,
     
     ],
 

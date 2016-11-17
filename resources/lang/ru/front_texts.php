@@ -4,7 +4,6 @@ return array (
   'home top text 1' => 'Сервис доставки качественных продуктов на дом',
   'home top text 2' => 'просто и вкусно',
   'registration coupon description' => 'Купон на скидку при регистрации',
-  'registration_coupon_description' => 'Купон на скидку при регистрации',
   'video on home title' => 'Основатель о том, как работает сервис',
   'delivery text title' => 'доставка бесплатно',
   'delivery text subtitle' => 'c воскресенья по понедельник, и до 12 км от МКАД',

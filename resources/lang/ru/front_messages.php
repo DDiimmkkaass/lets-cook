@@ -73,4 +73,6 @@ return array(
     'time of this coupon out' => 'Время действия этого купона уже завершилось',
     'order not found' => 'Заказ не найден',
     'you can not cancel payed or processed orders' => 'Вы не можете отменить оплаченный заказ или заказ в обработке',
+    'unknown social network' => 'Данная соц. сеть не поддрежываеться',
+    'you must allow access to your email' => 'Для логина с помощью соц. сети Вы должны разрешыть доступ к Вашему e-mail',
 );

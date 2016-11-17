@@ -3,6 +3,7 @@
 use App\Events\Frontend\UserRegister;
 use App\Http\Requests\Frontend\Auth\UserRegisterRequest;
 use App\Models\User;
+use App\Models\UserSocial;
 use App\Services\AuthService;
 use App\Services\UserService;
 use App\Traits\Controllers\SaveImageTrait;
@@ -113,6 +114,55 @@ class AuthController extends FrontendController
     }
     
     /**
+     * @param string                   $provider_name
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Redirect
+     */
+    public function social($provider_name, Request $request)
+    {
+        $provider = '\App\Providers\Oauth\\'.studly_case($provider_name);
+        
+        if (!class_exists($provider)) {
+            FlashMessages::add('error', trans('front_messages.unknown social network'));
+            
+            return redirect()->home();
+        }
+        
+        $provider = new $provider;
+        
+        $code = $request->get('code');
+        
+        if (empty($code)) {
+            return redirect($provider->loginUrl(), 302);
+        }
+        
+        $profile = $provider->profile($code);
+        
+        if (empty($profile['email'])) {
+            FlashMessages::add('error', trans('front_messages.you must allow access to your email'));
+            
+            return redirect()->home();
+        }
+        
+        $social = UserSocial::whereProvider($provider_name)->whereExternalId($profile['id'])->first();
+        
+        if (!$social) {
+            $user = $this->authService->registerFromSocialProfile($profile);
+        } else {
+            $social->update(['token', $profile['token']]);
+    
+            $user = $social->user;
+        }
+        
+        Sentry::login($user);
+        
+        FlashMessages::add('success', trans('front_messages.you have successfully logged in'));
+        
+        return redirect()->to($this->getRedirectTo());
+    }
+    
+    /**
      * @return mixed
      */
     public function getLogout()
@@ -206,7 +256,7 @@ class AuthController extends FrontendController
         
         try {
             $user = Sentry::findUserByLogin($email);
-    
+            
             Mail::queue(
                 'emails.auth.restore',
                 ['email' => $email, 'token' => $user->getResetPasswordCode()],
@@ -215,7 +265,7 @@ class AuthController extends FrontendController
                         ->subject(trans('front_subjects.password_restore_subject'));
                 }
             );
-    
+            
             return [
                 'status'  => 'success',
                 'message' => trans('front_messages.password restore message'),
@@ -259,7 +309,7 @@ class AuthController extends FrontendController
                     );
                     
                     Sentry::login($user);
-    
+                    
                     session()->put('set_password', true);
                     
                     return redirect()->route('profiles.set.password');

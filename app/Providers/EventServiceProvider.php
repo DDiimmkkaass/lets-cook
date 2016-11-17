@@ -46,6 +46,11 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\Events\Frontend\AddToClientsGroup',
         ],
 
+        'App\Events\Frontend\UserSocialRegister' => [
+            'App\Listeners\Events\Frontend\GiveRegistrationCoupon',
+            'App\Listeners\Events\Frontend\AddToClientsGroup',
+        ],
+
         'App\Events\Frontend\NewOrder' => [
             'App\Listeners\Events\Frontend\SendUserEmailWithOrderInfo',
         ],
