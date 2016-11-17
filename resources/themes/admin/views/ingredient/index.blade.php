@@ -8,7 +8,10 @@
                 <div class="box-body">
                     <div class="ingredients-table">
                         {!!
-                            TablesBuilder::create(['id' => "datatable1", 'class' => "filtered-datatable table table-bordered table-striped table-hover"], ['bStateSave' => true])
+                            TablesBuilder::create(
+                                ['id' => "datatable1", 'class' => "filtered-datatable table table-bordered table-striped table-hover"],
+                                ['bStateSave' => true, 'order' => [[ 0, 'desc' ]]]
+                            )
                             ->addHead([
                                 ['text' => trans('labels.id')],
                                 ['text' => trans('labels.name')],

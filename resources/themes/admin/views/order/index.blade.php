@@ -15,7 +15,7 @@
                             TablesBuilder::create(
                                 ['id' => "datatable1", 'class' => "filtered-datatable table table-bordered table-striped table-hover"],
                                 ['bStateSave' => true, 'order' => empty($history) ? [[ 5, 'asc' ]] : [[ 0, 'desc' ]]]
-                                )
+                            )
                             ->addHead([
                                 ['text' => trans('labels.id')],
                                 ['attr' => ['class' => 'col-sm-2'], 'text' => trans('labels.user')],
