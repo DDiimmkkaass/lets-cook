@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use App\Contracts\MetaGettable;
 use App\Traits\Models\PositionSortedTrait;
 use App\Traits\Models\TaggableTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * Class Basket
  * @package App\Models
  */
-class Basket extends Model
+class Basket extends Model implements MetaGettable
 {
     
     use PositionSortedTrait;
@@ -29,6 +30,9 @@ class Basket extends Model
         'name',
         'description',
         'image',
+        'meta_title',
+        'meta_keywords',
+        'meta_description',
         'price',
         'prices',
         'places',
@@ -278,5 +282,47 @@ class Basket extends Model
                 return $key;
             }
         }
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaTitle()
+    {
+        return empty($this->meta_title) ? $this->getName() : $this->meta_title;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaDescription()
+    {
+        return empty($this->meta_description) ? $this->getDescription() : $this->meta_description;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaKeywords()
+    {
+        return empty($this->meta_keywords) ? $this->getName() : $this->meta_keywords;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getMetaImage()
+    {
+        $img = empty($this->image) ? config('seo.share.default_image') : $this->image;
+    
+        return $img ? url($img) : $img;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        //
     }
 }

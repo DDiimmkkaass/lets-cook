@@ -36,8 +36,6 @@ $router->get('recipes/{recipe_id}/show', ['as' => 'recipes.show', 'uses' => 'Fro
 // baskets
 $router->get('baskets/{week}', ['as' => 'baskets.index', 'uses' => 'Frontend\BasketController@index'])
     ->where('week', '(current|next)');
-$router->get('baskets/{id}', ['as' => 'baskets.show', 'uses' => 'Frontend\BasketController@show'])
-    ->where('id', '[0-9]+');
 
 // search
 $router->get('search', ['as' => 'search.index', 'uses' => 'Frontend\SearchController@index']);

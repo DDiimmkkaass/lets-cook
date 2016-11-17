@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Models\Article;
 use App\Services\ArticleService;
 use Illuminate\Http\Request;
+use Meta;
 
 /**
  * Class ArticleController
@@ -56,6 +57,8 @@ class ArticleController extends FrontendController
         
         $this->data('list', $list['articles']);
         $this->data('next_count', $list['next_count']);
+    
+        Meta::canonical(localize_route('articles.index'));
         
         return $this->render($this->module.'.index');
     }

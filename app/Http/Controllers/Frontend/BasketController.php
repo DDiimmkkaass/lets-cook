@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\WeeklyMenu;
 use App\Models\WeeklyMenuBasket;
+use Meta;
 
 /**
  * Class BasketController
@@ -46,6 +47,8 @@ class BasketController extends FrontendController
         }
         
         $this->data('baskets', isset($baskets) ? $baskets->sortBy('position') : collect());
+    
+        Meta::canonical(localize_route('baskets.index', $week));
         
         return $this->render($this->module.'.index');
     }

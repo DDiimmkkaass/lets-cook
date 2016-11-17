@@ -676,4 +676,5 @@ return array (
   'subscribes_export_file_name' => 'Выгрузка_подписчиков',
   'subscribes' => 'Подписка',
   'subscribes_list' => 'Список подписок',
+  'tab_meta' => 'Мета данные',
 );

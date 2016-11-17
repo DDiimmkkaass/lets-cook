@@ -9,6 +9,10 @@
                     <a aria-expanded="false" href="#general" data-toggle="tab">@lang('labels.tab_general')</a>
                 </li>
 
+                <li>
+                    <a aria-expanded="false" href="#meta" data-toggle="tab">@lang('labels.tab_meta')</a>
+                </li>
+
                 @if ($type == 'basic')
                     <li>
                         <a aria-expanded="false" href="#prices" data-toggle="tab">@lang('labels.tab_prices')</a>
@@ -33,6 +37,10 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="general">
                     @include('basket.tabs.general')
+                </div>
+
+                <div class="tab-pane" id="meta">
+                    @include('basket.tabs.meta')
                 </div>
 
                 @if ($type == 'basic')

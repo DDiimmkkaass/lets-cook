@@ -59,8 +59,6 @@ class FrontendController extends BaseController
         
         parent::__construct();
         
-        Meta::title(Config::get('app.name', ''));
-        
         if (Sentry::getUser()) {
             $this->user = User::with('info')->whereId(Sentry::getUser()->getId())->first();
         }
@@ -73,6 +71,8 @@ class FrontendController extends BaseController
         
         if (!request()->ajax()) {
             $this->home_page = Page::with('translations')->whereSlug('home')->first();
+    
+            $this->fillMeta($this->home_page, 'page');
         }
         
         $this->fillThemeData();

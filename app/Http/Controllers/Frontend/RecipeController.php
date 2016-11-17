@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Models\Recipe;
 use App\Services\RecipeService;
 use Illuminate\Http\Request;
+use Meta;
 
 /**
  * Class RecipeController
@@ -56,6 +57,8 @@ class RecipeController extends FrontendController
         
         $this->data('list', $list['recipes']);
         $this->data('next_count', $list['next_count']);
+    
+        Meta::canonical(localize_route('recipes.index'));
         
         return $this->render($this->module.'.index');
     }

@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Models\News;
 use App\Services\NewsService;
 use Illuminate\Http\Request;
+use Meta;
 
 /**
  * Class NewsController
@@ -56,7 +57,9 @@ class NewsController extends FrontendController
     
         $this->data('list', $list['blog']);
         $this->data('next_count', $list['next_count']);
-
+    
+        Meta::canonical(localize_route('blog.index'));
+        
         return $this->render($this->module.'.index');
     }
 

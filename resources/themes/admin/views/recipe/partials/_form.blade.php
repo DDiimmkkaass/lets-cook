@@ -26,6 +26,10 @@
                 </li>
 
                 <li>
+                    <a aria-expanded="false" href="#meta" data-toggle="tab">@lang('labels.tab_meta')</a>
+                </li>
+
+                <li>
                     <a aria-expanded="false" href="#files" data-toggle="tab">@lang('labels.tab_files')</a>
                 </li>
 
@@ -57,6 +61,10 @@
 
                 <div class="tab-pane" id="tags">
                     @include('recipe.tabs.tags')
+                </div>
+
+                <div class="tab-pane" id="meta">
+                    @include('recipe.tabs.meta')
                 </div>
 
                 <div class="tab-pane" id="files">

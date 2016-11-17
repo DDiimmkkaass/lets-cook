@@ -33,6 +33,9 @@ class Recipe extends Model implements FrontLink, MetaGettable
         'name',
         'image',
         'ingredients_image',
+        'meta_title',
+        'meta_keywords',
+        'meta_description',
         'recipe',
         'helpful_hints',
         'portions',
@@ -223,7 +226,7 @@ class Recipe extends Model implements FrontLink, MetaGettable
      */
     public function getMetaTitle()
     {
-        return $this->name;
+        return empty($this->meta_title) ? $this->name : $this->meta_title;
     }
     
     /**
@@ -231,7 +234,7 @@ class Recipe extends Model implements FrontLink, MetaGettable
      */
     public function getMetaDescription()
     {
-        return $this->name;
+        return empty($this->meta_description) ? str_limit($this->recipe, 250) : $this->meta_description;
     }
     
     /**
@@ -239,7 +242,7 @@ class Recipe extends Model implements FrontLink, MetaGettable
      */
     public function getMetaKeywords()
     {
-        return $this->name;
+        return empty($this->meta_keywords) ? $this->name : $this->meta_keywords;
     }
     
     /**

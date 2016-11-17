@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Models\Page;
 use App\Services\PageService;
 use JavaScript;
+use Meta;
 use Response;
 use View;
 
@@ -52,8 +53,6 @@ class PageController extends FrontendController
         
         $this->data('model', $this->home_page);
         
-        $this->fillMeta($this->home_page, $this->module);
-        
         return $this->render($this->module.'.templates.'.$this->home_page->template);
     }
     
@@ -86,6 +85,8 @@ class PageController extends FrontendController
     public function contacts()
     {
         JavaScript::put(['map_lat' => variable('map_marker_latitude'), 'map_lng' => variable('map_marker_longitude')]);
+    
+        Meta::canonical(localize_route('contacts'));
         
         return $this->render('page.contacts');
     }

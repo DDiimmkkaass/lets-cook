@@ -125,6 +125,8 @@ class OrderController extends FrontendController
         
         $this->_fillAdditionalTemplateData($basket->year, $basket->week);
         
+        $this->fillMeta($basket, $this->module);
+        
         return $this->render($this->module.'.index');
     }
     
@@ -163,6 +165,8 @@ class OrderController extends FrontendController
         $this->data('selected_baskets', $repeat_order->additional_baskets);
         
         $this->_fillAdditionalTemplateData($basket->year, $basket->week);
+    
+        $this->fillMeta($basket, $this->module);
         
         return $this->render($this->module.'.index');
     }

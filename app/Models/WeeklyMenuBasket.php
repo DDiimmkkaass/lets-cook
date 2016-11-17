@@ -266,7 +266,7 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
      */
     public function getMetaTitle()
     {
-        return $this->getName();
+        return $this->basket->getMetaTitle();
     }
     
     /**
@@ -274,7 +274,7 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
      */
     public function getMetaDescription()
     {
-        return empty($this->getDescription()) ? $this->getName() : $this->getDescription();
+        return $this->basket->getMetaDescription();
     }
     
     /**
@@ -282,7 +282,7 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
      */
     public function getMetaKeywords()
     {
-        return $this->getName();
+        return $this->basket->getMetaKeywords();
     }
     
     /**
@@ -290,8 +290,6 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
      */
     public function getMetaImage()
     {
-        $img = empty($this->getImage()) ? config('seo.share.default_image') : $this->getImage();
-        
-        return $img ? url($img) : $img;
+        return $this->basket->getMetaImage();
     }
 }
