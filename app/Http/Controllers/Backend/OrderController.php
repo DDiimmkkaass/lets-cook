@@ -642,7 +642,22 @@ class OrderController extends BackendController
      */
     private function _fillAdditionalTemplateData(Order $model)
     {
-        $this->data('users', User::active()->orWhere('id', '=', $model->user_id)->get());
+        $this->data('users', User::joinInfo()->active()
+            ->orWhere('users.id', '=', $model->user_id)
+            ->orderBy('user_info.full_name')
+            ->get([
+                'users.id',
+                'users.email',
+                'user_info.user_id',
+                'user_info.full_name',
+                'user_info.phone',
+                'user_info.additional_phone',
+                'user_info.city_id',
+                'user_info.city_name',
+                'user_info.address',
+                'user_info.comment',
+            ])
+        );
         
         $payment_methods = [];
         foreach (Order::getPaymentMethods() as $id => $payment_method) {
@@ -663,7 +678,7 @@ class OrderController extends BackendController
         $this->data('delivery_times', $delivery_times);
         
         $cities = ['' => trans('labels.another')];
-        foreach (City::positionSorted()->get() as $city) {
+        foreach (City::positionSorted()->nameSorted()->get() as $city) {
             $cities[$city->id] = $city->name;
         }
         $this->data('cities', $cities);
