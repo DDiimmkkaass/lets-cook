@@ -539,7 +539,7 @@ class UserController extends BackendController
         $this->data('genders', $genders);
         
         $cities = ['' => trans('labels.another')];
-        foreach (City::positionSorted()->get() as $city) {
+        foreach (City::positionSorted()->nameSorted()->get() as $city) {
             $cities[$city->id] = $city->name;
         }
         $this->data('cities', $cities);
