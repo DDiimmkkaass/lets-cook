@@ -141,10 +141,10 @@
             <tr style="height: 30px;">
                 <td colspan="6"></td>
                 <td colspan="3" style="text-align: right; color: #ff0000; font-size: 17px; border: 1px solid #000000">
-                    @lang('labels.cash_total'): {!! $total !!} {!! $currency !!}
+                    @lang('labels.cash_total'):
                 </td>
                 <td style="text-align: right; color: #ff0000; font-size: 17px; border: 1px solid #000000">
-                    @lang('labels.cash_total'): {!! $total !!} {!! $currency !!}
+                    {!! $total !!} {!! $currency !!}
                 </td>
             </tr>
 
