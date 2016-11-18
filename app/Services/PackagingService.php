@@ -167,7 +167,7 @@ class PackagingService
                 }
             } else {
                 $recipe_id = $binds[$recipe['bind_id']];
-    
+                
                 if (!isset($baskets[$recipe['basket_id']][$recipe_id])) {
                     $baskets[$recipe['basket_id']][$recipe_id] = [
                         'name'          => str_limit($recipe['name'], mb_strlen($recipe['name']) - 2, '.pdf'),
@@ -426,7 +426,26 @@ class PackagingService
                 $excel->sheet(
                     trans('labels.deliveries'),
                     function ($sheet) use ($data) {
-                        $sheet->loadView('views.packaging.download.deliveries')->with('list', $data);
+                        $formula = [];
+    
+                        $rows = 0;
+                        $start = 3;
+                        foreach ($data as $day => $orders) {
+                            $orders_count = count($orders);
+                            
+                            $rows += $orders_count + 5;
+                            $end = $start + $orders_count - 1;
+                            
+                            $formula[] = 'SUM(I'.$start.':I'.$end.')';
+    
+                            $start = $end + 6;
+                        }
+                        
+                        $formula = '=('.implode('+', $formula).')';
+                        
+                        $sheet->loadView('views.packaging.download.deliveries')
+                            ->with('list', $data)
+                            ->setCellValue('I'.(7 + $rows), $formula);
                     }
                 );
             }

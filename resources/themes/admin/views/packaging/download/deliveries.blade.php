@@ -4,7 +4,6 @@
     <div class="box-body table-responsive no-padding">
         <table class="table table-bordered deliveries-packaging">
             <tbody>
-            @php($total = 0)
             @foreach($list as $day => $orders)
                 <tr style="height: 25px;">
                     <th style="background-color: #3a9a18; height: 20px; vertical-align: bottom" colspan="8">{!! $day !!}
@@ -49,19 +48,19 @@
 
                 @php($i = 1)
                 @foreach($orders as $order)
-                    @php($heigth = 15)
+                    @php($height = 15)
                     @php($baskets = '<div>'.$order->main_basket->getName().'</div>')
                     @if ($order->additional_baskets->count())
                         @foreach($order->additional_baskets as $basket)
                             @php($baskets .= '<br><div>'.$basket->getName().',</div>')
-                            @php($heigth += 15)
+                            @php($height += 15)
                         @endforeach
                     @endif
 
-                    @php($heigth = max($heigth, 30))
+                    @php($height = max($height, 30))
 
                     @php($background = $i % 2 == 0 ? ' background-color: #dddddd; ' : '')
-                    <tr style="height: {!! $heigth !!}px">
+                    <tr style="height: {!! $height !!}px">
                         <td style="text-align: center; {!! $background !!}">
                             {!! $i !!}
                         </td>
@@ -90,9 +89,7 @@
                         </td>
                         <td style="width: 15px; text-align: center; color: #ff0000; {!! $background !!}">
                             @if ($order->paymentMethod('cash'))
-                                {!! $order->total !!} {!! $currency !!}
-
-                                @php($total += $order->total)
+                                {!! $order->total !!}
                             @endif
                         </td>
                         <td style="width: 15px; {!! $background !!}">
@@ -140,11 +137,12 @@
 
             <tr style="height: 30px;">
                 <td colspan="6"></td>
-                <td colspan="3" style="text-align: right; color: #ff0000; font-size: 17px; border: 1px solid #000000">
+                <td colspan="2" style="text-align: right; color: #ff0000; font-size: 17px; border: 1px solid #000000;">
                     @lang('labels.cash_total'):
                 </td>
-                <td style="text-align: right; color: #ff0000; font-size: 17px; border: 1px solid #000000">
-                    {!! $total !!} {!! $currency !!}
+                <td style="text-align: right; color: #ff0000; font-size: 17px; border: 1px solid #000000"></td>
+                <td style="text-align: left; color: #ff0000; font-size: 17px; border: 1px solid #000000">
+                    {!! $currency !!}
                 </td>
             </tr>
 
