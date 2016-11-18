@@ -213,7 +213,10 @@ class PurchaseService
                     get_excel_sheet_name($data['sheet_name']),
                     function ($sheet) use ($data) {
                         $sheet->loadView('views.purchase.partials.'.$data['view'])
-                            ->with($data);
+                            ->with($data)
+                            ->setOrientation('landscape')
+                            ->getStyle('A1:Z'.$sheet->getHighestRow())
+                            ->getAlignment()->setWrapText(true);
                     }
                 );
             }

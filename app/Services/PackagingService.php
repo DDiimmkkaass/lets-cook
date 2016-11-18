@@ -302,7 +302,11 @@ class PackagingService
                 $excel->sheet(
                     trans('labels.ingredients_which_need_repackaging'),
                     function ($sheet) use ($data) {
-                        $sheet->loadView('views.packaging.download.repackaging')->with('list', $data);
+                        $sheet->loadView('views.packaging.download.repackaging')
+                            ->with('list', $data)
+                            ->setOrientation('landscape')
+                            ->getStyle('A1:Z'.$sheet->getHighestRow())
+                            ->getAlignment()->setWrapText(true);
                     }
                 );
             }
@@ -329,7 +333,11 @@ class PackagingService
                     $excel->sheet(
                         $sheet,
                         function ($sheet) use ($recipe) {
-                            $sheet->loadView('views.packaging.download.recipes')->with('recipe', $recipe);
+                            $sheet->loadView('views.packaging.download.recipes')
+                                ->with('recipe', $recipe)
+                                ->setOrientation('landscape')
+                                ->getStyle('A1:Z'.$sheet->getHighestRow())
+                            ->getAlignment()->setWrapText(true);
                         }
                     );
                 }
@@ -353,7 +361,11 @@ class PackagingService
                 $excel->sheet(
                     trans('labels.stickers'),
                     function ($sheet) use ($list) {
-                        $sheet->loadView('views.packaging.download.stickers')->with('list', $list);
+                        $sheet->loadView('views.packaging.download.stickers')
+                            ->with('list', $list)
+                            ->setOrientation('landscape')
+                            ->getStyle('A1:Z'.$sheet->getHighestRow())
+                            ->getAlignment()->setWrapText(true);
                     }
                 );
             }
@@ -380,7 +392,10 @@ class PackagingService
                     function ($sheet) use ($list, $booklet) {
                         $sheet->loadView('views.packaging.download.booklet')
                             ->with('list', $list)
-                            ->with('booklet', $booklet);
+                            ->with('booklet', $booklet)
+                            ->setOrientation('landscape')
+                            ->getStyle('A1:Z'.$sheet->getHighestRow())
+                            ->getAlignment()->setWrapText(true);
                     }
                 );
             }
@@ -403,7 +418,11 @@ class PackagingService
                 $excel->sheet(
                     trans('labels.users'),
                     function ($sheet) use ($data) {
-                        $sheet->loadView('views.packaging.download.users')->with('list', $data);
+                        $sheet->loadView('views.packaging.download.users')
+                            ->with('list', $data)
+                            ->setOrientation('landscape')
+                            ->getStyle('A1:Z'.$sheet->getHighestRow())
+                            ->getAlignment()->setWrapText(true);
                     }
                 );
             }
@@ -427,7 +446,7 @@ class PackagingService
                     trans('labels.deliveries'),
                     function ($sheet) use ($data) {
                         $formula = [];
-    
+                        
                         $rows = 0;
                         $start = 3;
                         foreach ($data as $day => $orders) {
@@ -437,7 +456,7 @@ class PackagingService
                             $end = $start + $orders_count - 1;
                             
                             $formula[] = 'SUM(I'.$start.':I'.$end.')';
-    
+                            
                             $start = $end + 6;
                         }
                         
@@ -445,7 +464,10 @@ class PackagingService
                         
                         $sheet->loadView('views.packaging.download.deliveries')
                             ->with('list', $data)
-                            ->setCellValue('I'.(7 + $rows), $formula);
+                            ->setCellValue('I'.(7 + $rows), $formula)
+                            ->setOrientation('landscape')
+                            ->getStyle('A1:Z'.$sheet->getHighestRow())
+                            ->getAlignment()->setWrapText(true);
                     }
                 );
             }

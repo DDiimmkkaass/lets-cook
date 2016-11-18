@@ -4,7 +4,7 @@
     <table class="table table-bordered recipes-packaging">
         <tbody>
 
-        <tr style="background-color: #cccccc">
+        <tr style="background-color: #cccccc; height: 30px;">
             <th colspan="2">
                 <h4>
                     {!! $recipe['name'] !!}

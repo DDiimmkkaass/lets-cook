@@ -7,7 +7,7 @@
     <table>
         <tbody>
 
-        <tr>
+        <tr style="height: 30px">
             <td colspan="7">
                 <h3 style="background: #92D050; text-align: center; display: block">
                     <b>
