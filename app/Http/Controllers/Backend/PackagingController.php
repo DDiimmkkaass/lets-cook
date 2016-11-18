@@ -225,6 +225,11 @@ class PackagingController extends BackendController
             
             return $this->packagingService->{'download'.studly_case($tab)}($year, $week);
         } catch (Exception $e) {
+            admin_notify(
+                'message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile(),
+                [$tab, $year, $week]
+            );
+            
             FlashMessages::add('error', trans('messages.an error has occurred, please reload the page and try again'));
             
             return redirect()->route('admin.'.$this->module.'.show', [$year, $week]);
