@@ -31,7 +31,7 @@
                         @lang('labels.phone')
                     </th>
                     <th>
-                        @lang('labels.comment')
+                        @lang('labels.order_comments')
                     </th>
                     <th>
                         @lang('labels.baskets')
@@ -140,7 +140,10 @@
 
             <tr style="height: 30px;">
                 <td colspan="6"></td>
-                <td colspan="4" style="text-align: right; color: #ff0000; font-size: 17px; border: 1px solid #000000">
+                <td colspan="3" style="text-align: right; color: #ff0000; font-size: 17px; border: 1px solid #000000">
+                    @lang('labels.cash_total'): {!! $total !!} {!! $currency !!}
+                </td>
+                <td style="text-align: right; color: #ff0000; font-size: 17px; border: 1px solid #000000">
                     @lang('labels.cash_total'): {!! $total !!} {!! $currency !!}
                 </td>
             </tr>

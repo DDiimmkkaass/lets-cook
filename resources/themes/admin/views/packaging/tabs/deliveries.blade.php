@@ -34,7 +34,7 @@
                         @lang('labels.phone')
                     </th>
                     <th class="col-sm-2">
-                        @lang('labels.comment')
+                        @lang('labels.order_comments')
                     </th>
                     <th class="col-sm-2">
                         @lang('labels.baskets')
