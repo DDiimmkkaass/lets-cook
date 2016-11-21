@@ -287,16 +287,17 @@ class PackagingService
     }
     
     /**
-     * @param int $year
-     * @param int $week
+     * @param int  $year
+     * @param int  $week
+     * @param bool $download
      *
-     * @return mixed
+     * @return mixed|string
      */
-    public function downloadRepackaging($year, $week)
+    public function downloadRepackaging($year, $week, $download = true)
     {
         $data = $this->repackagingForWeek($year, $week);
         
-        return Excel::create(
+        $excel = Excel::create(
             $this->_getFileName($year, $week, 'repackaging'),
             function ($excel) use ($data, $year, $week) {
                 $excel->sheet(
@@ -310,20 +311,27 @@ class PackagingService
                     }
                 );
             }
-        )->download('xls');
+        );
+        
+        $excel->store('xls', false, true);
+        
+        return $download ?
+            $excel->download() :
+            config('excel.export.store.path').'/'.$excel->getFileName().'.'.$excel->ext;
     }
     
     /**
-     * @param int $year
-     * @param int $week
+     * @param int  $year
+     * @param int  $week
+     * @param bool $download
      *
-     * @return mixed
+     * @return mixed|string
      */
-    public function downloadRecipes($year, $week)
+    public function downloadRecipes($year, $week, $download = true)
     {
         $data = $this->recipesForWeek($year, $week);
         
-        return Excel::create(
+        $excel = Excel::create(
             $this->_getFileName($year, $week, 'packaging_recipes'),
             function ($excel) use ($data, $year, $week) {
                 foreach ($data as $recipe) {
@@ -337,25 +345,32 @@ class PackagingService
                                 ->with('recipe', $recipe)
                                 ->setOrientation('landscape')
                                 ->getStyle('A1:Z'.$sheet->getHighestRow())
-                            ->getAlignment()->setWrapText(true);
+                                ->getAlignment()->setWrapText(true);
                         }
                     );
                 }
             }
-        )->download('xls');
+        );
+        
+        $excel->store('xls', false, true);
+        
+        return $download ?
+            $excel->download() :
+            config('excel.export.store.path').'/'.$excel->getFileName().'.'.$excel->ext;
     }
     
     /**
-     * @param int $year
-     * @param int $week
+     * @param int  $year
+     * @param int  $week
+     * @param bool $download
      *
-     * @return mixed
+     * @return mixed|string
      */
-    public function downloadStickers($year, $week)
+    public function downloadStickers($year, $week, $download = true)
     {
         $list = $this->stickersForWeek($year, $week);
         
-        return Excel::create(
+        $excel = Excel::create(
             $this->_getFileName($year, $week, 'stickers'),
             function ($excel) use ($list, $year, $week) {
                 $excel->sheet(
@@ -369,22 +384,29 @@ class PackagingService
                     }
                 );
             }
-        )->download('xls');
+        );
+        
+        $excel->store('xls', false, true);
+        
+        return $download ?
+            $excel->download() :
+            config('excel.export.store.path').'/'.$excel->getFileName().'.'.$excel->ext;
     }
     
     /**
-     * @param int $year
-     * @param int $week
+     * @param int  $year
+     * @param int  $week
+     * @param bool $download
      *
-     * @return mixed
+     * @return mixed|string
      */
-    public function downloadBooklet($year, $week)
+    public function downloadBooklet($year, $week, $download = true)
     {
         $list = $this->bookletForWeek($year, $week);
         
         $booklet = Booklet::forWeek($year, $week)->first();
         
-        return Excel::create(
+        $excel = Excel::create(
             $this->_getFileName($year, $week, 'packaging_booklet'),
             function ($excel) use ($list, $booklet) {
                 $excel->sheet(
@@ -399,20 +421,27 @@ class PackagingService
                     }
                 );
             }
-        )->download('xls');
+        );
+        
+        $excel->store('xls', false, true);
+        
+        return $download ?
+            $excel->download() :
+            config('excel.export.store.path').'/'.$excel->getFileName().'.'.$excel->ext;
     }
     
     /**
-     * @param int $year
-     * @param int $week
+     * @param int  $year
+     * @param int  $week
+     * @param bool $download
      *
-     * @return mixed
+     * @return mixed|string
      */
-    public function downloadUsers($year, $week)
+    public function downloadUsers($year, $week, $download = true)
     {
         $data = $this->usersForWeek($year, $week);
         
-        return Excel::create(
+        $excel = Excel::create(
             $this->_getFileName($year, $week, 'packaging_users'),
             function ($excel) use ($data, $year, $week) {
                 $excel->sheet(
@@ -426,20 +455,27 @@ class PackagingService
                     }
                 );
             }
-        )->download('xls');
+        );
+        
+        $excel->store('xls', false, true);
+        
+        return $download ?
+            $excel->download() :
+            config('excel.export.store.path').'/'.$excel->getFileName().'.'.$excel->ext;
     }
     
     /**
-     * @param int $year
-     * @param int $week
+     * @param int  $year
+     * @param int  $week
+     * @param bool $download
      *
-     * @return mixed
+     * @return mixed|string
      */
-    public function downloadDeliveries($year, $week)
+    public function downloadDeliveries($year, $week, $download = true)
     {
         $data = $this->deliveriesForWeek($year, $week);
         
-        return Excel::create(
+        $excel = Excel::create(
             $this->_getFileName($year, $week, 'packaging_deliveries'),
             function ($excel) use ($data, $year, $week) {
                 $excel->sheet(
@@ -471,7 +507,13 @@ class PackagingService
                     }
                 );
             }
-        )->download('xls');
+        );
+        
+        $excel->store('xls', false, true);
+        
+        return $download ?
+            $excel->download() :
+            config('excel.export.store.path').'/'.$excel->getFileName().'.'.$excel->ext;
     }
     
     /**

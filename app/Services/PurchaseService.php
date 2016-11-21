@@ -169,10 +169,11 @@ class PurchaseService
      * @param int      $week
      * @param int|bool $supplier_id
      * @param bool     $pre_report
+     * @param bool     $download
      *
-     * @return
+     * @return string
      */
-    public function download($year, $week, $supplier_id = false, $pre_report = false)
+    public function download($year, $week, $supplier_id = false, $pre_report = false, $download = true)
     {
         $supplier_name = $supplier_id !== false ?
             ($supplier_id == 0 ?
@@ -206,7 +207,7 @@ class PurchaseService
             'view'          => $view,
         ];
         
-        return Excel::create(
+        $excel = Excel::create(
             $file_name,
             function ($excel) use ($data) {
                 $excel->sheet(
@@ -220,7 +221,13 @@ class PurchaseService
                     }
                 );
             }
-        )->download('xls');
+        );
+    
+        $excel->store('xls', false, true);
+    
+        return $download ?
+            $excel->download() :
+            config('excel.export.store.path').'/'.$excel->getFileName().'.'.$excel->ext;
     }
     
     /**
@@ -544,7 +551,7 @@ class PurchaseService
      */
     private function _getDownloadFileName($year, $week, $supplier_name, $pre_report = false)
     {
-        return ($pre_report ? trans('labels.not_final_version').' ' : '').
+        return ($pre_report ? trans('labels.not_final_version').'. ' : '').
         str_replace(' ', '_', trans('labels.list_of_purchase')).'_'.
         trans('labels.w_label').$week.'_'.$year.
         ($supplier_name ? '_'.str_replace(' ', '_', $supplier_name) : '');

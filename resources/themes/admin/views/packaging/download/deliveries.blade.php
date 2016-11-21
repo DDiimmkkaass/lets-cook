@@ -14,7 +14,7 @@
                     </th>
                 </tr>
                 <tr style="font-size: 14px; height: 20px">
-                    <th style="text-align: center">
+                    <th style="text-align: center; width: 5px">
                         @lang('labels.id')
                     </th>
                     <th>
@@ -26,7 +26,7 @@
                     <th>
                         @lang('labels.address')
                     </th>
-                    <th>
+                    <th style="width: 20px">
                         @lang('labels.phone')
                     </th>
                     <th>
@@ -75,7 +75,7 @@
                         <td style="width: 60px; {!! $background !!}">
                             {!! $order->getFullAddress() !!}
                         </td>
-                        <td style="width: 25px; text-align: left; {!! $background !!}">
+                        <td style="text-align: left; {!! $background !!}">
                             {!! $order->getPhones() !!}
                         </td>
                         <td style="width: 30px; {!! $background !!}">

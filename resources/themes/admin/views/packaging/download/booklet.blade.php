@@ -31,7 +31,13 @@
         </tr>
 
         <tr style="height: 20px;">
-            <th colspan="2">{!! $booklet->link !!}</th>
+            <th colspan="2">
+                @if ($booklet)
+                    {!! $booklet->link !!}
+                @else
+                    @lang('messages.booklet not have a link')
+                @endif
+            </th>
         </tr>
 
         </tbody>

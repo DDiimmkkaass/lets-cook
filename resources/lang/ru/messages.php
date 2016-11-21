@@ -171,4 +171,5 @@ return array (
   'coupon not default any more' => 'Купон больше не установлен по умолчанию',
   'coupon successfully make default' => 'Купон успешно установлен по умолчанию',
   'you really want to cancel this order' => 'Вы действительно хотите отменить этот заказ?',
+  'booklet not have a link' => 'К буклету не прикреплена ссылка',
 );

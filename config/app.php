@@ -210,6 +210,7 @@ return [
         App\Providers\ViewComposerServiceProvider::class,
         App\Providers\GuzzleServiceProvider::class,
         Artdarek\OAuth\OAuthServiceProvider::class,
+        Chumper\Zipper\ZipperServiceProvider::class,
     ],
     
     /*
@@ -281,6 +282,7 @@ return [
         'YandexKassa'         => Artem328\LaravelYandexKassa\Facades\YandexKassa::class,
         'Guzzle'              => App\Facades\Guzzle::class,
         'OAuth'               => Artdarek\OAuth\Facade\OAuth::class,
+        'Zipper'              => Chumper\Zipper\Zipper::class,
     
     ],
 

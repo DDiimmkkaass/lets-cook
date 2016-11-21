@@ -677,4 +677,5 @@ return array (
   'subscribes' => 'Подписка',
   'subscribes_list' => 'Список подписок',
   'tab_meta' => 'Мета данные',
+  'export_all_reports' => 'Выгрузка всех отчётов',
 );

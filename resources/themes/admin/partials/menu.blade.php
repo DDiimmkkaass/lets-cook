@@ -232,6 +232,12 @@
                         <span>@lang('labels.history_of_packaging')</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{!! route('admin.packaging.all') !!}">
+                        <i class="fa fa-file-archive-o"></i>
+                        <span>@lang('labels.export_all_reports')</span>
+                    </a>
+                </li>
             @endif
 
             <li class="header">@lang('labels.content')</li>

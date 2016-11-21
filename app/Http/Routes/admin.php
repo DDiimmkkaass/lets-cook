@@ -570,6 +570,14 @@ $router->group(
                                 'uses' => 'Backend\PackagingController@updateBooklet',
                             ]
                         );
+    
+                        $router->get(
+                            'all',
+                            [
+                                'as'   => 'admin.packaging.all',
+                                'uses' => 'Backend\PackagingController@all',
+                            ]
+                        );
                     }
                 );
                 

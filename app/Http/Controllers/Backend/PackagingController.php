@@ -12,12 +12,14 @@ use App\Http\Requests\Backend\Booklet\BookletUpdateRequest;
 use App\Models\Booklet;
 use App\Models\Purchase;
 use App\Services\PackagingService;
+use App\Services\PurchaseService;
 use Datatables;
 use Exception;
 use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Request;
 use Meta;
+use Zipper;
 
 /**
  * Class PackagingController
@@ -58,14 +60,24 @@ class PackagingController extends BackendController
     private $packagingService;
     
     /**
+     * @var \App\Services\PurchaseService
+     */
+    private $purchaseService;
+    
+    /**
      * @param \Illuminate\Contracts\Routing\ResponseFactory $response
      * @param \App\Services\PackagingService                $packagingService
+     * @param \App\Services\PurchaseService                 $purchaseService
      */
-    public function __construct(ResponseFactory $response, PackagingService $packagingService)
-    {
+    public function __construct(
+        ResponseFactory $response,
+        PackagingService $packagingService,
+        PurchaseService $purchaseService
+    ) {
         parent::__construct($response);
         
         $this->packagingService = $packagingService;
+        $this->purchaseService = $purchaseService;
         
         Meta::title(trans('labels.packaging'));
         
@@ -237,6 +249,43 @@ class PackagingController extends BackendController
     }
     
     /**
+     * @return \Illuminate\Http\RedirectResponse|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function all()
+    {
+        $year = active_week()->year;
+        $week = active_week()->weekOfYear;
+        
+        try {
+            $archive_name = config('archive.path').'/'.
+                'reports_w'.$week.'_'.$year.'_'.carbon()->now()->format('Y_m_d_H_i_s').'.zip';
+            $archive = Zipper::make($archive_name);
+            
+            foreach ($this->downloads as $tab) {
+                $file = $this->packagingService->{'download'.studly_case($tab)}($year, $week, false);
+                
+                $archive->add($file);
+            }
+            
+            $file = $this->purchaseService->download($year, $week, false, before_finalisation($year, $week), false);
+            $archive->add($file);
+            
+            $archive->close();
+            
+            return response()->download($archive_name);
+        } catch (Exception $e) {
+            admin_notify(
+                'message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile(),
+                ['all reports', $year, $week]
+            );
+            
+            FlashMessages::add('error', trans('messages.an error has occurred, please reload the page and try again'));
+            
+            return redirect()->route('admin.'.$this->module.'.show', [$year, $week]);
+        }
+    }
+    
+    /**
      * @param \App\Http\Requests\Backend\Booklet\BookletUpdateRequest $request
      *
      * @return array
@@ -263,6 +312,8 @@ class PackagingController extends BackendController
                 'message' => trans('messages.changes successfully saved'),
             ];
         } catch (Exception $e) {
+            admin_notify('message: '.$e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile());
+            
             return [
                 'status'  => 'error',
                 'message' => trans('messages.an error has occurred, please reload the page and try again'),

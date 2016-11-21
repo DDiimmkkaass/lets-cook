@@ -3,6 +3,7 @@
 namespace App\Console;
 
 use App\Console\Commands\ArchiveCompletedOrders;
+use App\Console\Commands\ClearReportsTmpFolders;
 use App\Console\Commands\GenerateReportsForCurrentWeek;
 use App\Console\Commands\GenerateTmplOrders;
 use App\Console\Commands\ProcessPaidOrdersForCurrentWeek;
@@ -36,6 +37,7 @@ class Kernel extends ConsoleKernel
         RemoveUnsuccessfulOrdersForCurrentWeek::class,
         GenerateReportsForCurrentWeek::class,
         ArchiveCompletedOrders::class,
+        ClearReportsTmpFolders::class
     ];
     
     /**
@@ -74,6 +76,9 @@ class Kernel extends ConsoleKernel
         
         $schedule->command('orders:archive-completed-orders')
             ->cron('0 0 * * 1,2')->sendOutputTo($this->_logFile('archive-completed-orders'));
+    
+        $schedule->command('reports:clear-tmp')
+            ->cron('0 * * * *')->sendOutputTo($this->_logFile('clear-tmp'));
     }
     
     /**
