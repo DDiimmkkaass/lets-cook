@@ -49,4 +49,5 @@ return array(
   'unlimited' => 'неограниченно',
   'main_card' => 'Моя карта',
   'order' => 'Заказ',
+  'loyalty_program' => 'Программа лояльности',
 );

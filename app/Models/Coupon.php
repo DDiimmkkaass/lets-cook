@@ -26,6 +26,7 @@ class Coupon extends Model
         'type',
         'name',
         'description',
+        'key',
         'discount',
         'discount_type',
         'count',

@@ -151,7 +151,7 @@ class CouponService
         if ($user->coupons()->whereCouponId($coupon->id)->count()) {
             return trans('front_messages.you already added this coupon');
         }
-    
+        
         if ($coupon->getExpiredAt() && $coupon->getExpiredAt() < Carbon::now()) {
             return trans('front_messages.time of this coupon out');
         }
@@ -241,10 +241,10 @@ class CouponService
                 return trans('front_messages.this coupon already used');
             }
         }
-    
+        
         if ($coupon->count > 0) {
             $user_order_count = $user->orders()->whereCouponId($coupon->id)->count();
-        
+            
             if ($user_order_count >= $coupon->count) {
                 return trans('front_messages.this coupon already used');
             }
@@ -300,6 +300,7 @@ class CouponService
                 'type'          => Coupon::getTypeIdByName('all'),
                 'name'          => trans('front_labels.registration_coupon'),
                 'description'   => trans('front_texts.registration coupon description'),
+                'key'           => 'register',
                 'discount'      => (int) variable('registration_coupon_discount'),
                 'discount_type' => Coupon::getDiscountTypeIdByName('percentage'),
                 'count'         => 1,
@@ -311,6 +312,39 @@ class CouponService
         );
         
         $this->saveUserCoupon($user, $coupon, true);
+        
+        return $coupon;
+    }
+    
+    /**
+     * @param int $level
+     * @param int $orders
+     * @param int $discount
+     * @param int $count
+     *
+     * @return \App\Models\Coupon
+     * @internal param string $coupon_key
+     */
+    public function createLoyaltyCoupon($level, $orders, $discount, $count)
+    {
+        $coupon = $this->create(
+            [
+                'type'          => Coupon::getTypeIdByName('all'),
+                'name'          => trans('front_labels.loyalty_program'),
+                'description'   => trans(
+                    'front_texts.coupon_loyalty_program :percentage :orders',
+                    ['percentage' => $discount, 'orders' => $orders]
+                ),
+                'key'           => 'loyalty_program_'.$level,
+                'discount'      => (int) $discount,
+                'discount_type' => Coupon::getDiscountTypeIdByName('percentage'),
+                'count'         => (int) $count,
+                'users_count'   => 1,
+                'users_type'    => Coupon::getUsersTypeIdByName('exists'),
+                'started_at'    => Carbon::now()->format('d-m-Y'),
+                'create_count'  => 1,
+            ]
+        );
         
         return $coupon;
     }

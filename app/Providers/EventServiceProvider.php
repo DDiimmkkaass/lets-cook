@@ -34,6 +34,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Backend\TmplOrderPaymentError' => [
             'App\Listeners\Events\Backend\SendUserEmailAboutPaymentErrorOnTmplOrder',
         ],
+
+        'App\Events\Backend\CompletedOrderArchived' => [
+            'App\Listeners\Events\Backend\ApplyLoyaltyProgram',
+        ],
         
         'App\Events\Frontend\UserRegister' => [
             'App\Listeners\Events\Frontend\SendUserActivationEmail',

@@ -57,7 +57,7 @@ class UserCoupon extends Model
     }
     
     /**
-     * @param     $query
+     * @param $query
      * @param int $user_id
      *
      * @return mixed
@@ -65,6 +65,26 @@ class UserCoupon extends Model
     public function scopeOfUser($query, $user_id)
     {
         return $query->where($this->getTable().'.user_id', $user_id);
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeDefault($query)
+    {
+        return $query->where($this->getTable().'.default', true);
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinCoupon($query)
+    {
+        return $query->join('coupons', 'coupons.id', '=', $this->getTable().'.coupon_id');
     }
     
     /**
