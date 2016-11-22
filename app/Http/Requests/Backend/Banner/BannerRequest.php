@@ -55,7 +55,7 @@ class BannerRequest extends FormRequest
                     $items_rules[$key] = 'required|boolean';
 
                     $key = sprintf('items.%s.%s.position', $array_key, $item_id);
-                    $items_rules[$key] = 'required|boolean';
+                    $items_rules[$key] = 'required|integer';
 
                     foreach (config('app.locales') as $locale) {
                         foreach ($itemsLanguageRules as $name => $rule) {

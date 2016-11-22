@@ -202,6 +202,34 @@ if (!function_exists('get_templates')) {
     }
 }
 
+if (!function_exists('get_layout_positions')) {
+    /**
+     * @param string $parent_folder
+     *
+     * @return string
+     */
+    function get_layout_positions($parent_folder)
+    {
+        $positions = [];
+        
+        $pattern = "widget__banner\(\'([a-zA-Z0-9_]+)\'.*";
+        
+        $finder = new \Symfony\Component\Finder\Finder();
+        $finder->in($parent_folder)->name('*.php')->files();
+        foreach ($finder as $file) {
+            if(preg_match_all("/$pattern/siU", $file->getContents(), $matches)) {
+                foreach ($matches[1] as $key) {
+                    $positions[] = $key;
+                }
+            }
+        }
+        
+        $positions = array_unique($positions);
+        
+        return $positions;
+    }
+}
+
 if (!function_exists('format_number')) {
     /**
      * @param float  $price

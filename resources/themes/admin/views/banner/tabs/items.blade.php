@@ -1,12 +1,13 @@
 <div class="box-body table-responsive no-padding">
-    <table class="table table-hover duplication">
+    <h5 class="help-block text-center">@lang('messages.table sortable helper text')</h5>
+
+    <table class="table table-hover duplication table-sortable">
         <tbody>
         <tr>
             <th class="col-md-3">{!! trans('labels.image') !!}</th>
             <th>{!! trans('labels.name') !!}</th>
             <th>{!! trans('labels.link') !!}</th>
             <th class="col-sm-1 col-md-1 col-lg-1">{!! trans('labels.status') !!}<span class="required">*</span></th>
-            <th class="col-sm-1 col-md-1 col-lg-1">{!! trans('labels.position') !!}<span class="required">*</span></th>
             <th>{!! trans('labels.delete') !!}</th>
         </tr>
 
@@ -50,7 +51,7 @@
                             {!! Form::select('items[old][' .$item->id. '][status]', ['1' => trans('labels.status_on'), '0' => trans('labels.status_off')], $item->status, ['id' => 'items.old.' .$item->id. '.position', 'class' => 'form-control select2 input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
                         </div>
                     </td>
-                    <td>
+                    <td class="hidden position">
                         <div class="form-group required @if ($errors->has('items.old.' .$item->id. '.position')) has-error @endif">
                             {!! Form::text('items[old][' .$item->id. '][position]', $item->position, ['id' => 'items.old.' .$item->id. '.position', 'class' => 'form-control input-sm']) !!}
                         </div>
@@ -103,7 +104,7 @@
                                 {!! Form::select('items[new][' .$item_key. '][status]', ['1' => trans('labels.status_on'), '0' => trans('labels.status_off')], $item['status'], ['id' => 'items.new.' .$item_key. '.status', 'class' => 'form-control select2 input-sm', 'aria-hidden' => 'true', 'required' => true]) !!}
                             </div>
                         </td>
-                        <td>
+                        <td class="hidden position">
                             <div class="form-group required @if ($errors->has('items.new.' .$item_key. '.position')) has-error @endif">
                                 {!! Form::text('items[new][' .$item_key. '][position]', $item['position'], ['id' => 'items.new.' .$item_key. '.position', 'class' => 'form-control input-sm']) !!}
                             </div>
@@ -167,7 +168,7 @@
                     </select>
                 </div>
             </td>
-            <td>
+            <td class="hidden position">
                 <div class="form-group required">
                     <input data-name="items[new][replaseme][position]" value="0" data-required="required" class="form-control input-sm">
                 </div>

@@ -172,4 +172,6 @@ return array (
   'coupon successfully make default' => 'Купон успешно установлен по умолчанию',
   'you really want to cancel this order' => 'Вы действительно хотите отменить этот заказ?',
   'booklet not have a link' => 'К буклету не прикреплена ссылка',
+  'table sortable helper text' => 'Для сортировки элементов просто перетащите их с помощью мыши',
+  'banner position helper text' => 'Для сортировки элементов с одинаковой позицией на сайте',
 );
