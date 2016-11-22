@@ -37,21 +37,25 @@ class EventServiceProvider extends ServiceProvider
 
         'App\Events\Backend\CompletedOrderArchived' => [
             'App\Listeners\Events\Backend\ApplyLoyaltyProgram',
+            'App\Listeners\Events\Backend\ApplyInviteFriendsProgram',
         ],
         
         'App\Events\Frontend\UserRegister' => [
             'App\Listeners\Events\Frontend\SendUserActivationEmail',
             'App\Listeners\Events\Frontend\GiveRegistrationCoupon',
+            'App\Listeners\Events\Frontend\CreateInviteFriendCoupon',
             'App\Listeners\Events\Frontend\AddToClientsGroup',
         ],
 
         'App\Events\Frontend\UserQuickRegister' => [
             'App\Listeners\Events\Frontend\SendUserActivationEmail',
+            'App\Listeners\Events\Frontend\CreateInviteFriendCoupon',
             'App\Listeners\Events\Frontend\AddToClientsGroup',
         ],
 
         'App\Events\Frontend\UserSocialRegister' => [
             'App\Listeners\Events\Frontend\GiveRegistrationCoupon',
+            'App\Listeners\Events\Frontend\CreateInviteFriendCoupon',
             'App\Listeners\Events\Frontend\AddToClientsGroup',
         ],
 

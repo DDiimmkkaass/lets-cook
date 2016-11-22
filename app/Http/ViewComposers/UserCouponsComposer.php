@@ -8,6 +8,9 @@
 
 namespace App\Http\ViewComposers;
 
+use App\Models\Coupon;
+use App\Services\CouponService;
+use Carbon;
 use Illuminate\View\View;
 use Sentry;
 
@@ -17,6 +20,21 @@ use Sentry;
  */
 class UserCouponsComposer
 {
+    
+    /**
+     * @var \App\Services\CouponService
+     */
+    private $couponService;
+    
+    /**
+     * UserCouponsComposer constructor.
+     *
+     * @param \App\Services\CouponService $couponService
+     */
+    public function __construct(CouponService $couponService)
+    {
+        $this->couponService = $couponService;
+    }
     
     /**
      * Bind data to the view.
@@ -57,14 +75,25 @@ class UserCouponsComposer
                 if ($coupon) {
                     $coupon->default = true;
                     $coupon->save();
-    
+                    
                     $user_coupons->put($coupon->id, $coupon);
                 }
             }
+            
+            $invite_friend = Coupon::whereUserId($user->id)
+                ->whereKey('invite_friend')
+                ->whereRaw('(expired_at >= ? OR expired_at IS NULL)', [Carbon::now()])
+                ->first();
+            
+            if (!$invite_friend && (int) variable('invite_friend_discount') > 0) {
+                $invite_friend = $this->couponService->createInviteFriendCoupon($user);
+            }
         } else {
             $user_coupons = [];
+            $invite_friend = false;
         }
         
         $view->with('user_coupons', $user_coupons);
+        $view->with('invite_friend', $invite_friend);
     }
 }

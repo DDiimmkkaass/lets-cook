@@ -10,7 +10,6 @@ namespace App\Models;
 
 use Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Coupon
@@ -23,6 +22,7 @@ class Coupon extends Model
      * @var array
      */
     protected $fillable = [
+        'user_id',
         'type',
         'name',
         'description',

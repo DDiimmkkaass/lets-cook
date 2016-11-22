@@ -36,7 +36,7 @@ class CouponRequest extends FormRequest
             'users_count'   => 'required|integer|min:0',
             'users_type'    => 'required|in:'.implode(',', array_keys(Coupon::getUsersTypes())),
             'started_at'    => 'date_format:d-m-Y',
-            'expired_at'    => 'date_format:d-m-Y|after:started_at',
+            'expired_at'    => 'date_format:d-m-Y',
         ];
         
         $discount_types = Coupon::getDiscountTypes();

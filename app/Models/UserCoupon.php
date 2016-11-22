@@ -222,7 +222,7 @@ class UserCoupon extends Model
     public function getAvailableCount()
     {
         $coupons_count = $this->getCouponsCount();
-        
+
         $available_count = $coupons_count - $this->orders->count();
         
         return $coupons_count > 0 ? ($available_count <= 0 ? 0 : $available_count) : 1;

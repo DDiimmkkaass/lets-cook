@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Requests\Frontend\UserCoupon\CouponCheckRequest;
 use App\Http\Requests\Frontend\UserCoupon\UserCouponCreateRequest;
 use App\Http\Requests\Frontend\UserCoupon\UserCouponMakeDefaultRequest;
+use App\Models\Order;
 use App\Models\User;
 use App\Models\UserCoupon;
 use App\Services\CouponService;
@@ -63,14 +64,20 @@ class CouponController extends FrontendController
                     'message' => $status,
                 ];
             }
+    
+            $user_id = $this->user->id;
             
             $model = UserCoupon::create(
                 [
-                    'user_id'   => $this->user->id,
+                    'user_id'   => $user_id,
                     'coupon_id' => $coupon->id,
                     'default'   => $coupon->started() ? true : false,
                 ]
             );
+            
+            $model = UserCoupon::with(['orders' => function ($query) use ($user_id) {
+                $query->whereUserId($user_id);
+            }])->whereId($model->id)->first();
             
             return [
                 'status'  => 'success',

@@ -64,8 +64,8 @@ return array(
     'you used coupon' => 'Вы использовали скидочный купон',
     'this action is not available' => 'Это действие недоступно',
     'you already added this coupon' => 'Вы уже добавили этот купон',
-    'coupon available only for new users' => 'Этот купон доступено только для существующих пользователей',
-    'coupon available only for exists users' => 'Этот купон доступено только для новых пользователей',
+    'coupon available only for new users' => 'Этот купон доступено только для новых пользователей',
+    'coupon available only for exists users' => 'Этот купон доступено только для существующих пользователей',
     'this coupon already used' => 'Этот купон уже использован',
     'you do not have this coupon' => 'Вы не имеете такого купона',
     'coupon not find' => 'Купон не найден',
@@ -75,4 +75,5 @@ return array(
     'you can not cancel payed or processed orders' => 'Вы не можете отменить оплаченный заказ или заказ в обработке',
     'unknown social network' => 'Данная соц. сеть не поддрежываеться',
     'you must allow access to your email' => 'Для логина с помощью соц. сети Вы должны разрешыть доступ к Вашему e-mail',
+    'you can not use you own coupon' => 'Вы не можете использовать свой собственный купон',
 );

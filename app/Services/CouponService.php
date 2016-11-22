@@ -152,6 +152,10 @@ class CouponService
             return trans('front_messages.you already added this coupon');
         }
         
+        if ($coupon->key == 'invite_friend' && $coupon->user_id == $user->id) {
+            return trans('front_messages.you can not use you own coupon');
+        }
+        
         if ($coupon->getExpiredAt() && $coupon->getExpiredAt() < Carbon::now()) {
             return trans('front_messages.time of this coupon out');
         }
@@ -209,6 +213,10 @@ class CouponService
         }
         
         $now = Carbon::now();
+        
+        if ($coupon->key == 'invite_friend' && $coupon->user_id == $user->id) {
+            return trans('front_messages.you can not use you own coupon');
+        }
         
         if ($coupon->getStartedAt() && $coupon->getStartedAt() > $now) {
             return trans('front_messages.this coupon has not yet started');
@@ -314,6 +322,56 @@ class CouponService
         $this->saveUserCoupon($user, $coupon, true);
         
         return $coupon;
+    }
+    
+    /**
+     * @param \App\Models\User $user
+     */
+    public function createInviteFriendCoupon(User $user)
+    {
+        $this->create(
+            [
+                'user_id'       => $user->id,
+                'type'          => Coupon::getTypeIdByName('all'),
+                'name'          => trans('front_labels.invite_friend'),
+                'description'   => trans('front_texts.invite friend coupon'),
+                'key'           => 'invite_friend',
+                'discount'      => (int) variable('invite_friend_discount'),
+                'discount_type' => Coupon::getDiscountTypeIdByName('percentage'),
+                'count'         => 1,
+                'users_count'   => 0,
+                'users_type'    => Coupon::getUsersTypeIdByName('new'),
+                'started_at'    => Carbon::now()->format('d-m-Y'),
+                'create_count'  => 1,
+            ]
+        );
+    }
+    
+    /**
+     * @param \App\Models\User $for_user
+     * @param \App\Models\User $from_user
+     * @param bool             $default
+     */
+    public function giveInviteFriendCompensationCoupon(User $for_user, User $from_user, $default = false)
+    {
+        $coupon = $this->create(
+            [
+                'user_id'       => $from_user->id,
+                'type'          => Coupon::getTypeIdByName('all'),
+                'name'          => trans('front_labels.invite_friend_compensation'),
+                'description'   => trans('front_texts.invite friend compensation coupon'),
+                'key'           => 'invite_friend_compensation',
+                'discount'      => (int) variable('invite_friend_compensation'),
+                'discount_type' => Coupon::getDiscountTypeIdByName('percentage'),
+                'count'         => 1,
+                'users_count'   => 1,
+                'users_type'    => Coupon::getUsersTypeIdByName('exists'),
+                'started_at'    => Carbon::now()->format('d-m-Y'),
+                'create_count'  => 1,
+            ]
+        );
+        
+        $this->saveUserCoupon($for_user, $coupon, $default);
     }
     
     /**

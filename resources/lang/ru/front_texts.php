@@ -20,4 +20,7 @@ return array (
   'basket description on order page' => 'На приготовление одного блюда понадобится не более 40 минут',
   'login info text for old users' => 'Если вы были пользователем предыдущей версии сайта и пришли сюда впервые — воспользуйтесь восстановлением пароля.<br>Вход на сайт теперь осуществляется через емейл',
   'coupon_loyalty_program :percentage :orders' => 'Ваша скидка :percentage% за :orders успешных заказов',
+  'invite friend coupon' => 'Купон по программе "Пригласи друга"',
+  'invite friend description text' => 'Пригласи друга, дай ему свой купон, и ВЫ ОБА получите скидку',
+  'invite friend compensation coupon' => 'Купон по программе "Пригласи друга", за успешный заказ приглашенного друга',
 );

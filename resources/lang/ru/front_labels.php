@@ -50,4 +50,7 @@ return array(
   'main_card' => 'Моя карта',
   'order' => 'Заказ',
   'loyalty_program' => 'Программа лояльности',
+  'invite_friend' => 'Пригласи друга',
+  'invite_friend_compensation' => 'Купон за приглашенного друга',
+  'invite_friend_label' => 'Пригласи друга!',
 );
