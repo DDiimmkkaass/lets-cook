@@ -69,30 +69,38 @@ class UpdateMainBasketForTmplOrders extends Command
             ->get();
         
         foreach ($orders as $order) {
-            $this->log('start update order #'.$order->id, 'info');
+            if (!$order->main_basket()->count()) {
+                $this->log('start update order #'.$order->id, 'info');
+    
+                $subscribe = $this->_getSubscribe($order);
+    
+                try {
+                    $basket = $this->orderService->tmplAddMainBasket($order, $subscribe);
+        
+                    if ($basket) {
+                        $this->orderService->updatePrices($order);
             
-            $subscribe = $this->_getSubscribe($order);
+                        list($subtotal, $total) = $this->orderService->getTotals($order);
             
-            try {
-                $basket = $this->orderService->tmplAddMainBasket($order, $subscribe);
-                
-                if ($basket) {
-                    $order->total = $order->getTotal();
-                    $order->save();
-                    
-                    $this->log(
-                        'order successfully updated total = '.$order->total.', main basket #'.$basket->id,
-                        'info'
-                    );
-                } else {
-                    $this->log('order update fail main basket have not yet created', 'error');
+                        $order->subtotal = $subtotal;
+                        $order->total = $total;
+            
+                        $order->save();
+            
+                        $this->log(
+                            'order successfully updated total = '.$order->total.', main basket #'.$basket->id,
+                            'info'
+                        );
+                    } else {
+                        $this->log('order update fail main basket have not yet created', 'error');
+                    }
+                } catch (Exception $e) {
+                    $message = $e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
+        
+                    $this->log($message, 'error');
+        
+                    admin_notify($this->description.' error: '.$message);
                 }
-            } catch (Exception $e) {
-                $message = $e->getMessage().', line: '.$e->getLine().', file: '.$e->getFile();
-                
-                $this->log($message, 'error');
-                
-                admin_notify($this->description.' error: '.$message);
             }
         }
         
