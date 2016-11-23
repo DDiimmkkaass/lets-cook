@@ -41,7 +41,9 @@ class CheckCardCreateRequisites
      */
     public function handle(BeforeCheckOrderResponse $event)
     {
-        if ($event->request->get('cardConnect')) {
+        $orderNumber = $event->request->get('orderNumber');
+    
+        if (strpos($orderNumber, 'card_') !== false) {
             $provider = $this->paymentService->getProvider();
     
             if (!$provider->validCardConnectPayment($event->request->all())) {
@@ -51,8 +53,8 @@ class CheckCardCreateRequisites
                 
                 return $event->responseParameters;
             }
-    
-            return null;
         }
+    
+        return null;
     }
 }

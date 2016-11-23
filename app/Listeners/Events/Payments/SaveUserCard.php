@@ -26,8 +26,9 @@ class SaveUserCard
     public function handle(BeforePaymentAvisoResponse $event)
     {
         $rebilling = $event->request->get('rebillingOn');
-    
-        if ($rebilling == 'true') {
+        $baseInvoiceId = $event->request->get('baseInvoiceId');
+        
+        if ($rebilling == 'true' && !$baseInvoiceId) {
             if ($event->request->isValidHash()) {
                 $order_number = $event->request->get('orderNumber');
                 

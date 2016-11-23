@@ -50,12 +50,14 @@ class ChangeOrderStatusWhenPaymentSuccessful
      */
     public function handle(BeforePaymentAvisoResponse $event)
     {
-        if (!$event->request->get('cardConnect')) {
-            $order = Order::find($event->request->get('orderNumber'));
+        $orderNumber = $event->request->get('orderNumber');
+        
+        if (strpos($orderNumber, 'card_') === false) {
+            $order = Order::find($orderNumber);
     
             if (!in_array($order->getStringStatus(), ['paid', 'processed'])) {
                 if ($event->request->isValidHash()) {
-                    $status = $order->status;
+                    $status = $order->getStringStatus();
         
                     $order->status = $this->_getStatus($order);
                     $order->save();

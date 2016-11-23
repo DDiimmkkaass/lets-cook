@@ -48,7 +48,9 @@ class CheckOrderRequisites
      */
     public function handle(BeforeCheckOrderResponse $event)
     {
-        if (!$event->request->get('cardConnect')) {
+        $orderNumber = $event->request->get('orderNumber');
+    
+        if (strpos($orderNumber, 'card_') === false) {
             $provider = $this->paymentService->getProvider();
             
             if (!$provider->validPayment($event->request->all())) {
@@ -56,7 +58,7 @@ class CheckOrderRequisites
                 $event->responseParameters['message'] = implode(', ', $provider->getErrors());
                 $event->responseParameters['techMessage'] = trans('payments.validation_fails');
                 
-                $order = Order::find($event->request->get('orderNumber'));
+                $order = Order::find($orderNumber);
                 
                 if ($order) {
                     $this->paymentService->storeTransaction(
@@ -75,11 +77,11 @@ class CheckOrderRequisites
                 return $event->responseParameters;
             }
             
-            $order = Order::find($event->request->get('orderNumber'));
+            $order = Order::find($orderNumber);
             
             if ($order) {
                 $this->paymentService->storeTransaction(
-                    $event->request->get('orderNumber'),
+                    $orderNumber,
                     $event->request->all(),
                     'success',
                     'checkPayment'
