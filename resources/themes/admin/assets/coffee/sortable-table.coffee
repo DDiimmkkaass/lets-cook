@@ -14,5 +14,9 @@ $(document).on "ready", () ->
         $(item).find('.position input').val(val)
       , 500
 
+  $('.datatable-sortable tbody').sortable
+    stop: (event, ui) ->
+      $.each $('.datatable-sortable tr'), (index) ->
+        $(this).find('.position input').val(index - 1).trigger('change')
 
 

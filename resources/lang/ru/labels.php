@@ -690,4 +690,9 @@ return array (
   'layout_position_how_it_works' => 'Как это работает',
   'layout_position_what_you_get' => 'Что вы получете',
   'layout_position_cook_with_us' => 'Готовте с нами',
+  'go_to_page' => 'Перейти к странице',
+  'shares' => 'Акции',
+  'shares_list' => 'Список акций',
+  'share_creating' => 'Создание акции',
+  'share_editing' => 'Редактирование акции',
 );

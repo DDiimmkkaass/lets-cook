@@ -321,6 +321,22 @@
                 </li>
             @endif
 
+            @if ($user->hasAccess('share.read'))
+                <li class="{!! active_class('admin.share*') !!}">
+                    <a href="{!! route('admin.share.index') !!}">
+                        <i class="fa fa-flag"></i>
+                        <span>@lang('labels.shares')</span>
+
+                        @if ($user->hasAccess('share.create'))
+                            <small class="label create-label pull-right bg-green" title="@lang('labels.add_share')"
+                                   data-href="{!! route('admin.share.create') !!}">
+                                <i class="fa fa-plus"></i>
+                            </small>
+                        @endif
+                    </a>
+                </li>
+            @endif
+
             @if ($user->hasAccess('comment.read'))
                 <li class="{!! active_class('admin.comment*') !!}">
                     <a href="{!! route('admin.comment.index') !!}">

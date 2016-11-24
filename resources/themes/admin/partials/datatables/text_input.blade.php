@@ -1,4 +1,4 @@
-<div class="col-sm-10">
+<div class="col-sm-10 {!! $parent_class or '' !!}">
     <input class="input-sm col-xs-16 form-control ajax-field-changer {!! $field !!}-text-input"
            type="text"
            data-id="{!! $model->id !!}"

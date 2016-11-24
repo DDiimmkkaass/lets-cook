@@ -601,6 +601,17 @@ $router->group(
                     'subscribe/export',
                     ['as' => 'admin.subscribe.export', 'uses' => 'Backend\SubscribeController@export']
                 );
+    
+                //shares
+                $router->post(
+                    'share/{id}/ajax_field',
+                    [
+                        'middleware' => ['ajax'],
+                        'as'         => 'admin.share.ajax_field',
+                        'uses'       => 'Backend\ShareController@ajaxFieldChange',
+                    ]
+                );
+                $router->resource('share', 'Backend\ShareController');
             }
         );
         

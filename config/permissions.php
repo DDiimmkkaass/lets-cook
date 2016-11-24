@@ -115,6 +115,11 @@ return array (
     'article.read',
     'article.write',
     'article.delete',
+    
+    'share.create',
+    'share.read',
+    'share.write',
+    'share.delete',
 
     'question.create',
     'question.read',
