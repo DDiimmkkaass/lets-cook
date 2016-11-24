@@ -223,10 +223,10 @@ class OrderService
                         case 'year':
                             if (preg_match('/^[\d]{4}$/', $value)) {
                                 $dt = Carbon::create($year, 1, 1, 0, 0, 0);
-            
+                                
                                 $start_delivery_date = clone ($dt->startOfDay());
                                 $end_delivery_date = clone ($dt->endOfYear()->endOfDay());
-            
+                                
                                 $list->where('orders.delivery_date', '>=', $start_delivery_date);
                                 $list->where('orders.delivery_date', '<=', $end_delivery_date);
                             }
@@ -236,10 +236,10 @@ class OrderService
             }
         } else {
             $dt = Carbon::create(active_week()->year, 1, 1, 0, 0, 0)->addWeek(active_week()->weekOfYear - 1);
-    
+            
             $start_delivery_date = clone ($dt->endOfWeek()->startOfDay());
             $end_delivery_date = clone ($dt->endOfWeek()->addDay()->startOfDay());
-    
+            
             $list->where('orders.delivery_date', '>=', $start_delivery_date);
             $list->where('orders.delivery_date', '<=', $end_delivery_date);
         }
@@ -251,12 +251,13 @@ class OrderService
     public function getOrdersStatistic()
     {
         $statistic = [
-            'days'               => [],
-            'baskets'            => [],
-            'additional_baskets' => [],
-            'count'              => 0,
-            'sum'                => 0,
-            'sum_with_discount'  => 0,
+            'days'                   => [],
+            'baskets'                => [],
+            'additional_baskets'     => [],
+            'additional_ingredients' => [],
+            'count'                  => 0,
+            'sum'                    => 0,
+            'sum_with_discount'      => 0,
         ];
         
         $orders = Order::notOfStatus(['deleted'])->forCurrentWeek()->orderBy('delivery_date')->get();
@@ -325,6 +326,17 @@ class OrderService
                 DB::raw('count(order_baskets.basket_id) as count')
             )
             ->groupBy('order_baskets.basket_id')
+            ->get();
+        
+        $statistic['additional_ingredients'] = OrderIngredient::joinIngredient()
+            ->whereIn('order_ingredients.order_id', $orders->pluck('id'))
+            ->select(
+                'order_ingredients.ingredient_id',
+                'ingredients.name',
+                DB::raw('SUM(order_ingredients.price) as total'),
+                DB::raw('SUM(order_ingredients.count) as count')
+            )
+            ->groupBy('order_ingredients.ingredient_id')
             ->get();
         
         return $statistic;

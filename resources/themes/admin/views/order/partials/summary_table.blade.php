@@ -41,6 +41,21 @@
                                 <td colspan="2"></td>
                             </tr>
                         @endif
+
+                        @if (count($statistic['additional_ingredients']))
+                            <tr>
+                                <td colspan="2"><b>@lang('labels.additional_ingredients')</b></td>
+                            </tr>
+                            @foreach($statistic['additional_ingredients'] as $ingredient)
+                                <tr>
+                                    <td>{!! $ingredient['name'] !!}</td>
+                                    <td class="text-center">{!! $ingredient['count'] !!}</td>
+                                </tr>
+                            @endforeach
+                            <tr>
+                                <td colspan="2"></td>
+                            </tr>
+                        @endif
                         </tbody>
                     </table>
                 </div>
