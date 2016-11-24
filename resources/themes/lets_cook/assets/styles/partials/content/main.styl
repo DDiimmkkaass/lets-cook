@@ -700,6 +700,66 @@
     +bp('1024')
       display: block
 
+// FREE OFFERS
+.free-offers
+
+  +bp('1024')
+    margin-top: 70px
+
+  &__wrapper
+
+    +bp('1024')
+      margin: 0 auto
+      padding: 0 30px
+      max-width: 1078px
+
+  &__mobile
+    display: block
+    margin: 0; padding: 0; list-style-type: none
+    fs(0px)
+
+    +bp('1024')
+      display: none
+
+  &__mobile-item
+    display: inline-block
+    width: 33.3333333333333333%
+
+  &__mobile-link
+    display: inline-block
+    size: 100% auto
+    padding-bottom: 50%
+    background: $base-bg-color center center / cover no-repeat
+
+  &__desktop
+    display: none
+    margin: 0 auto; padding: 0; list-style-type: none
+    max-width: 1078px
+    padding: 0 30px
+    fs(0px)
+
+    +bp('1024')
+      display: block
+
+  &__desktop-item
+    margin-right: (1 / 1020) * 100%
+    display: inline-block
+    width: (294 / 1020) * 100%
+
+    &:last-of-type
+      margin-left: 0px
+      width: (134 / 1020) * 100%
+
+      .free-offers__desktop-link
+        padding-bottom: 59.83%
+
+  &__desktop-link
+    display: inline-block
+    size: 100% auto
+    padding-bottom: 27.265%
+    background: $base-bg-color center center / cover no-repeat
+
+
 // REVIEWS BLOCK
 .spec-review
   display: none

@@ -50,6 +50,8 @@
 
         @widget__weekly_menu()
 
+        @widget__last_shares()
+
         @widget__banner('what_makes_us_different')
 
         <section class="free-delivery">

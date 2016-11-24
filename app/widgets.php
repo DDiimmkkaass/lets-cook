@@ -33,3 +33,5 @@ Widget::register('widget__weekly_menu_baskets', 'App\Widgets\WeeklyMenuBaskets\W
 Widget::register('widget__weekly_menu', 'App\Widgets\WeeklyMenu\WeeklyMenuWidget@index');
 
 Widget::register('widget__trial_order', 'App\Widgets\TrialOrder\TrialOrderWidget@index');
+
+Widget::register('widget__last_shares', 'App\Widgets\LatsShares\LatsSharesWidget@index');
