@@ -2,9 +2,9 @@
 
 @section('content')
 
-    {{--@if (empty($history))--}}
-        {{--@include('order.partials.summary_table')--}}
-    {{--@endif--}}
+    @if (empty($history))
+        @include('order.partials.summary_table')
+    @endif
 
     <div class="row">
         <div class="col-lg-12">
