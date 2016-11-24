@@ -74,6 +74,7 @@ class OrderService
             'user.subscribe.basket',
             'main_basket',
             'additional_baskets',
+            'ingredients',
             'coupon'
         )
             ->select(
@@ -181,6 +182,7 @@ class OrderService
             ->removeColumn('basket')
             ->removeColumn('main_basket')
             ->removeColumn('additional_baskets')
+            ->removeColumn('ingredients')
             ->removeColumn('user_id')
             ->removeColumn('coupon')
             ->removeColumn('additional_phone')

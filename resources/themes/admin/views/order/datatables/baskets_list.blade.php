@@ -22,3 +22,12 @@
         <div class="clearfix"></div>
     </div>
 @endforeach
+@foreach($model->ingredients as $ingredient)
+    <div class="basket-row">
+        <div class="pull-left">{!! $ingredient->getName() !!}&nbsp;
+            ({!! $ingredient->count !!}&nbsp;{!! $ingredient->getSaleUnit() !!})
+        </div>
+        <div class="pull-right">{!! $ingredient->getPriceInOrder() !!}</div>
+        <div class="clearfix"></div>
+    </div>
+@endforeach
