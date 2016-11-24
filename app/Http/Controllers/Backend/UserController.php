@@ -247,7 +247,7 @@ class UserController extends BackendController
     public function edit($id)
     {
         try {
-            $model = User::with(['orders', 'fields'])->whereId($id)->firstOrFail();
+            $model = User::with(['orders', 'fields', 'socials'])->whereId($id)->firstOrFail();
             $user_coupons = $model->coupons()->with(
                 [
                     'orders' => function ($query) use ($id) {

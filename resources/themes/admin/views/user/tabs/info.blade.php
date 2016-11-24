@@ -140,6 +140,16 @@
         </div>
     </div>
 
+    @foreach($model->socials as $social)
+        <div class="form-group">
+            {!! Form::label('source', trans('labels.social_network_link'), ['class' => 'col-md-3 control-label']) !!}
+
+            <div class="col-md-5">
+                {!! Form::text('', $social->profile_url, ['class' => 'form-control input-sm']) !!}
+            </div>
+        </div>
+    @endforeach
+
     <div class="form-group">
         {!! Form::label('first_order_date', trans('labels.first_order_date'), ['class' => 'col-md-3 control-label']) !!}
 
