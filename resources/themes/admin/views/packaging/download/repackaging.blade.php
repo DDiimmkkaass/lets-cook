@@ -1,8 +1,15 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link rel="stylesheet" href="{!! public_path('/assets/themes/'.$theme.'/css/excel_styles.css') !!}"/>
+</head>
+<body>
 
 @if (count($list))
     <div class="box-body table-responsive no-padding">
-        <table class="table table-bordered repackaging-packaging">
+        <table class="table table-bordered repackaging-packaging excel-table">
             <tbody>
             <tr style="background-color: #cccccc">
                 <th>@lang('labels.categories_&_ingredients')</th>
@@ -31,7 +38,9 @@
                     </tr>
                 @endforeach
 
-                <tr><td colspan="3" style="height: 1px; border-bottom: 1px solid #000"></td></tr>
+                <tr>
+                    <td colspan="3" style="height: 1px; border-bottom: 1px solid #000"></td>
+                </tr>
                 <tr>
                     <td colspan="3"></td>
                 </tr>
@@ -42,3 +51,6 @@
         </table>
     </div>
 @endif
+
+</body>
+</html>

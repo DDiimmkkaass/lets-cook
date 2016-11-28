@@ -1,8 +1,15 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link rel="stylesheet" href="{!! public_path('/assets/themes/'.$theme.'/css/excel_styles.css') !!}"/>
+</head>
+<body>
 
 @if (count($list))
     <div class="box-body table-responsive no-padding">
-        <table class="table table-bordered recipes-packaging">
+        <table class="table table-bordered recipes-packaging excel-table">
             <tbody>
 
             @foreach($list as $user)
@@ -68,13 +75,13 @@
                                 {!! $ingredients['name'] !!}
                                 @if ($ingredients['repacking']) (@lang('labels.need_repacking')) @endif
                             </td>
-                            <td  style="width: 15px; text-align: center">
+                            <td style="width: 15px; text-align: center">
                                 {!! $ingredients['count'] !!}
                             </td>
-                            <td  style="width: 25px; text-align: center">
+                            <td style="width: 25px; text-align: center">
                                 {!! $ingredients['unit'] !!}
                             </td>
-                            <td  style="width: 50px; text-align: center">
+                            <td style="width: 50px; text-align: center">
                                 {!! $ingredients['recipe'] !!}
                             </td>
                         </tr>
@@ -111,3 +118,6 @@
         </table>
     </div>
 @endif
+
+</body>
+</html>

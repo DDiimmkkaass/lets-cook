@@ -174,8 +174,10 @@ class BackendController extends BaseController
     private function fillThemeData()
     {
         Meta::title(config('app.name'));
-        
-        $this->data("module", $this->module);
+    
+        view()->share("theme", $this->_theme);
+    
+        view()->share("module", $this->module);
         
         view()->share("user", $this->user);
         

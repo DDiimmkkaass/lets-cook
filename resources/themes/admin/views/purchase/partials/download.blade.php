@@ -1,10 +1,17 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link rel="stylesheet" href="{!! public_path('/assets/themes/'.$theme.'/css/excel_styles.css') !!}"/>
+</head>
+<body>
 
 @php($baskets_count = count($baskets))
 @php($ingredients_count = count($list))
 
 <div class="box-body table-responsive no-padding">
-    <table>
+    <table class="excel-table">
         <tbody>
 
         <tr style="height: 30px">
@@ -87,3 +94,6 @@
         </tbody>
     </table>
 </div>
+
+</body>
+</html>

@@ -31,6 +31,7 @@ dev_path =
   coffee:__dirname.concat('/coffee/**.coffee')
   js:__dirname.concat('/js/**')
   sass: __dirname.concat('/sass/')
+  css: __dirname.concat('/css/')
 
 prod_path =
   fonts: projectRoot.concat('/public/assets/themes/' + theme + '/fonts/')
@@ -59,6 +60,12 @@ gulp.task theme.concat("::css"), ->
   .pipe(gulp.dest(prod_path.css))
   .on('error', plumber)
 
+  gulp.src(dev_path.css.concat('*.css'))
+  .pipe(plumber())
+  .pipe(prefix())
+  .pipe(minifyCSS(removeEmpty: true))
+  .pipe(gulp.dest(prod_path.css))
+  .on('error', plumber)
 
 gulp.task theme.concat('::css:dev'), ->
   gulp.src(dev_path.sass.concat('*.sass'))
@@ -69,8 +76,15 @@ gulp.task theme.concat('::css:dev'), ->
   .pipe(gulp.dest(prod_path.css))
   .on('error', plumber)
 
+  gulp.src(dev_path.css.concat('*.css'))
+  .pipe(plumber())
+  .pipe(prefix())
+  .pipe(gulp.dest(prod_path.css))
+  .on('error', plumber)
+
 gulp.task theme.concat('::css:watch'), ->
   gulp.watch dev_path.sass.concat('**/*.sass') , [theme.concat('::css:dev')]
+  gulp.watch dev_path.css.concat('**/*.css') , [theme.concat('::css:dev')]
 
 # COFFEE #
 gulp.task theme.concat('::coffee'), ->
@@ -103,7 +117,6 @@ gulp.task theme.concat('::purejs'), ->
 
 gulp.task theme.concat('::purejs:watch'), ->
   gulp.watch dev_path.js.concat('/*.js'), [theme.concat('::purejs')]
-
 
 # IMAGES #
 gulp.task theme.concat('::images'), ->

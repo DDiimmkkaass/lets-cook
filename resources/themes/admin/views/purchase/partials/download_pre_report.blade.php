@@ -1,9 +1,16 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link rel="stylesheet" href="{!! public_path('/assets/themes/'.$theme.'/css/excel_styles.css') !!}"/>
+</head>
+<body>
 
 @php($baskets_count = count($baskets))
 @php($ingredients_count = count($list))
 
-<div class="box-body table-responsive no-padding">
+<div class="box-body table-responsive no-padding excel-table">
     <table>
         <tbody>
 
@@ -45,7 +52,12 @@
         @foreach($list as $ingredient)
             @if (($i > 0 && $ingredient['supplier_id'] != $supplier_id))
                 <tr>
-                    <th></th><th></th><th></th><th></th><th></th><th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                     <th style="text-align: center">
                         {!! $supplier_name !!} @lang('labels.result')
                     </th>
@@ -76,7 +88,12 @@
 
             @if ($ingredients_count - 1 == $i)
                 <tr>
-                    <th></th><th></th><th></th><th></th><th></th><th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
                     <th style="text-align: center">
                         {!! $ingredient['supplier_name'] !!} @lang('labels.result')
                     </th>
@@ -95,3 +112,6 @@
         </tbody>
     </table>
 </div>
+
+</body>
+</html>

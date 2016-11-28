@@ -1,7 +1,14 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link rel="stylesheet" href="{!! public_path('/assets/themes/'.$theme.'/css/excel_styles.css') !!}"/>
+</head>
+<body>
 
 <div class="box-body table-responsive no-padding">
-    <table class="table table-bordered recipes-packaging">
+    <table class="table table-bordered recipes-packaging excel-table">
         <tbody>
 
         <tr style="background-color: #cccccc; height: 30px;">
@@ -18,7 +25,9 @@
             </th>
         </tr>
 
-        <tr><td colspan="4"></td></tr>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
 
         <tr>
             <th>@lang('labels.category')</th>
@@ -27,14 +36,16 @@
             <th style="text-align: center;">@lang('labels.unit')</th>
         </tr>
 
-        <tr><td colspan="4"></td></tr>
+        <tr>
+            <td colspan="4"></td>
+        </tr>
 
         @foreach($recipe['packages'] as $package => $ingredients)
             @if (count($ingredients))
                 <tr>
                     <td></td>
                     <td><b>@lang('labels.package') {!! $package !!}</b></td>
-                    <td colspan="3"></td>
+                    <td colspan="2"></td>
                 </tr>
                 @foreach($ingredients as $ingredient)
                     <tr>
@@ -48,8 +59,12 @@
                         <td style="text-align: center;">{!! $ingredient['unit_name'] !!}</td>
                     </tr>
                 @endforeach
-                <tr><td colspan="4" style="height: 1px; border-bottom: 1px solid #000"></td></tr>
-                <tr><td colspan="4"></td></tr>
+                <tr>
+                    <td colspan="4" style="height: 1px; border-bottom: 1px solid #000"></td>
+                </tr>
+                <tr>
+                    <td colspan="4"></td>
+                </tr>
             @endif
         @endforeach
 
@@ -70,10 +85,15 @@
                         @endforeach
                     </td>
                 </tr>
-                <tr><td colspan="4" style="height: 1px; border-bottom: 1px solid #000"></td></tr>
+                <tr>
+                    <td colspan="4" style="height: 1px; border-bottom: 1px solid #000"></td>
+                </tr>
             @endforeach
         @endunless
 
         </tbody>
     </table>
 </div>
+
+</body>
+</html>

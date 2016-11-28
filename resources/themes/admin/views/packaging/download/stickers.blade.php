@@ -1,7 +1,14 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <link rel="stylesheet" href="{!! public_path('/assets/themes/'.$theme.'/css/excel_styles.css') !!}"/>
+</head>
+<body>
 
 <div class="box-body table-responsive no-padding">
-    <table class="table table-bordered stickers-packaging">
+    <table class="table table-bordered stickers-packaging excel-table">
         <tbody>
         <tr>
             <th style="background-color: #cccccc; text-align: center;">@lang('labels.basket')</th>
@@ -55,3 +62,6 @@
         </tbody>
     </table>
 </div>
+
+</body>
+</html>
