@@ -63,11 +63,17 @@
                             @php($height += 15)
                         @endforeach
                     @endif
+                    @if ($order->ingredients->count())
+                        @foreach($order->ingredients as $ingredient)
+                            @php($baskets .= '<br><div>'.$ingredient->getName().'('.$ingredient->count.$ingredient->getSaleUnit().'),</div>')
+                            @php($height += 15)
+                        @endforeach
+                    @endif
 
                     @php($height = max($height, 30))
 
                     @php($background = $i % 2 == 0 ? ' background-color: #dddddd; ' : '')
-                    <tr style="height: {!! $height !!}px">
+                    <tr style="height: {!! $height !!}px; vertical-align: top">
                         <td style="text-align: center; {!! $background !!}">
                             {!! $i !!}
                         </td>

@@ -78,6 +78,12 @@
                                     {!! $basket->getName() !!},
                                 @endforeach
                             @endif
+                            @if ($order->ingredients->count())
+                                <br>@lang('labels.ingredients'):
+                                @foreach($order->ingredients as $ingredient)
+                                    {!! $ingredient->getName() !!}({!! $ingredient->count.$ingredient->getSaleUnit() !!}),
+                                @endforeach
+                            @endif
                         </td>
                         <td class="text-center">
                             {!! $order->getPlacesCount() !!}
