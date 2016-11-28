@@ -153,6 +153,22 @@ class Coupon extends Model
     }
     
     /**
+     * @return int|float
+     */
+    public function getMainDiscount()
+    {
+        return in_array($this->getStringType(), ['main', 'all']) ? $this->discount : 0;
+    }
+    
+    /**
+     * @return int|float
+     */
+    public function getAdditionalDiscount()
+    {
+        return in_array($this->getStringType(), ['additional', 'all']) ? $this->discount : 0;
+    }
+    
+    /**
      * @return bool
      */
     public function started()

@@ -150,8 +150,8 @@ Order.calculateTotal = () ->
       total = total - order_discount
 
   __total = Math.round(total)
-  $total_mobile.html(__total);
-  $total_popup.text(__total);
+  $total_mobile.html(__total)
+  $total_popup.text(__total)
 
   if recipes > 0
     per_portions = Math.round(total / recipes / portions)
@@ -186,21 +186,25 @@ Order.calculateTotal = () ->
         _order_discount = (_total / 100 * additional_discount)
         _total = _total - _order_discount
 
-  total = Math.round(total + _total)
+  total = total + _total
+
   order_discount = Math.round(order_discount + _order_discount)
 
   if total < 0
     total = 0
 
+  _total = Math.round(total / 50) * 50
+  order_discount = Math.round(order_discount + (total - _total))
+
   if order_discount < 0 || isNaN(order_discount)
     order_discount = 0
 
-  $order_total_steps.text(total)
+  $order_total_steps.text(_total)
 
-  total += '<span>' + currency + '</span>';
+  _total += '<span>' + currency + '</span>';
   order_discount += '<span>' + currency + '</span>';
 
-  $total.html(total)
+  $total.html(_total)
 
   $order_discount.html(order_discount)
 

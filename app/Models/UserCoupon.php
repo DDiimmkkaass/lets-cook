@@ -181,7 +181,7 @@ class UserCoupon extends Model
      */
     public function getMainDiscount()
     {
-        return in_array($this->getType(), ['main', 'all']) ? $this->coupon->discount : 0;
+        return $this->coupon->getMainDiscount();
     }
     
     /**
@@ -189,7 +189,7 @@ class UserCoupon extends Model
      */
     public function getAdditionalDiscount()
     {
-        return in_array($this->coupon->getType(), ['additional', 'all']) ? $this->coupon->discount : 0;
+        return $this->coupon->getAdditionalDiscount();
     }
     
     /**

@@ -521,7 +521,9 @@ class Order extends Model
      */
     public function getDiscount()
     {
-        return $this->subtotal - $this->total;
+        $discount = $this->subtotal - $this->total;
+        
+        return $discount < 0 ? 0 : $discount;
     }
     
     /**

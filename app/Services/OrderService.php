@@ -943,6 +943,8 @@ class OrderService
             $total = $subtotal;
         }
         
+        $total = (round($total / 50)) * 50;
+        
         return [$subtotal, $total];
     }
     

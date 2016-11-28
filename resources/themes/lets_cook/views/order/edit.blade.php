@@ -161,7 +161,7 @@
                                         <option value="{!! $coupon->coupon_id !!}"
                                                 data-code="{!! $coupon->getCode() !!}"
                                                 data-main_discount="{!! $coupon->getMainDiscount() !!}"
-                                                data-additional_discount="{!! $coupon->getMainDiscount() !!}"
+                                                data-additional_discount="{!! $coupon->getAdditionalDiscount() !!}"
                                                 data-discount_type="{!! $coupon->getDiscountType() !!}"
                                                 @if ($order->coupon_id == $coupon->coupon_id)
                                                     data-selected
@@ -186,8 +186,8 @@
 
                     <input type="text" name="coupon_code"
                            class="order-edit__kupon input-order-edit"
-                           data-main_discount="0"
-                           data-additional_discount="0"
+                           data-main_discount="{!! $order->coupon->getMainDiscount() !!}"
+                           data-additional_discount="{!! $order->coupon->getAdditionalDiscount() !!}"
                            data-discount_type=""
                            placeholder="Введите сюда код">
 
