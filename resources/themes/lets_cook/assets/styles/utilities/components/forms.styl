@@ -402,7 +402,6 @@
     outline: none
     text-align: center
     background-color: transparent
-    color: $font-gray-1
     font-family: $ptsans-caption-regular
     fsh(40px * (310 / 720), 80px * (310 / 720))
     appearance: none
@@ -428,7 +427,10 @@
       height: 40px
       fsh(14px, 40px)
 
-
+    option
+      color: $font-gray-1!important
+      &:checked
+        color $font-black-1!important
 
 
 .large-select
