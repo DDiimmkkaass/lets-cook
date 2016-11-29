@@ -856,7 +856,7 @@ class PackagingService
         $file_name = trans('labels.tab_'.$type).' '.trans('labels.w_label').$week.' '.$year;
         
         if (before_finalisation($year, $week)) {
-            return trans('labels.this_is_not_final_version').'. '.$file_name;
+            $file_name = trans('labels.this_is_not_final_version').'. '.$file_name;
         }
         
         $file_name = str_replace(' ', '_', $file_name);
