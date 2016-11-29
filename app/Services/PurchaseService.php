@@ -557,7 +557,9 @@ class PurchaseService
         $file_name .= str_replace(' ', '_', trans('labels.list_of_purchase')).'_'.
             trans('labels.w_label').$week.'_'.$year;
         
-        $file_name .= $supplier_name ? '_'.str_replace(' ', '_', $supplier_name) : '';
+        $file_name .= $supplier_name ? '_'.$supplier_name : '';
+    
+        $file_name = str_replace(' ', '_', $file_name);
         
         return $download ? $file_name : trans('labels.all_prefix').' '.$file_name;
     }
