@@ -14,6 +14,9 @@ use App\Models\User;
 use App\Models\UserCoupon;
 use Carbon\Carbon;
 use Datatables;
+use DB;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 /**
  * Class CouponService
@@ -23,28 +26,37 @@ class CouponService
 {
     
     /**
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array|\Bllim\Datatables\json
      */
-    public function table()
+    public function table(Request $request)
     {
-        $list = Coupon::select(
-            'coupons.id',
-            'coupons.name',
-            'coupons.code',
-            'coupons.discount',
-            'coupons.discount_type',
-            'coupons.type',
-            'coupons.count',
-            'coupons.users_count',
-            'coupons.users_type',
-            'coupons.started_at',
-            'coupons.expired_at'
-        );
+        $list = Coupon::with('tags')
+            ->select(
+                'coupons.id',
+                'coupons.name',
+                DB::raw('1 as tags_list'),
+                'coupons.code',
+                'coupons.discount',
+                'coupons.discount_type',
+                'coupons.type',
+                'coupons.count',
+                'coupons.users_count',
+                'coupons.users_type',
+                'coupons.started_at',
+                'coupons.expired_at'
+            );
+    
+        $this->_implodeFilters($list, $request);
         
         return $dataTables = Datatables::of($list)
-            ->filterColumn('id', 'where', 'coupons.id', '=', '$1')
-            ->filterColumn('name', 'where', 'coupons.name', 'LIKE', '%$1%')
-            ->filterColumn('code', 'where', 'coupons.code', 'LIKE', '%$1%')
+            ->editColumn(
+                'tags_list',
+                function ($model) {
+                    return $model->tagsList();
+                }
+            )
             ->editColumn(
                 'discount_type',
                 function ($model) {
@@ -77,6 +89,7 @@ class CouponService
                 }
             )
             ->setIndexColumn('id')
+            ->removeColumn('tags')
             ->removeColumn('users_count')
             ->removeColumn('users_type')
             ->removeColumn('expired_at')
@@ -424,6 +437,27 @@ class CouponService
                     'default'   => $default,
                 ]
             );
+        }
+    }
+    
+    /**
+     * @param Builder $list
+     * @param Request $request
+     */
+    private function _implodeFilters(&$list, $request)
+    {
+        $filters = $request->get('datatable_filters');
+        
+        if (count($filters)) {
+            foreach ($filters as $filter => $value) {
+                if ($value !== '' && $value !== 'null') {
+                    switch ($filter) {
+                        case 'tags':
+                            $list->joinTags()->whereIn('tags.id', explode(',', $value));
+                            break;
+                    }
+                }
+            }
         }
     }
 }

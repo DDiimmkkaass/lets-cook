@@ -152,18 +152,6 @@ class Recipe extends Model implements FrontLink, MetaGettable
     }
     
     /**
-     * @param $query
-     *
-     * @return mixed
-     */
-    public function scopeJoinTags($query)
-    {
-        return $query->leftJoin('tagged', 'tagged.taggable_id', '=', 'recipes.id')
-            ->whereRaw('taggable_type = \''.str_replace('\\', '\\\\', self::class).'\'')
-            ->leftJoin('tags', 'tags.id', '=', 'tagged.tag_id');
-    }
-    
-    /**
      * @param        $query
      *
      * @return mixed

@@ -112,13 +112,7 @@ class RecipeService
             ->editColumn(
                 'recipe_tags',
                 function ($model) {
-                    $tags = '';
-                    
-                    foreach ($model->tags as $tag) {
-                        $tags .= $tag->tag->name.', ';
-                    }
-                    
-                    return trim($tags, ', ');
+                    return $model->tagsList();
                 }
             )
             ->editColumn(

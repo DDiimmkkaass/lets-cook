@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\TaggableTrait;
 use Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Coupon extends Model
 {
+
+    use TaggableTrait;
     
     /**
      * @var array

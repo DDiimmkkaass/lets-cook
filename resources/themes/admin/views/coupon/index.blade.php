@@ -9,12 +9,13 @@
                     <div class="coupons-table">
                         {!!
                             TablesBuilder::create(
-                                ['id' => "datatable1", 'class' => "table table-bordered table-striped table-hover"],
+                                ['id' => "datatable1", 'class' => "table table-bordered table-striped table-hover filtered-datatable"],
                                 ['bStateSave' => true, 'order' => [[ 0, 'desc' ]]]
                             )
                             ->addHead([
                                 ['text' => trans('labels.id')],
                                 ['text' => trans('labels.name')],
+                                ['text' => trans('labels.tags')],
                                 ['text' => trans('labels.code')],
                                 ['text' => trans('labels.discount')],
                                 ['text' => trans('labels.discount_type')],
@@ -24,7 +25,9 @@
                                 ['text' => trans('labels.actions')]
                             ])
                             ->addFoot([
-                                ['attr' => ['colspan' => 8]]
+                                ['attr' => ['colspan' => 2]],
+                                ['text' => Form::select('datatable_filters[tags]', $tags, null, ['class' => 'form-control select2 input-sm datatable-filter', 'multiple' => 'multiple'])],
+                                ['attr' => ['colspan' => 5]]
                             ])
                              ->make()
                         !!}

@@ -11,6 +11,8 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Requests\Backend\Coupon\CouponRequest;
 use App\Models\Coupon;
 use App\Services\CouponService;
+use App\Traits\Controllers\ProcessTagsTrait;
+use DB;
 use Exception;
 use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
@@ -24,6 +26,8 @@ use Meta;
  */
 class CouponController extends BackendController
 {
+    
+    use ProcessTagsTrait;
     
     /**
      * @var string
@@ -74,11 +78,13 @@ class CouponController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            return $this->couponService->table();
+            return $this->couponService->table($request);
         }
         
         $this->data('page_title', trans('labels.all_coupons'));
         $this->breadcrumbs(trans('labels.coupons_list'));
+    
+        $this->_fillAdditionalTemplateData();
         
         return $this->render('views.'.$this->module.'.index');
     }
@@ -113,12 +119,20 @@ class CouponController extends BackendController
     public function store(CouponRequest $request)
     {
         try {
-            $this->couponService->create($request->all());
+            DB::beginTransaction();
+            
+            $coupon = $this->couponService->create($request->all());
+            
+            $this->processTags($coupon);
+            
+            DB::commit();
             
             FlashMessages::add('success', trans('messages.save_ok'));
             
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
+            DB::rollBack();
+            
             FlashMessages::add('error', trans('messages.save_failed'));
             
             return redirect()->back()->withInput();
@@ -155,7 +169,7 @@ class CouponController extends BackendController
             
             $this->breadcrumbs(trans('labels.coupon_editing'));
     
-            $this->_fillAdditionalTemplateData();
+            $this->_fillAdditionalTemplateData($model);
             
             return $this->render('views.'.$this->module.'.edit', compact('model'));
         } catch (ModelNotFoundException $e) {
@@ -177,20 +191,29 @@ class CouponController extends BackendController
     public function update($id, CouponRequest $request)
     {
         try {
+            DB::beginTransaction();
+            
             $model = Coupon::findOrFail($id);
             
             $model->fill($request->all());
-            
             $model->save();
+            
+            $this->processTags($model);
+            
+            DB::commit();
             
             FlashMessages::add('success', trans('messages.save_ok'));
             
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            
             FlashMessages::add('error', trans('messages.record_not_found'));
             
             return redirect()->route('admin.'.$this->module.'.index');
         } catch (Exception $e) {
+            DB::rollBack();
+            
             FlashMessages::add("error", trans('messages.update_error'));
             
             return redirect()->back()->withInput();
@@ -228,8 +251,10 @@ class CouponController extends BackendController
     
     /**
      * fill additional template data
+     *
+     * @param Coupon|null $model
      */
-    private function _fillAdditionalTemplateData()
+    private function _fillAdditionalTemplateData($model = null)
     {
         $types = [];
         foreach (Coupon::getTypes() as $id => $type) {
@@ -248,5 +273,8 @@ class CouponController extends BackendController
             $users_types[$id] = trans('labels.discount_users_type_'.$users_type);
         }
         $this->data('users_types', $users_types);
+        
+        $this->data('tags', $this->getTagsList());
+        $this->data('selected_tags', $this->getSelectedTagsList($model));
     }
 }
