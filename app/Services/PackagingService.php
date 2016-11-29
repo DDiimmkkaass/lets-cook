@@ -298,7 +298,7 @@ class PackagingService
         $data = $this->repackagingForWeek($year, $week);
         
         $excel = Excel::create(
-            $this->_getFileName($year, $week, 'repackaging'),
+            $this->_getFileName($year, $week, 'repackaging', $download),
             function ($excel) use ($data, $year, $week) {
                 $excel->sheet(
                     trans('labels.ingredients_which_need_repackaging'),
@@ -332,7 +332,7 @@ class PackagingService
         $data = $this->recipesForWeek($year, $week);
         
         $excel = Excel::create(
-            $this->_getFileName($year, $week, 'packaging_recipes'),
+            $this->_getFileName($year, $week, 'packaging_recipes', $download),
             function ($excel) use ($data, $year, $week) {
                 foreach ($data as $recipe) {
                     $sheet = get_excel_sheet_name($recipe['name']);
@@ -371,7 +371,7 @@ class PackagingService
         $list = $this->stickersForWeek($year, $week);
         
         $excel = Excel::create(
-            $this->_getFileName($year, $week, 'stickers'),
+            $this->_getFileName($year, $week, 'stickers', $download),
             function ($excel) use ($list, $year, $week) {
                 $excel->sheet(
                     trans('labels.stickers'),
@@ -407,7 +407,7 @@ class PackagingService
         $booklet = Booklet::forWeek($year, $week)->first();
         
         $excel = Excel::create(
-            $this->_getFileName($year, $week, 'packaging_booklet'),
+            $this->_getFileName($year, $week, 'packaging_booklet', $download),
             function ($excel) use ($list, $booklet) {
                 $excel->sheet(
                     trans('labels.booklet'),
@@ -442,7 +442,7 @@ class PackagingService
         $data = $this->usersForWeek($year, $week);
         
         $excel = Excel::create(
-            $this->_getFileName($year, $week, 'packaging_users'),
+            $this->_getFileName($year, $week, 'packaging_users', $download),
             function ($excel) use ($data, $year, $week) {
                 $excel->sheet(
                     trans('labels.users'),
@@ -476,7 +476,7 @@ class PackagingService
         $data = $this->deliveriesForWeek($year, $week);
         
         $excel = Excel::create(
-            $this->_getFileName($year, $week, 'packaging_deliveries'),
+            $this->_getFileName($year, $week, 'packaging_deliveries', $download),
             function ($excel) use ($data, $year, $week) {
                 $excel->sheet(
                     trans('labels.deliveries'),
@@ -847,17 +847,20 @@ class PackagingService
      * @param int    $year
      * @param int    $week
      * @param string $type
+     * @param bool   $download
      *
      * @return string
      */
-    private function _getFileName($year, $week, $type)
+    private function _getFileName($year, $week, $type, $download = true)
     {
-        $file_name = trans('labels.tab_'.$type).' '.trans('labels.w_label').$week.', '.$year;
+        $file_name = trans('labels.tab_'.$type).' '.trans('labels.w_label').$week.' '.$year;
         
         if (before_finalisation($year, $week)) {
             return trans('labels.this_is_not_final_version').'. '.$file_name;
         }
         
-        return $file_name;
+        $file_name = str_replace(' ', '_', $file_name);
+
+        return $download ? $file_name : trans('labels.all_prefix').' '.$file_name;
     }
 }

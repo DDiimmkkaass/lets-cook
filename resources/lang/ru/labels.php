@@ -696,4 +696,5 @@ return array (
   'share_creating' => 'Создание акции',
   'share_editing' => 'Редактирование акции',
   'social_network_link' => 'Ссылка на соц. профиль',
+  'all_prefix' => '_',
 );

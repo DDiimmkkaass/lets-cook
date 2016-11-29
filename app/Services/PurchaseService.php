@@ -181,7 +181,7 @@ class PurchaseService
                 Supplier::whereId($supplier_id)->first()->name
             ) : '';
         
-        $file_name = $this->_getDownloadFileName($year, $week, $supplier_name, $pre_report);
+        $file_name = $this->_getDownloadFileName($year, $week, $supplier_name, $pre_report, $download);
         $sheet_name = $this->_getSheetTabName($supplier_name, $pre_report);
         $view = $this->_getViewName($pre_report);
         
@@ -222,9 +222,9 @@ class PurchaseService
                 );
             }
         );
-    
+        
         $excel->store('xls', false, true);
-    
+        
         return $download ?
             $excel->download() :
             config('excel.export.store.path').'/'.$excel->getFileName().'.'.$excel->ext;
@@ -469,7 +469,7 @@ class PurchaseService
         
         if (empty($ingredients)) {
             Purchase::where('week', $list['week'])->where('year', $list['year'])->delete();
-        }  else {
+        } else {
             foreach ($ingredients as $type => $_ingredients) {
                 Purchase::where('week', $list['week'])->where('year', $list['year'])
                     ->whereType($type)
@@ -546,15 +546,20 @@ class PurchaseService
      * @param int    $week
      * @param string $supplier_name
      * @param bool   $pre_report
+     * @param bool   $download
      *
      * @return string
      */
-    private function _getDownloadFileName($year, $week, $supplier_name, $pre_report = false)
+    private function _getDownloadFileName($year, $week, $supplier_name, $pre_report = false, $download = true)
     {
-        return ($pre_report ? trans('labels.not_final_version').'. ' : '').
-        str_replace(' ', '_', trans('labels.list_of_purchase')).'_'.
-        trans('labels.w_label').$week.'_'.$year.
-        ($supplier_name ? '_'.str_replace(' ', '_', $supplier_name) : '');
+        $file_name = $pre_report ? trans('labels.not_final_version').'. ' : '';
+        
+        $file_name .= str_replace(' ', '_', trans('labels.list_of_purchase')).'_'.
+            trans('labels.w_label').$week.'_'.$year;
+        
+        $file_name .= $supplier_name ? '_'.str_replace(' ', '_', $supplier_name) : '';
+        
+        return $download ? $file_name : trans('labels.all_prefix').' '.$file_name;
     }
     
     /**
