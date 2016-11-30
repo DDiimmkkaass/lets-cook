@@ -30,7 +30,7 @@ class CouponService
      *
      * @return array|\Bllim\Datatables\json
      */
-    public function table(Request $request)
+    public function tableIndex(Request $request)
     {
         $list = Coupon::with('tags')
             ->select(
@@ -47,7 +47,7 @@ class CouponService
                 'coupons.started_at',
                 'coupons.expired_at'
             );
-    
+        
         $this->_implodeFilters($list, $request);
         
         return $dataTables = Datatables::of($list)
@@ -93,6 +93,92 @@ class CouponService
             ->removeColumn('users_count')
             ->removeColumn('users_type')
             ->removeColumn('expired_at')
+            ->make();
+    }
+    
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|\Bllim\Datatables\json
+     */
+    public function tableUsing(Request $request)
+    {
+        $list = Coupon::joinOrders()
+            ->with('tags')
+            ->where('orders.status', Order::getStatusIdByName('archived'))
+            ->select(
+                'coupons.id',
+                'coupons.name',
+                DB::raw('1 as tags_list'),
+                'coupons.code',
+                'orders.user_id',
+                'orders.full_name',
+                DB::raw('orders.id as order_id'),
+                DB::raw('orders.total as order_total'),
+                DB::raw('(orders.subtotal - orders.total) as order_discount'),
+                'orders.created_at'
+            )
+            ->groupBy('orders.id');
+        
+        $this->_implodeFilters($list, $request);
+        
+        return $dataTables = Datatables::of($list)
+            ->editColumn(
+                'name',
+                function ($model) {
+                    return '<a href="'.route('admin.coupon.edit', $model->id).'" 
+                            title="'.trans('labels.go_to_coupon').' '.$model->name.'">
+                            '.$model->name.' (#'.$model->id.')
+                            </a>';
+                }
+            )
+            ->editColumn(
+                'tags_list',
+                function ($model) {
+                    return $model->tagsList();
+                }
+            )
+            ->editColumn(
+                'full_name',
+                function ($model) {
+                    return '<a href="'.route('admin.user.show', $model->user_id).'" 
+                            title="'.trans('labels.go_to_user').' '.$model->full_name.'">
+                            '.$model->full_name.' (#'.$model->user_id.')
+                            </a>';
+                }
+            )
+            ->editColumn(
+                'order_id',
+                function ($model) {
+                    return '<a href="'.route('admin.order.edit', $model->order_id).'" 
+                            title="'.trans('labels.go_to_order').' '.$model->order_id.'">
+                            '.trans('labels.order').' (#'.$model->order_id.')
+                            </a>';
+                }
+            )
+            ->editColumn(
+                'created_at',
+                function ($model) {
+                    $html = view('partials.datatables.humanized_date', ['date' => $model->created_at])->render();
+                    
+                    return '<div class="text-center">'.$html.'<div>';
+                }
+            )
+            ->editColumn(
+                'order_total',
+                function ($model) {
+                    return $model->order_total / 100;
+                }
+            )
+            ->editColumn(
+                'order_discount',
+                function ($model) {
+                    return $model->order_discount / 100;
+                }
+            )
+            ->setIndexColumn('id')
+            ->removeColumn('tags')
+            ->removeColumn('user_id')
             ->make();
     }
     
@@ -454,6 +540,18 @@ class CouponService
                     switch ($filter) {
                         case 'tags':
                             $list->joinTags()->whereIn('tags.id', explode(',', $value));
+                            break;
+                        case 'date_from':
+                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
+                                $value = Carbon::createFromFormat('d-m-Y', $value)->startOfDay()->format('Y-m-d H:i:s');
+                                $list->where('orders.created_at', '>=', $value);
+                            }
+                            break;
+                        case 'date_to':
+                            if (preg_match('/^[\d]{2}-[\d]{2}-[\d]{4}$/', $value)) {
+                                $value = Carbon::createFromFormat('d-m-Y', $value)->endOfDay()->format('Y-m-d H:i:s');
+                                $list->where('orders.created_at', '<=', $value);
+                            }
                             break;
                     }
                 }

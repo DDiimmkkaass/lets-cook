@@ -697,4 +697,8 @@ return array (
   'share_editing' => 'Редактирование акции',
   'social_network_link' => 'Ссылка на соц. профиль',
   'all_prefix' => '_',
+  'go_to_order' => 'Перейти к заказу',
+  'go_to_coupon' => 'Перейти к купону',
+  'coupons_using' => 'Использование купонов',
+  'list_of_coupons_using' => 'Список использованых купонов',
 );

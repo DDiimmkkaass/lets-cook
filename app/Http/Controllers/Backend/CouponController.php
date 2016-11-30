@@ -38,13 +38,14 @@ class CouponController extends BackendController
      * @var array
      */
     public $accessMap = [
-        'index'   => 'coupon.read',
-        'create'  => 'coupon.create',
-        'store'   => 'coupon.create',
-        'show'    => 'coupon.read',
-        'edit'    => 'coupon.read',
-        'update'  => 'coupon.write',
-        'destroy' => 'coupon.delete',
+        'index'      => 'coupon.read',
+        'indexUsing' => 'coupon.using',
+        'create'     => 'coupon.create',
+        'store'      => 'coupon.create',
+        'show'       => 'coupon.read',
+        'edit'       => 'coupon.read',
+        'update'     => 'coupon.write',
+        'destroy'    => 'coupon.delete',
     ];
     
     /**
@@ -78,15 +79,34 @@ class CouponController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            return $this->couponService->table($request);
+            return $this->couponService->tableIndex($request);
         }
         
         $this->data('page_title', trans('labels.all_coupons'));
         $this->breadcrumbs(trans('labels.coupons_list'));
-    
+        
         $this->_fillAdditionalTemplateData();
         
         return $this->render('views.'.$this->module.'.index');
+    }
+    
+    /**
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return array|\Bllim\Datatables\json|\Illuminate\Contracts\View\View
+     */
+    public function using(Request $request)
+    {
+        if ($request->get('draw')) {
+            return $this->couponService->tableUsing($request);
+        }
+        
+        $this->data('page_title', trans('labels.all_coupons'));
+        $this->breadcrumbs(trans('labels.list_of_coupons_using'));
+        
+        $this->_fillAdditionalTemplateData();
+        
+        return $this->render('views.'.$this->module.'.using');
     }
     
     /**
@@ -168,7 +188,7 @@ class CouponController extends BackendController
             $this->data('page_title', trans('labels.coupon_editing').' ('.$model->code.')');
             
             $this->breadcrumbs(trans('labels.coupon_editing'));
-    
+            
             $this->_fillAdditionalTemplateData($model);
             
             return $this->render('views.'.$this->module.'.edit', compact('model'));
@@ -237,7 +257,7 @@ class CouponController extends BackendController
                 FlashMessages::add('warning', trans("messages.you can not delete this coupon as it is used in orders"));
             } else {
                 $model->delete();
-    
+                
                 FlashMessages::add('success', trans("messages.destroy_ok"));
             }
         } catch (ModelNotFoundException $e) {
@@ -261,13 +281,13 @@ class CouponController extends BackendController
             $types[$id] = trans('labels.discount_type_'.$type);
         }
         $this->data('types', $types);
-    
+        
         $discount_types = [];
         foreach (Coupon::getDiscountTypes() as $id => $discount_type) {
             $discount_types[$id] = trans('labels.discount_discount_type_'.$discount_type);
         }
         $this->data('discount_types', $discount_types);
-    
+        
         $users_types = [];
         foreach (Coupon::getUsersTypes() as $id => $users_type) {
             $users_types[$id] = trans('labels.discount_users_type_'.$users_type);

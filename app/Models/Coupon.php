@@ -140,6 +140,16 @@ class Coupon extends Model
     }
     
     /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinOrders($query)
+    {
+        return $query->join('orders', 'orders.coupon_id', '=', 'coupons.id');
+    }
+    
+    /**
      * @return string|Carbon
      */
     public function getStartedAt()

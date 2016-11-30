@@ -151,9 +151,9 @@
 
             <li class="header">@lang('labels.orders')</li>
             @if ($user->hasAccess('coupon.read'))
-                <li class="{!! active_class('admin.coupon*') !!}">
+                <li class="{!! active_class('admin.coupon*', 'active', 'admin.coupon.using*') !!}">
                     <a href="{!! route('admin.coupon.index') !!}">
-                        <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                        <i class="fa fa-percent" aria-hidden="true"></i>
                         <span>@lang('labels.coupons')</span>
 
                         @if ($user->hasAccess('coupon.create'))
@@ -162,6 +162,14 @@
                                 <i class="fa fa-plus"></i>
                             </small>
                         @endif
+                    </a>
+                </li>
+            @endif
+            @if ($user->hasAccess('coupon.using'))
+                <li class="{!! active_class('admin.coupon.using*') !!}">
+                    <a href="{!! route('admin.coupon.using') !!}">
+                        <i class="fa fa-tasks" aria-hidden="true"></i>
+                        <span>@lang('labels.coupons_using')</span>
                     </a>
                 </li>
             @endif

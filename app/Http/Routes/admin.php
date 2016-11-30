@@ -385,6 +385,13 @@ $router->group(
                 $router->resource('city', 'Backend\CityController');
                 
                 //coupons
+                $router->get(
+                    'coupon/using',
+                    [
+                        'as'         => 'admin.coupon.using',
+                        'uses'       => 'Backend\CouponController@using',
+                    ]
+                );
                 $router->resource('coupon', 'Backend\CouponController');
                 
                 //orders

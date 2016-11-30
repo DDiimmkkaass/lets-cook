@@ -73,6 +73,7 @@ return array (
     
     'coupon.create',
     'coupon.read',
+    'coupon.using',
     'coupon.write',
     'coupon.delete',
     
