@@ -101,7 +101,7 @@ class CouponController extends BackendController
             return $this->couponService->tableUsing($request);
         }
         
-        $this->data('page_title', trans('labels.all_coupons'));
+        $this->data('page_title', trans('labels.list_of_coupons_using'));
         $this->breadcrumbs(trans('labels.list_of_coupons_using'));
         
         $this->_fillAdditionalTemplateData();
