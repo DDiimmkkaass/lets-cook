@@ -10,7 +10,7 @@
                         {!!
                             TablesBuilder::create(
                                 ['id' => "datatable1", 'class' => "table table-bordered table-striped table-hover filtered-datatable"],
-                                ['bStateSave' => false, 'order' => [[ 8, 'desc' ]]]
+                                ['bStateSave' => true, 'order' => [[ 8, 'desc' ]]]
                             )
                             ->addHead([
                                 ['text' => trans('labels.id')],
