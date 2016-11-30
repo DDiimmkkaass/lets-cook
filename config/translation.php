@@ -12,6 +12,7 @@ return [
         'front_texts',
         'front_labels',
         'front_messages',
+        'front_emails',
     ],
 
     'per_page' => 500,

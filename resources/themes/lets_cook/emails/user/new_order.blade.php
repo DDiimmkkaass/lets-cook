@@ -5,7 +5,7 @@
 @section('content')
 
     <div>
-        <div> @lang('front_messages.thanks for you order on site :site_name', ['site_name' => config('app.name')])</div>
+        <div> @lang('front_emails.new order user message :site_name', ['site_name' => config('app.name')])</div>
 
         <h3>@lang('front_labels.your_info')</h3>
         <div>
@@ -17,7 +17,7 @@
 
         <div>
             <div>
-                <b>@lang('front_labels.date')</b>: {!! $order->getFormattedDeliveryDate() !!}</div>
+                <b>@lang('front_labels.date')</b>: {!! $order->getFormattedDeliveryDate() !!}
                 <b>@lang('front_labels.address')</b>: {!! $order->getFullAddress()  !!}
                 @if ($order->comment)
                     <p>{!! $order->commnet !!}</p>
@@ -36,9 +36,8 @@
         <h3>@lang('front_labels.order_list')</h3>
         <div>
             <b>@lang('front_labels.main_basket'):</b> {!! $order->main_basket->getName() !!}
-            ({!! $order->main_basket->portions !!}
-            @choice('front_labels.count_of_portions', $order->main_basket->getPortions())) -
-            {!! $order->main_basket->price !!} {!! $currency !!}
+            ({!! $order->main_basket->getPortions() !!} @choice('front_labels.count_of_portions', $order->main_basket->getPortions()))
+            - {!! $order->main_basket->price !!} {!! $currency !!}
         </div>
 
         <h3>@lang('front_labels.recipes'): </h3>
@@ -68,7 +67,8 @@
 
         @if (!empty($order->coupon_id))
             <br/>
-            <div>@lang('front_messages.you used coupon'): <b>{!! $order->coupon->name !!}</b> ({!! $order->coupon->code !!})
+            <div>@lang('front_messages.you used coupon'): <b>{!! $order->coupon->name !!}</b>
+                ({!! $order->coupon->code !!})
             </div>
 
             <b>@lang('front_labels.your_discount'):</b> {!! $order->subtotal - $order->total !!} {!! $currency !!}
