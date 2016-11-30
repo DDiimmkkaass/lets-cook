@@ -207,6 +207,7 @@ return [
         Artem328\LaravelYandexKassa\YandexKassaServiceProvider::class,
         
         App\Providers\VariableServiceProvider::class,
+        App\Providers\MenuServiceProvider::class,
         App\Providers\ViewComposerServiceProvider::class,
         App\Providers\GuzzleServiceProvider::class,
         Artdarek\OAuth\OAuthServiceProvider::class,

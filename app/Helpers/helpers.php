@@ -738,6 +738,24 @@ if (!function_exists('variable')) {
     }
 }
 
+if (!function_exists('template_menu')) {
+    /**
+     * Get / set the specified template_menu.
+     *
+     * @param  string $layout_position
+     *
+     * @return mixed
+     */
+    function template_menu($layout_position)
+    {
+        if (is_null($layout_position)) {
+            return app('template_menu');
+        }
+        
+        return app('template_menu')->get($layout_position);
+    }
+}
+
 if (!function_exists('is_front')) {
     /**
      * @return bool

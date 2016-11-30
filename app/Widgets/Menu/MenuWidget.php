@@ -31,12 +31,8 @@ class MenuWidget extends Widget
     public function index($position)
     {
         $menus = [];
-
-        $list = Menu::with(['translations', 'visible_items', 'visible_items.translations'])
-            ->whereLayoutPosition($position)
-            ->visible()
-            ->positionSorted()
-            ->get();
+    
+        $list = template_menu($position);
         
         if (count($list)) {
             foreach ($list as $model) {
