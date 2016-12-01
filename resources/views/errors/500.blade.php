@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="{!! $lang !!}">
+<html lang="en">
 <head>
     @include('partials.head')
 </head>
