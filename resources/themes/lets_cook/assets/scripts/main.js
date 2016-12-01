@@ -38,6 +38,7 @@ $(function() {
 
     if ($('main[class="main baskets"]').length) {
         basketsFilter();
+        orderAddMoreInfo();
     }
 
     if ($('main[class="main articles-list"]').length) {
