@@ -36,11 +36,6 @@ $(function() {
         orderSubscribe();
     }
 
-    if ($('main[class="main baskets"]').length) {
-        basketsFilter();
-        orderAddMoreInfo();
-    }
-
     if ($('main[class="main articles-list"]').length) {
         let $articles = $('.main.articles-list'),
             loadedPage = 'articles';
@@ -136,6 +131,8 @@ $(window).load(function() {
 
     if ($('main[class="main baskets"]').length) {
         basketsImagesSize();
+
+        orderAddMoreInfo();
     }
 });
 
