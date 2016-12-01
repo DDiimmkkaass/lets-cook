@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers\Frontend;
 
+use App\Models\Basket;
 use App\Models\WeeklyMenu;
 use App\Models\WeeklyMenuBasket;
 use Meta;
@@ -49,7 +50,38 @@ class BasketController extends FrontendController
         $this->data('baskets', isset($baskets) ? $baskets->sortBy('position') : collect());
     
         Meta::canonical(localize_route('baskets.index', $week));
+    
+        $this->_fillAdditionalTemplateData();
         
         return $this->render($this->module.'.index');
+    }
+    
+    /**
+     * fill additional template data
+     */
+    private function _fillAdditionalTemplateData()
+    {
+        $additional_baskets = Basket::with('recipes', 'tags', 'tags.tag.category')
+            ->additional()
+            ->positionSorted()
+            ->get();
+        
+        $additional_baskets_tags = [];
+        foreach ($additional_baskets as $additional_basket) {
+            foreach ($additional_basket->tags as $tag) {
+                if ($tag->tag->category && $tag->tag->category->status) {
+                    if (!isset($additional_baskets_tags[$tag->tag->id])) {
+                        $additional_baskets_tags[$tag->tag->id] = [
+                            'tag'   => $tag->tag,
+                            'name'  => $tag->tag->name,
+                            'baskets' => [],
+                        ];
+                    }
+    
+                    $additional_baskets_tags[$tag->tag->id]['baskets'][] = $additional_basket;
+                }
+            }
+        }
+        $this->data('additional_baskets_tags', collect($additional_baskets_tags)->sortBy('name'));
     }
 }

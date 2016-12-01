@@ -53,4 +53,5 @@ return array(
   'invite_friend' => 'Пригласи друга',
   'invite_friend_compensation' => 'Купон за приглашенного друга',
   'invite_friend_label' => 'Пригласи друга!',
+  'add_to_order' => 'Добавьте к заказу',
 );

@@ -87,6 +87,8 @@
                 </ul>
             </section>
         @endif
+
+        @include('basket.partials.additional_baskets_tags')
     </main>
 
 @endsection
