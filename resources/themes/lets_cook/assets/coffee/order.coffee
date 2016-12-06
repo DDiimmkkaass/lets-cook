@@ -145,7 +145,7 @@ Order.calculateTotal = () ->
     if discount_type == 'absolute'
       order_discount = main_discount
       total = total - order_discount
-    else
+    else if discount_type == 'percentage'
       order_discount = (total / 100 * main_discount)
       total = total - order_discount
 
@@ -182,7 +182,7 @@ Order.calculateTotal = () ->
       if discount_type == 'absolute'
         _order_discount = additional_discount
         _total = _total - _order_discount
-      else
+      else if discount_type == 'percentage'
         _order_discount = (_total / 100 * additional_discount)
         _total = _total - _order_discount
 

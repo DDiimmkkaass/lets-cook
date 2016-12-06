@@ -186,9 +186,9 @@
 
                     <input type="text" name="coupon_code"
                            class="order-edit__kupon input-order-edit"
-                           data-main_discount="{!! $order->coupon->getMainDiscount() !!}"
-                           data-additional_discount="{!! $order->coupon->getAdditionalDiscount() !!}"
-                           data-discount_type=""
+                           data-main_discount="{!! $order->coupon ? $order->coupon->getMainDiscount() : 0 !!}"
+                           data-additional_discount="{!! $order->coupon ? $order->coupon->getAdditionalDiscount() : 0 !!}"
+                           data-discount_type="{!! $order->coupon ? $order->coupon->getDiscountType() : '' !!}"
                            placeholder="Введите сюда код">
 
                     <div id="order-edit-check-coupon"
