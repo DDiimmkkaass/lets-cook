@@ -32,9 +32,9 @@ class RandomCommentsWidget extends Widget
         if ($comments_count > $count) {
             $ids = $list->random($count)->pluck('id')->toArray();
             
-            $list = Comment::with('user', 'user.info')->whereIn('id', $ids)->get();
+            $list = Comment::with('user')->whereIn('id', $ids)->get();
         } else {
-            $list = Comment::with('user', 'user.info')->visible()->get();
+            $list = Comment::with('user')->visible()->get();
         }
         
         return view('widgets.random_comments.index')->with(compact('list'))->render();

@@ -2,12 +2,22 @@
     {!! Form::label('name', trans('labels.first_name'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-3 col-md-4">
-        {!! Form::text('name', null, ['placeholder' => trans('labels.first_name'), 'required' => true, 'class' => 'form-control input-sm']) !!}
+        @if ($model->user_id)
+            {!! Form::hidden('user_id', null) !!}
+            {!! Form::text('user_name', $model->user->getFullName(), ['readonly' => true,  'class' => 'form-control input-sm']) !!}
+        @else
+            {!! Form::text('name', null, ['placeholder' => trans('labels.first_name'), 'required' => true, 'class' => 'form-control input-sm']) !!}
 
-        {!! $errors->first('name', '<p class="help-block error">:message</p>') !!}
+            {!! $errors->first('name', '<p class="help-block error">:message</p>') !!}
+        @endif
     </div>
+
+    @if ($model->exists && $model->user_id)
+        <a href="{!! route('admin.user.show', $model->user_id) !!}" class="display-block margin-top-5">{!! trans('labels.go_to_user') !!}</a>
+    @endif
 </div>
 
+@if (!$model->user_id)
 <div class="form-group required @if ($errors->has('image')) has-error @endif">
     {!! Form::label('image', trans('labels.image'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
 
@@ -17,6 +27,7 @@
         {!! $errors->first('image', '<p class="help-block error">:message</p>') !!}
     </div>
 </div>
+@endif
 
 <div class="form-group required @if ($errors->has('status')) has-error @endif">
     {!! Form::label('status', trans('labels.status'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}

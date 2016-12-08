@@ -8,8 +8,6 @@
 
 return [
 
-    'last_comments_count' => 5,
-
-    'load_comments_count' => 10,
+    'per_page' => 20,
 
 ];

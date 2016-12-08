@@ -76,7 +76,7 @@ class CommentController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = Comment::with('user', 'user.info')
+            $list = Comment::with('user')
                 ->select(
                     'id',
                     'commentable_id',
@@ -84,12 +84,20 @@ class CommentController extends BackendController
                     'name',
                     'comment',
                     'date',
-                    'status'
+                    'status',
+                    'user_id'
                 );
             
             return $dataTables = Datatables::of($list)
-                ->filterColumn('id', 'where', 'comments.id', '=', '$1')
-                ->filterColumn('comment', 'where', 'comments.comment', 'LIKE', '%$1%')
+                ->editColumn(
+                    'name',
+                    function ($model) {
+                        return $model->user_id ?
+                            link_to_route('admin.user.edit', $model->getUserName(), $model->user_id, ['target' => '_blank'])
+                                ->toHtml() :
+                            $model->getUserName();
+                    }
+                )
                 ->editColumn(
                     'comment',
                     function ($model) {
@@ -124,7 +132,6 @@ class CommentController extends BackendController
                 )
                 ->setIndexColumn('id')
                 ->removeColumn('user')
-                ->removeColumn('info')
                 ->removeColumn('user_id')
                 ->removeColumn('commentable_id')
                 ->removeColumn('commentable_type')

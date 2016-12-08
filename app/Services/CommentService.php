@@ -11,6 +11,10 @@ namespace App\Services;
 use App\Exceptions\CommentableClassNotExistException;
 use App\Http\Requests\Frontend\Comment\CommentCreateRequest;
 use App\Models\Comment;
+use App\Models\Page;
+use App\Models\User;
+use App\Transformers\CommentTransformer;
+use Illuminate\Support\Collection;
 use Sentry;
 
 /**
@@ -19,23 +23,22 @@ use Sentry;
  */
 class CommentService
 {
-
+    
     /**
      * @param \App\Http\Requests\Frontend\Comment\CommentCreateRequest $request
+     * @param \App\Models\User                                         $user
      *
      * @return array
      */
-    public function prepareInput(CommentCreateRequest $request)
+    public function prepareInput(CommentCreateRequest $request, User $user)
     {
-        $input = $request->all('');
-
-        $input['user_id'] = Sentry::getUser() ? Sentry::getUser()->getId() : null;
-
-        if (!empty($input['parent_id'])) {
-            $parent_comment = Comment::whereId($input['parent_id'])->child()->first();
-            $input['parent_id'] = $parent_comment ? $parent_comment->parent_id : $input['parent_id'];
-        }
-
+        $input = [];
+            
+        $input['comment'] = $request->get('comment');
+        $input['user_id'] = $user->id;
+        $input['commentable_type'] = 'page';
+        $input['commentable_id'] = Page::whereSlug('home')->first()->id;
+        
         return $input;
     }
 
@@ -57,53 +60,63 @@ class CommentService
 
         $comment = new Comment($input);
         $comment->user_id = $input['user_id'];
-        $comment->status = true;
+        $comment->status = false;
 
         $model->comments()->save($comment);
 
         return $comment;
     }
-
+    
     /**
-     * @param string $commentable_type
-     * @param int    $commentable_id
-     * @param int    $page
+     * @return array
+     */
+    public function getList()
+    {
+        $page = Page::whereSlug('home')->first();
+        
+        $list = $page->comments()->with('user')->visible()->latest();
+    
+        if (request('page', 1) == 0) {
+            $list = $list->get();
+        } else {
+            $list = $list->paginate(config('comments.per_page'));
+        }
+    
+        $list = $this->_prepareData($list);
+    
+        return $list;
+    }
+    
+    /**
+     * @param $list
      *
      * @return array
      */
-    public function getComments($commentable_type, $commentable_id, $page = 1)
+    private function _prepareData($list)
     {
-        $last = config($commentable_type.'.last_comments_count', config('comments.last_comments_count'));
-        $load = config($commentable_type.'.load_comments_count', config('comments.load_comments_count'));
-
-        $skip = $page > 1 ? $last + (($page - 2) * $load) : 0;
-        $take = $page > 1 ? $load : $last;
-
-        $commentable_type = 'App\\\\Models\\\\'.studly_case($commentable_type);
-
-        $list = Comment::whereRaw('commentable_type = \''.$commentable_type.'\'')
-            ->whereCommentableId($commentable_id)
-            ->with(
-                [
-                    'likes',
-                    'user',
-                    'user.info',
-                    'visible_childs',
-                    'visible_childs.likes',
-                    'visible_childs.visible_childs',
-                    'visible_childs.user',
-                    'visible_childs.user.info',
-                ]
-            )
-            ->parents()
-            ->visible()
-            ->latest();
-
-        $count = $list->count() - $skip - $take;
-        $count = $count > $load ? $load : $count;
-
-        $list = $list->skip($skip)->take($take)->get();
-
-        return ['list' => $list, 'available_comment_count' => $count];
+        $data = ['comments' => []];
+        
+        foreach ($list as $item) {
+            $data['comments'][] = CommentTransformer::transform($item);
+        }
+        
+        if ($list instanceof Collection) {
+            $data['next_count'] = 0;
+        } else {
+            if ($list->lastPage() == $list->currentPage()) {
+                $data['next_count'] = 0;
+            } else {
+                $data['next_count'] = $list->total() - $list->currentPage() * $list->perPage();
+                $data['next_count'] = $data['next_count'] > $list->perPage() ? $list->perPage() : $data['next_count'];
+                
+                $data['next_count'] = $data['next_count'] >= 0 ? $data['next_count'] : 0;
+            }
+        }
+        
+        $data['next_count_label'] = trans('front_labels.pagination_next').' '.
+            $data['next_count'].' '.
+            trans_choice('front_labels.count_of_comments', $data['next_count']);
+        
+        return $data;
     }
 }

@@ -19,18 +19,9 @@ use Mail;
  */
 class SendAdminEmailAboutNewComment implements ShouldQueue
 {
-
+    
     use InteractsWithQueue;
-
-    /**
-     * Create the event handler.
-     *
-     * @return \App\Listeners\Events\Frontend\SendAdminEmailAboutNewComment
-     */
-    public function __construct()
-    {
-    }
-
+    
     /**
      * Handle the event.
      *
@@ -42,6 +33,7 @@ class SendAdminEmailAboutNewComment implements ShouldQueue
             'emails.admin.new_comment',
             [
                 'comment' => serialize($event->comment),
+                'user'    => serialize($event->user),
             ],
             function ($message) use ($event) {
                 $message->to(

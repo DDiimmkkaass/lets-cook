@@ -71,7 +71,7 @@ class FrontendController extends BaseController
         
         if (!request()->ajax()) {
             $this->home_page = Page::with('translations')->whereSlug('home')->first();
-    
+            
             $this->fillMeta($this->home_page, 'page');
         }
         
@@ -139,6 +139,9 @@ class FrontendController extends BaseController
                 ),
                 'lang_youReallyWantToCancelThisOrder' => trans('messages.you really want to cancel this order'),
                 'lang_errorCantShowAjaxPopup'         => trans('messages.an error has occurred, try_later'),
+                'lang_errorUnauthorized'              => trans(
+                    'front_messages.this action available only for registered users'
+                ),
                 'no_image'                            => 'http://www.placehold.it/250x250/EFEFEF/AAAAAA&text=no+image',
                 'no_image_user'                       => config('user.no_image'),
                 'is_mobile'                           => Agent::isMobile(),

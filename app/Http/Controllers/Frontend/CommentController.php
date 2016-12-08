@@ -14,6 +14,7 @@ use App\Services\CommentService;
 use Event;
 use Exception;
 use Illuminate\Http\Request;
+use Meta;
 
 /**
  * Class CommentController
@@ -47,50 +48,22 @@ class CommentController extends FrontendController
     /**
      * @param \Illuminate\Http\Request $request
      *
-     * @return array
+     * @return \Illuminate\Contracts\View\View|array
      */
     public function index(Request $request)
     {
-        try {
-            $input = $request->all();
-            
-            $result = $this->commentService->getComments(
-                $input['type'],
-                $input['id'],
-                $input['page']
-            );
-            
-            $html = '';
-            $model = null;
-            
-            $result['list']->map(
-                function ($item) use (&$html, &$model) {
-                    $model = $model === null ? $item->getParent() : $model;
-
-                    $html .= view('comments.partials.item')->with(
-                        [
-                            'item'  => $item,
-                            'model' => $model,
-                        ]
-                    )->render();
-                }
-            );
-            
-            $result = [
-                'status'                  => 'success',
-                'html'                    => $html,
-                'button_text'             => trans('labels.show_more').' '.
-                    $result['available_comment_count'].' '.
-                    trans_choice('labels.comments_label_on_more_button', $result['available_comment_count']),
-                'available_comment_count' => $result['available_comment_count'],
-                'message'                 => $result['available_comment_count'] < 0 ?
-                    trans('messages.no any available comments') : '',
-            ];
-        } catch (Exception $e) {
-            return ['status' => 'error', 'message' => trans('messages.an error has occurred, try_later')];
+        $list = $this->commentService->getList();
+        
+        if ($request->ajax()) {
+            return $list;
         }
         
-        return $result;
+        $this->data('list', $list['comments']);
+        $this->data('next_count', $list['next_count']);
+        
+        Meta::canonical(localize_route('comments.index'));
+        
+        return $this->render($this->module.'.index');
     }
     
     /**
@@ -101,26 +74,27 @@ class CommentController extends FrontendController
     public function store(CommentCreateRequest $request)
     {
         try {
-            $input = $this->commentService->prepareInput($request);
+            if (!$this->user) {
+                return [
+                    'status'  => 'error',
+                    'message' => trans('front_messages.this action available only for registered users'),
+                ];
+            }
+            
+            $input = $this->commentService->prepareInput($request, $this->user);
             
             $comment = $this->commentService->store($input);
             
             Event::fire(new NewComment($comment));
-
+            
             return [
-                'status'     => 'success',
-                'message'    => trans('messages.comment successfully added message'),
-                'comment'    => view('comments.partials.item')->with(
-                    [
-                        'item'  => $comment,
-                        'model' => $comment->getParent(),
-                    ]
-                )->render(),
-                'parent_id'  => $comment->parent_id,
-                'comment_id' => $comment->id,
+                'status'  => 'success',
+                'message' => trans('front_messages.comment successfully added message'),
             ];
         } catch (Exception $e) {
-            return ['status' => 'error', 'message' => trans('messages.an error has occurred, try_later')];
+            return ['status'  => 'error',
+                    'message' => trans('front_messages.an error has occurred, please reload the page and try again'),
+            ];
         }
     }
 }

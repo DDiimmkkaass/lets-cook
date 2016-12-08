@@ -245,7 +245,7 @@ class Comment extends Model implements SearchableContract, Likable
         return empty($this->name) ?
             (
                 empty($this->user_id) ? trans('labels.unregistered_user') :
-                ($this->user->name ? $this->user->name : trans('labels.unregistered_user'))
+                (isset($this->user->id) ? $this->user->getFullName() : trans('labels.unregistered_user'))
             ) :
             $this->name;
     }

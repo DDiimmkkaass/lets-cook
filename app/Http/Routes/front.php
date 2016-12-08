@@ -66,6 +66,28 @@ $router->post(
     ['middleware' => 'ajax', 'as' => 'subscribes.store', 'uses' => 'Frontend\SubscribeController@store']
 );
 
+// comments
+$router->group(
+    [
+        'prefix' => 'comments',
+    ],
+    function () use ($router) {
+        $router->get(
+            '{category_id?}/{tag_id?}',
+            ['as' => 'comments.index', 'uses' => 'Frontend\CommentController@index']
+        )->where(['category_id' => '[0-9]+', 'tag_id' => '[0-9]+']);
+        
+        $router->post(
+            '/',
+            [
+                'as'         => 'comments.store',
+                'middleware' => 'ajax',
+                'uses'       => 'Frontend\CommentController@store',
+            ]
+        );
+    }
+);
+
 //order
 $router->group(
     [

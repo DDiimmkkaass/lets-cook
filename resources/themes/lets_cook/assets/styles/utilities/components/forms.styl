@@ -247,7 +247,7 @@
 
   +bp('1024')
     text-align: left
-    padding: 5px 20px
+    padding: 10px 20px
     size: auto
     fs(14px)
 
@@ -832,12 +832,13 @@
       size: 27px 4px
       background-color: $bg-black-1
       border-radius: 3px
+      transform-origin: 50% 50%
 
     &::before
       transform: translate(-50%, -50%) rotate(-45deg);
 
     &::after
-      transform: translate(-50%, -47%) rotate(45deg);
+      transform: translate(-50%, -50%) rotate(45deg);
 
 
 .sign-in
@@ -1091,5 +1092,56 @@
   input[name='restore__submit']
     margin-top: 15px
     width: 100%
+
+
+.add-review
+  @extend .pop-up
+
+  &__close-layout
+    @extend .pop-up__close-layout
+
+  &__wrapper
+    @extend .pop-up__wrapper
+    max-width: 490px
+
+  &__title
+    @extend .pop-up__title
+
+  &__content
+    @extend .pop-up__content
+
+  &__user
+    text-align: left
+    fs(0px)
+
+  &__user-photo
+    display: inline-block
+    vertical-align: middle
+    size: 65px
+    border-radius: 50%
+    background: $bg-green-1 center center / cover no-repeat
+
+  &__user-name
+    margin-left: 20px
+    display: inline-block
+    vertical-align: middle
+    font-family: $ptsans-regular
+    fsh(18px, 1.25)
+    color: $brown-1
+
+  &__text
+    margin-top: 24px
+    width: 100%
+
+  &__bottom
+    margin-top: 30px
+    text-align: right
+
+  &__submit
+    display: inline-block
+
+
+  &__close
+    @extend .pop-up__close
 
 /* ----- end FORMS ----- */

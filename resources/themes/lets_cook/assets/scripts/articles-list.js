@@ -40,15 +40,12 @@ function articlesList($rootElement, loadedPage) {
             success: function(data) {
                 if (data.status === 'error') {
                     let errorMessage = data.message;
-
-
                 }
 
                 console.log('articles ajax success');
             },
 
             error: function() {
-
                 console.log('articles ajax error');
             }
         });
@@ -58,21 +55,39 @@ function articlesList($rootElement, loadedPage) {
         $articlesList.empty();
 
         $.each(articlesObj[page], function(index, item) {
-            let currentArticle = '<li class="articles-list-main__item article-item">'
-                + '<div class="article-item__main">'
-                + '<a href="' + item.href + '" class="article-item__img" style="background-image: url(' + '\'' + item.image + '\'' + ');"></a>'
-                + '<div class="article-item__content">'
-                + '<a href="' + item.href + '" class="article-item__title">' + item.name + '</a>'
-                + '<ul class="article-item__tag-list">';
+            let currentArticle = '';
 
-            $.each(item.tags, function(index, item) {
-                currentArticle += '<li class="article-item__tag-item" data-tag="' + item.id + '">' + item.name + '</li>';
-            });
+            if (page == 'comments') {
+                currentArticle = '<li class="clients-reviews__item review-item">'
+                    + '<div class="review-item__img" ';
 
-            currentArticle += '</ul>'
-                + '<div class="article-item__description"><span>Ингридиенты: </span>' + item.description + '</div>'
-                + '</div>'
-                + '</div>';
+                if (item.image) {
+                    currentArticle += 'style="background-image: url('+item.image+');"';
+                }
+
+                currentArticle += '></div>'
+                    + '<div class="review-item__main">'
+                    + '<div class="review-item__name">' + item.name + '</div>'
+                    + '<div class="review-item__comment">' + item.comment + '</div>'
+                    + '<div class="review-item__date">' + item.date + '</div>'
+                    + '</div></li>';
+            } else {
+                currentArticle = '<li class="articles-list-main__item article-item">'
+                    + '<div class="article-item__main">'
+                    + '<a href="' + item.href + '" class="article-item__img" style="background-image: url(' + '\'' + item.image + '\'' + ');"></a>'
+                    + '<div class="article-item__content">'
+                    + '<a href="' + item.href + '" class="article-item__title">' + item.name + '</a>'
+                    + '<ul class="article-item__tag-list">';
+
+                $.each(item.tags, function(index, item) {
+                    currentArticle += '<li class="article-item__tag-item" data-tag="' + item.id + '">' + item.name + '</li>';
+                });
+
+                currentArticle += '</ul>'
+                    + '<div class="article-item__description"><span>Ингридиенты: </span>' + item.description + '</div>'
+                    + '</div>'
+                    + '</div>';
+            }
 
             if (page === 'recipes') {
                 currentArticle += '<div class="article-item__additional">'

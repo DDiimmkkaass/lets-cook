@@ -69,4 +69,6 @@ return array(
     'unknown social network' => 'Данная соц. сеть не поддрежываеться',
     'you must allow access to your email' => 'Для логина с помощью соц. сети Вы должны разрешыть доступ к Вашему e-mail',
     'you can not use you own coupon' => 'Вы не можете использовать свой собственный купон',
+    'this action available only for registered users' => 'Это действие доступно только для зарегистрированных пользователей',
+    'comment successfully added message' => 'Спасибо! Ваш комментарий успешно сохранен и будет опубликован на сайте после модерации.',
 );

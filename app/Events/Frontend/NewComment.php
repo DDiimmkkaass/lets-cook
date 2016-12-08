@@ -25,6 +25,11 @@ class NewComment extends Event
      * @var \App\Models\Comment
      */
     public $comment;
+    
+    /**
+     * @var \App\Models\User
+     */
+    public $user;
 
     /**
      * NewComment constructor.
@@ -33,6 +38,8 @@ class NewComment extends Event
      */
     public function __construct(Comment $comment)
     {
-        $this->comment = Comment::with('user', 'user.info')->whereId($comment->id)->first();
+        $this->comment = Comment::with('user')->whereId($comment->id)->first();
+        
+        $this->user = $this->comment->user;
     }
 }

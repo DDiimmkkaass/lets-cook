@@ -23,4 +23,5 @@ return array (
   'invite friend coupon' => 'Купон по программе "Пригласи друга"',
   'invite friend description text' => 'Пригласи друга, дай ему свой купон, и ВЫ ОБА получите скидку',
   'invite friend compensation coupon' => 'Купон по программе "Пригласи друга", за успешный заказ приглашенного друга',
+  'comment helper text' => 'Напишите Ваш отзыв о корзине...',
 );

@@ -27,6 +27,8 @@ $(function() {
         recipesMenu();
 
         subscribeNews();
+
+        clientsReviews();
     }
 
     if ($('main[class="main order"]').length) {
@@ -56,6 +58,13 @@ $(function() {
             loadedPage = 'recipes';
 
         articlesList($recipes, loadedPage);
+    }
+
+    if ($('main[class="main comments-list articles-list"]').length) {
+        let $articles = $('.main.comments-list.articles-list'),
+            loadedPage = 'comments';
+
+        articlesList($articles, loadedPage);
     }
 
 

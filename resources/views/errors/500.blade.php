@@ -1,7 +1,18 @@
 <!doctype html>
 <html lang="en">
 <head>
-    @include('partials.head')
+    <title>{!! config('app.name') !!}</title>
+
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="/favicon.ico" rel="shortcut icon"/>
+
+    <link rel="stylesheet" href="{!! asset('assets/components//pikaday/css/pikaday.css') !!}"/>
+
+    <link rel="stylesheet" href="{!! asset('assets/themes/'.config('app.theme').'/css/styles.css') !!}"/>
 </head>
 <body>
 <!--[if lt IE 10]>

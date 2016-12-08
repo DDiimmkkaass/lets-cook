@@ -18,10 +18,7 @@ class CommentCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'parent_id'        => 'exists:comments,id',
-            'commentable_id'   => 'required',
-            'commentable_type' => 'required',
-            'comment'          => 'required',
+            'comment' => 'required',
         ];
     }
 }

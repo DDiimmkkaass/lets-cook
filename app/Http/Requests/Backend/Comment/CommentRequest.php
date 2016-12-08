@@ -24,8 +24,10 @@ class CommentRequest extends FormRequest
      */
     public function rules()
     {
+        $user_id = $this->request->get('user_id');
+        
         $rules = [
-            'name'    => 'required',
+            'name'    => !$user_id ? 'required' : '',
             'image'   => ['regex:'.$this->image_regex],
             'comment' => 'required',
             'status'  => 'required|boolean',
