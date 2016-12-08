@@ -24,10 +24,14 @@ class CommentTransformer implements Transformer
      */
     public static function transform($model)
     {
+        $image = empty($model->image) ?
+            (empty($model->user_id) ? null : ($model->user->avatar ? $model->user->avatar : null)) :
+            $model->image;
+        
         return [
             'id'      => $model->id,
             'name'    => $model->getUserName(),
-            'image'   => thumb($model->getUserImage(), 104),
+            'image'   => $image ? thumb($model->getUserImage(), 104) : '',
             'comment' => $model->comment,
             'date'    => $model->getDate(),
         ];
