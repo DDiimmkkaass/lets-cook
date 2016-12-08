@@ -702,4 +702,6 @@ return array (
   'go_to_coupon' => 'Перейти к купону',
   'coupons_using' => 'Использование купонов',
   'list_of_coupons_using' => 'Список использованых купонов',
+  'options' => 'Установки',
+  'history_for_weeks' => 'История по неделям',
 );
