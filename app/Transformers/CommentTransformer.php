@@ -31,7 +31,7 @@ class CommentTransformer implements Transformer
         return [
             'id'      => $model->id,
             'name'    => $model->getUserName(),
-            'image'   => $image ? thumb($model->getUserImage(), 104) : '',
+            'image'   => $image ? thumb($image, 104) : '',
             'comment' => $model->comment,
             'date'    => $model->getDate(),
         ];
