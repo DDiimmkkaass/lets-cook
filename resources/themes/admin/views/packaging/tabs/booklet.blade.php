@@ -21,7 +21,7 @@
                     </div>
                     <div class="col-sm-6">
                         <input class="form-control input-sm" type="text" name="link" id="link"
-                               value="{!! isset($booklet->link) ? $booklet->link : '' !!}">
+                               value="{!! isset($booklet->link) ? $booklet->link : variable('booklet_link', '') !!}">
                         <input type="hidden" name="year" value="{!! $year !!}">
                         <input type="hidden" name="week" value="{!! $week !!}">
                     </div>

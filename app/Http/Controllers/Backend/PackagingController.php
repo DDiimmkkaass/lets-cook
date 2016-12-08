@@ -9,7 +9,6 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Requests\Backend\Booklet\BookletUpdateRequest;
-use App\Models\Booklet;
 use App\Models\Purchase;
 use App\Services\PackagingService;
 use App\Services\PurchaseService;
@@ -103,7 +102,7 @@ class PackagingController extends BackendController
                     'week',
                     function ($model) {
                         return trans('labels.w_label').$model->week.
-                        ($model->isCurrentWeek() ? view('partials.datatables.current_week_label')->render() : '');
+                            ($model->isCurrentWeek() ? view('partials.datatables.current_week_label')->render() : '');
                     }
                 )
                 ->addColumn(
@@ -194,7 +193,7 @@ class PackagingController extends BackendController
             $list = $this->packagingService->{$tab.'ForWeek'}($year, $week);
             
             if ($tab == 'booklet') {
-                $booklet = Booklet::forWeek($year, $week)->first();
+                $booklet = $this->packagingService->getBooklet($year, $week);
             }
             
             $html = view('views.'.$this->module.'.tabs.'.$tab)
@@ -293,18 +292,9 @@ class PackagingController extends BackendController
     public function updateBooklet(BookletUpdateRequest $request)
     {
         try {
-            $booklet = Booklet::forWeek($request->get('year'), $request->get('week'))->first();
+            $booklet = $this->packagingService->getBooklet($request->get('year'), $request->get('week'));
             
-            if (!$booklet) {
-                $booklet = new Booklet(
-                    [
-                        'year' => $request->get('year'),
-                        'week' => $request->get('week'),
-                    ]
-                );
-            }
-            
-            $booklet->link = $request->link;
+            $booklet->link = $request->get('link');
             $booklet->save();
             
             return [

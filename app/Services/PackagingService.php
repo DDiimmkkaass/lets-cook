@@ -517,6 +517,31 @@ class PackagingService
     }
     
     /**
+     * @param int $year
+     * @param int $week
+     *
+     * @return \App\Models\Booklet
+     */
+    public function getBooklet($year, $week)
+    {
+        $booklet = Booklet::forWeek($year, $week)->first();
+    
+        if (!$booklet) {
+            $booklet = new Booklet(
+                [
+                    'year' => $year,
+                    'week' => $week,
+                ]
+            );
+    
+            $booklet->link = variable('booklet_link', '');
+            $booklet->save();
+        }
+        
+        return $booklet;
+    }
+    
+    /**
      * @param Collection $orders
      *
      * @return array
