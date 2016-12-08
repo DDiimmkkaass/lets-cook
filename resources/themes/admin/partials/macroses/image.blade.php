@@ -16,6 +16,13 @@
         <div class="input-group-addon clear-image-button" title="@lang('labels.clear_image')" data-target-image=".{!! $image_class !!}" data-target-input="{!! $target_input !!}">
             <i class="fa fa-close"></i>
         </div>
+        <div class="input-group-addon download-file-button" data-title="@lang('labels.download')">
+            <a target="_blank"
+               data-href="{!! route('admin.download.file', ['file']) !!}"
+               href="{!! route('admin.download.file', ['file' => $image]) !!}">
+                <i class="fa fa-download" aria-hidden="true"></i>
+            </a>
+        </div>
     </div>
 </div>
 

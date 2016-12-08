@@ -10,12 +10,14 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\BaseController;
 use App\Services\OrderService;
+use File;
 use FlashMessages;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use JavaScript;
 use Lang;
 use Meta;
 use Sentry;
+use URL;
 
 /**
  * Class BackendController
@@ -148,8 +150,12 @@ class BackendController extends BaseController
     {
         $file = request('file', null);
         
-        if ($file) {
+        if ($file && File::exists(public_path($file))) {
             return response()->download(public_path($file));
+        }
+        
+        if (URL::isValidUrl($file)) {
+            return redirect($file);
         }
         
         return redirect()->back();
