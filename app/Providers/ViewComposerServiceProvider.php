@@ -30,7 +30,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer('layouts/profile', '\App\Http\ViewComposers\ProfileComposer');
         view()->composer('profile/layouts/orders', '\App\Http\ViewComposers\ProfileOrdersComposer');
         view()->composer(
-            ['profile/index', 'order/edit', 'order/partials/coupon'],
+            ['profile/index', 'order/edit', 'basket/partials/coupon'],
             '\App\Http\ViewComposers\UserCouponsComposer'
         );
     }

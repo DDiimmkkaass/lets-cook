@@ -2,10 +2,22 @@
     {!! Form::label('name', trans('labels.name'), ['class' => 'control-label col-xs-12 col-sm-3 col-md-2']) !!}
 
     <div class="col-xs-12 col-sm-6 col-md-5">
-        {!! Form::text('name', null, ['placeholder'=> trans('labels.name'), 'required' => true, 'class' => 'form-control input-sm']) !!}
+        {!! Form::text('name', null, ['placeholder'=> trans('labels.name'), 'required' => true, 'class' => 'form-control input-sm', 'id' => 'name']) !!}
 
         {!! $errors->first('name', '<p class="help-block error">:message</p>') !!}
     </div>
+</div>
+
+<div class="form-group required @if ($errors->has('slug')) has-error @endif">
+    {!! Form::label('slug', trans('labels.slug'), ['class' => 'control-label col-xs-12 col-sm-3 col-md-2']) !!}
+
+    <div class="col-xs-12 col-sm-6 col-md-5">
+        {!! Form::text('slug', null, ['placeholder'=> trans('labels.slug'), 'required' => true, 'class' => 'form-control input-sm']) !!}
+
+        {!! $errors->first('slug', '<p class="help-block error">:message</p>') !!}
+    </div>
+
+    <a href="#" data-from_id="#name" class="btn btn-success btn-flat btn-xs margin-top-4 slug-generate">{!! trans('labels.generate') !!}</a>
 </div>
 
 @if ($type == 'additional')

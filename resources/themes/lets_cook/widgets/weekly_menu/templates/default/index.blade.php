@@ -22,10 +22,11 @@
                     @foreach($menu_baskets as $key => $basket)
                         @if ($key == 0)
                             @php($active_basket = $basket)
+                            @php($week = 'current')
                         @endif
                         @foreach($basket->recipes as $_key => $recipe)
                             <li class="recipes-menu__item" data-week="0" data-basket="{!! $key !!}">
-                                <a href="{!! localize_route('order.index', $basket->id) !!}"
+                                <a href="{!! $basket->getUrl() !!}"
                                    title="{!! $recipe->getRecipeName() !!}"
                                    class="recipes-menu__link">
                                     <div class="recipes-menu__img"
@@ -44,10 +45,11 @@
                     @foreach($next_menu_baskets as $key => $basket)
                         @if ($key == 0 && !isset($active_basket))
                             @php($active_basket = $basket)
+                            @php($week = 'next')
                         @endif
                         @foreach($basket->recipes as $_key => $recipe)
                             <li class="recipes-menu__item" data-week="1" data-basket="{!! $key !!}">
-                                <a href="{!! localize_route('order.index', $basket->id) !!}"
+                                <a href="{!! $basket->getUrl('next') !!}"
                                    title="{!! $recipe->getRecipeName() !!}"
                                    class="recipes-menu__link">
                                     <div class="recipes-menu__img"
@@ -68,7 +70,7 @@
 
                 </ul>
 
-                <a href="{!! isset($active_basket) ? localize_route('order.index', $active_basket->id) : '#' !!}" class="recipes-menu__all yellow-small-button">Все рецепты</a>
+                <a href="{!! isset($active_basket) ? $active_basket->getUrl($week) : '#' !!}" class="recipes-menu__all yellow-small-button">Все рецепты</a>
             </div>
         </div>
 
@@ -87,7 +89,7 @@
                         <ul class="baskets-menu__sub-list">
                             @foreach($menu_baskets as $key => $basket)
                                 <li class="baskets-menu__sub-item"
-                                    data-url="{!! localize_route('order.index', $basket->id) !!}"
+                                    data-url="{!! $basket->getUrl() !!}"
                                     @if ($key == 0) data-active-item @endif
                                     data-week="0"
                                     data-basket="{!! $key !!}">
@@ -103,7 +105,7 @@
                         <ul class="baskets-menu__sub-list">
                             @foreach($next_menu_baskets as $key => $basket)
                                 <li class="baskets-menu__sub-item"
-                                    data-url="{!! localize_route('order.index', $basket->id) !!}"
+                                    data-url="{!! $basket->getUrl('next') !!}"
                                     @if ($key == 0) data-active-item @endif
                                     data-week="1"
                                     data-basket="{!! $key !!}">
@@ -124,7 +126,7 @@
                     Заказав после, вы получите продукты меню следующей недели.
                 </div>
 
-                <a href="{!! localize_route('order.index', $active_basket->id) !!}"
+                <a href="{!! $active_basket->getUrl() !!}"
                    data-week="0"
                    class="baskets-menu__details black-long-button baskets-menu__to-order">
                     подробнее про корзину
@@ -140,7 +142,7 @@
                     Заказав после, вы получите продукты меню следующей недели.
                 </div>
 
-                <a href="{!! localize_route('order.index', $active_basket->id) !!}"
+                <a href="{!! $active_basket->getUrl('next') !!}"
                    data-week="1"
                    class="baskets-menu__details black-long-button baskets-menu__to-order">
                     подробнее про корзину

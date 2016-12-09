@@ -897,9 +897,8 @@ class OrderService
     {
         $active_week = active_week_menu_week();
         
-        $basket = WeeklyMenuBasket::with(
-            ['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients']
-        )->joinWeeklyMenu()
+        $basket = WeeklyMenuBasket::with(['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients'])
+            ->joinWeeklyMenu()
             ->where(['weekly_menus.year' => $active_week->year, 'weekly_menus.week' => $active_week->weekOfYear])
             ->whereBasketId($repeat_order->main_basket->weekly_menu_basket->basket_id)
             ->wherePortions($repeat_order->main_basket->getPortions())

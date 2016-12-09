@@ -36,6 +36,15 @@ $router->get('recipes/{recipe_id}/show', ['as' => 'recipes.show', 'uses' => 'Fro
 // baskets
 $router->get('baskets/{week}', ['as' => 'baskets.index', 'uses' => 'Frontend\BasketController@index'])
     ->where('week', '(current|next)');
+$router->get('baskets/{slug}/{week?}', ['as' => 'baskets.show', 'uses' => 'Frontend\BasketController@show'])
+    ->where('week', '(current|next)');
+$router->get(
+    'baskets/{slug}/repeat/{order_id}',
+    [
+        'as'   => 'baskets.repeat',
+        'uses' => 'Frontend\BasketController@repeat',
+    ]
+)->where('order_id', '[0-9]+');
 
 // search
 $router->get('search', ['as' => 'search.index', 'uses' => 'Frontend\SearchController@index']);
@@ -94,8 +103,6 @@ $router->group(
         'prefix' => 'order',
     ],
     function () use ($router) {
-        $router->get('/{basket_id}', ['as' => 'order.index', 'uses' => 'Frontend\OrderController@index'])
-            ->where('basket_id', '[0-9]+');
         $router->post(
             '/store',
             ['as' => 'order.store', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@store']

@@ -35,12 +35,14 @@ class TrialOrderWidget extends Widget
         if ($basket_id) {
             $active_week = active_week_menu_week();
             
-            $basket = WeeklyMenuBasket::joinWeeklyMenu()
-                ->where('weekly_menus.year', $active_week->year)
-                ->where('weekly_menus.week', $active_week->weekOfYear)
-                ->whereBasketId($basket_id)
+            $basket = WeeklyMenuBasket::whereBasketId($basket_id)
                 ->wherePortions(2)
-                ->select('weekly_menu_baskets.id', 'weekly_menu_baskets.prices')
+                ->whereRaw('weekly_menu_id = 
+                    (select weekly_menus.id 
+                    from weekly_menus
+                    where weekly_menus.year = '.$active_week->year.' and weekly_menus.week = '.$active_week->weekOfYear.'
+                    )'
+                )
                 ->first();
             
             if ($basket) {

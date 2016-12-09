@@ -120,6 +120,14 @@ class OrderBasket extends Model
     /**
      * @return string
      */
+    public function getSlug()
+    {
+        return empty($this->weekly_menu_basket_id) ? $this->basket->getSlug() : $this->weekly_menu_basket->getSlug();
+    }
+    
+    /**
+     * @return string
+     */
     public function getImage()
     {
         return empty($this->weekly_menu_basket_id) ? $this->basket->getImage() : $this->weekly_menu_basket->getImage();

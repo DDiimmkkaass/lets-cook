@@ -6,7 +6,7 @@
             <ul class="profile-orders-own__list">
                 @foreach($history_orders as $key => $order)
                     <li class="profile-orders-own__item own-order" data-order="even">
-                        <a href="{!! localize_route('order.repeat', $order->id) !!}" class="own-order__change-link">
+                        <a href="{!! localize_route('baskets.repeat', [$order->main_basket->getSlug(), $order->id]) !!}" class="own-order__change-link">
                             <div class="own-order__image"
                                  style="background-image: url({!! $order->main_basket->getImage() !!});">
                                 <div class="own-order__retry"><span>Повторить</span></div>

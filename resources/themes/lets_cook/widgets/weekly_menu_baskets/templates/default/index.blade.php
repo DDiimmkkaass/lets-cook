@@ -9,7 +9,7 @@
                 @foreach($menu->baskets as $basket)
                     <tr>
                         <td>
-                            <a href="{!! localize_route('order.index', $basket->id) !!}">{!! $basket->getName() !!}</a>
+                            <a href="{!! $basket->getUrl() !!}">{!! $basket->getName() !!}</a>
                         </td>
                         <td>
                         <span>

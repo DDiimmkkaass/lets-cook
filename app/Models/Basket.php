@@ -28,6 +28,7 @@ class Basket extends Model implements MetaGettable
      */
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'image',
         'meta_title',
@@ -249,6 +250,14 @@ class Basket extends Model implements MetaGettable
     /**
      * @return string
      */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+    
+    /**
+     * @return string
+     */
     public function getCode()
     {
         return str_limit(str_slug($this->getName()), 3, '');
@@ -319,10 +328,14 @@ class Basket extends Model implements MetaGettable
     }
     
     /**
+     * @param string $week
+     *
      * @return string
      */
-    public function getUrl()
+    public function getUrl($week = 'current')
     {
-        //
+        return $week != 'current' ?
+            localize_route('baskets.show', [$this->getSlug(), $week]) :
+            localize_route('baskets.show', [$this->getSlug()]);
     }
 }

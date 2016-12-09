@@ -17,18 +17,19 @@ use Closure;
  */
 class SetSlug
 {
-
+    
     /**
      * Handle an incoming request.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \Closure                 $next
+     * @param \Illuminate\Http\Request $request
+     * @param \Closure                 $next
+     * @param string|null                      $key
      *
      * @return mixed
      */
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $key = null)
     {
-        $name = $request->input(App::getLocale().'.name', '');
+        $name = $request->input($key ? $key : App::getLocale().'.name', '');
         $slug = $request->input('slug', '');
 
         $request->request->set('slug', !empty($slug) ? $slug : (!empty($name) ? str_slug($name) : ''));

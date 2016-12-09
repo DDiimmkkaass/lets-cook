@@ -31,6 +31,11 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
     ];
     
     /**
+     * @var array
+     */
+    protected $with = ['basket'];
+    
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function weekly_menu()
@@ -200,6 +205,25 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
     /**
      * @return string
      */
+    public function getSlug()
+    {
+        return $this->basket->getSlug();
+    }
+    
+    /**
+     * @param string $week
+     *
+     * @return string
+     */
+    public function getUrl($week = 'current')
+    {
+        return $this->basket->getUrl($week);
+        
+    }
+    
+    /**
+     * @return string
+     */
     public function getCode()
     {
         return $this->basket->getCode();
@@ -251,14 +275,6 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
     public function getPortions()
     {
         return (int) $this->portions;
-    }
-    
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        return localize_route('order.index', $this->id);
     }
     
     /**

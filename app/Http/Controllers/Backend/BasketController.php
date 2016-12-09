@@ -89,6 +89,8 @@ class BasketController extends BackendController
             trans('labels.'.$this->type.'_baskets'),
             route('admin.'.$this->module.'.index', ['type' => $this->type])
         );
+        
+        $this->middleware('slug.set:name', ['only' => ['create', 'update']]);
     }
     
     /**

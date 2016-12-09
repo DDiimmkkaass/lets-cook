@@ -16,12 +16,12 @@
                                 <div class="baskets-main-item__left">
                                     <h2 class="baskets-main-item__title">
                                         <a title="{!! $basket->getName() !!}"
-                                           href="{!! localize_route('order.index', $basket->id) !!}"
+                                           href="{!! $basket->getUrl($week) !!}"
                                            data-device="mobile">
                                             {!! $basket->getName() !!}
                                         </a>
                                         <a title="{!! $basket->getName() !!}"
-                                           href="{!! localize_route('order.index', $basket->id) !!}"
+                                           href="{!! $basket->getUrl($week) !!}"
                                            data-device="desktop">
                                             {!! $basket->getName() !!}
                                         </a>
@@ -43,7 +43,7 @@
                                         <span>{!! $currency !!}</span>
                                     </div>
                                     @if (empty($next))
-                                        <a href="{!! localize_route('order.index', $basket->id) !!}"
+                                        <a href="{!! $basket->getUrl($week) !!}"
                                            class="baskets-main-item__make-order"
                                            data-device="desktop">
                                             Оформить заказ
@@ -54,7 +54,7 @@
 
                             <div class="baskets-main-item__main">
                                 <div class="baskets-main-item__first">
-                                    <a href="{!! localize_route('order.index', $basket->id) !!}"
+                                    <a href="{!! $basket->getUrl($week) !!}"
                                        class="baskets-main-item__link">
                                         <div class="baskets-main-item__img"
                                              style="background-image: url({!! thumb($basket->getImage(), 980, 335) !!}); height: 335px"></div>
@@ -68,7 +68,7 @@
                                     <ul class="baskets-main-item__list">
                                         @foreach($basket->recipes->keyBy('position')->take(5) as $key => $recipe)
                                             <li class="baskets-main-item__item">
-                                                <a href="{!! localize_route('order.index', $basket->id) !!}"
+                                                <a href="{!! $basket->getUrl($week) !!}"
                                                    class="baskets-main-item__link">
                                                     <div class="baskets-main-item__img"
                                                          style="background-image: url({!! thumb($recipe->getRecipeImage(), 195, 134) !!});"></div>
@@ -88,7 +88,7 @@
             </section>
         @endif
 
-        @include('basket.partials.additional_baskets_tags')
+        @include('basket.partials.additional_baskets')
     </main>
 
 @endsection

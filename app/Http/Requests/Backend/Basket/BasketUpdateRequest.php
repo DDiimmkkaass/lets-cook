@@ -29,6 +29,7 @@ class BasketUpdateRequest extends FormRequest
         
         $rules = [
             'name'     => 'required|unique:baskets,name,'.$id.',id',
+            'slug'     => 'required|unique:baskets,slug,'.$id.',id',
             'image'    => ['regex:'.$this->image_regex],
             'position' => 'integer',
             

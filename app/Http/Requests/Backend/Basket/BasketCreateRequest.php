@@ -29,6 +29,7 @@ class BasketCreateRequest extends FormRequest
         
         $rules = [
             'name'     => 'required|unique:baskets,name',
+            'slug'     => 'required|unique:baskets,slug',
             'image'    => ['regex:'.$this->image_regex],
             'position' => 'integer',
             'type'     => 'required|in:'.implode(',', Basket::$types),
