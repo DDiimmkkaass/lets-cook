@@ -27,7 +27,7 @@
             @foreach($baskets as $basket)
                 <th style="background-color: #92D050;">
                     <div style="text-align: center;">
-                        @lang($basket['name'])
+                        {!! $basket['name'] !!}
                     </div>
                 </th>
             @endforeach

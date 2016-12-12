@@ -10,8 +10,8 @@
 @php($baskets_count = count($baskets))
 @php($ingredients_count = count($list))
 
-<div class="box-body table-responsive no-padding">
-    <table class="excel-table">
+<div class="box-body table-responsive no-padding excel-table">
+    <table>
         <tbody>
 
         <tr style="height: 30px">
