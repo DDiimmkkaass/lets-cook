@@ -53,7 +53,10 @@
                 <ul class="all-baskets__list">
                     @foreach($active_baskets as $basket)
                         <li>
-                            <a href="{!! $basket->getUrl() !!}">{!! $basket->name !!}</a>
+                            <a title="{!! $basket->name !!}"
+                               href="{!! localize_route('baskets.show', $basket->slug) !!}">
+                                {!! $basket->name !!}
+                            </a>
                         </li>
                     @endforeach
                 </ul>
