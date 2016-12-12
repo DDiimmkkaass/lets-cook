@@ -704,4 +704,5 @@ return array (
   'list_of_coupons_using' => 'Список использованых купонов',
   'options' => 'Установки',
   'history_for_weeks' => 'История по неделям',
+  'success_orders_count' => 'Количество успешных заказов',
 );

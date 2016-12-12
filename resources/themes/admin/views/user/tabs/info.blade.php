@@ -150,20 +150,23 @@
         </div>
     @endforeach
 
-    <div class="form-group">
-        {!! Form::label('first_order_date', trans('labels.first_order_date'), ['class' => 'col-md-3 control-label']) !!}
+    @if ($model->exists)
+        <div class="form-group">
+            {!! Form::label('first_order_date', trans('labels.first_order_date'), ['class' => 'col-md-3 control-label']) !!}
 
-        <div class="col-md-3">
-            {!! Form::text('first_order_date', null, ['class' => 'form-control input-sm', 'readonly' => true]) !!}
+            <div class="col-md-3">
+                {!! Form::text('first_order_date', null, ['class' => 'form-control input-sm', 'readonly' => true]) !!}
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        {!! Form::label('old_site_orders_count', trans('labels.old_site_orders_count'), ['class' => 'col-md-3 control-label']) !!}
+        <div class="form-group">
+            {!! Form::label('success_orders_count', trans('labels.success_orders_count'), ['class' => 'col-md-3 control-label']) !!}
 
-        <div class="col-md-3">
-            {!! Form::text('old_site_orders_count', null, ['class' => 'form-control input-sm', 'readonly' => true]) !!}
+            <div class="col-md-3">
+                @php($success_orders_count = $model->orders()->finished()->count() + $model->old_site_orders_count)
+                {!! Form::text('success_orders_count', $success_orders_count, ['class' => 'form-control input-sm', 'readonly' => true]) !!}
+            </div>
         </div>
-    </div>
+    @endif
 
     @include('partials.tabs.fields')
 
