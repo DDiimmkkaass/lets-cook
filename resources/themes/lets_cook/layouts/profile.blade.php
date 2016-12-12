@@ -13,7 +13,8 @@
                     <div class="profile-orders-user__mobile-name">{!! $user->getFullName() !!}</div>
 
                     <div class="profile-orders-user__mobile-details">
-                        (сделал {!! $user_archived_orders->count() !!} заказа)
+                        @php($success_orders_count = $user_archived_orders->count() + $user->old_site_orders_count)
+                        (сделал {!! $success_orders_count !!} @choice('front_labels.user_success_order_count', $success_orders_count))
                     </div>
                 </div>
 
@@ -28,7 +29,7 @@
                     </li>
 
                     <li class="profile-orders-user__item" data-item="orders">
-                        Сделано заказов: <span>{!! $user_archived_orders->count() !!}</span>
+                        Сделано заказов: <span>{!! $success_orders_count !!}</span>
                     </li>
 
                     <li class="profile-orders-user__item" data-item="exit">

@@ -60,4 +60,5 @@ return array(
   'leave_comment' => 'Оставить отзыв',
   'publish' => 'Опубликовать',
   'all_comments' => 'Посмотреть все отзывы',
+  'user_success_order_count' => '{0} заказов|{1} заказ|[2,4] заказа|[5,Inf] заказов',
 );
