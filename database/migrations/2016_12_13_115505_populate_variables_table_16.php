@@ -19,7 +19,7 @@ class PopulateVariablesTable16 extends Migration
         $variable = [
             'key'         => 'new_year_basket_slug',
             'type'        => 'text',
-            'value'       => $basket ? $basket->id : '',
+            'value'       => $basket ? $basket->slug : '',
             'name'        => 'Slug новогодней корзины',
             'description' => 'Slug корзины, которая будет использоваться в качестве новогодней',
             'status'      => true,
