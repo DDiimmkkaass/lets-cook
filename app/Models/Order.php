@@ -309,7 +309,7 @@ class Order extends Model
         $dt = Carbon::create($year, 1, 1)->addWeeks($week)->startOfWeek();
         
         $to = clone($dt->endOfDay());
-        $from = $dt->subDay()->startOfDay();
+        $from = $dt->subDay()->startOfWeek()->addDay()->startOfDay();
         
         return $query->where('delivery_date', '>=', $from)->where('delivery_date', '<=', $to);
     }
@@ -353,7 +353,7 @@ class Order extends Model
         $dt = active_week();
         
         $to = $dt->endOfDay()->format('d-m-Y');
-        $from = $dt->subDay()->startOfDay()->format('d-m-Y');
+        $from = $dt->subDay()->startOfWeek()->addDay()->format('d-m-Y');
         
         return $this->delivery_date >= $from && $this->delivery_date <= $to;
     }
