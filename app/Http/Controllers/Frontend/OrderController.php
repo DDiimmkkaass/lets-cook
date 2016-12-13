@@ -329,7 +329,8 @@ class OrderController extends FrontendController
         }
         $this->data('additional_baskets_tags', collect($additional_baskets_tags)->sortBy('name'));
     
-        $delivery_dates = [Carbon::createFromFormat('d-m-Y', $basket->getDeliveryDate())];
+        $delivery_date = $basket->getDeliveryDate();
+        $delivery_dates = $delivery_date ? [Carbon::createFromFormat('d-m-Y', $delivery_date)] : null;
         if (!$delivery_dates) {
             $delivery_dates = $this->weeklyMenuService->getDeliveryDates($basket->year, $basket->week);
         }
