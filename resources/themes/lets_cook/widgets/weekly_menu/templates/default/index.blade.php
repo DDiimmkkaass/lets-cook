@@ -117,7 +117,7 @@
                                 <li class="baskets-menu__sub-item"
                                     data-url="{!! $new_year_basket->getUrl() !!}"
                                     data-week="0"
-                                    data-delivery_dates="{!! implode(' или ', $new_year_basket->getFormatDeliveryDate()) !!}"
+                                    data-delivery_dates="{!! implode(' или ', $new_year_delivery_dates) !!}"
                                     data-basket="1000">
                                     {!! $new_year_basket->getName() !!}
                                 </li>

@@ -11,6 +11,7 @@ namespace App\Widgets\WeeklyMenu;
 use App\Models\WeeklyMenu;
 use App\Models\WeeklyMenuBasket;
 use App\Services\WeeklyMenuService;
+use Carbon;
 use Illuminate\Container\Container;
 use Illuminate\View\Compilers\BladeCompiler;
 use Pingpong\Widget\Widget;
@@ -86,6 +87,17 @@ class WeeklyMenuWidget extends Widget
         }
         
         $new_year_basket = $this->weeklyMenuService->getNewYearBasket();
+        $dates = [];
+        if ($new_year_basket) {
+            $dates = [
+                Carbon::now()->endOfYear()->startOfDay()->subDays(2),
+                Carbon::now()->endOfYear()->startOfDay()->subDay(),
+            ];
+    
+            foreach ($dates as $key => $date) {
+                $dates[$key] = $date = $date->format('d').' '.get_localized_date($date, 'Y-m-d H:i:s', false, '', '%f');
+            }
+        }
         
         if (view()->exists('widgets.weekly_menu.templates.'.$template.'.index')) {
             $this->template = $template;
@@ -95,6 +107,7 @@ class WeeklyMenuWidget extends Widget
             ->with('menu', $menu)->with('menu_baskets', $menu_baskets)
             ->with('next_menu', $next_menu)->with('next_menu_baskets', $next_menu_baskets)
             ->with('new_year_basket', $new_year_basket)
+            ->with('new_year_delivery_dates', $dates)
             ->render();
     }
 }

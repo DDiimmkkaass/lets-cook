@@ -223,29 +223,6 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
     }
     
     /**
-     * @return float
-     */
-    public function getDeliveryDate()
-    {
-        return $this->delivery_date;
-    }
-    
-    /**
-     * @return array
-     */
-    public function getFormatDeliveryDate()
-    {
-        $date = $this->getDeliveryDate();
-        if ($date) {
-            $date = Carbon::createFromFormat('d-m-Y', $date);
-            
-            $date = $date->format('d').' '.get_localized_date($date->format('Y-m-d'), 'Y-m-d', false, '', '%f');
-        }
-        
-        return [$date];
-    }
-    
-    /**
      * @return string
      */
     public function getName()
