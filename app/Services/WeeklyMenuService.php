@@ -79,6 +79,8 @@ class WeeklyMenuService
                 ->getPrice($weekly_menu_basket->portions);
             
             $model->baskets()->save($weekly_menu_basket);
+        } else {
+            $weekly_menu_basket->update($data);
         }
         
         return $weekly_menu_basket;
