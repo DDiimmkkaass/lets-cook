@@ -215,7 +215,7 @@ class OrderService
                             if (preg_match('/^[\d]{1,2}$/', $value)) {
                                 $dt = Carbon::create($year, 1, 1, 0, 0, 0)->addWeek($value - 1);
                                 
-                                $start_delivery_date = clone ($dt->endOfWeek()->startOfDay());
+                                $start_delivery_date = clone ($dt->startOfWeek()->addDay());
                                 $end_delivery_date = clone ($dt->endOfWeek()->addDay()->startOfDay());
                                 
                                 $list->where('orders.delivery_date', '>=', $start_delivery_date);

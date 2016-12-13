@@ -30,7 +30,7 @@
 
             @include('basket.partials.user_info')
 
-            @if (!$user || ($user && !$user->subscribe()->count()))
+            @if ((!$user || ($user && !$user->subscribe()->count())) && !$new_year_basket)
                 @include('basket.partials.subscribe')
             @endif
 

@@ -25,6 +25,7 @@ use App\Models\WeeklyMenu;
 use App\Models\WeeklyMenuBasket;
 use App\Services\CouponService;
 use App\Services\OrderService;
+use App\Services\WeeklyMenuService;
 use DB;
 use Exception;
 use FlashMessages;
@@ -76,19 +77,26 @@ class OrderController extends BackendController
     private $couponService;
     
     /**
+     * @var \App\Services\WeeklyMenuService
+     */
+    private $weeklyMenuService;
+    
+    /**
      * @param \Illuminate\Contracts\Routing\ResponseFactory $response
      * @param \App\Services\OrderService                    $orderService
      * @param \App\Services\CouponService                   $couponService
+     * @param \App\Services\WeeklyMenuService               $weeklyMenuService
      */
-    public function __construct(ResponseFactory $response, OrderService $orderService, CouponService $couponService)
+    public function __construct(ResponseFactory $response, OrderService $orderService, CouponService $couponService, WeeklyMenuService $weeklyMenuService)
     {
         parent::__construct($response);
         
         $this->orderService = $orderService;
         $this->couponService = $couponService;
-        
+        $this->weeklyMenuService = $weeklyMenuService;
+    
         Meta::title(trans('labels.orders'));
-        
+    
         $this->breadcrumbs(trans('labels.orders'), route('admin.'.$this->module.'.index'));
     }
     

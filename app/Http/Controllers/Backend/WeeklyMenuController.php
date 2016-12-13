@@ -17,7 +17,6 @@ use App\Services\BasketService;
 use App\Services\RecipeService;
 use App\Services\WeeklyMenuService;
 use App\Traits\Controllers\ProcessTagsTrait;
-use Carbon;
 use DB;
 use Event;
 use Exception;
@@ -486,13 +485,16 @@ class WeeklyMenuController extends BackendController
     private function _saveRelationships(WeeklyMenu $model, Request $request)
     {
         $exists_baskets = [];
-        
+
         foreach ($request->get('baskets', []) as $_basket) {
             $basket = $this->weeklyMenuService->saveBasket(
                 $model,
                 [
-                    'basket_id' => $_basket['id'],
-                    'portions'  => $_basket['portions'],
+                    'basket_id'     => $_basket['id'],
+                    'portions'      => $_basket['portions'],
+                ],
+                [
+                    'delivery_date' => isset($_basket['delivery_date']) ? $_basket['delivery_date'] : null,
                 ]
             );
             $this->weeklyMenuService->processRecipes($basket, $_basket);

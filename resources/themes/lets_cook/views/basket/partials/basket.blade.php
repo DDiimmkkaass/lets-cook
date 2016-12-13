@@ -1,5 +1,6 @@
 <section class="order__main order-main" data-steps="1">
     <input type="hidden" name="basket_id" value="{!! $basket->id !!}">
+    <input type="hidden" name="basket_slug" value="{!! $basket->getSlug() !!}">
 
     <div class="order-main__wrapper">
         <div class="order-main__top">

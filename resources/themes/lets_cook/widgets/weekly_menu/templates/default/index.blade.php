@@ -39,6 +39,22 @@
                             @break($_key >= 4)
                         @endforeach
                     @endforeach
+                    @if ($new_year_basket)
+                        @foreach($new_year_basket->recipes as $_key => $recipe)
+                            <li class="recipes-menu__item" data-week="0" data-basket="1000">
+                                <a href="{!! $new_year_basket->getUrl() !!}"
+                                   title="{!! $recipe->getRecipeName() !!}"
+                                   class="recipes-menu__link">
+                                    <div class="recipes-menu__img"
+                                         style="background-image: url({!! thumb($recipe->recipe->image, 410, 191) !!});"></div>
+                                    <h3 class="recipes-menu__title">
+                                        {!! $recipe->getRecipeName() !!}
+                                    </h3>
+                                </a>
+                            </li>
+                            @break($_key >= 4)
+                        @endforeach
+                    @endif
                 @endif
 
                 @if ($next_menu)
@@ -70,7 +86,8 @@
 
                 </ul>
 
-                <a href="{!! isset($active_basket) ? $active_basket->getUrl($week) : '#' !!}" class="recipes-menu__all yellow-small-button">Все рецепты</a>
+                <a href="{!! isset($active_basket) ? $active_basket->getUrl($week) : '#' !!}"
+                   class="recipes-menu__all yellow-small-button">Все рецепты</a>
             </div>
         </div>
 
@@ -96,6 +113,15 @@
                                     {!! $basket->getName() !!}
                                 </li>
                             @endforeach
+                            @if ($new_year_basket)
+                                <li class="baskets-menu__sub-item"
+                                    data-url="{!! $new_year_basket->getUrl() !!}"
+                                    data-week="0"
+                                    data-delivery_dates="{!! implode(' или ', $new_year_basket->getFormatDeliveryDate()) !!}"
+                                    data-basket="1000">
+                                    {!! $new_year_basket->getName() !!}
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif
@@ -120,7 +146,9 @@
             @if ($menu)
                 <div class="baskets-menu__desc" data-week="0">
                     Оформите сегодня, и вы
-                    <span>получите заказ {!! implode(' или ', $menu->getDeliveryDates()) !!}</span>.<br/>
+                    <span>получите заказ
+                        <span class="delivery-dates" data-delivery_dates="{!! implode(' или ', $menu->getDeliveryDates()) !!}">
+                            {!! implode(' или ', $menu->getDeliveryDates()) !!}</span></span>.<br/>
                     Заказы на это меню принимаются до
                     <span>{!! variable('stop_ordering_time') !!} {!! trans_choice('front_labels.day_of_week_to_string_when', variable('stop_ordering_date')) !!}</span>.<br/>
                     Заказав после, вы получите продукты меню следующей недели.
@@ -136,7 +164,9 @@
             @if ($next_menu)
                 <div class="baskets-menu__desc" data-week="1">
                     Оформите сегодня, и вы
-                    <span>получите заказ {!! implode(' или ', $next_menu->getDeliveryDates()) !!}</span>.<br/>
+                    <span>получите заказ
+                        <span class="delivery-dates" data-delivery_dates="{!! implode(' или ', $next_menu->getDeliveryDates()) !!}">
+                            {!! implode(' или ', $next_menu->getDeliveryDates()) !!}</span></span>.<br/>
                     Заказы на это меню принимаются до
                     <span>{!! variable('stop_ordering_time') !!} {!! trans_choice('front_labels.day_of_week_to_string_when', variable('stop_ordering_date')) !!}</span>.<br/>
                     Заказав после, вы получите продукты меню следующей недели.

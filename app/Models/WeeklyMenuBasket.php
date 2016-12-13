@@ -10,6 +10,7 @@ namespace App\Models;
 
 use App\Contracts\FrontLink;
 use App\Contracts\MetaGettable;
+use Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Model;
 
@@ -28,12 +29,18 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
         'basket_id',
         'portions',
         'prices',
+        'delivery_date',
     ];
     
     /**
      * @var array
      */
     protected $with = ['basket'];
+    
+    /**
+     * @var array
+     */
+    protected $dates = ['delivery_date'];
     
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -72,6 +79,17 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
     }
     
     /**
+     * @param string $value
+     */
+    public function setDeliveryDateAttribute($value)
+    {
+        $this->attributes['delivery_date'] = empty($value) ?
+            null :
+            Carbon::createFromFormat('d-m-Y', $value)->startOfDay()->format('Y-m-d H:i:s');
+            
+    }
+    
+    /**
      * @param array $value
      *
      * @return array
@@ -99,6 +117,16 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
     public function getPortionsAttribute($value)
     {
         return (int) $value;
+    }
+    
+    /**
+     * @param string $value
+     *
+     * @return null|string
+     */
+    public function getDeliveryDateAttribute($value)
+    {
+        return empty($value) ? null : Carbon::createFromFormat('Y-m-d H:i:s', $value)->startOfDay()->format('d-m-Y');
     }
     
     /**
@@ -192,6 +220,29 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
     public function getWeekPrice()
     {
         return $this->prices;
+    }
+    
+    /**
+     * @return float
+     */
+    public function getDeliveryDate()
+    {
+        return $this->delivery_date;
+    }
+    
+    /**
+     * @return array
+     */
+    public function getFormatDeliveryDate()
+    {
+        $date = $this->getDeliveryDate();
+        if ($date) {
+            $date = Carbon::createFromFormat('d-m-Y', $date);
+            
+            $date = $date->format('d').' '.get_localized_date($date->format('Y-m-d'), 'Y-m-d', false, '', '%f');
+        }
+        
+        return [$date];
     }
     
     /**

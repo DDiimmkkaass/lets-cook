@@ -25,22 +25,22 @@ class WeeklyMenuCreateRequest extends FormRequest
     public function rules()
     {
         $rules = [
-            'week' => 'required|numeric|min:1|max:52|unique:weekly_menus,week,NULL,id,year,' . $this->request->get('year'),
+            'week' => 'required|numeric|min:1|max:52|unique:weekly_menus,week,NULL,id,year,'.
+                $this->request->get('year'),
             'year' => 'required|numeric',
-             
+            
             'baskets.*.old.*' => 'array',
             'baskets.*.new.*' => 'array',
             
-            'baskets.*.id'       => 'required|exists:baskets,id',
-            'baskets.*.portions' => 'required|numeric|in:'.implode(',', config('recipe.available_portions')),
+            'baskets.*.id'            => 'required|exists:baskets,id',
+            'baskets.*.portions'      => 'required|numeric|in:'.implode(',', config('recipe.available_portions')),
+            'baskets.*.delivery_date' => 'date_format:d-m-Y',
             
             'baskets.*.old.*.recipe_id' => 'required_with:baskets.*.new|exists:recipes,id',
             'baskets.*.old.*.position'  => 'required_with:baskets.*.new|numeric|min:1',
-            'baskets.*.old.*.main'      => 'boolean',
             
             'baskets.*.new.*.recipe_id' => 'required_with:baskets.*.new|exists:recipes,id',
             'baskets.*.new.*.position'  => 'required_with:baskets.*.new|numeric|min:1',
-            'baskets.*.new.*.main'      => 'boolean',
         ];
         
         return $rules;

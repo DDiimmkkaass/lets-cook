@@ -3,7 +3,7 @@
         <div class="form-group">
             <label class="col-sm-2 control-label">@lang('labels.basket_price'):</label>
             <div class="col-sm-10">
-                <table class="table table-bordered">
+                <table class="table table-bordered no-margin">
                     <tbody>
                     <tr>
                         @foreach($basket->getPrice($portions) as $day => $price)
@@ -28,6 +28,20 @@
                 <div class="col-sm-1 with-after-helper currency-rub">
                     <input type="text" readonly="readonly" class="form-control input-sm basket-internal-price"
                            value="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-2 control-label">@lang('labels.delivery_date'):</label>
+            <div class="col-sm-10">
+                <div class="col-sm-2">
+                    <div class="input-group">
+                        <input type="text" class="form-control input-sm date inputmask-birthday datepicker-birthday"
+                               name="baskets[{!! $basket->id !!}_{!! $portions !!}][delivery_date]"
+                               value="">
+                        <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -65,6 +65,15 @@ function recipesMenu() {
                 $basketsMenuList.find('.baskets-menu__sub-item').removeAttr('data-active-item');
                 $that.attr('data-active-item', '');
 
+                let delivery_dates = $that.data('delivery_dates'),
+                    $showed_delivery_dates = $that.closest('.baskets-menu').find('.delivery-dates');
+
+                if (delivery_dates) {
+                    $showed_delivery_dates.text(delivery_dates);
+                } else {
+                    $showed_delivery_dates.text($showed_delivery_dates.data('delivery_dates'));
+                }
+
                 setItems(data_week, data_basket);
             }
         });

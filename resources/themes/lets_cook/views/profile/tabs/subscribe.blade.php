@@ -10,12 +10,14 @@
                         <div class="profile-subscribe__select order-select">
                             <select name="basket_id" id="profile-subscribe-name">
                                 @foreach($weekly_menu->baskets as $basket)
-                                    <option value="{!! $basket->basket_id !!}"
-                                            @if ($basket->basket_id == $subscribe->basket_id) selected @endif>
-                                        {!! $basket->getName() !!}
-                                        ({!! $basket->portions !!} @choice('front_labels.count_of_portions', $basket->portions)
-                                        {!! $basket->getPriceInOrder($subscribe->recipes) !!} {!! $currency !!})
-                                    </option>
+                                    @if ($basket->getSlug() != variable('new_year_basket_slug'))
+                                        <option value="{!! $basket->basket_id !!}"
+                                                @if ($basket->basket_id == $subscribe->basket_id) selected @endif>
+                                            {!! $basket->getName() !!}
+                                            ({!! $basket->portions !!} @choice('front_labels.count_of_portions', $basket->portions)
+                                            {!! $basket->getPriceInOrder($subscribe->recipes) !!} {!! $currency !!})
+                                        </option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>

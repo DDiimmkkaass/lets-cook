@@ -1,7 +1,7 @@
 @if ($model->exists)
     <div id="order_comments_block" class="box box-primary order-comments-block">
         <div class="box-header">
-            <h4 class="margin-top-10 margin-bottom-0">@lang('labels.comments')</h4>
+            <h4 class="margin-top-10 margin-bottom-0">@lang('labels.order_comments')</h4>
         </div>
         <div class="box-body">
             <div class="direct-chat-messages height-auto comments-block">

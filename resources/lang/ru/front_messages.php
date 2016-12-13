@@ -71,4 +71,5 @@ return array(
     'you can not use you own coupon' => 'Вы не можете использовать свой собственный купон',
     'this action available only for registered users' => 'Это действие доступно только для зарегистрированных пользователей',
     'comment successfully added message' => 'Спасибо! Ваш комментарий успешно сохранен и будет опубликован на сайте после модерации.',
+    'you can not repeat this basket' => 'Вы не можете повторить данную корзину',
 );

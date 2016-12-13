@@ -5,6 +5,8 @@
     <div class="profile-orders-content__main order-edit" data-tab="my-orders-edit">
         <form action="{!! localize_route('order.update', $order->id) !!}" method="post" class="order-edit-form">
             {!! csrf_field() !!}
+            <input type="hidden" name="basket_slug" value="{!! $order->main_basket->getSlug() !!}">
+
             @php($recipes_count = $order->recipes->count())
 
             <div class="order-edit__wrapper">
@@ -27,7 +29,7 @@
                 <div class="order-edit__right">
                     <div class="order-edit__select order-select">
                         <select name="basket_id" id="order-select-name">
-                            @if (after_week_closing($weekly_menu->year, $weekly_menu->week))
+                            @if (after_week_closing($weekly_menu->year, $weekly_menu->week) || $new_year_basket)
                                 @foreach($weekly_menu->baskets()->get() as $basket)
                                     @if ($basket->id == $order->main_basket->weekly_menu_basket_id)
                                         <option value="{!! $basket->id !!}"
@@ -80,7 +82,7 @@
                         </div>
                     </div>
 
-                    @if (!$user->subscribe()->count())
+                    @if (!$user->subscribe()->count() && !$new_year_basket)
                         <div class="order-edit__subscribe">
                             <div class="order-edit__subscribe-title">Подписка:</div>
 

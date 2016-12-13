@@ -22,6 +22,7 @@ use App\Services\OrderService;
 use App\Services\PaymentService;
 use App\Services\SubscribeService;
 use App\Services\WeeklyMenuService;
+use Carbon;
 use DB;
 use Exception;
 use FlashMessages;
@@ -108,7 +109,9 @@ class OrderController extends FrontendController
     public function store(OrderCreateRequest $request)
     {
         try {
-            abort_if(!$this->weeklyMenuService->checkActiveWeeksBasket($request->get('basket_id', 0)), 404);
+            if ($request->get('basket_slug', '') != variable('new_year_basket_slug')) {
+                abort_if(!$this->weeklyMenuService->checkActiveWeeksBasket($request->get('basket_id', 0)), 404);
+            }
             
             if (!$this->user) {
                 $this->user = $this->authService->quickRegister($request->all());
@@ -183,12 +186,13 @@ class OrderController extends FrontendController
         $weekly_menu = $order->main_basket->weekly_menu_basket->weekly_menu;
         
         $this->data('weekly_menu', $weekly_menu);
+        $this->data('new_year_basket', $order->main_basket->getSlug() == variable('new_year_basket_slug'));
         $this->data('data_tab', 'my-orders-edit');
         $this->data('profile_css_class', 'profile-orders order-edit');
         
         $this->data('order', $order);
         
-        $this->_fillAdditionalTemplateData($weekly_menu->year, $weekly_menu->week);
+        $this->_fillAdditionalTemplateData($order->main_basket->weekly_menu_basket);
         
         return $this->render($this->module.'.edit');
     }
@@ -294,10 +298,9 @@ class OrderController extends FrontendController
     /**
      * fill additional template data
      *
-     * @param int $year
-     * @param int $week
+     * @param WeeklyMenuBasket $basket
      */
-    private function _fillAdditionalTemplateData($year, $week)
+    private function _fillAdditionalTemplateData($basket)
     {
         $additional_baskets = Basket::with('recipes', 'tags', 'tags.tag.category')
             ->additional()
@@ -325,8 +328,12 @@ class OrderController extends FrontendController
             }
         }
         $this->data('additional_baskets_tags', collect($additional_baskets_tags)->sortBy('name'));
-        
-        $this->data('delivery_dates', $this->weeklyMenuService->getDeliveryDates($year, $week));
+    
+        $delivery_dates = [Carbon::createFromFormat('d-m-Y', $basket->getDeliveryDate())];
+        if (!$delivery_dates) {
+            $delivery_dates = $this->weeklyMenuService->getDeliveryDates($basket->year, $basket->week);
+        }
+        $this->data('delivery_dates', $delivery_dates);
         
         $this->data('delivery_times', config('order.delivery_times'));
         

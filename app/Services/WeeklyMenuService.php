@@ -39,7 +39,7 @@ class WeeklyMenuService
                 'week',
                 function ($model) {
                     return trans('labels.w_label').$model->week.
-                    ($model->isCurrentWeekMenu() ? view('partials.datatables.current_week_label')->render() : '');
+                        ($model->isCurrentWeekMenu() ? view('partials.datatables.current_week_label')->render() : '');
                 }
             )
             ->addColumn(
@@ -60,15 +60,18 @@ class WeeklyMenuService
     
     /**
      * @param \App\Models\WeeklyMenu $model
+     * @param array                  $find_data
      * @param array                  $data
      *
      * @return \App\Models\WeeklyMenuBasket
      */
-    public function saveBasket(WeeklyMenu $model, $data = [])
+    public function saveBasket(WeeklyMenu $model, $find_data = [], $data = [])
     {
-        $weekly_menu_basket = $model->baskets()->where($data)->first();
+        $weekly_menu_basket = $model->baskets()->where($find_data)->first();
         
         if (!$weekly_menu_basket) {
+            $data = array_merge($find_data, $data);
+            
             $weekly_menu_basket = new WeeklyMenuBasket($data);
             
             $weekly_menu_basket->prices = Basket::whereId($weekly_menu_basket->basket_id)
@@ -148,17 +151,46 @@ class WeeklyMenuService
     
     /**
      * @param WeeklyMenuBasket $basket
+     * @param bool             $new_year_basket
      *
-     * @return WeeklyMenuBasket|null
+     * @return \App\Models\WeeklyMenuBasket|null
      */
-    public function getSameBasket(WeeklyMenuBasket $basket)
+    public function getSameBasket(WeeklyMenuBasket $basket, $new_year_basket = false)
     {
+        if ($new_year_basket) {
+            return WeeklyMenuBasket::joinWeeklyMenu()
+                ->where('weekly_menus.year', Carbon::now()->year + 1)
+                ->where('weekly_menus.week', 1)
+                ->where('weekly_menu_baskets.portions', $basket->portions == 2 ? 4 : 2)
+                ->where('weekly_menu_baskets.basket_id', $basket->basket_id)
+                ->first(['weekly_menu_baskets.id', 'weekly_menu_baskets.portions', 'weekly_menu_baskets.prices']);
+        }
+        
         return WeeklyMenuBasket::joinWeeklyMenu()
             ->where('weekly_menus.year', $basket->year)
             ->where('weekly_menus.week', $basket->week)
             ->where('weekly_menu_baskets.portions', $basket->portions == 2 ? 4 : 2)
             ->where('weekly_menu_baskets.basket_id', $basket->basket_id)
             ->first(['weekly_menu_baskets.id', 'weekly_menu_baskets.portions', 'weekly_menu_baskets.prices']);
+    }
+    
+    /**
+     * @return WeeklyMenuBasket|null
+     */
+    public function getNewYearBasket()
+    {
+        $new_year_basket_slug = variable('new_year_basket_slug');
+        
+        if (!$new_year_basket_slug) {
+            return null;
+        }
+    
+        $basket = WeeklyMenuBasket::with('recipes')
+                ->whereRaw('weekly_menu_id = (select id from weekly_menus where weekly_menus.year = '.(Carbon::now()->year + 1).' and weekly_menus.week = 1)')
+                ->whereRaw('basket_id = (select id from baskets where baskets.slug = \''.$new_year_basket_slug.'\')')
+                ->first();
+        
+        return $basket;
     }
     
     /**

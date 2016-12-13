@@ -16,6 +16,7 @@ use App\Models\WeeklyMenu;
 use App\Models\WeeklyMenuBasket;
 use App\Services\OrderService;
 use App\Services\WeeklyMenuService;
+use Carbon;
 use FlashMessages;
 use Meta;
 
@@ -76,8 +77,11 @@ class BasketController extends FrontendController
                 ->orderBy('weekly_menu_baskets.portions', 'DESC')
                 ->get(['weekly_menu_baskets.*', 'baskets.position']);
         }
+    
+        $new_year_basket = $this->weeklyMenuService->getNewYearBasket();
         
         $this->data('baskets', isset($baskets) ? $baskets->sortBy('position') : collect());
+        $this->data('new_year_basket', $new_year_basket);
         $this->data('week', $week);
         
         Meta::canonical(localize_route('baskets.index', $week));
@@ -100,15 +104,26 @@ class BasketController extends FrontendController
         if ($week == 'next') {
             $active_week->addWeek();
         }
+    
+        $new_year_basket_slug = variable('new_year_basket_slug');
         
-        $basket = WeeklyMenuBasket::with(['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients'])
-            ->joinWeeklyMenu()
-            ->joinBasket()
-            ->where('baskets.slug', $slug)
-            ->where('weekly_menus.year', $active_week->year)
-            ->where('weekly_menus.week', $active_week->weekOfYear)
-            ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
-            ->first();
+        if ($slug == $new_year_basket_slug) {
+            $basket = WeeklyMenuBasket::with(['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients'])
+                ->joinWeeklyMenu()
+                ->whereRaw('weekly_menu_id = (select id from weekly_menus where weekly_menus.year = '.(Carbon::now()->year + 1).' and weekly_menus.week = 1)')
+                ->whereRaw('basket_id = (select id from baskets where baskets.slug = \''.$new_year_basket_slug.'\')')
+                ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
+                ->first();
+        } else {
+            $basket = WeeklyMenuBasket::with(['recipes', 'recipes.recipe.ingredients', 'recipes.recipe.home_ingredients'])
+                ->joinWeeklyMenu()
+                ->joinBasket()
+                ->where('baskets.slug', $slug)
+                ->where('weekly_menus.year', $active_week->year)
+                ->where('weekly_menus.week', $active_week->weekOfYear)
+                ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
+                ->first();
+        }
         
         abort_if(!$basket, 404);
         
@@ -116,11 +131,13 @@ class BasketController extends FrontendController
         
         $this->data('trial', $trial);
         $this->data('basket', $basket);
-        $this->data('same_basket', $this->weeklyMenuService->getSameBasket($basket));
-        $this->data('recipes_count', $trial ? 1 : config('weekly_menu.default_recipes_count'));
+        $this->data('same_basket', $this->weeklyMenuService->getSameBasket($basket), $slug == $new_year_basket_slug);
+        $this->data('recipes_count', $trial ? 1 :
+            ($slug == $new_year_basket_slug ? 7 : config('weekly_menu.default_recipes_count')));
         $this->data('selected_baskets', collect());
+        $this->data('new_year_basket', $slug == $new_year_basket_slug);
         
-        $this->_fillShowAdditionalTemplateData($basket->year, $basket->week);
+        $this->_fillShowAdditionalTemplateData($basket);
         
         $this->fillMeta($basket, $this->module);
         
@@ -135,6 +152,12 @@ class BasketController extends FrontendController
      */
     public function repeat($slug, $order_id)
     {
+        if ($slug == variable('new_year_basket_slug')) {
+            FlashMessages::add('error', trans('front_messages.you can not repeat this basket'));
+        
+            return redirect()->back();
+        }
+    
         $repeat_order = Order::with(
             'main_basket',
             'recipes',
@@ -162,7 +185,7 @@ class BasketController extends FrontendController
         $this->data('repeat_order', $repeat_order);
         $this->data('selected_baskets', $repeat_order->additional_baskets);
         
-        $this->_fillShowAdditionalTemplateData($basket->year, $basket->week);
+        $this->_fillShowAdditionalTemplateData($basket);
         
         $this->fillMeta($basket, $this->module);
         
@@ -201,10 +224,9 @@ class BasketController extends FrontendController
     /**
      * fill additional template data
      *
-     * @param int $year
-     * @param int $week
+     * @param WeeklyMenuBasket $basket
      */
-    private function _fillShowAdditionalTemplateData($year, $week)
+    private function _fillShowAdditionalTemplateData($basket)
     {
         $additional_baskets = Basket::with('recipes', 'tags', 'tags.tag.category')
             ->additional()
@@ -232,8 +254,12 @@ class BasketController extends FrontendController
             }
         }
         $this->data('additional_baskets_tags', collect($additional_baskets_tags)->sortBy('name'));
-        
-        $this->data('delivery_dates', $this->weeklyMenuService->getDeliveryDates($year, $week));
+    
+        $delivery_dates = [Carbon::createFromFormat('d-m-Y', $basket->getDeliveryDate())];
+        if (!$delivery_dates) {
+            $delivery_dates = $this->weeklyMenuService->getDeliveryDates($basket->year, $basket->week);
+        }
+        $this->data('delivery_dates', $delivery_dates);
         
         $this->data('delivery_times', config('order.delivery_times'));
         
