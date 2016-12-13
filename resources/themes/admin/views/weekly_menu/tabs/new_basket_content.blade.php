@@ -30,21 +30,6 @@
             </div>
         </div>
     </div>
-
-    <div class="form-group @if ($errors->has('baskets.'.$basket['id'].'_'.$basket['portions'].'.delivery_date')) has-error @endif">
-        <label class="col-sm-2 control-label">@lang('labels.delivery_date'):</label>
-        <div class="col-sm-10">
-            <div class="col-sm-2">
-                <div class="input-group">
-                    <input type="text" class="form-control input-sm date inputmask-birthday datepicker-birthday"
-                           value="{!! old('baskets.'.$basket['id'].'_'.$basket['portions'].'.delivery_date', '') !!}">
-                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                </div>
-            </div>
-
-            {!! $errors->first('baskets.'.$basket['id'].'_'.$basket['portions'].'.delivery_date', '<p class="help-block error">:message</p>') !!}
-        </div>
-    </div>
 </div>
 
 <div id="basket_recipes_{!! $basket['id'] !!}_{!! $basket['portions'] !!}" class="menu-recipes-table margin-bottom-40">

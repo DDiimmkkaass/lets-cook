@@ -31,20 +31,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="form-group">
-            <label class="col-sm-2 control-label">@lang('labels.delivery_date'):</label>
-            <div class="col-sm-10">
-                <div class="col-sm-2">
-                    <div class="input-group">
-                        <input type="text" class="form-control input-sm date inputmask-birthday datepicker-birthday"
-                               name="baskets[{!! $basket->id !!}_{!! $portions !!}][delivery_date]"
-                               value="">
-                        <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div id="basket_recipes_{!! $basket->id !!}_{!! $portions !!}" class="menu-recipes-table margin-bottom-40">

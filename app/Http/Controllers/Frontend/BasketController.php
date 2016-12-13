@@ -254,10 +254,16 @@ class BasketController extends FrontendController
             }
         }
         $this->data('additional_baskets_tags', collect($additional_baskets_tags)->sortBy('name'));
-    
-        $delivery_date = $basket->getDeliveryDate();
-        $delivery_dates = $delivery_date ? [Carbon::createFromFormat('d-m-Y', $delivery_date)] : null;
-        if (!$delivery_dates) {
+        
+        if ($basket->getSlug() == variable('new_year_basket_slug')) {
+            $dt = Carbon::now()->endOfYear()->startOfDay();
+            
+            $delivery_dates = [
+                clone $dt->subDays(2),
+                $dt->addDay(),
+            ];
+        }
+        if (!isset($delivery_dates)) {
             $delivery_dates = $this->weeklyMenuService->getDeliveryDates($basket->year, $basket->week);
         }
         $this->data('delivery_dates', $delivery_dates);

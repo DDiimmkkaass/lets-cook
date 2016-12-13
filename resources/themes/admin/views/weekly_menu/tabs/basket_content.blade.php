@@ -30,20 +30,6 @@
             </div>
         </div>
     </div>
-
-    <div class="form-group">
-        <label class="col-sm-2 control-label">@lang('labels.delivery_date'):</label>
-        <div class="col-sm-10">
-            <div class="col-sm-2">
-                <div class="input-group">
-                    <input type="text" class="form-control input-sm date inputmask-birthday datepicker-birthday"
-                           name="baskets[{!! $basket->basket_id !!}_{!! $basket->portions !!}][delivery_date]"
-                           value="{!! $basket->getDeliveryDate() !!}">
-                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <div id="basket_recipes_{!! $basket->basket_id !!}_{!! $basket->portions !!}" class="menu-recipes-table">
