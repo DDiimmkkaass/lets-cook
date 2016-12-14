@@ -310,11 +310,7 @@ $(document).on "ready", () ->
         , 1000
 
   $('.order-main__count-list.order-portions-count').on 'change', 'input[type="radio"]', () ->
-    $('span', '#portions_count_result').text($(this).val())
-
-    Order.calculateTotal()
-
-    $('[name="basket_id"]').val($(this).data('basket_id'))
+    window.location = $(this).data('href')
 
   $(document).on 'click', '[name="order-promocode__submit"]', (e) ->
     e.preventDefault()

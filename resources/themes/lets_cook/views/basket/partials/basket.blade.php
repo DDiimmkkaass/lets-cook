@@ -38,24 +38,37 @@
                         <div class="order-main__count">
                             <div class="order-main__count-title">Порций</div>
                             <ul class="order-main__count-list order-portions-count">
-                                @foreach(config('recipe.available_portions') as $portions)
-                                    @if ($basket->portions == $portions || ($same_basket && $same_basket->portions == $portions))
-                                        <li class="order-main__count-item order-portions-count-radio">
-                                            <input type="radio" id="order-portions-count-radio-{!! $portions !!}"
-                                                   name="portions"
-                                                   @if ($basket->portions == $portions)
-                                                   checked
-                                                   data-basket_id="{!! $basket->id !!}"
-                                                   @endif
-                                                   @if ($same_basket && $same_basket->portions == $portions)
-                                                   data-basket_id="{!! $same_basket->id !!}"
-                                                   @endif
-                                                   value="{!! $portions !!}"
-                                                   data-count="{!! $portions !!}">
-                                            <label for="order-portions-count-radio-{!! $portions !!}">{!! $portions !!}</label>
-                                        </li>
-                                    @endif
-                                @endforeach
+                                @php($_basket = $basket->portions == 2 ? $basket : ($same_basket ? $same_basket : null))
+                                @if ($_basket)
+                                    <li class="order-main__count-item order-portions-count-radio">
+                                        <input type="radio" id="order-portions-count-radio-2"
+                                               name="portions"
+                                               @if ($_basket->portions == $basket->portions)
+                                               checked
+                                               @endif
+                                               data-basket_id="{!! $basket->id !!}"
+                                               data-href="{!! $_basket->getUrl() !!}"
+                                               value="2"
+                                               data-count="2">
+                                        <label for="order-portions-count-radio-2">2</label>
+                                    </li>
+                                @endif
+
+                                @php($__basket = $basket->portions == 4 ? $basket : ($same_basket ? $same_basket : null))
+                                @if ($__basket)
+                                    <li class="order-main__count-item order-portions-count-radio">
+                                        <input type="radio" id="order-portions-count-radio-4"
+                                               name="portions"
+                                               @if ($__basket->portions == $basket->portions)
+                                               checked
+                                               @endif
+                                               data-basket_id="{!! $__basket->id !!}"
+                                               data-href="{!! $__basket->getUrl() !!}"
+                                               value="4"
+                                               data-count="4">
+                                        <label for="order-portions-count-radio-4">4</label>
+                                    </li>
+                                @endif
                             </ul>
                         </div>
                     </div>

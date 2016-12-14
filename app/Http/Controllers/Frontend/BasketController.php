@@ -93,11 +93,12 @@ class BasketController extends FrontendController
     
     /**
      * @param string $slug
+     * @param int    $portions
      * @param string $week
      *
      * @return \Illuminate\Contracts\View\View
      */
-    public function show($slug, $week = 'current')
+    public function show($slug, $portions = 2, $week = 'current')
     {
         $active_week = active_week_menu_week();
         
@@ -112,6 +113,7 @@ class BasketController extends FrontendController
                 ->joinWeeklyMenu()
                 ->whereRaw('weekly_menu_id = (select id from weekly_menus where weekly_menus.year = '.(Carbon::now()->year + 1).' and weekly_menus.week = 1)')
                 ->whereRaw('basket_id = (select id from baskets where baskets.slug = \''.$new_year_basket_slug.'\')')
+                ->where('weekly_menu_baskets.portions', $portions)
                 ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
                 ->first();
         } else {
@@ -121,6 +123,7 @@ class BasketController extends FrontendController
                 ->where('baskets.slug', $slug)
                 ->where('weekly_menus.year', $active_week->year)
                 ->where('weekly_menus.week', $active_week->weekOfYear)
+                ->where('weekly_menu_baskets.portions', $portions)
                 ->select('weekly_menu_baskets.*', 'weekly_menus.year', 'weekly_menus.week')
                 ->first();
         }

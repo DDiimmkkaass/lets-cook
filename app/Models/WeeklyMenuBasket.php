@@ -245,7 +245,7 @@ class WeeklyMenuBasket extends Model implements FrontLink, MetaGettable
      */
     public function getUrl($week = 'current')
     {
-        return $this->basket->getUrl($week);
+        return $this->basket->getUrl($this->getPortions(), $week);
         
     }
     
