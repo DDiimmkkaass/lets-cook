@@ -14,4 +14,5 @@ return array (
   'password_restore_subject' => 'Востановление пароля',
   'your discount coupon' => 'Ваш купон на скидку',
   'your new order' => 'Ваш новый заказ',
+  'new order' => 'Новый заказ на Вашем сайте',
 );
