@@ -8,8 +8,10 @@
 
 namespace App\Services;
 
+use App\Models\Tag;
 use App\Models\TagCategory;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class TagService
@@ -30,8 +32,21 @@ class TagService
             ->groupBy('tag_categories.id')
             ->positionSorted()
             ->nameSorted()
+            ->visible()
             ->get(['tag_categories.*']);
         
         return $categories;
+    }
+    
+    /**
+     * @param Model $model
+     */
+    public function tagsForItem(Model $model)
+    {
+        return Tag::joinTagCategory()->joinTagged()
+            ->whereRaw('tagged.taggable_type = \''.'App\\\\Models\\\\'.class_basename($model).'\'')
+            ->where('tagged.taggable_id', $model->id)
+            ->where('tag_categories.status', true)
+            ->get(['tags.id']);
     }
 }

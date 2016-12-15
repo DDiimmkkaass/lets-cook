@@ -32,10 +32,10 @@
                         </div>
                     </div>
 
-                    @if ($model->tags->count())
+                    @if ($tags)
                         <ul class="recipe-simple-basket__tags">
-                            @foreach($model->tags as $tag)
-                                <li data-tag="{!! $tag->tag->name !!}">{!! $tag->tag->name !!}</li>
+                            @foreach($tags as $tag)
+                                <li data-tag="{!! $tag->name !!}">{!! $tag->name !!}</li>
                             @endforeach
                         </ul>
                     @endif
@@ -46,10 +46,9 @@
                  style="background-image: url({!! thumb($model->image, 720, 370) !!});"></div>
         </section>
 
-        <section class="recipe-simple__all all-baskets">
-            <div class="all-baskets__title georgia-title">Корзины</div>
-
-            @if (count($active_baskets))
+        @if (count($active_baskets))
+            <section class="recipe-simple__all all-baskets">
+                <div class="all-baskets__title georgia-title">Корзины</div>
                 <ul class="all-baskets__list">
                     @foreach($active_baskets as $basket)
                         <li>
@@ -60,8 +59,8 @@
                         </li>
                     @endforeach
                 </ul>
-            @endif
-        </section>
+            </section>
+        @endif
 
         @widget__banner('cook_with_us', ['recipe_name' => $model->name])
 

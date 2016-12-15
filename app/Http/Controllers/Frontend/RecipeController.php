@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Models\Recipe;
 use App\Services\RecipeService;
+use App\Services\TagService;
 use Illuminate\Http\Request;
 use Meta;
 
@@ -29,17 +30,24 @@ class RecipeController extends FrontendController
      * @var \App\Services\RecipeService
      */
     protected $recipeService;
-
+    
+    /**
+     * @var \App\Services\TagService
+     */
+    private $tagService;
+    
     /**
      * RecipeController constructor.
      *
      * @param \App\Services\RecipeService $recipeService
+     * @param \App\Services\TagService    $tagService
      */
-    public function __construct(RecipeService $recipeService)
+    public function __construct(RecipeService $recipeService, TagService $tagService)
     {
         parent::__construct();
 
         $this->recipeService = $recipeService;
+        $this->tagService = $tagService;
     }
     
     /**
@@ -70,7 +78,7 @@ class RecipeController extends FrontendController
      */
     public function show($recipe_id)
     {
-        $model = Recipe::with(['tags', 'tags.tag.translations', 'ingredients', 'home_ingredients', 'steps', 'media'])
+        $model = Recipe::with(['ingredients', 'home_ingredients', 'steps', 'media'])
             ->visible()
             ->whereId($recipe_id)
             ->first();
@@ -78,8 +86,10 @@ class RecipeController extends FrontendController
         abort_if(!$model, 404);
     
         $active_baskets = $this->recipeService->activeBaskets($model);
+        $tags = $this->tagService->tagsForItem($model);
         
         $this->data('model', $model);
+        $this->data('tags', $tags);
         $this->data('active_baskets', $active_baskets);
         
         $this->fillMeta($model, $this->module);

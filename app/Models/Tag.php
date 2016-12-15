@@ -19,11 +19,15 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Tag extends Model
 {
-
-    use VisibleTrait;
+    
     use Translatable;
     use WithTranslationsTrait;
-
+    
+    /**
+     * @var array
+     */
+    protected $with = ['translations'];
+    
     /**
      * @var array
      */
@@ -41,12 +45,7 @@ class Tag extends Model
     ];
 
     /**
-     * @var array
-     */
-    protected $guarded = [];
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
+     * @return \Illuminate\Database\Eloquent\Relations\hasMany
      */
     public function taggable()
     {
@@ -59,5 +58,25 @@ class Tag extends Model
     public function category()
     {
         return $this->belongsTo(TagCategory::class);
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinTagCategory($query)
+    {
+        return $query->leftJoin('tag_categories', 'tag_categories.id', '=', 'tags.category_id');
+    }
+    
+    /**
+     * @param $query
+     *
+     * @return mixed
+     */
+    public function scopeJoinTagged($query)
+    {
+        return $query->join('tagged', 'tagged.tag_id', '=', 'tags.id');
     }
 }

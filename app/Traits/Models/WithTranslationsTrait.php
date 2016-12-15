@@ -18,7 +18,7 @@ use App;
  */
 trait WithTranslationsTrait
 {
-
+    
     /**
      * @param $q
      */
@@ -32,33 +32,34 @@ trait WithTranslationsTrait
             ]
         );
     }
-
+    
     /**
-     * @param      $q
-     * @param      $modelTable
-     * @param null $translationsTable
-     * @param null $modelTableKey
-     * @param null $translationsTableKey
+     * @param             $q
+     * @param string|null $modelTable
+     * @param string|null $translationsTable
+     * @param string|null $modelTableKey
+     * @param string|null $translationsTableKey
      */
     public function scopeJoinTranslations(
         $q,
-        $modelTable,
+        $modelTable = null,
         $translationsTable = null,
         $modelTableKey = null,
         $translationsTableKey = null
     ) {
-        $class = get_class($this);
-        $class = explode('\\', $class);
-
-        $model = mb_convert_case(array_pop($class), MB_CASE_LOWER);
-
-        if (!$translationsTable) {
-            $translationsTable = $model."_translations";
+        if (!$modelTable) {
+            $modelTable = $this->getTable();
         }
-
-        $translationsTableKey = (empty($translationsTableKey) ? $model."_id" : $translationsTableKey);
+        
+        $singularModelTable = str_singular($modelTable);
+        
+        if (!$translationsTable) {
+            $translationsTable = $singularModelTable."_translations";
+        }
+        
+        $translationsTableKey = (empty($translationsTableKey) ? $singularModelTable."_id" : $translationsTableKey);
         $modelTableKey = (empty($modelTableKey) ? "id" : $modelTableKey);
-
+        
         $q->leftJoin(
             $translationsTable,
             function ($join) use ($modelTable, $translationsTable, $translationsTableKey, $modelTableKey) {
