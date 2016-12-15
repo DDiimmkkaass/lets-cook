@@ -425,10 +425,12 @@ class CouponService
     
     /**
      * @param \App\Models\User $user
+     *
+     * @return \App\Models\Coupon
      */
     public function createInviteFriendCoupon(User $user)
     {
-        $this->create(
+        return $this->create(
             [
                 'user_id'       => $user->id,
                 'type'          => Coupon::getTypeIdByName('all'),
