@@ -25,8 +25,8 @@ use App\Services\WeeklyMenuService;
 use Carbon;
 use DB;
 use Exception;
-use FlashMessages;
 use Illuminate\Http\Request;
+use Sentry;
 
 /**
  * Class OrderController
@@ -160,9 +160,10 @@ class OrderController extends FrontendController
             }
             
             return [
-                'status'  => 'success',
-                'message' => trans('front_messages.your order successfully created'),
-                'html'    => isset($html) ? $html : '',
+                'status'   => 'success',
+                'message'  => trans('front_messages.your order successfully created'),
+                'html'     => isset($html) ? $html : '',
+                'redirect' => Sentry::check(),
             ];
         } catch (Exception $e) {
             DB::rollBack();
@@ -209,7 +210,7 @@ class OrderController extends FrontendController
         
         try {
             $status = $this->_validCoupon($request, $model);
-    
+            
             if ($status !== true) {
                 return [
                     'status'  => 'error',
@@ -328,10 +329,10 @@ class OrderController extends FrontendController
             }
         }
         $this->data('additional_baskets_tags', collect($additional_baskets_tags)->sortBy('name'));
-    
+        
         if ($basket->getSlug() == variable('new_year_basket_slug')) {
             $dt = Carbon::now()->endOfYear()->startOfDay();
-        
+            
             $delivery_dates = [
                 clone $dt->subDays(2),
                 $dt->addDay(),

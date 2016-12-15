@@ -295,7 +295,10 @@ Order.save = ($button, $form) ->
             $('#payment_form').find('form').submit()
           else
             setTimeout () ->
-                window.location.href = '/'
+                if response.redirect
+                  window.location.href = '/profiles/orders'
+                else
+                  window.location.href = '/'
               , 1500
         else
           popUp(lang_error, response.message)
