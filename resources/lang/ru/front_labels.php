@@ -64,4 +64,5 @@ return array(
   'user_info' => 'Данные пользователя',
   'used_coupon' => 'Использован купон',
   'discount' => 'Скидка',
+  'share_link_on' => 'Поделиться ссылкой на',
 );

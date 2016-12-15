@@ -42,118 +42,81 @@
         text-decoration: underline
 
 
-
-
-
 .social-info
   background: $bg-black-1 url('../images/dark-bg.png') top left repeat
 
   &__list
+    display block
     margin: 0; padding: 25px 0 20px; list-style-type: none
     text-align: center
     fs(0px)
 
-    // YANDEX SHARE
-
-    .ya-share2__container_size_m .ya-share2__item
-      margin-right: 30px !important
-
-    .ya-share2__badge
-      border-radius: 0 !important
-      background-color: transparent !important
-
-    .ya-share2__container_size_m .ya-share2__icon
-      background: none !important
-      width: 110px !important
-      height: 30px !important
-
-    .ya-share2__container_size_m .ya-share2__counter
-      display: none !important
-
-    .ya-share2__container_size_m .ya-share2__item_service_facebook .ya-share2__icon,
-    .ya-share2__container_size_m .ya-share2__item_service_vkontakte .ya-share2__icon,
-    .ya-share2__container_size_m .ya-share2__item_service_gplus .ya-share2__icon,
-    .ya-share2__container_size_m .ya-share2__item_service_odnoklassniki .ya-share2__icon
-      &::before
-        display: inline-block
-        font-family: $arial
-        fsh(10px, 30px)
-        font-weight: 400
-        text-transform: uppercase
-
-
-  .ya-share2__container_size_m .ya-share2__item_service_facebook .ya-share2__icon
-    background-color: #3b5998 !important
-
-    &::before
-      content: 'facebook'
-
-  .ya-share2__container_size_m .ya-share2__item_service_vkontakte .ya-share2__icon
-    background-color: #48729e !important
-
-    &::before
-      content: 'вконтакте'
-
-  .ya-share2__container_size_m .ya-share2__item_service_gplus .ya-share2__icon
-    background-color: #dc4e41 !important
-
-    &::before
-      content: 'google +'
-
-  .ya-share2__container_size_m .ya-share2__item_service_odnoklassniki .ya-share2__icon
-    background-color: #ffbd00 !important
-
-    &::before
-      content: 'одноклассники'
-
-    // end YANDEX SHARE
-
   &__item
     display: inline-block
-    margin: 0 15px
-    font-family: $arial
-    fsh(10px, 30px)
-    font-weight: 400
+    margin: 0 45px 0 15px
+    width: 110px
+    cursor pointer
+    position relative
 
-    &[data-social='facebook'] a
-      width: 130px
-      background-color: $bg-blue-1
+    .social-likes__button
+      font-family: $arial
+      fsh(10px, 30px)
+      font-weight: 400
+      text-decoration none
+      text-transform uppercase
+      color #fff
 
-    &[data-social='vkontakte'] a
-      width: 130px
-      background-color: $bg-blue-2
+    .social-likes__icon
+      display none
 
-    &[data-social='instagram'] a
-      width: 130px
-      background-color: $bg-blue-3
-
-    &[data-social='livejournal'] a
-      width: 92px
-      background-color: $bg-green-1
-
-    a
+    .social-likes__counter
+      position absolute
+      right -40px
+      top 0
       display: inline-block
-      text-transform: uppercase
-      text-decoration: none
-      color: $font-white-1
-
-    span
-      position: relative
-      display: inline-block
+      min-width: 30px
+      height: 30px
       margin-left: 10px
       padding: 0 5px
-      background-color: $bg-gray-1
-      color: $font-gray-2
+      background-color: #c9c9c9
+      font-family: Arial,'sans-serif'
+      font-size: 10px
+      line-height: 30px
+      color: #666
+      -webkit-user-select: none
+      -moz-user-select: none
+      -ms-user-select: none
       user-select: none
 
-      &::before
+      &:before
+        margin: 0
         content: ''
-        absolute: top 50% left -6px
-        transform: translateY(-50%) rotate(360deg)
-        size: 0
+        position: absolute
+        top: 50%
+        left: -6px
+        -webkit-transform: translateY(-50%) rotate(1turn)
+        -moz-transform: translateY(-50%) rotate(1turn)
+        -o-transform: translateY(-50%) rotate(1turn)
+        -ms-transform: translateY(-50%) rotate(1turn)
+        transform: translateY(-50%) rotate(1turn)
+        width: 0
+        height: 0
         border-style: solid
         border-width: 6px 7px 6px 0
-        border-color: transparent $bg-gray-1 transparent transparent
+        border-color: transparent #c9c9c9 transparent transparent
+        background: none
+
+  .social-likes__widget_facebook
+      background-color: $bg-blue-1
+
+  .social-likes__widget_vkontakte
+      background-color: $bg-blue-2
+
+  .social-likes__widget_odnoklassniki
+      background-color: $bg-orange-1
+
+  .social-likes__widget_plusone
+      background-color: #dc4e41
 
 .copy-info
   js-display: flex; display: flex

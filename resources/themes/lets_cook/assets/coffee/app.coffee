@@ -6,4 +6,8 @@ $(document).on "ready", () ->
 
     return false
 
+  $('.social-likes').on 'counter.social-likes', (e, service, number) ->
+    if parseInt(number) == 0
+      $('.social-likes__widget_' + service + ' .social-likes__counter').text('0')
+
   console.log('init')

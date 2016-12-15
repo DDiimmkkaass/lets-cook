@@ -29,7 +29,8 @@
     "components-font-awesome": "~4.5.0",
     "moment": "2.14.1",
     "flexibility": "^1.0.6",
-    "pikaday": "^1.4.0"
+    "pikaday": "^1.4.0",
+    "social-likes": "3.1.2"
   },
   "devDependencies": {
     "chai": "^3.5.0",
