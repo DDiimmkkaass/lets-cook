@@ -342,7 +342,7 @@ class Basket extends Model implements MetaGettable
         }
         
         return $week != 'current' ?
-            localize_route('baskets.show', [$this->getSlug(), $week]) :
+            localize_route('baskets.show', [$this->getSlug(), $portions, $week]) :
             localize_route('baskets.show', [$this->getSlug()]);
     }
 }
