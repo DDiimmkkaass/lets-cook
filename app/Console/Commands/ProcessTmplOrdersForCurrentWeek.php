@@ -65,8 +65,10 @@ class ProcessTmplOrdersForCurrentWeek extends Command
     {
         $this->log('Start '.$this->description);
         
-        foreach (Order::ofStatus('tmpl')->forCurrentWeek()->get() as $order) {
+        foreach (Order::with('user')->ofStatus('tmpl')->forCurrentWeek()->get() as $order) {
             try {
+                $order = $this->_selectActiveCoupon($order);
+                
                 $this->orderService->updatePrices($order);
 
                 list($subtotal, $total) = $this->orderService->getTotals($order);
@@ -145,7 +147,68 @@ class ProcessTmplOrdersForCurrentWeek extends Command
     {
         $this->orderService->addSystemOrderComment($order, $message, 'changed');
 
-        $order->status = 'changed';
+//        $order->status = 'changed';
         $order->save();
+    }
+    
+    /**
+     * @param \App\Models\Order $order
+     *
+     * @return \App\Models\Order
+     */
+    private function _selectActiveCoupon(Order $order)
+    {
+        if ($order->coupon_id) {
+            return $order;
+        }
+        
+        $user = $order->user;
+        
+        if ($user) {
+            $user_id = $user->id;
+            $coupon = false;
+            
+            $user_coupons = $user->coupons()->with(
+                [
+                    'orders' => function ($query) use ($user_id) {
+                        $query->whereUserId($user_id);
+                    },
+                ]
+            )->get()->keyBy('id');
+    
+            $_user_coupons = $user_coupons->filter(
+                function ($item) use ($user, &$default, &$coupon) {
+                    if ($item->available($user)) {
+                        if ($item->default) {
+                            $coupon = $item;
+                        }
+                
+                        return true;
+                    }
+            
+                    return false;
+                }
+            );
+    
+            if (!$coupon) {
+                $coupon = $_user_coupons->last();
+    
+                if ($coupon) {
+                    $this->log('set default user coupon for user #'.$user->id.', coupon '.$coupon->getName().'('.$coupon->coupon_id.')', 'info');
+                    
+                    $coupon->default = true;
+                    $coupon->save();
+                }
+            }
+            
+            if ($coupon) {
+                $this->log('set coupon for order #'.$order->id.', coupon '.$coupon->getName().'('.$coupon->coupon_id.')', 'info');
+                
+                $order->coupon_id = $coupon->coupon_id;
+                $order->save();
+            }
+        }
+        
+        return $order;
     }
 }
