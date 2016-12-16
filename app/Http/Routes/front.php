@@ -12,25 +12,25 @@ $router->get(
     ['as' => 'pages.show', 'uses' => 'Frontend\PageController@getPage']
 );
 
+// tags for filters
+$router->get(
+    'tags/{tag_category}/{module}',
+    ['as' => 'tags.tags_by_category', 'uses' => 'Frontend\TagController@tagsByCategory']
+);
+
 // blog
-$router->get('blog/{category_id?}/{tag_id?}', ['as' => 'blog.index', 'uses' => 'Frontend\NewsController@index'])
-    ->where(['category_id' => '[0-9]+', 'tag_id' => '[0-9]+']);
+$router->get('blog/{tag_id?}', ['as' => 'blog.index', 'uses' => 'Frontend\NewsController@index'])
+    ->where(['tag_id' => '[0-9]+']);
 $router->get('blog/{slug}', ['as' => 'blog.show', 'uses' => 'Frontend\NewsController@show']);
 
 // articles
-$router->get(
-    'articles/{category_id?}/{tag_id?}',
-    ['as' => 'articles.index', 'uses' => 'Frontend\ArticleController@index']
-)
-    ->where(['category_id' => '[0-9]+', 'tag_id' => '[0-9]+']);
+$router->get('articles/{tag_id?}', ['as' => 'articles.index', 'uses' => 'Frontend\ArticleController@index'])
+    ->where(['tag_id' => '[0-9]+']);
 $router->get('articles/{slug}', ['as' => 'articles.show', 'uses' => 'Frontend\ArticleController@show']);
 
 // recipes
-$router->get(
-    'recipes/{category_id?}/{tag_id?}',
-    ['as' => 'recipes.index', 'uses' => 'Frontend\RecipeController@index']
-)
-    ->where(['category_id' => '[0-9]+', 'tag_id' => '[0-9]+']);
+$router->get('recipes/{tag_id?}', ['as' => 'recipes.index', 'uses' => 'Frontend\RecipeController@index'])
+    ->where(['tag_id' => '[0-9]+']);
 $router->get('recipes/{recipe_id}/show', ['as' => 'recipes.show', 'uses' => 'Frontend\RecipeController@show']);
 
 // baskets

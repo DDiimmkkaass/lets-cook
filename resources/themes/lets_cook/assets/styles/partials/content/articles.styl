@@ -122,7 +122,20 @@
     &[data-active]
       cursor: default
 
+  &__tags
+    font-size inherit
 
+    +bp('980')
+      padding-left: 130px
+
+    .articles-list-filter__subTitle
+      padding-right 38px
+
+    .article-item__tag-item
+      background #fff
+
+      &[data-active], &:hover
+        background #65b145
 
 .articles-list-main
   position: relative

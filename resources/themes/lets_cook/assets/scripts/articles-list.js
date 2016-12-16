@@ -4,7 +4,9 @@
 function articlesList($rootElement, loadedPage) {
     let $articles = $rootElement,
         $searchForm = $articles.find('.articles-list-search__form'),
-        $filterList = $articles.find('.articles-list-filter__list'),
+        $filterList = $articles.find('.articles-list-filter__categories'),
+        $tagsFilterList = $articles.find('.articles-list-filter__tags'),
+        $tagsList = $articles.find('.articles-list-filter__list-tags'),
         $articlesPanel = $articles.find('.articles-list-filter__panel'),
         $articlesList = $articles.find('.articles-list-main__list'),
         $articlesLoader = $articles.find('.articles-list-main__loader'),
@@ -14,14 +16,13 @@ function articlesList($rootElement, loadedPage) {
         $paginationNext = $pagination.find('.articles-list-pag__item[data-pagination="next"]'),
         articlesObj = {},
         page = loadedPage,
-        currCat = 0,
         currTag = 0,
         currPage = 1,
         textSearch = '';
 
     // FUNCTIONS
-    function articlesAjax(cat = 0, tag = 0, pageNum = 0, searchText = '') {
-        let ajaxUrl = page + '/' + cat + '/' + tag + '?page=' + pageNum + '&search_text=' + searchText;
+    function articlesAjax(tag = 0, pageNum = 0, searchText = '') {
+        let ajaxUrl = page + '/' + tag + '?page=' + pageNum + '&search_text=' + searchText;
 
         console.log(ajaxUrl);
 
@@ -167,12 +168,43 @@ function articlesList($rootElement, loadedPage) {
         $paginationNext.text(articlesObj.next_count_label);
     }
 
-    $filterList.on('click', '.articles-list-filter__subItem', function() {
+    $filterList.on('click', '.articles-list-filter__subItem.category', function() {
+        let $that = $(this);
+        let module = $that.closest('.articles-list-filter__list').data('module');
+
+        $filterList.find('.articles-list-filter__subItem').removeAttr('data-active');
+        $that.attr('data-active', '');
+
+        $.ajax({
+            type: 'GET',
+            url: '/tags/' + $that.data('cat') + '/' + module,
+            dataType: 'json',
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function(data) {
+                console.log('categories ajax success');
+
+                if (data.status == 'success') {
+                    if ($tagsList.hasClass('h-hidden')) {
+                        $tagsList.removeClass('h-hidden');
+                    }
+
+                    $('.articles-list-filter__tags .articles-list-filter__subList').html(data.html)
+                } else {
+                    popUp(lang_error, response.message)
+                }
+            },
+            error: function() {
+                console.log('categories ajax error');
+            }
+        });
+    });
+
+    $filterList.on('click', '.articles-list-filter__subItem.all', function() {
         let $that = $(this);
 
-        currCat = $that.attr('data-cat');
-
-        $.when(articlesAjax(currCat, currTag = 0, currPage = 1, textSearch = ''))
+        $.when(articlesAjax(currTag = 0, currPage = 1, textSearch = ''))
             .done(function(ra) {
                 articlesObj = $.extend(true, {}, ra);
 
@@ -182,6 +214,9 @@ function articlesList($rootElement, loadedPage) {
 
                 $filterList.find('.articles-list-filter__subItem').removeAttr('data-active');
                 $that.attr('data-active', '');
+
+                $tagsList.addClass('h-hidden');
+                $tagsFilterList.find('.articles-list-filter__subList').html('');
 
                 if ((currPage - 1) < 1) {
                     $paginationPrev.removeAttr('data-active');
@@ -205,7 +240,7 @@ function articlesList($rootElement, loadedPage) {
     });
 
     $paginationAll.on('click', function() {
-        $.when(articlesAjax(currCat, currTag, currPage = 0, textSearch = ''))
+        $.when(articlesAjax(currTag, currPage = 0, textSearch = ''))
             .done(function(ra) {
                 articlesObj = $.extend(true, {}, ra);
 
@@ -229,7 +264,7 @@ function articlesList($rootElement, loadedPage) {
     });
 
     $paginationPrev.on('click', function() {
-        $.when(articlesAjax(currCat, currTag, currPage -= 1, textSearch = ''))
+        $.when(articlesAjax(currTag, currPage -= 1, textSearch = ''))
             .done(function(ra) {
                 articlesObj = $.extend(true, {}, ra);
 
@@ -261,7 +296,7 @@ function articlesList($rootElement, loadedPage) {
     });
 
     $paginationNext.on('click', function() {
-        $.when(articlesAjax(currCat, currTag, currPage += 1, textSearch = ''))
+        $.when(articlesAjax(currTag, currPage += 1, textSearch = ''))
             .done(function(ra) {
                 articlesObj = $.extend(true, {}, ra);
 
@@ -292,12 +327,16 @@ function articlesList($rootElement, loadedPage) {
             });
     });
 
-    $articlesList.on('click', '.article-item__tag-item', function() {
+    $(document).on('click', '.article-item__tag-item', function() {
         let $that = $(this);
 
         currTag = $that.attr('data-tag');
 
-        $.when(articlesAjax(currCat, currTag, currPage = 1, textSearch = ''))
+        $tagsFilterList.find('.article-item__tag-item').removeAttr('data-active');
+        $articlesList.find('.article-item__tag-item').removeAttr('data-active');
+        $that.attr('data-active', '');
+
+        $.when(articlesAjax(currTag, currPage = 1, textSearch = ''))
             .done(function(ra) {
                 articlesObj = $.extend(true, {}, ra);
 
@@ -311,6 +350,7 @@ function articlesList($rootElement, loadedPage) {
 
                 $articlesList.find('.article-item__tag-item').removeAttr('data-active');
                 $articlesList.find('.article-item__tag-item[data-tag="' + currTag + '"]').attr('data-active', '');
+                $tagsFilterList.find('.article-item__tag-item[data-tag="' + currTag + '"]').attr('data-active', '');
 
                 if ((currPage - 1) < 1) {
                     $paginationPrev.removeAttr('data-active');
@@ -339,7 +379,7 @@ function articlesList($rootElement, loadedPage) {
         let $input = $(this).find('input[name="search-text"]');
 
         if ($input.val()) {
-            $.when(articlesAjax(currCat = 0, currTag = 0, currPage = 1, textSearch = $input.val()))
+            $.when(articlesAjax(currTag = 0, currPage = 1, textSearch = $input.val()))
                 .done(function(ra) {
                     articlesObj = $.extend(true, {}, ra);
 
@@ -347,6 +387,8 @@ function articlesList($rootElement, loadedPage) {
 
                     $filterList.find('.articles-list-filter__subItem').removeAttr('data-active');
                     $filterList.find('.articles-list-filter__subItem[data-cat="0"]').attr('data-active', '');
+
+                    //скидать категорію і теги
 
                     if ((currPage - 1) < 1) {
                         $paginationPrev.removeAttr('data-active');

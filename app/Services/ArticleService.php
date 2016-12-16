@@ -62,26 +62,9 @@ class ArticleService
      */
     private function _implodeFilters(Builder $list)
     {
-        $category_id = request()->route('category_id', 0);
         $tag_id = request()->route('tag_id', 0);
         
-        if ($category_id > 0) {
-            $list->whereExists(
-                function ($query) use ($category_id, $tag_id) {
-                    $query->leftJoin('tags', 'tags.id', '=', 'tagged.tag_id')
-                        ->select(DB::raw('1'))
-                        ->from('tagged')
-                        ->whereRaw(
-                            'articles.id = tagged.taggable_id AND
-                            tagged.taggable_type = \''.str_replace('\\', '\\\\', Article::class).'\' AND
-                            tags.category_id = '.$category_id.
-                            ($tag_id > 0 ? ' AND tagged.tag_id = '.$tag_id : '')
-                        );
-                }
-            );
-        }
-        
-        if (!$category_id && $tag_id > 0) {
+        if ($tag_id > 0) {
             $list->whereExists(
                 function ($query) use ($tag_id) {
                     $query->select(DB::raw('1'))

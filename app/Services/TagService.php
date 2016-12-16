@@ -23,23 +23,23 @@ class TagService
     /**
      * @param string $class_name
      *
-     * @return array|Collection
+     * @return Collection
      */
     public function tagCategoriesByClass($class_name)
     {
-        $categories = TagCategory::joinTags()->joinTagged()
+        return TagCategory::joinTags()->joinTagged()
             ->whereRaw('tagged.taggable_type = \''.str_replace('\\', '\\\\', $class_name).'\'')
             ->groupBy('tag_categories.id')
             ->positionSorted()
             ->nameSorted()
             ->visible()
             ->get(['tag_categories.*']);
-        
-        return $categories;
     }
     
     /**
      * @param Model $model
+     *
+     * @return Collection
      */
     public function tagsForItem(Model $model)
     {
@@ -47,6 +47,22 @@ class TagService
             ->whereRaw('tagged.taggable_type = \''.'App\\\\Models\\\\'.class_basename($model).'\'')
             ->where('tagged.taggable_id', $model->id)
             ->where('tag_categories.status', true)
+            ->get(['tags.id']);
+    }
+    
+    /**
+     * @param int    $category_id
+     * @param string $model
+     *
+     * @return Collection
+     */
+    public function tagsByCategory($category_id, $model)
+    {
+        return Tag::joinTagCategory()->joinTagged()
+            ->whereRaw('tagged.taggable_type = \''.'App\\\\Models\\\\'.$model.'\'')
+            ->where('tag_categories.id', $category_id)
+            ->where('tag_categories.status', true)
+            ->groupBy('tags.id')
             ->get(['tags.id']);
     }
 }
