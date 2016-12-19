@@ -25,7 +25,7 @@
             </td>
 
             @foreach($baskets as $basket)
-                <th style="width: {!! cell_width($basket['name']) !!}px; background-color: #92D050;">
+                <th style="width: {!! max(cell_width($basket['name']), 10) !!}px; background-color: #92D050;">
                     <div style="text-align: center;">
                         {!! $basket['name'] !!}
                     </div>
