@@ -25,6 +25,8 @@
 
                         <div class="own-order__price">{!! $order->total !!} {!! $currency !!}</div>
 
+                        <div class="own-order__when own-order__status">{!! order_front_status($order) !!}</div>
+
                         <div href="#" class="own-order__change-button green-long-button">
                             Изменить
                         </div>

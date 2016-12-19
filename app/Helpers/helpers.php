@@ -1055,3 +1055,18 @@ if (!function_exists('prepare_phone')) {
         return empty($phone) ? null : '+'.$phone;
     }
 }
+
+if (!function_exists('order_front_status')) {
+    /**
+     * @param \App\Models\Order $order
+     *
+     * @return string
+     */
+    function order_front_status($order)
+    {
+        $status = $order->getStringStatus();
+        $status .= in_array($status, ['paid', 'processed']) ? '_'.$order->payment_method : '';
+        
+        return trans('front_labels.order_status_front_'.$status);
+    }
+}

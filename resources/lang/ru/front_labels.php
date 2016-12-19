@@ -65,4 +65,13 @@ return array(
   'used_coupon' => 'Использован купон',
   'discount' => 'Скидка',
   'share_link_on' => 'Поделиться ссылкой на',
+  'order_status_front_' => 'Не задан',
+  'order_status_front_changed' => 'Ожидает подтвержения',
+  'order_status_front_tmpl' => 'По подписке',
+  'order_status_front_paid_0' => 'Подтвержден',
+  'order_status_front_paid_1' => 'Оплачен',
+  'order_status_front_processed_0' => 'Подтвержден',
+  'order_status_front_processed_1' => 'Оплачен',
+  'order_status_front_archived' => 'Доставлен',
+  'order_status_front_deleted' => 'Отменен',
 );
