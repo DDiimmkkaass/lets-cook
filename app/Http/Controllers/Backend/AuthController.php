@@ -63,7 +63,7 @@ class AuthController extends BackendController
             $user = Sentry::authenticate($credentials, $request->has('remember'));
 
             if ($user && $user->hasAccess('administrator')) {
-                return Redirect::route('admin.home');
+                return Redirect::route('admin.order.index');
             }
 
             Sentry::logout();

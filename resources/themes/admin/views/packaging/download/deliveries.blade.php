@@ -11,7 +11,16 @@
     <div class="box-body table-responsive no-padding">
         <table class="table table-bordered deliveries-packaging excel-table">
             <tbody>
+            @php($user_width = 15)
+            @php($address_width = 15)
+            @php($comment_width = 24)
+            @php($basket_width = 10)
+            @php($days_count = count($list))
+            @php($d = 1)
+
             @foreach($list as $day => $orders)
+                @php($orders_count = count($orders))
+
                 <tr style="height: 25px;">
                     <th style="background-color: #3a9a18; height: 20px; vertical-align: bottom" colspan="8">{!! $day !!}
                         ({!! day_of_week($day, 'd-m-Y') !!})
@@ -21,19 +30,19 @@
                     </th>
                 </tr>
                 <tr style="font-size: 14px; height: 20px">
-                    <th style="text-align: center; width: 5px">
+                    <th style="width: 3px; text-align: center;">
                         @lang('labels.id')
                     </th>
                     <th>
                         @lang('labels.user')
                     </th>
-                    <th>
+                    <th style="width: 8px; text-align: center">
                         @lang('labels.time')
                     </th>
                     <th>
                         @lang('labels.address')
                     </th>
-                    <th style="width: 20px">
+                    <th style="width: 19px; text-align: center">
                         @lang('labels.phone')
                     </th>
                     <th>
@@ -42,13 +51,13 @@
                     <th>
                         @lang('labels.baskets')
                     </th>
-                    <th style="text-align: center">
+                    <th style="width: 7px; text-align: center">
                         @lang('labels.places')
                     </th>
-                    <th style="text-align: center">
+                    <th style="width: 12px; text-align: center">
                         @lang('labels.payment')
                     </th>
-                    <th>
+                    <th style="width: 12px;">
                         @lang('labels.autograph')
                     </th>
                 </tr>
@@ -57,15 +66,19 @@
                 @foreach($orders as $order)
                     @php($height = 15)
                     @php($baskets = '<div>'.$order->main_basket->getName().'</div>')
+                    @php($basket_width = max(cell_width($order->main_basket->getName(), false, 2), $basket_width))
                     @if ($order->additional_baskets->count())
                         @foreach($order->additional_baskets as $basket)
                             @php($baskets .= '<br><div>'.$basket->getName().',</div>')
+                            @php($basket_width = max(cell_width($basket->getName(), false, 2), $basket_width))
                             @php($height += 15)
                         @endforeach
                     @endif
                     @if ($order->ingredients->count())
                         @foreach($order->ingredients as $ingredient)
-                            @php($baskets .= '<br><div>'.$ingredient->getName().'('.$ingredient->count.$ingredient->getSaleUnit().'),</div>')
+                            @php($ingredient_name = $ingredient->getName().'('.$ingredient->count.$ingredient->getSaleUnit().')')
+                            @php($baskets .= '<br><div>'.$ingredient_name.',</div>')
+                            @php($basket_width = max(cell_width($ingredient_name, false, 2), $basket_width))
                             @php($height += 15)
                         @endforeach
                     @endif
@@ -77,35 +90,38 @@
                         <td style="text-align: center; {!! $background !!}">
                             {!! $i !!}
                         </td>
-                        <td style="width: 40px; {!! $background !!}">
-                            {!! $order->getUserFullName() !!}
-                            [#{!! $order->user->id !!}]
-                            ({!! $order->user->orders()->finished()->count() + $order->user->old_site_orders_count !!})
+                        @php($user_name = $order->getUserFullName().' [#'.$order->user->id.'] ('.($order->user->orders()->finished()->count() + $order->user->old_site_orders_count).')')
+                        @php($user_width = max(cell_width($user_name), $user_width))
+                        <td style="@if ($days_count == $d && $orders_count == $i) width: {!! $user_width - $user_width * 0.4 !!}px; @endif {!! $background !!}">
+                            {!! $user_name !!}
                         </td>
                         <td style="text-align: center; {!! $background !!}">
                             {!! $order->delivery_time !!}
                         </td>
-                        <td style="width: 60px; {!! $background !!}">
-                            {!! $order->getFullAddress() !!}
+                        @php($address = $order->getFullAddress())
+                        @php($address_width = max(cell_width($address), $address_width))
+                        <td style="@if ($days_count == $d && $orders_count == $i) width: {!! $address_width - $address_width * 0.4 !!}px; @endif {!! $background !!}">
+                            {!! $address !!}
                         </td>
                         <td style="text-align: left; {!! $background !!}">
                             {!! $order->getPhones() !!}
                         </td>
-                        <td style="width: 30px; {!! $background !!}">
+                        @php($comment_width = max(cell_width($order->comment), $comment_width))
+                        <td style="@if ($days_count == $d && $orders_count == $i) width: {!! $comment_width - $comment_width * 0.4 !!}px; @endif {!! $background !!}">
                             {!! $order->comment !!}
                         </td>
-                        <td style="width: 30px; {!! $background !!}">
+                        <td style="@if ($days_count == $d && $orders_count == $i) width: {!! $basket_width !!}px; @endif {!! $background !!}">
                             {!! $baskets !!}
                         </td>
-                        <td style="width: 15px; text-align: center; {!! $background !!}">
+                        <td style="text-align: center; {!! $background !!}">
                             {!! $order->getPlacesCount() !!}
                         </td>
-                        <td style="width: 15px; text-align: center; color: #ff0000; {!! $background !!}">
+                        <td style="text-align: center; color: #ff0000; {!! $background !!}">
                             @if ($order->paymentMethod('cash'))
                                 {!! $order->total !!}
                             @endif
                         </td>
-                        <td style="width: 15px; {!! $background !!}">
+                        <td style="{!! $background !!}">
 
                         </td>
                     </tr>
@@ -121,6 +137,8 @@
                 <tr>
                     <td colspan="10"></td>
                 </tr>
+
+                @php($d++)
             @endforeach
 
             <tr>

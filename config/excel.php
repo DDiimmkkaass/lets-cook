@@ -690,7 +690,7 @@ return array(
     /*
      * calculate cell width for excel
      * */
-    'title_to_with_multiplier' => 0.86,
+    'title_to_with_multiplier' => 0.88,
 
     'title_to_with_multiplier_bold' => 1.19,
 

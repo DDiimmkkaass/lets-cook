@@ -1075,14 +1075,17 @@ if (!function_exists('cell_width')) {
     /**
      * @param string $string
      * @param bool   $bold
+     * @param int   $add_with
      *
      * @return string
      */
-    function cell_width($string, $bold = false)
+    function cell_width($string, $bold = false, $add_with = 5)
     {
         $width = mb_strlen($string);
         $width = $width *
             ($bold ? config('excel.title_to_with_multiplier_bold') : config('excel.title_to_with_multiplier'));
+        
+        $width += (int) $add_with;
         
         return $width;
     }

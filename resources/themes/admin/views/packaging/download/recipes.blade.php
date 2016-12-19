@@ -32,14 +32,16 @@
         <tr>
             <th>@lang('labels.category')</th>
             <th style="width: {!! strlen($recipe['name']) * config('recipe.title_to_with_multiplier') !!}px">@lang('labels.package_&_ingredient')</th>
-            <th style="text-align: center;">@lang('labels.count')</th>
-            <th style="text-align: center;">@lang('labels.unit')</th>
+            <th style="width: 12px; text-align: center;">@lang('labels.count')</th>
+            <th style="width: 20px; text-align: center;">@lang('labels.unit')</th>
         </tr>
 
         <tr>
             <td colspan="4"></td>
         </tr>
 
+        @php($category_width = 15)
+        @php($ingredient_width = 40)
         @foreach($recipe['packages'] as $package => $ingredients)
             @if (count($ingredients))
                 <tr>
@@ -49,11 +51,15 @@
                 </tr>
                 @foreach($ingredients as $ingredient)
                     <tr>
-                        <td>{!! $ingredient['category_name'] !!}</td>
-                        <td>
-                            {!! $ingredient['name'] !!}
-                            @if ($ingredient['parameter_name']) ({!! $ingredient['parameter_name'] !!}) @endif
-                            @if ($ingredient['repacking']) (@lang('labels.need_repacking')) @endif
+                        @php($category_width = max(cell_width($ingredient['category_name']), $category_width))
+                        <td style="width: {!! $category_width !!}px">{!! $ingredient['category_name'] !!}</td>
+                        @php($ingredient_name = $ingredient['name'].' '.
+                                ($ingredient['parameter_name'] ? '('.$ingredient['parameter_name'].')':'').
+                                ($ingredient['repacking'] ? '('.trans('labels.need_repacking').')':'')
+                            )
+                        @php($ingredient_width = max(cell_width($ingredient_name), $ingredient_width))
+                        <td style="width: {!! $ingredient_width !!}px">
+                            {!! $ingredient_name !!}
                         </td>
                         <td style="text-align: center;">{!! $ingredient['count'] !!}</td>
                         <td style="text-align: center;">{!! $ingredient['unit_name'] !!}</td>

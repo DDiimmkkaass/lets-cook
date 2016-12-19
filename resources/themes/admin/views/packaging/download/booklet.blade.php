@@ -12,7 +12,7 @@
         <tbody>
 
         <tr style="background-color: #cccccc; height: 27px">
-            <th style="width: 100px">
+            <th>
                 @lang('labels.recipe')
             </th>
             <th style="width: 15px">
@@ -20,17 +20,27 @@
             </th>
         </tr>
 
-        @foreach($list as $basket)
-            @foreach($basket as $recipe)
+        @php($recipe_width = 10)
+        @php($basket_count = count($list) - 1)
+        @php($i = 0)
+        @foreach($list as $key => $basket)
+            @php($recipe_count = count($basket) - 1)
+            @php($n = 0)
+            @foreach($basket as $_key => $recipe)
+                @php($recipe_width = max(cell_width($recipe['name']), $recipe_width))
                 <tr>
-                    <td>{!! $recipe['name'] !!}</td>
-                    <td>{!! $recipe['recipes_count'] !!}</td>
+                    <td @if ($basket_count == $i && $recipe_count == $n) style="width: {!! $recipe_width !!}px;" @endif>
+                        {!! $recipe['name'] !!}
+                    </td>
+                    <td style="text-align: center">{!! $recipe['recipes_count'] !!}</td>
                 </tr>
+                @php($n++)
             @endforeach
 
             <tr>
                 <td colspan="2"></td>
             </tr>
+            @php($i++)
         @endforeach
 
         <tr>

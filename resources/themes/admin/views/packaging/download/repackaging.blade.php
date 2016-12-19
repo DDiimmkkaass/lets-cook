@@ -12,9 +12,9 @@
         <table class="table table-bordered repackaging-packaging excel-table">
             <tbody>
             <tr style="background-color: #cccccc">
-                <th>@lang('labels.categories_&_ingredients')</th>
-                <th style="text-align: center">@lang('labels.packaging')</th>
-                <th style="text-align: center">@lang('labels.count')(@lang('labels.count_short'))</th>
+                <th style="width: 50px;">@lang('labels.categories_&_ingredients')</th>
+                <th style="width: 20px; text-align: center">@lang('labels.packaging')</th>
+                <th style="width: 20px; text-align: center">@lang('labels.count')(@lang('labels.count_short'))</th>
             </tr>
 
             <tr>
