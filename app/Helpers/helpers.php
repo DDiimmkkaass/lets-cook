@@ -1070,3 +1070,20 @@ if (!function_exists('order_front_status')) {
         return trans('front_labels.order_status_front_'.$status);
     }
 }
+
+if (!function_exists('cell_width')) {
+    /**
+     * @param string $string
+     * @param bool   $bold
+     *
+     * @return string
+     */
+    function cell_width($string, $bold = false)
+    {
+        $width = mb_strlen($string);
+        $width = $width *
+            ($bold ? config('excel.title_to_with_multiplier_bold') : config('excel.title_to_with_multiplier'));
+        
+        return $width;
+    }
+}

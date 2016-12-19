@@ -15,7 +15,7 @@
                             ->addHead([
                                 ['text' => trans('labels.id')],
                                 ['text' => trans('labels.name')],
-                                ['text' => trans('labels.comments')],
+                                ['text' => trans('labels.comments_as_comment')],
                                 ['text' => trans('labels.priority')],
                                 ['text' => trans('labels.actions')]
                             ])

@@ -25,7 +25,7 @@
             </td>
 
             @foreach($baskets as $basket)
-                <th style="background-color: #92D050;">
+                <th style="width: {!! cell_width($basket['name']) !!}px; background-color: #92D050;">
                     <div style="text-align: center;">
                         {!! $basket['name'] !!}
                     </div>
@@ -34,13 +34,13 @@
         </tr>
 
         <tr>
-            <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.ingredient')</th>
-            <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.in_stock')</th>
-            <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.unit_short')</th>
-            <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.price') {!! $currency !!}</th>
-            <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.count')</th>
-            <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.category')</th>
-            <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.supplier')</th>
+            <th style="width: 40px; background-color: #FCD5B4; text-align: center;">@lang('labels.ingredient')</th>
+            <th style="width: 11px; background-color: #FCD5B4; text-align: center;">@lang('labels.in_stock')</th>
+            <th style="width: 10px; background-color: #FCD5B4; text-align: center;">@lang('labels.unit_short')</th>
+            <th style="width: 11px; background-color: #FCD5B4; text-align: center;">@lang('labels.price') {!! $currency !!}</th>
+            <th style="width: 12px; background-color: #FCD5B4; text-align: center;">@lang('labels.count')</th>
+            <th style="width: 15px; background-color: #FCD5B4; text-align: center;">@lang('labels.category')</th>
+            <th style="width: 20px; background-color: #FCD5B4; text-align: center;">@lang('labels.supplier')</th>
 
             @foreach($baskets as $basket)
                 <th style="background-color: #FCD5B4; text-align: center;">{!! $basket['count'] !!}</th>
@@ -49,7 +49,9 @@
 
         @php($i = 0)
         @php($supplier_id = 0)
+        @php($ingredients_width = 40)
         @foreach($list as $ingredient)
+            @php($ingredients_width = max(cell_width($ingredient['name']), $ingredients_width))
             @if (($i > 0 && $ingredient['supplier_id'] != $supplier_id))
                 <tr>
                     <th></th>
@@ -88,7 +90,7 @@
 
             @if ($ingredients_count - 1 == $i)
                 <tr>
-                    <th></th>
+                    <th @if ($ingredients_count - 1 == $i) style="width: {!! $ingredients_width !!}px" @endif ></th>
                     <th></th>
                     <th></th>
                     <th></th>

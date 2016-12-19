@@ -705,4 +705,5 @@ return array (
   'options' => 'Установки',
   'history_for_weeks' => 'История по неделям',
   'success_orders_count' => 'Количество успешных заказов',
+  'comments_as_comment' => 'Комментарии',
 );
