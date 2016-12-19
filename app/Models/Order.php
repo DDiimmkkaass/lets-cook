@@ -76,6 +76,24 @@ class Order extends Model
     /**
      * @var array
      */
+    protected static $active_statuses = [
+        'changed',
+        'paid',
+        'processed',
+        'tmpl'
+    ];
+    
+    /**
+     * @var array
+     */
+    protected static $closed_statuses = [
+        'deleted',
+        'archived'
+    ];
+    
+    /**
+     * @var array
+     */
     protected static $payment_methods = [
         'cash',
         'online',
@@ -554,6 +572,22 @@ class Order extends Model
     public static function getStatuses()
     {
         return self::$statuses;
+    }
+    
+    /**
+     * @return array
+     */
+    public static function getActiveStatuses()
+    {
+        return self::$active_statuses;
+    }
+    
+    /**
+     * @return array
+     */
+    public static function getClosedStatuses()
+    {
+        return self::$closed_statuses;
     }
     
     /**

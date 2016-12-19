@@ -43,7 +43,7 @@ class OrderService
      */
     public function tableIndex(Request $request)
     {
-        $table = $this->table($request, $this->_getActiveStatuses());
+        $table = $this->table($request, 'index');
         
         return $table->make();
     }
@@ -55,18 +55,18 @@ class OrderService
      */
     public function tableHistory(Request $request)
     {
-        $table = $this->table($request, $this->_getClosedStatuses());
+        $table = $this->table($request, 'history');
         
         return $table->make();
     }
     
     /**
      * @param \Illuminate\Http\Request $request
-     * @param array                    $statuses
+     * @param string                   $type
      *
      * @return \Datatables
      */
-    public function table(Request $request, $statuses)
+    public function table(Request $request, $type)
     {
         $list = Order::with(
             'user',
@@ -95,7 +95,7 @@ class OrderService
                 'address',
                 'comment'
             )
-            ->ofStatus($statuses);
+            ->ofStatus($this->_getStatuses($type, $request));
         
         $this->_implodeFilters($list, $request);
         
@@ -125,10 +125,10 @@ class OrderService
                 'total',
                 function ($model) {
                     return $model->total.'<br>'.
-                    ($model->paymentMethod('cash') ?
-                        '<div class="red">'.trans('labels.for_courier').'</div>' :
-                        ''
-                    );
+                        ($model->paymentMethod('cash') ?
+                            '<div class="red">'.trans('labels.for_courier').'</div>' :
+                            ''
+                        );
                 }
             )
             ->editColumn(
@@ -224,7 +224,7 @@ class OrderService
                             break;
                         case 'year':
                             if (preg_match('/^[\d]{4}$/', $value)) {
-                                $dt = Carbon::create($year, 1, 1, 0, 0, 0);
+                                $dt = Carbon::create($filters['year'], 1, 1, 0, 0, 0);
                                 
                                 $start_delivery_date = clone ($dt->startOfDay());
                                 $end_delivery_date = clone ($dt->endOfYear()->endOfDay());
@@ -967,18 +967,38 @@ class OrderService
     }
     
     /**
+     * @param string                   $type
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    private function _getActiveStatuses()
+    private function _getStatuses($type, Request $request)
     {
-        return ['changed', 'paid', 'processed', 'tmpl'];
-    }
+        $filters = $request->get('datatable_filters');
+        
+        if (empty($filters['year']) && empty($filters['week'])) {
+            return array_merge(Order::getClosedStatuses(), Order::getActiveStatuses());
+        }
+        
+        $year = empty($filters['year']) ? active_week()->year : $filters['year'];
+        $week = empty($filters['week']) ? active_week()->weekOfYear : $filters['week'];
+        
+        if ($type == 'index') {
+            $statuses = Order::getActiveStatuses();
+            
+            if ($year < active_week()->year || ($year == active_week()->year && $week < active_week()->weekOfYear)) {
+                $statuses = array_merge($statuses, Order::getClosedStatuses());
+            }
+
+            return $statuses;
+        }
+        
+        $statuses = Order::getClosedStatuses();
     
-    /**
-     * @return array
-     */
-    private function _getClosedStatuses()
-    {
-        return ['deleted', 'archived'];
+        if ($year > active_week()->year || ($year == active_week()->year && $week > active_week()->weekOfYear)) {
+            $statuses = array_merge($statuses, Order::getActiveStatuses());
+        }
+        
+        return $statuses;
     }
 }
