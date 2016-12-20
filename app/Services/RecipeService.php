@@ -492,7 +492,7 @@ class RecipeService
      */
     public function getList()
     {
-        $list = Recipe::with(['tags', 'tags.tag.translations', 'ingredients'])
+        $list = Recipe::with(['tags', 'tags.tag.translations', 'tags.tag.category', 'ingredients'])
             ->visible()
             ->nameSorted()
             ->portionsSorted('DESC')

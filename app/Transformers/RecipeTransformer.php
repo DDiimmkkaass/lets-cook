@@ -47,10 +47,12 @@ class RecipeTransformer implements Transformer
         $tags = [];
         
         foreach ($model->tags as $tag) {
-            $tags[] = [
-                'id'   => $tag->tag->id,
-                'name' => $tag->tag->name,
-            ];
+            if (!$tag->tag->category_id || ($tag->tag->category_id && $tag->tag->category->status == true)) {
+                $tags[] = [
+                    'id'   => $tag->tag->id,
+                    'name' => $tag->tag->name,
+                ];
+            }
         }
         
         return $tags;
