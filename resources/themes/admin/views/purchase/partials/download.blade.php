@@ -34,13 +34,13 @@
         </tr>
 
         <tr style="height: 16px;">
-            <th style="width: 40px; background-color: #FCD5B4; text-align: center;">@lang('labels.ingredient')</th>
+            <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.ingredient')</th>
             <th style="width: 11px; background-color: #FCD5B4; text-align: center;">@lang('labels.in_stock')</th>
             <th style="width: 10px; background-color: #FCD5B4; text-align: center;">@lang('labels.unit_short')</th>
             <th style="width: 11px; background-color: #FCD5B4; text-align: center;">@lang('labels.price') {!! $currency !!}</th>
             <th style="width: 12px; background-color: #FCD5B4; text-align: center;">@lang('labels.count')</th>
-            <th style="width: 15px; background-color: #FCD5B4; text-align: center;">@lang('labels.category')</th>
-            <th style="width: 20px; background-color: #FCD5B4; text-align: center;">@lang('labels.supplier')</th>
+            <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.category')</th>
+            <th style="background-color: #FCD5B4; text-align: center;">@lang('labels.supplier')</th>
 
             @foreach($baskets as $basket)
                 <th style="background-color: #FCD5B4; text-align: center;">
@@ -49,7 +49,9 @@
             @endforeach
         </tr>
 
-        @php($ingredients_width = 40)
+        @php($ingredients_width = 25)
+        @php($category_width = 15)
+        @php($supplier_width = 15)
         @foreach($list as $key => $ingredient)
             @php($ingredients_width = max(cell_width($ingredient->ingredient->name), $ingredients_width))
             <tr style="height: 15px;">
@@ -57,13 +59,14 @@
                 <td style="text-align: center">@if ($ingredient->in_stock) @lang('labels.yes') @endif</td>
                 <td style="background-color: #dddddd; text-align: center;">{!! $ingredient->getUnitName() !!}</td>
                 <td style="background-color: #dddddd; text-align: center;">{!! $ingredient->price !!}</td>
-                <td style="text-align: right;">
+                <td style="text-align: center;">
                     @if (isset($ordered[$ingredient->ingredient_id.'_'.$ingredient->type]))
                         {!!  $ordered[$ingredient->ingredient_id.'_'.$ingredient->type]['count']  !!}
                     @else
                         {!! $ingredient->count !!}
                     @endif
                 </td>
+                @php($category_width = max(cell_width($ingredient->ingredient->category->name), $category_width))
                 <td style="background-color: #dddddd; text-align: center;">{!! $ingredient->ingredient->category->name !!}</td>
                 <td style="background-color: #dddddd; text-align: center;">{!! $ingredient->ingredient->supplier->name !!}</td>
 
@@ -78,13 +81,14 @@
 
             @if ($ingredients_count - 1 == $key || $ingredient->ingredient->supplier_id != $list[$key + 1]->ingredient->supplier_id)
                 <tr style="height: 16px;">
-                    <th @if ($ingredients_count - 1 == $key) style="width: {!! $ingredients_width !!}px" @endif ></th>
+                    <th @if ($ingredients_count - 1 == $key) style="width: {!! $ingredients_width !!}px" @endif></th>
                     <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
-                    <th></th>
-                    <th style="text-align: center">
+                    <th @if ($ingredients_count - 1 == $key) style="width: {!! $category_width !!}px" @endif></th>
+                    @php($supplier_width = max(cell_width($ingredient->ingredient->supplier->name.' '.trans('labels.result'), true, 2), $supplier_width))
+                    <th style="@if ($ingredients_count - 1 == $key) width: {!! $supplier_width !!}px; @endif text-align: center">
                         {!! $ingredient->ingredient->supplier->name !!} @lang('labels.result')
                     </th>
 
