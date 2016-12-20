@@ -297,6 +297,10 @@ class PackagingService
     {
         $data = $this->repackagingForWeek($year, $week);
         
+        if (!$data->count()) {
+            return false;
+        }
+        
         $excel = Excel::create(
             $this->_getFileName($year, $week, 'repackaging', $download),
             function ($excel) use ($data, $year, $week) {
@@ -330,6 +334,10 @@ class PackagingService
     public function downloadRecipes($year, $week, $download = true)
     {
         $data = $this->recipesForWeek($year, $week);
+        
+        if (!$data->count()) {
+            return false;
+        }
         
         $excel = Excel::create(
             $this->_getFileName($year, $week, 'packaging_recipes', $download),
@@ -370,6 +378,10 @@ class PackagingService
     {
         $list = $this->stickersForWeek($year, $week);
         
+        if (empty($list)) {
+            return false;
+        }
+        
         $excel = Excel::create(
             $this->_getFileName($year, $week, 'stickers', $download),
             function ($excel) use ($list, $year, $week) {
@@ -405,6 +417,10 @@ class PackagingService
         $list = $this->bookletForWeek($year, $week);
         
         $booklet = Booklet::forWeek($year, $week)->first();
+    
+        if (empty($list)) {
+            return false;
+        }
         
         $excel = Excel::create(
             $this->_getFileName($year, $week, 'packaging_booklet', $download),
@@ -440,6 +456,10 @@ class PackagingService
     public function downloadUsers($year, $week, $download = true)
     {
         $data = $this->usersForWeek($year, $week);
+    
+        if (empty($data)) {
+            return false;
+        }
         
         $excel = Excel::create(
             $this->_getFileName($year, $week, 'packaging_users', $download),
@@ -474,6 +494,10 @@ class PackagingService
     public function downloadDeliveries($year, $week, $download = true)
     {
         $data = $this->deliveriesForWeek($year, $week);
+    
+        if (empty($data)) {
+            return false;
+        }
         
         $excel = Excel::create(
             $this->_getFileName($year, $week, 'packaging_deliveries', $download),

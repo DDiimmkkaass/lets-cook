@@ -263,11 +263,17 @@ class PackagingController extends BackendController
             foreach ($this->downloads as $tab) {
                 $file = $this->packagingService->{'download'.studly_case($tab)}($year, $week, false);
                 
+                if (!$file) {
+                    continue;
+                }
+                
                 $archive->add($file);
             }
             
             $file = $this->purchaseService->download($year, $week, false, before_finalisation($year, $week), false);
-            $archive->add($file);
+            if ($file) {
+                $archive->add($file);
+            }
             
             $archive->close();
             
