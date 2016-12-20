@@ -33,7 +33,7 @@
             @endforeach
         </tr>
 
-        <tr>
+        <tr style="height: 16px;">
             <th style="width: 40px; background-color: #FCD5B4; text-align: center;">@lang('labels.ingredient')</th>
             <th style="width: 11px; background-color: #FCD5B4; text-align: center;">@lang('labels.in_stock')</th>
             <th style="width: 10px; background-color: #FCD5B4; text-align: center;">@lang('labels.unit_short')</th>
@@ -53,7 +53,7 @@
         @foreach($list as $ingredient)
             @php($ingredients_width = max(cell_width($ingredient['name']), $ingredients_width))
             @if (($i > 0 && $ingredient['supplier_id'] != $supplier_id))
-                <tr>
+                <tr style="height: 16px;">
                     <th></th>
                     <th></th>
                     <th></th>
@@ -70,7 +70,7 @@
                 </tr>
             @endif
 
-            <tr>
+            <tr style="height: 15px;">
                 <td>{!! $ingredient['name'] !!}</td>
                 <td style="text-align: center">@if ($ingredient['in_stock']) @lang('labels.yes') @endif</td>
                 <td style="background-color: #dddddd; text-align: center;">{!! $ingredient['unit'] !!}</td>
@@ -89,7 +89,7 @@
             </tr>
 
             @if ($ingredients_count - 1 == $i)
-                <tr>
+                <tr style="height: 16px;">
                     <th @if ($ingredients_count - 1 == $i) style="width: {!! $ingredients_width !!}px" @endif ></th>
                     <th></th>
                     <th></th>
