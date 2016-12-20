@@ -4,64 +4,70 @@
 function orderAddMoreInfo() {
     let $baskets = $('.main.baskets'),
         $orderAddMore = $baskets.find('.order-add-more-info'),
-        $list = $orderAddMore.find('.order-add-more-info__list'),
-        $items = $list.children(),
-        $itemsMobileInfo = $items.find('.more-item-info__info[data-device="mobile"]'),
-        $itemsDesktopInfo = $items.find('.more-item-info__info[data-device="desktop"]'),
-        $itemsDesktopInfoTitles = $itemsDesktopInfo.find('.more-item-info__title[data-device="desktop"]');
-
+        $wrappers = $orderAddMore.find('.order-add-more-info__wrapper');
 
     function setMobileInfoHeight() {
-        let maxHeight = 0, titlesMaxHeight = 0;
 
-        $itemsDesktopInfoTitles.css('height', 'auto');
+        $wrappers.each(function() {
+            let $items = $(this).find('.order-add-more-info__item'),
+                $itemsMobileInfo = $items.find('.more-item-info__info[data-device="mobile"]'),
+                maxHeight = 0;
 
-        $itemsDesktopInfoTitles.each(function() {
-            let $that = $(this),
-                that__height = $that.outerHeight();
+            $itemsMobileInfo.css('height', 'auto');
 
-            if (that__height > titlesMaxHeight) {
-                titlesMaxHeight = that__height;
-            }
+            $itemsMobileInfo.each(function() {
+                let $that = $(this),
+                    that__height = $that.outerHeight();
+
+                if (that__height > maxHeight) {
+                    maxHeight = that__height;
+                }
+            });
+
+            $itemsMobileInfo.outerHeight(maxHeight);
         });
 
-        $itemsDesktopInfoTitles.css('height', titlesMaxHeight);
 
-        $itemsMobileInfo.css('height', 'auto');
-
-        $itemsMobileInfo.each(function() {
-            let $that = $(this),
-                that__height = $that.outerHeight();
-
-            if (that__height > maxHeight) {
-                maxHeight = that__height;
-            }
-        });
-
-        $itemsMobileInfo.outerHeight(maxHeight);
     }
 
     function setDesktopInfoHeight() {
-        let maxHeight = 0;
 
-        $itemsDesktopInfo.css('height', 'auto');
+        $wrappers.each(function() {
+            let $items = $(this).find('.order-add-more-info__item'),
+                $itemsInfo = $items.find('.more-item-info__info[data-device="desktop"]'),
+                $itemsInfoTitle = $itemsInfo.find('.more-item-info__title'),
+                $itemsInfoDesc = $itemsInfo.find('.more-item-info__desc'),
+                titlesMaxHeight = 0, descMaxHeight = 0;
 
-        $itemsDesktopInfo.each(function() {
-            let $that = $(this),
-                that__height = $that.outerHeight();
+            $itemsInfoTitle.css('height', 'auto');
+            $itemsInfoDesc.css('height', 'auto');
 
-            if (that__height > maxHeight) {
-                maxHeight = that__height;
-            }
+            $itemsInfoTitle.each(function() {
+                let $that = $(this),
+                    that__height = $that.outerHeight();
+
+                if (that__height > titlesMaxHeight) {
+                    titlesMaxHeight = that__height;
+                }
+            });
+
+            $itemsInfoDesc.each(function() {
+                let $that = $(this),
+                    that__height = $that.outerHeight();
+
+                if (that__height > descMaxHeight) {
+                    descMaxHeight = that__height;
+                }
+            });
+
+            $itemsInfoTitle.outerHeight(titlesMaxHeight);
+            $itemsInfoDesc.outerHeight(descMaxHeight);
         });
-
-        $itemsDesktopInfo.outerHeight(maxHeight);
     }
 
 
     $(window).on('resize', function() {
         setMobileInfoHeight();
-
         setDesktopInfoHeight();
     }).resize();
 
