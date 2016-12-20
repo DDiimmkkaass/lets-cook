@@ -287,6 +287,8 @@ Order.save = ($button, $form) ->
 
       else
         if response.status == 'success'
+          yaCounter21710725.reachGoal('ZAKAZ');
+
           popUp(lang_success, response.message)
 
           unless response.html == ''
