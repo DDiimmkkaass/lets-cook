@@ -976,6 +976,10 @@ class OrderService
     {
         $filters = $request->get('datatable_filters');
         
+        if (!isset($filters['year']) && !isset($filters['week'])) {
+            return $type == 'index' ? Order::getActiveStatuses() : Order::getClosedStatuses();
+        }
+        
         if (empty($filters['year']) && empty($filters['week'])) {
             return array_merge(Order::getClosedStatuses(), Order::getActiveStatuses());
         }
