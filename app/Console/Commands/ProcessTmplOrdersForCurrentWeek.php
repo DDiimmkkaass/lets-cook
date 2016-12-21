@@ -147,7 +147,7 @@ class ProcessTmplOrdersForCurrentWeek extends Command
     {
         $this->orderService->addSystemOrderComment($order, $message, 'changed');
 
-//        $order->status = 'changed';
+        $order->status = 'changed';
         $order->save();
     }
     
