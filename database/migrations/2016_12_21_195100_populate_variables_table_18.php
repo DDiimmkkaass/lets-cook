@@ -19,7 +19,7 @@ class PopulateVariablesTable18 extends Migration
                 'name'        => 'Тип скидки для друга',
                 'description' => 'Тип скидка для друга по программе "Пригласи друга"',
                 'status'      => true,
-                'value'       => 'absolute',
+                'value'       => 'percentage',
             ],
         
             [
@@ -28,7 +28,7 @@ class PopulateVariablesTable18 extends Migration
                 'name'        => 'Тип компенсации за успешный заказ друга',
                 'description' => 'Тип компенсации пользователю при успешном заказе друга по его купону',
                 'status'      => true,
-                'value'       => 'percentage',
+                'value'       => 'absolute',
             ],
         ];
     
