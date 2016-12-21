@@ -67,6 +67,9 @@ function recipesMenu() {
             let delivery_dates = $that.data('delivery_dates'),
                 $showed_delivery_dates = $that.closest('.baskets-menu').find('.delivery-dates[data-week="0"]');
 
+            console.log(delivery_dates)
+            console.log($showed_delivery_dates)
+
             if (delivery_dates) {
                 $showed_delivery_dates.text(delivery_dates);
             } else {

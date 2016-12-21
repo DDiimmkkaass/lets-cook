@@ -120,7 +120,7 @@
                 <div class="baskets-menu__desc" data-week="0">
                     Оформите сегодня, и вы
                     <span>получите заказ
-                        <span class="delivery-dates" data-delivery_dates="{!! implode(' или ', $menu->getDeliveryDates()) !!}">
+                        <span class="delivery-dates" data-week="0" data-delivery_dates="{!! implode(' или ', $menu->getDeliveryDates()) !!}">
                             {!! implode(' или ', $menu->getDeliveryDates()) !!}</span></span>.<br/>
                     Заказы на это меню принимаются до
                     <span>{!! variable('stop_ordering_time') !!} {!! trans_choice('front_labels.day_of_week_to_string_when', variable('stop_ordering_date')) !!}</span>.<br/>
@@ -138,7 +138,7 @@
                 <div class="baskets-menu__desc" data-week="1">
                     Оформите сегодня, и вы
                     <span>получите заказ
-                        <span class="delivery-dates" data-delivery_dates="{!! implode(' или ', $next_menu->getDeliveryDates()) !!}">
+                        <span class="delivery-dates" data-week="1" data-delivery_dates="{!! implode(' или ', $next_menu->getDeliveryDates()) !!}">
                             {!! implode(' или ', $next_menu->getDeliveryDates()) !!}</span></span>.<br/>
                     Заказы на это меню принимаются до
                     <span>{!! variable('stop_ordering_time') !!} {!! trans_choice('front_labels.day_of_week_to_string_when', variable('stop_ordering_date')) !!}</span>.<br/>

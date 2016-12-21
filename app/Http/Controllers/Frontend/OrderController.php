@@ -329,8 +329,8 @@ class OrderController extends FrontendController
             }
         }
         $this->data('additional_baskets_tags', collect($additional_baskets_tags)->sortBy('name'));
-        
-        if ($basket->getSlug() == variable('new_year_basket_slug')) {
+    
+        if ($basket->getSlug() == variable('new_year_basket_slug') && $basket->weekly_menu->week == 52) {
             $dt = Carbon::now()->endOfYear()->startOfDay();
             
             $delivery_dates = [

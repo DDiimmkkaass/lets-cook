@@ -40,7 +40,7 @@ class OrderUpdateRequest extends FormRequest
         $city_id = $this->request->get('city_id', 0);
     
         $delivery_rules = ['required'];
-        if ($this->request->get('basket_slug', '') != variable('new_year_basket_slug')) {
+        if ($this->request->get('basket_slug', '') != variable('new_year_basket_slug') || $weekly_menu->week != 52) {
             $delivery_rules = [
                 'required',
                 'date_format:"d-m-Y"',
