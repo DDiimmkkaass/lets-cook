@@ -289,8 +289,11 @@ Order.save = ($button, $form) ->
         if response.status == 'success'
           popUp(lang_success, response.message)
 
-          _gaq.push(['_trackEvent', 'forms','zakaz']);
-          yaCounter21710725.reachGoal('ZAKAZ');
+          try
+            _gaq.push(['_trackEvent', 'forms','zakaz'])
+            yaCounter21710725.reachGoal('ZAKAZ')
+          catch exception
+            console.log(exception)
 
           unless response.html == ''
             $(response.html).insertAfter('.order-create-form')
