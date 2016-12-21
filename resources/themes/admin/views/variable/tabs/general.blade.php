@@ -47,3 +47,13 @@
         {!! $errors->first('multilingual', '<p class="help-block error">:message</p>') !!}
     </div>
 </div>
+
+<div class="form-group required @if ($errors->has('position')) has-error @endif">
+    {!! Form::label('position', trans('labels.position'), ['class' => 'control-label col-xs-4 col-sm-3 col-md-2']) !!}
+
+    <div class="col-xs-12 col-sm-2 col-md-1">
+        {!! Form::text('position', null, ['placeholder' => trans('labels.position'), 'required' => true, 'class' => 'form-control input-sm']) !!}
+
+        {!! $errors->first('position', '<p class="help-block error">:message</p>') !!}
+    </div>
+</div>

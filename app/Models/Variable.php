@@ -8,6 +8,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\PositionSortedTrait;
 use App\Traits\Models\WithTranslationsTrait;
 use Dimsav\Translatable\Translatable;
 use Eloquent;
@@ -21,6 +22,7 @@ class Variable extends Eloquent
 
     use Translatable;
     use WithTranslationsTrait;
+    use PositionSortedTrait;
     
     /**
      * @var array
@@ -39,6 +41,7 @@ class Variable extends Eloquent
         'value',
         'text',
         'status',
+        'position',
     ];
 
     /**
@@ -55,7 +58,8 @@ class Variable extends Eloquent
         3 => 'image',
         4 => 'weekday',
         5 => 'time',
-        6 => 'boolean'
+        6 => 'boolean',
+        7 => 'discount_type'
     ];
 
     /**

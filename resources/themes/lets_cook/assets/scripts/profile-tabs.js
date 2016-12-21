@@ -17,9 +17,6 @@ function profileTabs() {
         $parent.attr('data-active', '');
 
         if ($that.is('[data-tab="my-orders"]') || $that.is('[data-tab="prev-orders"]')) {
-
-            console.dir($tabItems);
-
             profileOrdersSizes();
             profilePrevOrdersSizes();
 

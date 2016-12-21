@@ -44,3 +44,7 @@
     </main>
 
 @endsection
+
+@push('assets.bottom')
+    <script type="text/javascript" src="{!! asset('assets/components/clipboard/dist/clipboard.min.js') !!}"></script>
+@endpush

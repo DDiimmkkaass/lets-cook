@@ -4,7 +4,7 @@
 function profileOrders() {
     let $profileOrders = $('.profile-orders, .profile-main'),
         $mobile = $profileOrders.find('.profile-orders-user__mobile'),
-        $desktop = $profileOrders.find('.profile-orders-user__desktop')
+        $desktop = $profileOrders.find('.profile-orders-user__desktop');
 
     $mobile.on('click', function() {
         if ($desktop.is('[data-active]')) {

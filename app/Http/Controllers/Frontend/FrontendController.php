@@ -117,10 +117,13 @@ class FrontendController extends BaseController
                 'max_upload_image_height'             => config('image.max_upload_height'),
                 'lang_error'                          => trans('front_labels.error'),
                 'lang_success'                        => trans('front_labels.success'),
+                'lang_copied'                         => trans('front_labels.copied'),
                 'lang_notice'                         => trans('front_labels.notice'),
                 'lang_deleteCardConfirmMessage'       => trans(
                     'messages.your really want to delete this card'
                 ),
+                'lang_codeCopyMessage'                =>
+                    trans('front_messages.invite friend coupon code copy success message'),
                 'lang_errorRequestError'              => trans(
                     'messages.an error has occurred, please reload the page and try again'
                 ),

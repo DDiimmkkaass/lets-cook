@@ -47,7 +47,11 @@ class ApplyInviteFriendsProgram implements ShouldQueue
      */
     public function handle(CompletedOrderArchived $event)
     {
-        if ((int) variable('invite_friend_compensation') > 0 && $event->order->coupon_id) {
+        if (
+            (int) variable('invite_friend_compensation') > 0 &&
+            variable('invite_friend_compensation_type') &&
+            $event->order->coupon_id
+        ) {
             $from_user = $event->order->user;
             $coupon = Coupon::whereId($event->order->coupon_id)
                 ->whereNotNull('user_id')

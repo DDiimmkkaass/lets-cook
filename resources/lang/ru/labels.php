@@ -511,6 +511,8 @@ return array (
   'tag_category_editing' => 'Редактирование категории тегов',
   'variable_type_weekday' => 'День недели',
   'variable_type_time' => 'Время',
+  'variable_type_discount_type' => 'Тип скидки',
+  'variable_type_boolean' => 'Переключатель',
   'weekly_menu_show' => 'Просмотр меню на неделю',
   'order_status_changed' => 'Изменен',
   'order_status_paid' => 'Оплачен',

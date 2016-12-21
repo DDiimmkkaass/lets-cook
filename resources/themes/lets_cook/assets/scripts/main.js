@@ -83,6 +83,7 @@ $(function() {
 
     if ($('main[class="main profile-orders"]').length) {
         profileOrders();
+        profileOrdersDiscounts();
     }
 
     if ($('main[class="main profile-orders"]').length) {

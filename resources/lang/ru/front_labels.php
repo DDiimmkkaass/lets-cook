@@ -3,6 +3,7 @@
 return array(
   'error' => 'Ошибка',
   'success' => 'Успешно',
+  'copied' => 'Скопировано',
   'notice' => 'Внимание',
   'payment_method_cash' => 'Наличными',
   'payment_method_online' => 'Онлайн оплата',
@@ -53,7 +54,8 @@ return array(
   'loyalty_program' => 'Программа лояльности',
   'invite_friend' => 'Пригласи друга',
   'invite_friend_compensation' => 'Купон за приглашенного друга',
-  'invite_friend_label' => 'Пригласи друга!',
+  'invite_friend_your_discount_label' => 'Ваша скидка',
+  'invite_friend_friend_discount_label' => 'Скидка другу',
   'add_to_order' => 'Добавьте к заказу',
   'users_comments' => 'Отзывы клиентов',
   'add_comment' => 'Добавить отзыв',
@@ -74,4 +76,6 @@ return array(
   'order_status_front_processed_1' => 'Оплачен',
   'order_status_front_archived' => 'Доставлен',
   'order_status_front_deleted' => 'Отменен',
+  'discount_short_label_percentage' => '%',
+  'discount_short_label_absolute' => 'руб',
 );

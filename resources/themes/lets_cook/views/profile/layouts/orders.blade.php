@@ -25,6 +25,14 @@
                     @include('profile.tabs.history')
                 </div>
             </li>
+
+            <li class="profile-orders-content__tabs-item" data-tab="discount">
+                <div class="profile-orders-content__tabs-title" data-tab="discount">Посоветовать другу</div>
+
+                <div class="profile-orders-content__main profile-discount" data-tab="discount">
+                    @include('profile.tabs.invite_friend')
+                </div>
+            </li>
         </ul>
 
         @if ($data_tab == 'my-orders')

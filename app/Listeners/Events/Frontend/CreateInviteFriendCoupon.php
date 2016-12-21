@@ -45,7 +45,7 @@ class CreateInviteFriendCoupon implements ShouldQueue
      */
     public function handle(Event $event)
     {
-        if ((int) variable('invite_friend_discount') > 0) {
+        if ((int) variable('invite_friend_discount') > 0 && variable('invite_friend_discount_type')) {
             $this->couponService->createInviteFriendCoupon($event->user);
         }
     }

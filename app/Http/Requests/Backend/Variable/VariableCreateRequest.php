@@ -17,7 +17,7 @@ use App\Models\Variable;
  */
 class VariableCreateRequest extends FormRequest
 {
-
+    
     /**
      * Get the validation rules that apply to the request.
      *
@@ -30,6 +30,7 @@ class VariableCreateRequest extends FormRequest
             'key'          => 'required|unique:variables,key',
             'name'         => 'required',
             'multilingual' => 'required|boolean',
+            'position'     => 'required|integer|min:0',
         ];
     }
 }

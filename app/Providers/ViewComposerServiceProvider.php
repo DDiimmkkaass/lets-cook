@@ -29,6 +29,7 @@ class ViewComposerServiceProvider extends ServiceProvider
         view()->composer('recipe/partials/filters', '\App\Http\ViewComposers\RecipeComposer');
         view()->composer('layouts/profile', '\App\Http\ViewComposers\ProfileComposer');
         view()->composer('profile/layouts/orders', '\App\Http\ViewComposers\ProfileOrdersComposer');
+        view()->composer('profile/tabs/invite_friend', '\App\Http\ViewComposers\InviteFriendCouponComposer');
         view()->composer(
             ['profile/index', 'order/edit', 'basket/partials/coupon'],
             '\App\Http\ViewComposers\UserCouponsComposer'

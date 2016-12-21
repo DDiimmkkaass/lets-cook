@@ -32,6 +32,7 @@ class VariableUpdateRequest extends FormRequest
             'key'          => 'required|unique:variables,key,'.$id.',id',
             'name'         => 'required',
             'multilingual' => 'required|boolean',
+            'position'     => 'required|integer|min:0',
         ];
     }
 }

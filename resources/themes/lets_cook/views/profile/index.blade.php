@@ -23,8 +23,6 @@
         </div>
     </section>
 
-    @include('profile.partials.invite_friend')
-
     @include('profile.partials.coupons')
 
 @endsection

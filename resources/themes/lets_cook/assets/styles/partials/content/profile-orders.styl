@@ -254,6 +254,12 @@
     text-align: center
     line-height: 52px
     text-transform: none
+    cursor: pointer
+    text-decoration: underline
+
+    &:hover
+      text-decoration: none
+      cursor: pointer
 
     &[data-tab='my-orders'], &[data-tab='my-orders-edit']
       background-color: $bg-orange-1
@@ -275,6 +281,10 @@
       background-color: $bg-red-3
       color: $font-yellow-3
 
+    &[data-tab='discount']
+      background-color: $bg-blue-4
+      color: $base-bg-color
+
     +bp('480')
       line-height: 78px
 
@@ -290,6 +300,7 @@
       font-style: normal
       text-transform: none
       cursor: pointer
+      text-decoration: none
 
       &[data-tab='my-orders']
         background-color: $bg-orange-3
@@ -310,8 +321,11 @@
         background-color: $bg-orange-3
         color: $font-black-2
 
+    &[data-tab='discount']
+      background-color: $bg-orange-3
+      color: $font-black-2
+
     &:hover
-      cursor: pointer
       text-decoration: underline
 
   &__main
@@ -348,6 +362,7 @@
 
   &__item
     width: 50%
+    min-height: 200px
     border-left: 1px solid transparent
     border-bottom: 2px solid transparent
 
@@ -393,9 +408,15 @@
       +bp('1600')
         border-left-width: 0px
 
+    +bp('480')
+      min-height: 250px
+
+    +bp('768')
+      min-height: 300px
 
     +bp('1024')
       width: (100 / 3) * 1%
+      min-height: 400px
       border-left: 1px solid $bg-white-1
 
     +bp('1280')
@@ -994,6 +1015,159 @@
     fsh(16px, 1.25)
     text-decoration: underline
     color: $font-black-2
+    cursor: pointer
+
+    &:hover
+      text-decoration: none
+
+
+.profile-discount
+  &__wrapper
+    js-display: flex; display: flex
+    flex-direction: column
+    background-color: $bg-white-1
+    padding: (50px * (310 / 768)) (40px * (310 / 768)) (200px * (310 / 768))
+
+    +bp('480')
+      padding: (50px * (470 / 768)) (40px * (470 / 768)) (200px * (470 / 768))
+
+    +bp('768')
+      padding: 50px 40px 200px
+
+    +bp('1024')
+      flex-direction: row
+      justify-content: space-between
+      align-items: center
+
+  &__info
+    flex: 0 1 50%
+
+  &__code
+    margin-top: 30px
+    flex: 0 1 50%
+
+    +bp('1024')
+      margin-top: 0
+
+.discount-info
+  padding: 12px 10px 20px
+  border: 1px solid $bg-gray-8
+
+  +bp('480')
+    padding: 16px 14px 25px
+
+  +bp('768')
+    padding: 23px 21px 55px
+
+  &__desc
+    font-family: $ptsans-regular
+    color: $bg-black-2
+    fsh(12px, 1)
+
+    +bp('480')
+      fs(14px)
+
+    +bp('768')
+      fs(20px)
+
+  &__list
+    margin: 20px 0 0; padding: 0; list-style-type: none
+    js-display: flex; display: flex
+    justify-content: space-around
+
+    +bp('480')
+      margin-top: 40px
+
+    +bp('768')
+      margin-top: 60px
+
+
+.discount-item
+  js-display: flex; display: flex
+  flex-direction: column
+  align-items: center
+
+  &[data-sign='percentage']
+    .discount-item__value
+      flex-direction: row
+
+  &[data-sign='absolute']
+    .discount-item__value
+      flex-direction: column
+
+      span
+        fs(12px)
+
+        +bp('480')
+          fs(14px)
+
+        +bp('768')
+          fs(16px)
+
+  &__value
+    js-display: flex; display: flex;
+    justify-content: center
+    align-items: center
+    size: 88px
+    border-radius: 50%
+    border: 2px solid $bg-red-2
+    color: $bg-red-2
+    fsh(26px, 1.15)
+    font-family: $ptsans-regular
+
+    +bp('480')
+      fs(28px)
+
+    +bp('768')
+      size: 100px
+      fs(30px)
+      border-width: 3px
+
+  &__title
+    margin-top: 12px
+    font-family: $ptsans-bold
+    text-transform: uppercase
+    fsh(10px, 1)
+    color: $font-black-1
+
+    +bp('480')
+      margin-top: 16px
+      fs(12px)
+
+    +bp('768')
+      margin-top: 22px
+      fs(14px)
+
+
+
+.discount-code
+  js-display: flex; display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+
+  &__value
+    font-family: $ptsans-regular
+    color: $bg-black-2
+    text-transform: uppercase
+    fsh(40px, 1.15)
+
+    +bp('480')
+      fs(45px)
+
+    +bp('768')
+      fs(50px)
+
+  &__copy
+    margin-top: 20px
+    size: 200px 60px
+    background-color: $bg-orange-3
+    text-align: center
+    font-family: $ptsans-regular
+    fsh(18px, 60px)
+    color: $bg-black-2
+    text-transform: uppercase
+    text-decoration: underline
     cursor: pointer
 
     &:hover

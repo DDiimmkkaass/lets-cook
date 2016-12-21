@@ -116,7 +116,7 @@ class VariableController extends BackendController
         $this->data('page_title', trans('labels.variables'));
         $this->breadcrumbs(trans('labels.variables_list'));
 
-        $list = Variable::all();
+        $list = Variable::positionSorted()->get();
 
         $this->data('list', $list);
 
@@ -152,7 +152,7 @@ class VariableController extends BackendController
      */
     public function store(VariableCreateRequest $request)
     {
-        $input = $request->only(['type', 'key', 'name', 'description', 'multilingual']);
+        $input = $request->only(['type', 'key', 'name', 'description', 'multilingual', 'position']);
 
         try {
             Variable::create($input);
@@ -215,7 +215,7 @@ class VariableController extends BackendController
      */
     public function update($id, VariableUpdateRequest $request)
     {
-        $input = $request->only(['type', 'key', 'name', 'description', 'multilingual']);
+        $input = $request->only(['type', 'key', 'name', 'description', 'multilingual', 'position']);
 
         try {
             $model = Variable::findOrFail($id);
@@ -240,14 +240,14 @@ class VariableController extends BackendController
      *
      * @param VariableValueUpdateRequest $request
      *
-     * @return \Response
+     * @return array
      */
     public function updateValue(VariableValueUpdateRequest $request)
     {
         try {
             $model = Variable::findOrFail($request->get('variable_id'));
 
-            $model->update($request->except('type', 'key', 'name', 'description', 'multilingual'));
+            $model->update($request->except('type', 'key', 'name', 'description', 'multilingual', 'position'));
 
             return [
                 'status' => 'success',
