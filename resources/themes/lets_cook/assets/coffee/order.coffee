@@ -287,9 +287,10 @@ Order.save = ($button, $form) ->
 
       else
         if response.status == 'success'
-          yaCounter21710725.reachGoal('ZAKAZ');
-
           popUp(lang_success, response.message)
+
+          _gaq.push(['_trackEvent', 'forms','zakaz']);
+          yaCounter21710725.reachGoal('ZAKAZ');
 
           unless response.html == ''
             $(response.html).insertAfter('.order-create-form')
@@ -298,9 +299,9 @@ Order.save = ($button, $form) ->
           else
             setTimeout () ->
                 if response.redirect
-                  window.location.href = '/profiles/orders'
+#                  window.location.href = '/profiles/orders'
                 else
-                  window.location.href = '/'
+#                  window.location.href = '/'
               , 1500
         else
           popUp(lang_error, response.message)
