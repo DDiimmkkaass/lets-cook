@@ -299,9 +299,9 @@ Order.save = ($button, $form) ->
           else
             setTimeout () ->
                 if response.redirect
-#                  window.location.href = '/profiles/orders'
+                  window.location.href = '/profiles/orders'
                 else
-#                  window.location.href = '/'
+                  window.location.href = '/'
               , 1500
         else
           popUp(lang_error, response.message)
