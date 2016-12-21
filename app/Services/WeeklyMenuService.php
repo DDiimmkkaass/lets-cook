@@ -183,7 +183,7 @@ class WeeklyMenuService
     {
         $new_year_basket_slug = variable('new_year_basket_slug');
         
-        if (!$new_year_basket_slug) {
+        if (!$new_year_basket_slug || active_week()->weekOfYear == 52) {
             return null;
         }
     

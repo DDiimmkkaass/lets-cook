@@ -17,65 +17,132 @@ function recipesMenu() {
         $basketsMenuLink = $basketsMenu.find('.baskets-menu__details'),
         $allRecipesLink = $recipesMenu.find('.recipes-menu__all'),
         $_allRecipesLink = $basketsMenu.find('.baskets-menu__to-order'),
-        initWeek = 0,
-        initBasket = 0;
+        currentBasket = 0,
+        currentWeek = 0,
+        currentCurrentWeek = 0,
+        currentNextWeek = 0;
 
     (function init() {
-        setItems(initWeek, initBasket);
+        chooseBasket();
 
         chooseWeek();
 
-        chooseBasket();
+        firstInit();
 
         onResize();
     }());
 
-    function chooseWeek() {
-        $recipesMenuChooseList.on('click', 'li.recipes-menu__chooseItem', function() {
-            let week_num = parseInt($(this).attr('data-week'));
+    function firstInit() {
+        let $firstBasket = $basketsMenuItems.eq(0);
 
-            setActiveWeek(week_num);
-
-            setItems(week_num, 0);
-
-            let _order_url = $('.baskets-menu__main-item[data-active]').find('.baskets-menu__sub-item').data('url');
-            $allRecipesLink.attr('href', _order_url);
-            $_allRecipesLink.attr('href', _order_url);
-
-                $('.baskets-menu__main-item[data-active]')
-                .find('.baskets-menu__sub-item').removeAttr('data-active-item')
-                .first().attr('data-active-item', '');
-        });
+        $firstBasket.trigger('click');
     }
 
     function chooseBasket() {
-        $basketsMenuList.on('click', '.baskets-menu__sub-item', function() {
-            let $that = $(this),
-                data_week = parseInt($that.attr('data-week')),
-                data_basket = parseInt($that.attr('data-basket'));
+        $basketsMenuList.on('click', '.baskets-menu__main-item', function() {
+            let $that               = $(this),
+                data_basket         = parseInt($that.attr('data-basket')),
+                data_current_week   = $that.attr('data-current-week'), // "true"/"false"
+                data_next_week      = $that.attr('data-next-week'), // "true"/"false"
+                active_week         = null,
+                url                 = null;
 
-            let url = $that.data('url');
-
-            if ($('.recipes-and-baskets__item.recipes-menu').css('display') == 'none') {
-                window.location.href = url;
+            if (data_current_week === 'true') {
+                active_week = 0;
+                url = $that.data('current-week-url');
             } else {
+                active_week = 1;
+                url = $that.data('next-week-url');
+            }
+            
+            $basketsMenuItems.attr('data-active', 'false');
+            $that.attr('data-active', 'true');
+
+            $allRecipesLink.attr('href', url);
+            $_allRecipesLink.attr('href', url);
+
+            $basketsMenuList.find('.baskets-menu__sub-item').removeAttr('data-active-item');
+            $that.attr('data-active-item', '');
+
+            let delivery_dates = $that.data('delivery_dates'),
+                $showed_delivery_dates = $that.closest('.baskets-menu').find('.delivery-dates');
+
+            if (delivery_dates) {
+                $showed_delivery_dates.text(delivery_dates);
+            } else {
+                $showed_delivery_dates.text($showed_delivery_dates.data('delivery_dates'));
+            }
+
+            $basketsMenuDesc.removeAttr('data-active').filter('[data-week="' + active_week + '"]').attr('data-active', '');
+            $basketsMenuLink.removeAttr('data-active').filter('[data-week="' + active_week + '"]').attr('data-active', '');
+
+            setItems(data_basket, data_current_week, data_next_week, active_week);
+            setWeeks(data_current_week, data_next_week);
+        });
+    }
+
+    function setItems(basket, currWeek, nextWeek, activeWeek) {
+        $recipesMenuContentList.empty();
+
+        $recipesMenuContentHiddenChildren.each(function() {
+            let $that = $(this),
+                that_week = parseInt($that.attr('data-week')),
+                that_basket = parseInt($that.attr('data-basket'));
+
+            if (that_week === activeWeek && that_basket === basket) {
+                $recipesMenuContentList.append($that);
+            }
+        });
+
+        currentBasket       = basket;
+        currentWeek         = activeWeek;
+        currentCurrentWeek  = currWeek;
+        currentNextWeek     = nextWeek;
+
+        setItemsPosition();
+        setItemsTitleHeight();
+        setContentListHeight();
+    }
+
+    function setWeeks(curr_week, next_week) {
+        $recipesMenuChooseItems.attr('data-show', 'false');
+
+        if (curr_week === 'true') {
+            $recipesMenuChooseItems.eq(0).attr('data-show', 'true');
+        }
+
+        if (next_week === 'true') {
+            $recipesMenuChooseItems.eq(1).attr('data-show', 'true');
+        }
+
+        $recipesMenuChooseItems.removeAttr('data-active');
+        $recipesMenuChooseList
+            .find('.recipes-menu__chooseItem[data-show="true"]')
+            .eq(0)
+            .attr('data-active', '');
+    }
+
+    function chooseWeek() {
+        $recipesMenuChooseList.on('click', 'li.recipes-menu__chooseItem', function() {
+            let week_num = parseInt($(this).attr('data-week')),
+                $activeBasket = $basketsMenuItems.filter('[data-active="true"]'),
+                url = null;
+
+            $recipesMenuChooseItems.removeAttr('data-active');
+            $recipesMenuChooseItems.eq(week_num).attr('data-active', '');
+
+            if (week_num == 0) {
+                url = $activeBasket.data('current-week-url');
+            } else {
+                url = $activeBasket.data('next-week-url');
+            }
+
+            if (url) {
                 $allRecipesLink.attr('href', url);
                 $_allRecipesLink.attr('href', url);
-
-                $basketsMenuList.find('.baskets-menu__sub-item').removeAttr('data-active-item');
-                $that.attr('data-active-item', '');
-
-                let delivery_dates = $that.data('delivery_dates'),
-                    $showed_delivery_dates = $that.closest('.baskets-menu').find('.delivery-dates');
-
-                if (delivery_dates) {
-                    $showed_delivery_dates.text(delivery_dates);
-                } else {
-                    $showed_delivery_dates.text($showed_delivery_dates.data('delivery_dates'));
-                }
-
-                setItems(data_week, data_basket);
             }
+
+            setItems(currentBasket, currentCurrentWeek, currentNextWeek, week_num);
         });
     }
 
@@ -86,26 +153,6 @@ function recipesMenu() {
         }).resize();
     }
 
-
-    function setItems(week, basket) {
-        $recipesMenuContentList.empty();
-
-        $recipesMenuContentHiddenChildren.each(function() {
-            let $that = $(this),
-                that_week = parseInt($that.attr('data-week')),
-                that_basket = parseInt($that.attr('data-basket'));
-
-            if (that_week === week && that_basket === basket) {
-                $recipesMenuContentList.append($that);
-            }
-        });
-
-        setActiveWeek(week);
-
-        setItemsPosition();
-        setItemsTitleHeight();
-        setContentListHeight();
-    }
 
     function setItemsPosition() {
         let $recipesMenuContentItems = $recipesMenuContentList.children();
@@ -149,46 +196,6 @@ function recipesMenu() {
         }
     }
 
-    function setActiveWeek(week) {
-        $recipesMenuChooseItems.removeAttr('data-active');
-        $recipesMenuChooseItems.eq(parseInt(week)).attr('data-active', '');
-
-        $basketsMenuItems.each(function() {
-            let $that = $(this),
-                data_week = parseInt($that.attr('data-week'));
-
-            if (data_week === week) {
-                $that.attr('data-active', '');
-            } else {
-                $that.removeAttr('data-active');
-            }
-        });
-
-        $basketsMenuDesc.each(function() {
-            let $that = $(this),
-                data_week = parseInt($that.attr('data-week'));
-
-            if (data_week === week) {
-                $that.attr('data-active', '');
-            } else {
-                $that.removeAttr('data-active');
-            }
-        });
-
-        $basketsMenuLink.each(function() {
-            let $that = $(this),
-                data_week = parseInt($that.attr('data-week'));
-
-            if (data_week === week) {
-                $that.attr('data-active', '');
-            } else {
-                $that.removeAttr('data-active');
-            }
-        });
-
-
-    }
-
     function setItemsTitleHeight() {
         let $allTitles = $recipesMenuContentList.children().find('.recipes-menu__title'),
             titlesHeight = 0;
@@ -209,16 +216,6 @@ function recipesMenu() {
     function setContentListHeight() {
         $recipesMenuContent.height($recipesMenuContentList.children().eq(0).height() * 3);
     }
-
-    $(document).on("ready", function () {
-        $('.go-to-choose-basket').on('click', function (e) {
-            e.preventDefault();
-
-            $('html,body').animate({
-                scrollTop: $recipesMenu.offset().top
-            }, 'slow');
-        });
-    });
 }
 
 /* ----- end RECIPES MENU ----- */

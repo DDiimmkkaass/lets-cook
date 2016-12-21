@@ -349,12 +349,18 @@
     background-color: $bg-orange-2
 
   &__chooseItem
-    display: inline-block
+    display: none
     fsh(14px, 16px)
     color: $font-yellow-2
     padding-bottom: 1px
     border-bottom: 1px dashed $font-yellow-2
     cursor: pointer
+
+    &[data-show='false']
+      display: none
+
+    &[data-show='true']
+      display: inline-block
 
     &:hover, &[data-active]
       padding-bottom: 0
@@ -438,6 +444,7 @@
     align-content: center
     flex-direction: column
     text-align: center
+    min-height: 40px
     font-family: $ptsans-regular
     fsh(14px, 17px)
 
@@ -539,7 +546,6 @@
     font-family: $ptsans-narrow-regular
     color: $font-black-1
     fsh(40px * (310 / 720), 1.2)
-    text-decoration: underline
 
     +bp('480')
       margin: 40px * (470 / 720) auto 0
@@ -559,30 +565,32 @@
       margin: 40px 0 0
 
   &__main-item
-    display: none
-
-    &[data-active]
-      display: block
-
-    +bp('1024')
-      [data-active-item]
-        &::before
-          content: ''
-          position absolute
-          left -20px
-          top: 6px
-          width: 0
-          height 0
-          border: 9px solid transparent;
-          border-left: 15px solid #091f2a;
-
-  &__sub-list
-    margin: 0; padding: 0; list-style-type: none
-
-  &__sub-item
+    position: relative
     margin-bottom: 4px
     cursor: pointer
-    position relative
+    text-decoration: underline
+
+    &:hover
+      text-decoration: none
+
+    &::before
+      +bp('1024')
+        content: ''
+        absolute: top 6px left -25px
+        size: 0
+        border: 9px solid transparent
+        border-left: 15px solid #091f2a
+
+    &[data-active="false"]
+      +bp('1024')
+        &::before
+          content: none
+
+    &[data-active="true"]
+      +bp('1024')
+        &::before
+          content: ''
+
 
     +bp('480')
       margin-bottom: 8px
@@ -599,7 +607,7 @@
 
     +bp('1024')
       &[data-active]
-        display: block
+        display: inline-block
 
     +bp('1600')
       margin: 40px 0 0

@@ -3,29 +3,19 @@
 
         <div class="recipes-and-baskets__item recipes-menu">
             <ul class="recipes-menu__choose">
-                @if ($menu)
-                    <li class="recipes-menu__chooseItem"
-                        data-week="0">
-                        Меню на эту неделю
-                    </li>
-                @endif
-                @if ($next_menu)
-                    <li class="recipes-menu__chooseItem"
-                        data-week="1">
-                        Меню на следующую неделю
-                    </li>
-                @endif
+                <li class="recipes-menu__chooseItem" data-show="false" data-week="0">
+                    Меню на эту неделю
+                </li>
+                <li class="recipes-menu__chooseItem" data-show="false" data-week="1">
+                    Меню на следующую неделю
+                </li>
             </ul>
 
             <ul class="recipes-menu__hidden">
                 @if ($menu)
                     @foreach($menu_baskets as $key => $basket)
-                        @if ($key == 0)
-                            @php($active_basket = $basket)
-                            @php($week = 'current')
-                        @endif
                         @foreach($basket->recipes as $_key => $recipe)
-                            <li class="recipes-menu__item" data-week="0" data-basket="{!! $key !!}">
+                            <li class="recipes-menu__item" data-week="0" data-basket="{!! $basket->basket_id !!}">
                                 <a href="{!! $basket->getUrl() !!}"
                                    title="{!! $recipe->getRecipeName() !!}"
                                    class="recipes-menu__link">
@@ -59,12 +49,8 @@
 
                 @if ($next_menu)
                     @foreach($next_menu_baskets as $key => $basket)
-                        @if ($key == 0 && !isset($active_basket))
-                            @php($active_basket = $basket)
-                            @php($week = 'next')
-                        @endif
                         @foreach($basket->recipes as $_key => $recipe)
-                            <li class="recipes-menu__item" data-week="1" data-basket="{!! $key !!}">
+                            <li class="recipes-menu__item" data-week="1" data-basket="{!! $basket->basket_id !!}">
                                 <a href="{!! $basket->getUrl('next') !!}"
                                    title="{!! $recipe->getRecipeName() !!}"
                                    class="recipes-menu__link">
@@ -82,12 +68,8 @@
             </ul>
 
             <div class="recipes-menu__content">
-                <ul class="recipes-menu__list">
-
-                </ul>
-
-                <a href="{!! isset($active_basket) ? $active_basket->getUrl($week) : '#' !!}"
-                   class="recipes-menu__all yellow-small-button">Все рецепты</a>
+                <ul class="recipes-menu__list"></ul>
+                <a href="#" class="recipes-menu__all yellow-small-button">Все рецепты</a>
             </div>
         </div>
 
@@ -100,47 +82,38 @@
                 <li class="baskets-menu__info-item">Любой рецепт<br><span data-info="text">можно заменить</span></li>
             </ul>
 
+
             <ul class="baskets-menu__main-list">
-                @if ($menu)
-                    <li class="baskets-menu__main-item" data-week="0">
-                        <ul class="baskets-menu__sub-list">
-                            @foreach($menu_baskets as $key => $basket)
-                                <li class="baskets-menu__sub-item"
-                                    data-url="{!! $basket->getUrl() !!}"
-                                    @if ($key == 0) data-active-item @endif
-                                    data-week="0"
-                                    data-basket="{!! $key !!}">
-                                    {!! $basket->getName() !!}
-                                </li>
-                            @endforeach
-                            @if ($new_year_basket)
-                                <li class="baskets-menu__sub-item"
-                                    data-url="{!! $new_year_basket->getUrl() !!}"
-                                    data-week="0"
-                                    data-delivery_dates="{!! implode(' или ', $new_year_delivery_dates) !!}"
-                                    data-basket="1000">
-                                    {!! $new_year_basket->getName() !!}
-                                </li>
-                            @endif
-                        </ul>
+                @if ($new_year_basket)
+                    <li class="baskets-menu__main-item"
+                        data-basket="1000"
+                        data-active="false"
+                        data-current-week="true"
+                        data-current-week-url="{!! $new_year_basket->getUrl() !!}"
+                        data-delivery_dates="{!! implode(' или ', $new_year_delivery_dates) !!}">
+                        {!! $new_year_basket->getName() !!}
                     </li>
                 @endif
 
-                @if ($next_menu)
-                    <li class="baskets-menu__main-item" data-week="1">
-                        <ul class="baskets-menu__sub-list">
-                            @foreach($next_menu_baskets as $key => $basket)
-                                <li class="baskets-menu__sub-item"
-                                    data-url="{!! $basket->getUrl('next') !!}"
-                                    @if ($key == 0) data-active-item @endif
-                                    data-week="1"
-                                    data-basket="{!! $key !!}">
-                                    {!! $basket->getName() !!}
-                                </li>
-                            @endforeach
-                        </ul>
-                    </li>
-                @endif
+                @foreach($baskets as $basket)
+                    @php($_menu = $menu_baskets->get($basket->id))
+                    @php($_next_menu = $next_menu_baskets->get($basket->id))
+
+                    @if ($_menu || $_next_menu)
+                    <li class="baskets-menu__main-item"
+                        data-basket="{!! $basket->id !!}"
+                        data-active="false"
+                        @if ($_menu)
+                            data-current-week="true"
+                            data-current-week-url="{!! $_menu->getUrl() !!}"
+                        @endif
+                        @if ($_next_menu)
+                            data-next-week="true"
+                            data-next-week-url="{!! $_next_menu->getUrl('next') !!}"
+                        @endif
+                        >{!! $basket->getName() !!}</li>
+                    @endif
+                @endforeach
             </ul>
 
             @if ($menu)
@@ -154,7 +127,7 @@
                     Заказав после, вы получите продукты меню следующей недели.
                 </div>
 
-                <a href="{!! $active_basket->getUrl() !!}"
+                <a href="#"
                    data-week="0"
                    class="baskets-menu__details black-long-button baskets-menu__to-order">
                     подробнее про корзину
@@ -172,7 +145,7 @@
                     Заказав после, вы получите продукты меню следующей недели.
                 </div>
 
-                <a href="{!! $active_basket->getUrl('next') !!}"
+                <a href="#"
                    data-week="1"
                    class="baskets-menu__details black-long-button baskets-menu__to-order">
                     подробнее про корзину

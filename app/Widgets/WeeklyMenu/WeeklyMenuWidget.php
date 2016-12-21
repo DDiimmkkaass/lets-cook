@@ -8,8 +8,10 @@
 
 namespace App\Widgets\WeeklyMenu;
 
+use App\Models\Basket;
 use App\Models\WeeklyMenu;
 use App\Models\WeeklyMenuBasket;
+use App\Services\BasketService;
 use App\Services\WeeklyMenuService;
 use Carbon;
 use Illuminate\Container\Container;
@@ -55,6 +57,8 @@ class WeeklyMenuWidget extends Widget
     public function index($template = '')
     {
         $active_week = active_week_menu_week();
+    
+        $baskets = Basket::basic()->positionSorted()->get();
         
         $menus = WeeklyMenu::active()->get();
         
@@ -86,14 +90,14 @@ class WeeklyMenuWidget extends Widget
             }
         }
         
-        $new_year_basket = $this->weeklyMenuService->getNewYearBasket();
         $dates = [];
+        $new_year_basket = $this->weeklyMenuService->getNewYearBasket();
         if ($new_year_basket) {
             $dates = [
                 Carbon::now()->endOfYear()->startOfDay()->subDays(2),
                 Carbon::now()->endOfYear()->startOfDay()->subDay(),
             ];
-    
+
             foreach ($dates as $key => $date) {
                 $dates[$key] = $date = $date->format('d').' '.get_localized_date($date, 'Y-m-d H:i:s', false, '', '%f');
             }
@@ -104,8 +108,9 @@ class WeeklyMenuWidget extends Widget
         }
         
         return view('widgets.weekly_menu.templates.'.$this->template.'.index')
-            ->with('menu', $menu)->with('menu_baskets', $menu_baskets)
-            ->with('next_menu', $next_menu)->with('next_menu_baskets', $next_menu_baskets)
+            ->with('baskets', $baskets)
+            ->with('menu', $menu)->with('menu_baskets', $menu_baskets->keyBy('basket_id'))
+            ->with('next_menu', $next_menu)->with('next_menu_baskets', $next_menu_baskets->keyBy('basket_id'))
             ->with('new_year_basket', $new_year_basket)
             ->with('new_year_delivery_dates', $dates)
             ->render();
