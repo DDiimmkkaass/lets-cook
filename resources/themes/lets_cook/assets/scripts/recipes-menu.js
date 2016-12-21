@@ -216,6 +216,16 @@ function recipesMenu() {
     function setContentListHeight() {
         $recipesMenuContent.height($recipesMenuContentList.children().eq(0).height() * 3);
     }
+
+    $(document).on("ready", function () {
+        $('.go-to-choose-basket').on('click', function (e) {
+            e.preventDefault();
+
+            $('html,body').animate({
+                scrollTop: $recipesMenu.offset().top
+            }, 'slow');
+        });
+    });
 }
 
 /* ----- end RECIPES MENU ----- */
