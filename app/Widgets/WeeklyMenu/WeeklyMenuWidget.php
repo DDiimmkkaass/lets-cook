@@ -91,7 +91,7 @@ class WeeklyMenuWidget extends Widget
         }
         
         $dates = [];
-        $new_year_basket = $this->weeklyMenuService->getNewYearBasket();
+        $new_year_basket = $this->weeklyMenuService->getNewYearBasket($active_week->weekOfYear);
         if ($new_year_basket) {
             $dates = [
                 Carbon::now()->endOfYear()->startOfDay()->subDays(2),

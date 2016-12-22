@@ -39,16 +39,17 @@ class OrderUpdateRequest extends FormRequest
         $weekly_menu = $this->weeklyMenuService->getWeeklyMenuByBasketId($this->request->get('basket_id', 0));
         $city_id = $this->request->get('city_id', 0);
     
-        $delivery_rules = ['required'];
-        if ($this->request->get('basket_slug', '') != variable('new_year_basket_slug') || $weekly_menu->week != 52) {
-            $delivery_rules = [
-                'required',
-                'date_format:"d-m-Y"',
-                'delivery_date_day_of_week',
-                'delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week,
-                'max_delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week,
-                'min_delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week,
-            ];
+        $delivery_rules = [
+            'required',
+            'date_format:"d-m-Y"',
+            'delivery_date_day_of_week',
+            'delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week,
+            'max_delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week,
+            'min_delivery_date_date:'.$weekly_menu->year.','.$weekly_menu->week,
+        ];
+        
+        if ($this->request->get('basket_slug') == variable('new_year_basket_slug') && $weekly_menu->week == 1) {
+            $delivery_rules = ['required'];
         }
         
         $rules = [

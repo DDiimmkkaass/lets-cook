@@ -179,11 +179,11 @@ class WeeklyMenuService
     /**
      * @return WeeklyMenuBasket|null
      */
-    public function getNewYearBasket()
+    public function getNewYearBasket($week)
     {
         $new_year_basket_slug = variable('new_year_basket_slug');
         
-        if (!$new_year_basket_slug || active_week_menu_week()->weekOfYear != 52) {
+        if (!$new_year_basket_slug || $week == 1) {
             return null;
         }
     

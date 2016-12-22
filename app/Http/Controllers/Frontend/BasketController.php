@@ -78,7 +78,7 @@ class BasketController extends FrontendController
                 ->get(['weekly_menu_baskets.*', 'baskets.position']);
         }
     
-        $new_year_basket = $this->weeklyMenuService->getNewYearBasket();
+        $new_year_basket = $this->weeklyMenuService->getNewYearBasket($menu->week);
         
         $this->data('baskets', isset($baskets) ? $baskets->sortBy('position') : collect());
         $this->data('new_year_basket', $new_year_basket);
@@ -258,7 +258,7 @@ class BasketController extends FrontendController
         }
         $this->data('additional_baskets_tags', collect($additional_baskets_tags)->sortBy('name'));
     
-        if ($basket->getSlug() == variable('new_year_basket_slug') && $basket->weekly_menu->week == 52) {
+        if ($basket->getSlug() == variable('new_year_basket_slug') && $basket->weekly_menu->week == 1) {
             $dt = Carbon::now()->endOfYear()->startOfDay();
             
             $delivery_dates = [
