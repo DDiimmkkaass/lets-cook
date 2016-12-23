@@ -85,17 +85,15 @@
 
             <ul class="baskets-menu__main-list">
                 @foreach($baskets as $basket)
-                    @if ($basket->getSlug() == variable('new_year_basket_slug'))
-                        @if ($new_year_basket)
-                            <li class="baskets-menu__main-item"
-                                data-basket="1000"
-                                data-active="false"
-                                data-current-week="true"
-                                data-current-week-url="{!! $new_year_basket->getUrl() !!}"
-                                data-delivery_dates="{!! implode(' или ', $new_year_delivery_dates) !!}">
-                                {!! $new_year_basket->getName() !!}
-                            </li>
-                        @endif
+                    @if ($basket->getSlug() == variable('new_year_basket_slug') && $new_year_basket)
+                        <li class="baskets-menu__main-item"
+                            data-basket="1000"
+                            data-active="false"
+                            data-current-week="true"
+                            data-current-week-url="{!! $new_year_basket->getUrl() !!}"
+                            data-delivery_dates="{!! implode(' или ', $new_year_delivery_dates) !!}">
+                            {!! $new_year_basket->getName() !!}
+                        </li>
                     @else
                         @php($_menu = $menu_baskets->get($basket->id))
                         @php($_next_menu = $next_menu_baskets->get($basket->id))
