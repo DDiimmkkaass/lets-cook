@@ -26,7 +26,7 @@
                                     </h3>
                                 </a>
                             </li>
-                            @break($_key >= 4)
+                            @break($_key >= 4{})
                         @endforeach
                     @endforeach
                     @if ($new_year_basket)
@@ -99,18 +99,23 @@
                         @php($_next_menu = $next_menu_baskets->get($basket->id))
 
                         @if ($_menu || $_next_menu)
-                        <li class="baskets-menu__main-item"
-                            data-basket="{!! $basket->id !!}"
-                            data-active="false"
-                            @if ($_menu)
+                            <li class="baskets-menu__main-item"
+                                data-basket="{!! $basket->id !!}"
+                                data-active="false"
+                                @if ($_menu)
                                 data-current-week="true"
                                 data-current-week-url="{!! $_menu->getUrl() !!}"
-                            @endif
-                            @if ($_next_menu)
+                                @endif
+                                @if ($_next_menu)
                                 data-next-week="true"
                                 data-next-week-url="{!! $_next_menu->getUrl('next') !!}"
-                            @endif
-                            >{!! $basket->getName() !!}</li>
+                                @endif
+
+                                @if ($basket->getSlug() == variable('new_year_basket_slug') && !empty($new_year_delivery_dates))
+                                data-delivery_dates="{!! implode(' или ', $new_year_delivery_dates) !!}"
+                                @endif
+
+                                >{!! $basket->getName() !!}</li>
                         @endif
                     @endif
                 @endforeach
@@ -120,8 +125,8 @@
                 <div class="baskets-menu__desc" data-week="0">
                     Оформите сегодня, и вы
                     <span>получите заказ
-                        <span class="delivery-dates" data-week="0" data-delivery_dates="{!! implode(' или ', $menu->getDeliveryDates()) !!}">
-                            {!! implode(' или ', $menu->getDeliveryDates()) !!}</span></span>.<br/>
+<span class="delivery-dates" data-week="0" data-delivery_dates="{!! implode(' или ', $menu->getDeliveryDates()) !!}">
+{!! implode(' или ', $menu->getDeliveryDates()) !!}</span></span>.<br/>
                     Заказы на это меню принимаются до
                     <span>{!! variable('stop_ordering_time') !!} {!! trans_choice('front_labels.day_of_week_to_string_when', variable('stop_ordering_date')) !!}</span>.<br/>
                     Заказав после, вы получите продукты меню следующей недели.
@@ -138,8 +143,9 @@
                 <div class="baskets-menu__desc" data-week="1">
                     Оформите сегодня, и вы
                     <span>получите заказ
-                        <span class="delivery-dates" data-week="1" data-delivery_dates="{!! implode(' или ', $next_menu->getDeliveryDates()) !!}">
-                            {!! implode(' или ', $next_menu->getDeliveryDates()) !!}</span></span>.<br/>
+<span class="delivery-dates" data-week="1"
+      data-delivery_dates="{!! implode(' или ', $next_menu->getDeliveryDates()) !!}">
+{!! implode(' или ', $next_menu->getDeliveryDates()) !!}</span></span>.<br/>
                     Заказы на это меню принимаются до
                     <span>{!! variable('stop_ordering_time') !!} {!! trans_choice('front_labels.day_of_week_to_string_when', variable('stop_ordering_date')) !!}</span>.<br/>
                     Заказав после, вы получите продукты меню следующей недели.
