@@ -63,10 +63,10 @@ class WeeklyMenuWidget extends Widget
         $menus = WeeklyMenu::active()->get();
         
         $menu = false;
-        $menu_baskets = [];
+        $menu_baskets = collect([]);
         
         $next_menu = false;
-        $next_menu_baskets = [];
+        $next_menu_baskets = collect([]);
         
         foreach ($menus as $_menu) {
             if ($_menu->week == $active_week->weekOfYear) {
