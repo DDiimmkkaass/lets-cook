@@ -26,7 +26,7 @@
                                     </h3>
                                 </a>
                             </li>
-                            @break($_key >= 4{})
+                            @break($_key >= 4)
                         @endforeach
                     @endforeach
                     @if ($new_year_basket)
