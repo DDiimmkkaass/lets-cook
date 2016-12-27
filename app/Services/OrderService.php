@@ -239,7 +239,7 @@ class OrderService
         } else {
             $dt = Carbon::create(active_week()->year, 1, 1, 0, 0, 0)->addWeek(active_week()->weekOfYear - 1);
             
-            $start_delivery_date = clone ($dt->endOfWeek()->startOfDay());
+            $start_delivery_date = clone ($dt->startOfWeek()->addDay());
             $end_delivery_date = clone ($dt->endOfWeek()->addDay()->startOfDay());
             
             $list->where('orders.delivery_date', '>=', $start_delivery_date);
