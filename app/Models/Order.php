@@ -469,6 +469,24 @@ class Order extends Model
     }
     
     /**
+     * @param string $split
+     *
+     * @return string
+     */
+    public function getIngredientsList($split = ', ')
+    {
+        $list = [];
+        
+        $this->ingredients()->each(
+            function ($item) use (&$list) {
+                $list[] = $item->getName();
+            }
+        );
+        
+        return implode($split, $list);
+    }
+    
+    /**
      * @return string
      */
     public function getUserFullName()

@@ -159,11 +159,11 @@ class OrderController extends FrontendController
                 $html = $provider->getForm($model);
             }
             
+            session(['success_order' => $model->id]);
+            
             return [
-                'status'   => 'success',
-                'message'  => trans('front_messages.your order successfully created'),
-                'html'     => isset($html) ? $html : '',
-                'redirect' => Sentry::check(),
+                'status' => 'success',
+                'html'   => isset($html) ? $html : '',
             ];
         } catch (Exception $e) {
             DB::rollBack();
@@ -173,6 +173,26 @@ class OrderController extends FrontendController
                 'message' => trans('front_messages.an error has occurred, please reload the page and try again'),
             ];
         }
+    }
+    
+    /**
+     * @return \Illuminate\Contracts\View\View
+     */
+    public function success()
+    {
+        $order_id = session()->get('success_order', null);
+        
+        $order = Order::find($order_id);
+
+        if (!$order) {
+            return redirect(localize_route('home'));
+        }
+        
+        $this->data('order', $order);
+        $this->data('class', 'success-order');
+        $this->data('redirect_url', Sentry::check() ? localize_route('profiles.orders.index') : localize_route('home'));
+        
+        return $this->render($this->module.'.success');
     }
     
     /**
@@ -329,7 +349,7 @@ class OrderController extends FrontendController
             }
         }
         $this->data('additional_baskets_tags', collect($additional_baskets_tags)->sortBy('name'));
-    
+        
         if ($basket->getSlug() == variable('new_year_basket_slug') && $basket->weekly_menu->week == 1) {
             $dt = Carbon::now()->endOfYear()->startOfDay();
             

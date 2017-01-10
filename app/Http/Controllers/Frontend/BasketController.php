@@ -134,6 +134,7 @@ class BasketController extends FrontendController
             abort_if(!$basket, 404);
     
             $this->data('basket', $basket);
+            $this->data('class', 'not-available-basket-page');
             
             return $this->render($this->module.'.not_available');
         }
@@ -190,6 +191,7 @@ class BasketController extends FrontendController
             abort_if(!$basket, 404);
         
             $this->data('basket', $basket);
+            $this->data('class', 'not-available-basket-page');
         
             return $this->render($this->module.'.not_available');
         }

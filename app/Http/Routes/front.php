@@ -107,6 +107,8 @@ $router->group(
             '/store',
             ['as' => 'order.store', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@store']
         );
+    
+        $router->get('/success', ['as' => 'order.success', 'uses' => 'Frontend\OrderController@success']);
         
         $router->group(
             [

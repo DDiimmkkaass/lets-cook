@@ -19,9 +19,7 @@ class PaymentController extends YandexKassaController
      */
     public function success()
     {
-        FlashMessages::add('success', trans('Спасибо! Ваш платеж успешно зачислен.'));
-        
-        return redirect()->route('home');
+        return redirect()->route('order.success');
     }
     
     /**
@@ -29,6 +27,8 @@ class PaymentController extends YandexKassaController
      */
     public function fail()
     {
+        session()->forget('success_order');
+        
         FlashMessages::add('error', trans('Платеж завершился ошибкой, заказ не оплачен.'));
         
         return redirect()->route('home');

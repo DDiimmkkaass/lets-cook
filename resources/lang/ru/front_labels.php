@@ -80,4 +80,9 @@ return array(
   'discount_short_label_absolute' => 'руб',
   'go_to_baskets' => 'Перейти к корзинам',
   'our_baskets' => 'Наши корзины',
+  'thanks_for_your_order' => 'Спасибо за Ваш заказ!',
+  'you_order_as_action' => 'Вы заказали',
+  'delivery_address' => 'Аддрес доставки',
+  'delivery_time' => 'Время доставки',
+  'additional_ingredients' => 'Дополнительные ингредиенты',
 );

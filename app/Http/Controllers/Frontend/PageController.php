@@ -96,7 +96,7 @@ class PageController extends FrontendController
      */
     public function notFound()
     {
-        $view = View::make('errors.404')->render();
+        $view = view('errors.404')->render();
         
         return Response::make($view, 404);
     }
