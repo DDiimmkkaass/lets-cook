@@ -76,12 +76,12 @@ class BasketController extends FrontendController
                 ->groupBy('weekly_menu_baskets.basket_id')
                 ->orderBy('weekly_menu_baskets.portions', 'DESC')
                 ->get(['weekly_menu_baskets.*', 'baskets.position']);
+            
+            $new_year_basket = $this->weeklyMenuService->getNewYearBasket($menu->week);
         }
     
-        $new_year_basket = $this->weeklyMenuService->getNewYearBasket($menu->week);
-        
         $this->data('baskets', isset($baskets) ? $baskets->sortBy('position') : collect());
-        $this->data('new_year_basket', $new_year_basket);
+        $this->data('new_year_basket', isset($new_year_basket) ? $new_year_basket : null);
         $this->data('week', $week);
         
         Meta::canonical(localize_route('baskets.index', $week));
@@ -128,7 +128,15 @@ class BasketController extends FrontendController
                 ->first();
         }
         
-        abort_if(!$basket, 404);
+        if (!$basket) {
+            $basket = Basket::whereSlug($slug)->first();
+            
+            abort_if(!$basket, 404);
+    
+            $this->data('basket', $basket);
+            
+            return $this->render($this->module.'.not_available');
+        }
         
         $trial = request('trial', false);
         
@@ -175,11 +183,15 @@ class BasketController extends FrontendController
         abort_if(!$repeat_order, 404);
         
         $basket = $this->orderService->getSameActiveBasket($repeat_order);
-        
+    
         if (!$basket) {
-            FlashMessages::add('error', trans('front_messages.no same basket on this week'));
-            
-            return redirect()->back();
+            $basket = Basket::whereSlug($slug)->first();
+        
+            abort_if(!$basket, 404);
+        
+            $this->data('basket', $basket);
+        
+            return $this->render($this->module.'.not_available');
         }
         
         $this->data('basket', $basket);

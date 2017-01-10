@@ -78,4 +78,6 @@ return array(
   'order_status_front_deleted' => 'Отменен',
   'discount_short_label_percentage' => '%',
   'discount_short_label_absolute' => 'руб',
+  'go_to_baskets' => 'Перейти к корзинам',
+  'our_baskets' => 'Наши корзины',
 );

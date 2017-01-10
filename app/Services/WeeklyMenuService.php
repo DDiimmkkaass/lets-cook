@@ -177,7 +177,9 @@ class WeeklyMenuService
     }
     
     /**
-     * @return WeeklyMenuBasket|null
+     * @param int $week
+     *
+     * @return \App\Models\WeeklyMenuBasket|null
      */
     public function getNewYearBasket($week)
     {
