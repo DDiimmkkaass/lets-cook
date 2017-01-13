@@ -85,4 +85,5 @@ return array(
   'delivery_address' => 'Аддрес доставки',
   'delivery_time' => 'Время доставки',
   'additional_ingredients' => 'Дополнительные ингредиенты',
+  'must_be_at_home' => 'Должно быть дома',
 );

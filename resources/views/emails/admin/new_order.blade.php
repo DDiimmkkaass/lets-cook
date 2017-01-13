@@ -56,6 +56,19 @@
             @endforeach
         @endif
 
+        <h3>@lang('front_labels.must_be_at_home'): </h3>
+        @php($i = 0)
+        @php($viewed = [])
+        @foreach($order->recipes as $recipe)
+            @foreach($recipe->recipe->recipe->home_ingredients as $ingredient)
+                @if (! in_array($ingredient->ingredient_id, $viewed))
+                    @php($viewed[] = $ingredient->ingredient_id)
+                    <div>{!! $ingredient->ingredient->getTitle() !!}</div>
+                    @php($i++)
+                @endif
+            @endforeach
+        @endforeach
+
         @if ($order->additional_baskets->count())
             <h3>@lang('front_labels.additional_baskets') </h3>
             @foreach($order->additional_baskets as $baskets)

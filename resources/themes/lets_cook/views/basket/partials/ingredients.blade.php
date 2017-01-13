@@ -37,29 +37,35 @@
                 @php($viewed = [])
                 @foreach($basket->recipes as $recipe)
                     @foreach($recipe->recipe->home_ingredients as $ingredient)
-                        @if ($ingredient->ingredient->inSale() && !in_array($ingredient->ingredient_id, $viewed))
+                        @if (! in_array($ingredient->ingredient_id, $viewed))
                             @php($viewed[] = $ingredient->ingredient_id)
-                            <li class="recipe-{!! $recipe->id !!}-ingredient">
-                                <span>{!! $ingredient->ingredient->getTitle() !!}</span>
+                            @if ($ingredient->ingredient->inSale())
+                                <li class="recipe-{!! $recipe->id !!}-ingredient">
+                                    <span>{!! $ingredient->ingredient->getTitle() !!}</span>
 
-                                <div class="checkbox-button">
-                                    <input type="checkbox"
-                                           id="f-order-ing-{!! $recipe->id !!}_{!! $ingredient->id !!}"
-                                           data-name="ingredients[{!! $i !!}]"
-                                           data-price="{!! $ingredient->getPriceInOrder() !!}"
-                                           value="{!! $recipe->id !!}_{!! $ingredient->ingredient_id !!}"
-                                           class="checkbox-button"
-                                           data-ingredient_name="{!! $ingredient->ingredient->getTitle() !!}"
-                                           data-id="{!! $recipe->id !!}_{!! $ingredient->id !!}">
-                                    <label for="f-order-ing-{!! $recipe->id !!}_{!! $ingredient->id !!}"
-                                           data-add="Добавить"
-                                           data-remove="Убрать">
-                                        Добавить
-                                    </label>
-                                </div>
-                            </li>
-                            @php($i++)
+                                    <div class="checkbox-button">
+                                        <input type="checkbox"
+                                               id="f-order-ing-{!! $recipe->id !!}_{!! $ingredient->id !!}"
+                                               data-name="ingredients[{!! $i !!}]"
+                                               data-price="{!! $ingredient->getPriceInOrder() !!}"
+                                               value="{!! $recipe->id !!}_{!! $ingredient->ingredient_id !!}"
+                                               class="checkbox-button"
+                                               data-ingredient_name="{!! $ingredient->ingredient->getTitle() !!}"
+                                               data-id="{!! $recipe->id !!}_{!! $ingredient->id !!}">
+                                        <label for="f-order-ing-{!! $recipe->id !!}_{!! $ingredient->id !!}"
+                                               data-add="Добавить"
+                                               data-remove="Убрать">
+                                            Добавить
+                                        </label>
+                                    </div>
+                                </li>
+                            @else
+                                <li class="recipe-{!! $recipe->id !!}-ingredient">
+                                    <span>{!! $ingredient->ingredient->getTitle() !!}</span>
+                                </li>
+                            @endif
                         @endif
+                        @php($i++)
                     @endforeach
                 @endforeach
             </ul>
