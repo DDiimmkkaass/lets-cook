@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Events\Backend\TmplOrderPaymentError;
+use App\Events\Backend\TmplOrderProcessError;
 use App\Exceptions\AutomaticallyPayException;
 use App\Exceptions\UnsupportedPaymentMethod;
 use App\Models\Card;
@@ -65,38 +66,63 @@ class ProcessTmplOrdersForCurrentWeek extends Command
     {
         $this->log('Start '.$this->description);
         
-        foreach (Order::with('user')->ofStatus('tmpl')->forCurrentWeek()->get() as $order) {
+        foreach (Order::with('user', 'main_basket')->ofStatus('tmpl')->forCurrentWeek()->get() as $order) {
             try {
-                $order = $this->_selectActiveCoupon($order);
-                
-                $this->orderService->updatePrices($order);
-
-                list($subtotal, $total) = $this->orderService->getTotals($order);
-
-                $order->subtotal = $subtotal;
-                $order->total = $total;
-
-                $order->save();
-                
-                $this->log('process order #'.$order->id, 'info', $order->toArray());
-                
-                $card = Card::ofUser($order->user_id)->default()->first();
-                
-                if ($card) {
-                    if ($this->paymentService->automaticallyPay($order, $card)) {
+                if (empty($order->main_basket)) {
+                    $this->log('process order #'.$order->id, 'info', $order->toArray());
+                    
+                    $message = trans('messages.tmpl order has no main basket admin message');
+                    
+                    $this->_sendManagerMessage($order, $message);
+                    
+                    $this->_setChangedStatus($order, $message);
+                } else {
+                    $order = $this->_selectActiveCoupon($order);
+                    
+                    $this->orderService->updatePrices($order);
+                    
+                    list($subtotal, $total) = $this->orderService->getTotals($order);
+                    
+                    $order->subtotal = $subtotal;
+                    $order->total = $total;
+                    
+                    $order->save();
+                    
+                    $this->log('process order #'.$order->id, 'info', $order->toArray());
+                    
+                    if ($order->getStringPaymentMethod() == 'cash') {
+                        $message = trans('messages.tmpl order successfully updated and can be processed');
+                        
+                        $this->_setChangedStatus($order, $message);
+    
+                        $this->log($message, 'info');
+                        
+                        $this->log('end process order #'.$order->id, 'info');
+                        
                         continue;
                     }
                     
-                    $message = 'Order in processed status';
-                } else {
-                    $message = trans('messages.no selected default cards admin message');
+                    $card = Card::ofUser($order->user_id)->default()->first();
                     
-                    $this->_sendUserMessage($order, trans('messages.no selected default cards user message'));
-                    $this->_sendAdminMessage($order, $message);
-                    
-                    $this->_setChangedStatus($order, $message);
+                    if ($card) {
+                        if ($this->paymentService->automaticallyPay($order, $card)) {
+                            $this->log('end process order #'.$order->id, 'info');
+                            
+                            continue;
+                        }
+                        
+                        $message = 'Order in processed status';
+                    } else {
+                        $message = trans('messages.no selected default cards admin message');
+                        
+                        $this->_sendUserMessage($order, trans('messages.no selected default cards user message'));
+                        $this->_sendAdminMessage($order, $message);
+                        
+                        $this->_setChangedStatus($order, $message);
+                    }
                 }
             } catch (UnsupportedPaymentMethod $e) {
+                //this part is unused, because wee not processed here the orders with cash payment method
                 $message = $e->getMessage();
                 
                 $this->_sendUserMessage($order, $message);
@@ -143,10 +169,19 @@ class ProcessTmplOrdersForCurrentWeek extends Command
      * @param \App\Models\Order $order
      * @param string            $message
      */
+    private function _sendManagerMessage(Order $order, $message)
+    {
+        admin_notify($this->description.' error: '.$message, $order->toArray(), variable('order_email'));
+    }
+    
+    /**
+     * @param \App\Models\Order $order
+     * @param string            $message
+     */
     private function _setChangedStatus(Order $order, $message)
     {
         $this->orderService->addSystemOrderComment($order, $message, 'changed');
-
+        
         $order->status = 'changed';
         $order->save();
     }
@@ -175,26 +210,30 @@ class ProcessTmplOrdersForCurrentWeek extends Command
                     },
                 ]
             )->get()->keyBy('id');
-    
+            
             $_user_coupons = $user_coupons->filter(
                 function ($item) use ($user, &$default, &$coupon) {
                     if ($item->available($user)) {
                         if ($item->default) {
                             $coupon = $item;
                         }
-                
+                        
                         return true;
                     }
-            
+                    
                     return false;
                 }
             );
-    
+            
             if (!$coupon) {
                 $coupon = $_user_coupons->last();
-    
+                
                 if ($coupon) {
-                    $this->log('set default user coupon for user #'.$user->id.', coupon '.$coupon->getName().'('.$coupon->coupon_id.')', 'info');
+                    $this->log(
+                        'set default user coupon for user #'.$user->id.', coupon '.$coupon->getName(
+                        ).'('.$coupon->coupon_id.')',
+                        'info'
+                    );
                     
                     $coupon->default = true;
                     $coupon->save();
@@ -202,7 +241,10 @@ class ProcessTmplOrdersForCurrentWeek extends Command
             }
             
             if ($coupon) {
-                $this->log('set coupon for order #'.$order->id.', coupon '.$coupon->getName().'('.$coupon->coupon_id.')', 'info');
+                $this->log(
+                    'set coupon for order #'.$order->id.', coupon '.$coupon->getName().'('.$coupon->coupon_id.')',
+                    'info'
+                );
                 
                 $order->coupon_id = $coupon->coupon_id;
                 $order->save();
