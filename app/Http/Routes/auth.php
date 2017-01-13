@@ -51,6 +51,16 @@ $router->group(
                         );
                     }
                 );
+    
+                $router->group(
+                    ['middleware' => 'admin.auth'],
+                    function () use ($router) {
+                        $router->get(
+                            'admin-login/{user_id}',
+                            ['as' => 'auth.admin_login', 'uses' => 'Frontend\AuthController@adminLogin']
+                        )->where('user_id', '[0-9]+');
+                    }
+                );
             }
         );
     }

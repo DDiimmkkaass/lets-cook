@@ -163,6 +163,32 @@ class AuthController extends FrontendController
     }
     
     /**
+     * @param int $user_id
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function adminLogin($user_id)
+    {
+        if ($this->user->hasAccess('user.login_as_user')) {
+            $model = User::find($user_id);
+            
+            if (!$model) {
+                FlashMessages::add('error', trans('messages.user not find'));
+                
+                return redirect()->back();
+            }
+            
+            Sentry::login($model, false);
+    
+            return redirect()->route('profiles.index');
+        }
+    
+        FlashMessages::add('notice', trans('messages.you do not have access for this action'));
+    
+        return redirect()->back();
+    }
+    
+    /**
      * @return mixed
      */
     public function getLogout()

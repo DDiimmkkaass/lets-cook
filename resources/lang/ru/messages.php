@@ -176,4 +176,6 @@ return array (
   'banner position helper text' => 'Для сортировки элементов с одинаковой позицией на сайте',
   'tmpl order successfully updated and can be processed' => 'В заказе успешно обновлены цены и он может быть обработан',
   'tmpl order has no main basket admin message' => 'В заказе отсутствует основная корзина. Пожалуйста, свяжитесь с клиентом для решения данной проблемы.',
+  'you do not have access for this action' => 'У Вас нет доступа к этому действию',
+  'user not find' => 'Пользователь не найден',
 );

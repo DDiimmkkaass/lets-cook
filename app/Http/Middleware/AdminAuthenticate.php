@@ -63,9 +63,9 @@ class AdminAuthenticate
         if (!Sentry::check()) {
             Session::put('redirect', URL::full());
 
-            return $request->ajax() ? $this->response->make('Unauthorized', 401) : $this->response->redirectToRoute(
-                'admin.login'
-            );
+            return $request->ajax() ?
+                $this->response->make('Unauthorized', 401) :
+                $this->response->redirectToRoute('admin.login');
         } else {
             $user = Sentry::getUser();
 
@@ -73,9 +73,9 @@ class AdminAuthenticate
             if (!$user || !$user->hasAccess('administrator')) {
                 Sentry::logout();
 
-                return $request->ajax() ? $this->response->make('Unauthorized', 401) : $this->response->redirectToRoute(
-                    'admin.login'
-                );
+                return $request->ajax() ?
+                    $this->response->make('Unauthorized', 401) :
+                    $this->response->redirectToRoute('admin.login');
             }
 
             if ($redirect = Session::get('redirect')) {

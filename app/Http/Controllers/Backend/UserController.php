@@ -142,7 +142,7 @@ class UserController extends BackendController
                     'actions',
                     function ($model) {
                         return view(
-                            'partials.datatables.control_buttons',
+                            'views.'.$this->module.'.datatables.control_buttons',
                             ['model' => $model, 'type' => 'user']
                         )->render();
                     }

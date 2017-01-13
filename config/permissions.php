@@ -169,6 +169,7 @@ return array (
     'user.read',
     'user.write',
     'user.delete',
+    'user.login_as_user',
     'user.group.write',
     
     'subscribe.read',
