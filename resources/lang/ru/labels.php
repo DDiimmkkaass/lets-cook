@@ -708,4 +708,5 @@ return array (
   'history_for_weeks' => 'История по неделям',
   'success_orders_count' => 'Количество успешных заказов',
   'comments_as_comment' => 'Комментарии',
+  'login_as_user' => 'Перейти на сайт как пользователь',
 );
