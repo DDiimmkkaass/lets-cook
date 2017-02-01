@@ -64,7 +64,7 @@ class Handler extends ExceptionHandler
             if (env('HANDLE_ERROR', true)) {
                 switch ($statusCode) {
                     case 404:
-                        return redirect(route('not_found'), 404);
+                        return redirect(route('not_found'), 302);
                     default:
                         if (is_front()) {
                             return response(view('errors.500')->render());
