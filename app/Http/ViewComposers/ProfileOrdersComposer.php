@@ -53,7 +53,7 @@ class ProfileOrdersComposer
      */
     public function compose(View $view)
     {
-        $view->with('history_orders', $this->userService->getOrders(Sentry::getUser()->getId()));
+        $view->with('history_orders', $this->userService->getOrders(Sentry::getUser()->getId(), ['archived'], ['recipes']));
         
         $weekly_menu = WeeklyMenu::with('baskets')->current()->first();
         $subscribe = BasketSubscribe::whereUserId($this->user->getId())->first();

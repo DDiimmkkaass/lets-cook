@@ -40,6 +40,6 @@ class ProfileComposer
      */
     public function compose(View $view)
     {
-        $view->with('user_archived_orders', $this->userService->getOrders(Sentry::getUser()->getId()));
+        $view->with('user_archived_orders', $this->userService->getOrders(Sentry::getUser()->getId(), ['recipes']));
     }
 }

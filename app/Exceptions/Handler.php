@@ -3,10 +3,13 @@
 namespace App\Exceptions;
 
 use Exception;
+use FlashMessages;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Foundation\Validation\ValidationException;
+use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -25,6 +28,8 @@ class Handler extends ExceptionHandler
         HttpException::class,
         ModelNotFoundException::class,
         ValidationException::class,
+        TokenMismatchException::class,
+        AuthenticationException::class,
     ];
     
     /**
@@ -38,6 +43,8 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
+        $this->_sendToAdmin($e);
+        
         return parent::report($e);
     }
     
@@ -47,31 +54,31 @@ class Handler extends ExceptionHandler
      * @param  \Illuminate\Http\Request $request
      * @param  \Exception               $e
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response
      */
     public function render($request, Exception $e)
     {
         if ($this->isHttpException($e)) {
             $statusCode = $e->getStatusCode();
-            
-            if (!in_array($statusCode, [404])) {
-                $this->_sendToAdmin($e);
-            }
-            
+        
             if (env('HANDLE_ERROR', true)) {
                 switch ($statusCode) {
                     case 404:
-                        return redirect(route('not_found'), 301);
+                        return redirect(route('not_found'), 404);
                     default:
                         if (is_front()) {
                             return response(view('errors.500')->render());
                         }
                 }
             }
-        } else {
-            $this->_sendToAdmin($e);
         }
+    
+        if ($e instanceof TokenMismatchException) {
+            FlashMessages::add('error', trans('front_messages.session expired, please reload the page'));
         
+            return redirect()->back();
+        }
+    
         return parent::render($request, $e);
     }
     

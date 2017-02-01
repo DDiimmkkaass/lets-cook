@@ -53,7 +53,7 @@ class Kernel extends ConsoleKernel
             ->cron('0 0 * * 2')->sendOutputTo($this->_logFile('generate-tmpl-orders'));
         
         $schedule->command('orders:update-main-basket-form-tmp-orders')
-            ->cron('5 0 * * 2')->sendOutputTo($this->_logFile('update-main-basket-form-tmp-orders'));
+            ->cron('5 0 * * *')->sendOutputTo($this->_logFile('update-main-basket-form-tmp-orders'));
         
         $schedule->command('orders:process-tmp-orders-for-current-week')
             ->cron('0 * * * 2-'.variable('stop_ordering_date'))->sendOutputTo($this->_logFile('process-tmp-orders-for-current-week'));
