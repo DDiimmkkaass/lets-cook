@@ -359,7 +359,7 @@ class OrderController extends FrontendController
             ];
         }
         if (!isset($delivery_dates)) {
-            $delivery_dates = $this->weeklyMenuService->getDeliveryDates($basket->year, $basket->week);
+            $delivery_dates = $this->weeklyMenuService->getDeliveryDates($basket->weekly_menu->year, $basket->weekly_menu->week);
         }
         $this->data('delivery_dates', $delivery_dates);
         
