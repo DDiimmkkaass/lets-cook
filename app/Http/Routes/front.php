@@ -6,6 +6,9 @@ $router->any('/', ['as' => 'home', 'uses' => 'Frontend\PageController@getHome'])
 // 404
 $router->any('/not-found', ['as' => 'not_found', 'uses' => 'Frontend\PageController@notFound']);
 
+// 5xx
+$router->any('/error', ['as' => 'server_error', 'uses' => 'Frontend\PageController@error']);
+
 // pages
 $router->get(
     '/pages/{slug1?}/{slug2?}/{slug3?}/{slug4?}/{slug5?}',

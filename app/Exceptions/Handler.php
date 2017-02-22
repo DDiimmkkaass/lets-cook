@@ -11,6 +11,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Foundation\Validation\ValidationException;
 use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Handler
@@ -30,6 +31,7 @@ class Handler extends ExceptionHandler
         ValidationException::class,
         TokenMismatchException::class,
         AuthenticationException::class,
+        NotFoundHttpException::class,
     ];
     
     /**
@@ -67,7 +69,7 @@ class Handler extends ExceptionHandler
                         return redirect(route('not_found'), 302);
                     default:
                         if (is_front()) {
-                            return response(view('errors.500')->render());
+                            return redirect(route('server_error'), 302);
                         }
                 }
             }

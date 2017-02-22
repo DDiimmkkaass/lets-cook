@@ -13,7 +13,6 @@ use App\Services\PageService;
 use JavaScript;
 use Meta;
 use Response;
-use View;
 
 /**
  * Class PageController
@@ -99,5 +98,15 @@ class PageController extends FrontendController
         $view = view('errors.404')->render();
         
         return Response::make($view, 404);
+    }
+    
+    /**
+     * @return \Illuminate\Http\Response
+     */
+    public function error()
+    {
+        $view = view('errors.500')->render();
+        
+        return Response::make($view, 500);
     }
 }
