@@ -20,13 +20,14 @@
                                     ['text' => trans('labels.additional_phone')],
                                     ['text' => trans('labels.city')],
                                     ['text' => trans('labels.address')],
+                                    ['text' => trans('labels.orders')],
                                     ['text' => trans('labels.activated')],
                                     ['text' => trans('labels.actions')]
                                 ])
                                 ->addFoot([
                                     ['attr' => ['colspan' => 5]],
                                     ['text' => Form::text('datatable_filters[city_name]', '', ['class' => 'form-control input-sm datatable-filter'])],
-                                    ['attr' => ['colspan' => 2]]
+                                    ['attr' => ['colspan' => 3]]
                                 ])
                                 ->make()
                         !!}

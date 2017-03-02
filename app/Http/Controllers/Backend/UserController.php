@@ -14,6 +14,7 @@ use App\Http\Requests\Backend\User\UserCreateRequest;
 use App\Http\Requests\Backend\User\UserUpdateRequest;
 use App\Models\City;
 use App\Models\Field;
+use App\Models\Order;
 use App\Models\User;
 use App\Models\UserCoupon;
 use App\Models\UserInfo;
@@ -96,7 +97,10 @@ class UserController extends BackendController
     public function index(Request $request)
     {
         if ($request->get('draw')) {
-            $list = User::with('info.city')->joinInfo()->joinCities()->select(
+            $list = User::with('info.city')
+                ->joinInfo()
+                ->joinCities()
+                ->select(
                 [
                     'users.id',
                     'user_info.full_name',
@@ -105,9 +109,39 @@ class UserController extends BackendController
                     'user_info.additional_phone',
                     'user_info.city_id',
                     DB::raw(
-                        '(select (IF(user_info.city_id IS NOT NULL, cities.name, user_info.city_name))) as city_name'
+                        '(select 
+                            (IF
+                                (
+                                    user_info.city_id IS NOT NULL, 
+                                    cities.name, 
+                                    user_info.city_name
+                                )
+                            )
+                        ) as city_name'
                     ),
                     'user_info.address',
+                    DB::raw(
+                        '(select 
+                            (IF
+                                (
+                                    user_info.first_order_date IS NULL, 
+                                    (
+                                        select min(orders.delivery_date) as first_order_date 
+                                        from orders 
+                                        where orders.user_id = users.id AND orders.status = '.Order::getStatusIdByName('archived').'
+                                    ), 
+                                    user_info.first_order_date
+                                )
+                            )
+                        ) as first_order_date'
+                    ),
+                    DB::raw(
+                        '(
+                            select max(orders.delivery_date) as latest_order_date 
+                            from orders 
+                            where orders.user_id = users.id AND orders.status = '.Order::getStatusIdByName('archived').'
+                        ) as latest_order_date'
+                    ),
                     'activated',
                 ]
             );
@@ -125,6 +159,12 @@ class UserController extends BackendController
                     'city_name',
                     function ($model) {
                         return $model->getCityName();
+                    }
+                )
+                ->editColumn(
+                    'first_order_date',
+                    function ($model) {
+                        return view($this->module.'.datatables.orders_dates', ['model' => $model])->render();
                     }
                 )
                 ->editColumn(
@@ -151,6 +191,7 @@ class UserController extends BackendController
                 ->removeColumn('info')
                 ->removeColumn('city')
                 ->removeColumn('city_id')
+                ->removeColumn('latest_order_date')
                 ->make();
         }
         

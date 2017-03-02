@@ -709,4 +709,6 @@ return array (
   'success_orders_count' => 'Количество успешных заказов',
   'comments_as_comment' => 'Комментарии',
   'login_as_user' => 'Перейти на сайт как пользователь',
+  'first_order' => 'Первый',
+  'latest_order' => 'Последний',
 );

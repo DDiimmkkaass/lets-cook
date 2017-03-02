@@ -279,15 +279,29 @@ class User extends SentryUser implements FrontLink
     }
     
     /**
+     * @param string $value
+     *
      * @return string
      */
-    public function getFirstOrderDateAttribute()
+    public function getFirstOrderDateAttribute($value)
     {
-        if (empty($this->info->first_order_date)) {
-            return '';
+        if (empty($value)) {
+            if (!empty($this->info->first_order_date)) {
+                return $this->info->first_order_date;
+            }
         }
-        
-        return $this->info->first_order_date;
+    
+        return carbon()->parse($value)->format('Y-m-d');
+    }
+    
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    public function getLatestOrderDateAttribute($value)
+    {
+        return empty($value) ? $this->first_order_date : carbon()->parse($value)->format('Y-m-d');
     }
     
     /**
