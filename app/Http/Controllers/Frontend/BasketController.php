@@ -201,6 +201,7 @@ class BasketController extends FrontendController
         $this->data('recipes_count', $repeat_order->recipes->count());
         $this->data('repeat_order', $repeat_order);
         $this->data('selected_baskets', $repeat_order->additional_baskets);
+        $this->data('new_year_basket', false);
         
         $this->_fillShowAdditionalTemplateData($basket);
         
