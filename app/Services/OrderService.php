@@ -672,6 +672,8 @@ class OrderService
      */
     private function _getDeliveryDateForTmplOrder(BasketSubscribe $subscribe)
     {
+        $delivery_date = null;
+        
         $latest_tmpl_order = Order::ofStatus('tmpl')->whereUserId($subscribe->user_id)
             ->orderBy('delivery_date', 'DESC')
             ->first();
@@ -685,10 +687,12 @@ class OrderService
                 ->first();
         }
         
-        if (!$latest_tmpl_order) {
-            $delivery_date = Carbon::now()->endOfWeek()->startOfDay();
-        } else {
+        if ($latest_tmpl_order) {
             $delivery_date = $latest_tmpl_order->getDeliveryDate();
+        }
+        
+        if (!$delivery_date) {
+            $delivery_date = Carbon::now()->endOfWeek()->startOfDay();
         }
         
         $delivery_date = $delivery_date->dayOfWeek > $subscribe->delivery_date ?
