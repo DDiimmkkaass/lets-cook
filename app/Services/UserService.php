@@ -12,8 +12,8 @@ use App\Http\Requests\Frontend\User\UserUpdateRequest;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\UserInfo;
-use Carbon;
-use ImageUploader;
+use Datatables;
+use DB;
 
 /**
  * Class UserService
@@ -101,5 +101,99 @@ class UserService
             ->latest()
             ->where('user_id', $user_id)
             ->get();
+    }
+    
+    /**
+     * @param $user_id
+     *
+     * @return array|\Bllim\Datatables\json
+     */
+    public function ordersTable($user_id)
+    {
+        $list = Order::with(
+            'user',
+            'user.subscribe',
+            'user.subscribe.basket',
+            'main_basket',
+            'additional_baskets',
+            'ingredients',
+            'coupon'
+        )
+            ->select(
+                'orders.id',
+                'orders.user_id',
+                DB::raw('1 as baskets_list'),
+                'orders.payment_method',
+                'orders.total',
+                'orders.status',
+                'orders.coupon_id',
+                'orders.delivery_date',
+                'orders.delivery_time',
+                'orders.comment'
+            )
+            ->where('orders.user_id', $user_id);
+        
+        $dataTables = Datatables::of($list)
+            ->editColumn(
+                'baskets_list',
+                function ($model) {
+                    return view('order.datatables.baskets_list', ['model' => $model])->render();
+                }
+            )
+            ->editColumn(
+                'total',
+                function ($model) {
+                    return $model->total.'<br>'.
+                        ($model->paymentMethod('cash') ?
+                            '<div class="red">'.trans('labels.for_courier').'</div>' :
+                            ''
+                        );
+                }
+            )
+            ->editColumn(
+                'status',
+                function ($model) {
+                    return view('order.datatables.status_changer', ['model' => $model])->render();
+                }
+            )
+            ->editColumn(
+                'coupon_id',
+                function ($model) {
+                    return $model->getCouponCode();
+                }
+            )
+            ->editColumn(
+                'delivery_date',
+                function ($model) {
+                    $html = view(
+                        'partials.datatables.humanized_date',
+                        [
+                            'date'      => $model->delivery_date,
+                            'in_format' => 'd-m-Y',
+                        ]
+                    )->render();
+                    
+                    return '<div class="text-center">'.$html.' '.$model->delivery_time.'<div>';
+                }
+            )
+            ->editColumn(
+                'actions',
+                function ($model) {
+                    return view('user.datatables.orders_control_buttons', ['model' => $model])->render();
+                }
+            )
+            ->setIndexColumn('id')
+            ->removeColumn('user')
+            ->removeColumn('subscribe')
+            ->removeColumn('basket')
+            ->removeColumn('main_basket')
+            ->removeColumn('additional_baskets')
+            ->removeColumn('ingredients')
+            ->removeColumn('user_id')
+            ->removeColumn('coupon')
+            ->removeColumn('delivery_time')
+            ->removeColumn('payment_method');
+        
+        return $dataTables->make();
     }
 }

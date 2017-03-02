@@ -171,6 +171,7 @@ return array (
     'user.delete',
     'user.login_as_user',
     'user.group.write',
+    'user.orders',
     
     'subscribe.read',
     'subscribe.export',

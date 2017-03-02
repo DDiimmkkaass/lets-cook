@@ -8,6 +8,12 @@
             <li>
                 <a aria-expanded="false" href="#coupons" data-toggle="tab">@lang('labels.tab_coupons')</a>
             </li>
+
+            @if ($user->hasAccess('user.orders'))
+                <li>
+                    <a aria-expanded="false" href="#orders" data-toggle="tab">@lang('labels.tab_orders')</a>
+                </li>
+            @endif
         @endif
 
         <li class="@if ($errors->has('groups')) tab-with-errors @endif">
@@ -24,6 +30,12 @@
             <div class="tab-pane" id="coupons">
                 @include('user.tabs.coupons')
             </div>
+
+            @if ($user->hasAccess('user.orders'))
+                <div class="tab-pane" id="orders">
+                    @include('user.tabs.orders')
+                </div>
+            @endif
         @endif
 
         <div class="tab-pane" id="groups">

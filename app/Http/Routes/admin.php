@@ -42,6 +42,14 @@ $router->group(
                     'user/{user_id}/coupon/{coupon_id}/default',
                     ['as' => 'admin.user.coupon.default', 'uses' => 'Backend\UserController@makeDefaultCoupon']
                 );
+                $router->get(
+                    'user/{id}/orders',
+                    [
+                        'middleware' => ['ajax'],
+                        'as'         => 'admin.user.orders',
+                        'uses'       => 'Backend\UserController@orders',
+                    ]
+                );
                 $router->resource('user', 'Backend\UserController');
                 
                 // groups

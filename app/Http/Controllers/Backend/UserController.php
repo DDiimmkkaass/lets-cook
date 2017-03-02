@@ -19,6 +19,7 @@ use App\Models\User;
 use App\Models\UserCoupon;
 use App\Models\UserInfo;
 use App\Services\CouponService;
+use App\Services\UserService;
 use App\Traits\Controllers\AjaxFieldsChangerTrait;
 use App\Traits\Controllers\ProcessFieldsTrait;
 use App\Traits\Controllers\SaveImageTrait;
@@ -64,8 +65,14 @@ class UserController extends BackendController
         'destroy'         => 'user.delete',
         'getNewPassword'  => 'user.write',
         'postNewPassword' => 'user.write',
+        'orders'          => 'user.orders',
         'ajaxFieldChange' => 'user.write',
     ];
+    
+    /**
+     * @var \App\Services\UserService
+     */
+    private $userService;
     
     /**
      * @var \App\Services\CouponService
@@ -74,9 +81,10 @@ class UserController extends BackendController
     
     /**
      * @param \Illuminate\Contracts\Routing\ResponseFactory $response
+     * @param \App\Services\UserService                     $userService
      * @param \App\Services\CouponService                   $couponService
      */
-    public function __construct(ResponseFactory $response, CouponService $couponService)
+    public function __construct(ResponseFactory $response, UserService $userService, CouponService $couponService)
     {
         parent::__construct($response);
         
@@ -85,6 +93,7 @@ class UserController extends BackendController
         Meta::title(trans('labels.users'));
         
         $this->breadcrumbs(trans('labels.users'), route('admin.'.$this->module.'.index'));
+        $this->userService = $userService;
     }
     
     /**
@@ -101,15 +110,15 @@ class UserController extends BackendController
                 ->joinInfo()
                 ->joinCities()
                 ->select(
-                [
-                    'users.id',
-                    'user_info.full_name',
-                    'email',
-                    'user_info.phone',
-                    'user_info.additional_phone',
-                    'user_info.city_id',
-                    DB::raw(
-                        '(select 
+                    [
+                        'users.id',
+                        'user_info.full_name',
+                        'users.email',
+                        'user_info.phone',
+                        'user_info.additional_phone',
+                        'user_info.city_id',
+                        DB::raw(
+                            '(select 
                             (IF
                                 (
                                     user_info.city_id IS NOT NULL, 
@@ -118,36 +127,38 @@ class UserController extends BackendController
                                 )
                             )
                         ) as city_name'
-                    ),
-                    'user_info.address',
-                    DB::raw(
-                        '(select 
+                        ),
+                        'user_info.address',
+                        DB::raw(
+                            '(select 
                             (IF
                                 (
                                     user_info.first_order_date IS NULL, 
                                     (
                                         select min(orders.delivery_date) as first_order_date 
                                         from orders 
-                                        where orders.user_id = users.id AND orders.status = '.Order::getStatusIdByName('archived').'
+                                        where orders.user_id = users.id AND orders.status = '.Order::getStatusIdByName(
+                                'archived'
+                            ).'
                                     ), 
                                     user_info.first_order_date
                                 )
                             )
                         ) as first_order_date'
-                    ),
-                    DB::raw(
-                        '(
+                        ),
+                        DB::raw(
+                            '(
                             select max(orders.delivery_date) as latest_order_date 
                             from orders 
                             where orders.user_id = users.id AND orders.status = '.Order::getStatusIdByName('archived').'
                         ) as latest_order_date'
-                    ),
-                    'activated',
-                ]
-            );
+                        ),
+                        'activated',
+                    ]
+                );
             
             $this->_implodeFilters($list, $request);
-
+            
             return $dataTables = Datatables::of($list)
                 ->editColumn(
                     'id',
@@ -413,6 +424,16 @@ class UserController extends BackendController
         $this->data('page_title', trans('labels.password_edit'));
         
         return $this->render('views.'.$this->module.'.new_password');
+    }
+    
+    /**
+     * @param int $user_id
+     *
+     * @return array|\Bllim\Datatables\json
+     */
+    public function orders($user_id)
+    {
+        return $this->userService->ordersTable($user_id);
     }
     
     /**
@@ -734,10 +755,12 @@ class UserController extends BackendController
                 if ($value !== '' && $value !== 'null') {
                     switch ($filter) {
                         case 'city_name':
-                            $list->where(function ($query) use ($value) {
-                                return $query->where('user_info.city_name', 'LIKE', '%'.$value.'%')
-                                    ->orWhere('cities.name', 'LIKE', '%'.$value.'%');
-                            });
+                            $list->where(
+                                function ($query) use ($value) {
+                                    return $query->where('user_info.city_name', 'LIKE', '%'.$value.'%')
+                                        ->orWhere('cities.name', 'LIKE', '%'.$value.'%');
+                                }
+                            );
                             break;
                     }
                 }

@@ -711,4 +711,5 @@ return array (
   'login_as_user' => 'Перейти на сайт как пользователь',
   'first_order' => 'Первый',
   'latest_order' => 'Последний',
+  'tab_orders' => 'Заказы',
 );
