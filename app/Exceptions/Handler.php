@@ -45,7 +45,9 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        $this->_sendToAdmin($e);
+        if ($this->shouldReport($e)) {
+            $this->_sendToAdmin($e);
+        }
         
         return parent::report($e);
     }
@@ -62,7 +64,7 @@ class Handler extends ExceptionHandler
     {
         if ($this->isHttpException($e)) {
             $statusCode = $e->getStatusCode();
-        
+            
             if (env('HANDLE_ERROR', true)) {
                 switch ($statusCode) {
                     case 404:
@@ -74,13 +76,13 @@ class Handler extends ExceptionHandler
                 }
             }
         }
-    
+        
         if ($e instanceof TokenMismatchException) {
             FlashMessages::add('error', trans('front_messages.session expired, please reload the page'));
-        
+            
             return redirect()->back();
         }
-    
+        
         return parent::render($request, $e);
     }
     
