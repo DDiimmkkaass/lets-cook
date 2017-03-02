@@ -289,6 +289,8 @@ class User extends SentryUser implements FrontLink
             if (!empty($this->info->first_order_date)) {
                 return $this->info->first_order_date;
             }
+            
+            return '';
         }
     
         return carbon()->parse($value)->format('Y-m-d');
