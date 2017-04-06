@@ -74,4 +74,5 @@ return array(
     'you can not repeat this basket' => 'Вы не можете повторить данную корзину',
     'invite friend coupon code copy success message' => 'Код скопирован в буфер обмена. Теперь Вы можете передать его своему другу.',
     'session expired, please reload the page' => 'Время сессии истекло. Пожалуйста, перезагрузите страницу и попробуйте еще раз.',
+    'accepting orders suspended' => 'Прием заказов приостановлен на неопределенное время.',
 );

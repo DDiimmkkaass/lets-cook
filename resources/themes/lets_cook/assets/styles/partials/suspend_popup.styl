@@ -1,0 +1,14 @@
+.suspend-popup
+  @extend .pop-up
+  background rgba(255, 255, 255, 0.5)
+
+  .pop-up__wrapper
+    padding: 100px 50px
+    max-width: 850px
+    text-align: center
+
+    +bp('1024')
+      padding: 150px 100px
+
+    .pop-up__content-email
+      text-decoration underline

@@ -1,4 +1,12 @@
+window.showSuspendPopup = () ->
+  $popUp = $('.pop-up.suspend-popup')
+
+  $popUp.attr('data-active', '');
+  $popUp.attr('style', 'z-index: 9999999');
+
 $(document).on "ready", () ->
+  showSuspendPopup()
+
   $(document).on 'click', '.show-auth-form', (e) ->
     e.preventDefault()
 

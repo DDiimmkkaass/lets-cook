@@ -108,7 +108,7 @@ $router->group(
     function () use ($router) {
         $router->post(
             '/store',
-            ['as' => 'order.store', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@store']
+            ['as' => 'order.store', 'middleware' => ['ajax', 'suspend'], 'uses' => 'Frontend\OrderController@store']
         );
     
         $router->get('/success', ['as' => 'order.success', 'uses' => 'Frontend\OrderController@success']);
@@ -120,7 +120,7 @@ $router->group(
             function () use ($router) {
                 $router->get(
                     '/{order_id}/repeat',
-                    ['as' => 'order.repeat', 'uses' => 'Frontend\OrderController@repeat']
+                    ['as' => 'order.repeat', 'middleware' => 'suspend', 'uses' => 'Frontend\OrderController@repeat']
                 )
                     ->where('order_id', '[0-9]+');
                 
@@ -131,13 +131,13 @@ $router->group(
                     ->where('order_id', '[0-9]+');
                 $router->post(
                     '/{order_id}/update',
-                    ['as' => 'order.update', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@update']
+                    ['as' => 'order.update', 'middleware' => ['ajax', 'suspend'], 'uses' => 'Frontend\OrderController@update']
                 )
                     ->where('order_id', '[0-9]+');
                 
                 $router->post(
                     '/{order_id}/delete',
-                    ['as' => 'order.delete', 'middleware' => 'ajax', 'uses' => 'Frontend\OrderController@delete']
+                    ['as' => 'order.delete', 'middleware' => ['ajax', 'suspend'], 'uses' => 'Frontend\OrderController@delete']
                 )
                     ->where('order_id', '[0-9]+');
             }
@@ -216,11 +216,11 @@ $router->group(
         
         $router->post(
             '/basket-subscribes',
-            ['as' => 'profiles.basket_subscribes.update', 'uses' => 'Frontend\ProfileController@updateSubscribe']
+            ['as' => 'profiles.basket_subscribes.update', 'middleware' => 'suspend', 'uses' => 'Frontend\ProfileController@updateSubscribe']
         );
         $router->post(
             '/basket-subscribes/delete',
-            ['as' => 'profiles.basket_subscribes.delete', 'uses' => 'Frontend\ProfileController@deleteSubscribe']
+            ['as' => 'profiles.basket_subscribes.delete', 'middleware' => 'suspend', 'uses' => 'Frontend\ProfileController@deleteSubscribe']
         );
         
         $router->get(
@@ -276,15 +276,6 @@ $router->group(
             ['as' => 'coupons.check', 'uses' => 'Frontend\CouponController@check']
         );
     }
-);
-
-$router->post(
-    'basket_subscribes',
-    [
-        'as'         => 'basket_subscribes.save',
-        'middleware' => ['auth', 'ajax'],
-        'uses'       => 'Frontend\ProfileController@updatePassword',
-    ]
 );
 
 $router->group(
