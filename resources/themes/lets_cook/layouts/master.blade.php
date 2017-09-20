@@ -6,8 +6,6 @@
 
         @include('partials.modules.popup')
 
-        @include('partials.suspend_popup')
-
         @include('partials.header')
 
         @yield('content')
